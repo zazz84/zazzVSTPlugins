@@ -1,0 +1,124 @@
+
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/.suo
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/Browse.VC.db
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/ipch/AutoPCH/9f518f68fb73978a/PLUGINPROCESSOR.ipch
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/ipch/AutoPCH/c2ab91fd6b81a8f8/ALLPASSFILTERS .ipch
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/ipch/AutoPCH/d4beb40e094e964b/INCLUDE_JUCE_GUI_BASICS.ipch
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/ipch/AutoPCH/d76cf45fda28a9cf/ZAZZAUDIOPROCESSOREDITOR.ipch
+MultiAllPass/Builds/VisualStudio2017/.vs/MultiAllPass/v15/Solution.VC.db
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass.sln
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_SharedCode.vcxproj
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_SharedCode.vcxproj.filters
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_SharedCode.vcxproj.user
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_VST3.vcxproj
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_VST3.vcxproj.filters
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_VST3.vcxproj.user
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_VST3ManifestHelper.vcxproj
+MultiAllPass/Builds/VisualStudio2017/MultiAllPass_VST3ManifestHelper.vcxproj.filters
+MultiAllPass/Builds/VisualStudio2017/resources.rc
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/AllPassFilters .obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/CL.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/CL.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/CL.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/Lib-link.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/Lib-link.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/Lib.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAll.4CC5F9AF.tlog/MultiAllPass_SharedCode.lastbuildstate
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAllPass.lib
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAllPass.pdb
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/MultiAllPass_SharedCode.log
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/CL.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/CL.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/CL.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/link.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/link.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/link.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/MultiAllPass_VST3ManifestHelper.lastbuildstate
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/rc.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/rc.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAll.D71371C6.tlog/rc.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MultiAllPass_VST3ManifestHelper.log
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/CL.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/CL.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/CL.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/link.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/link.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/link.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/MultiAllPass_VST3.lastbuildstate
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/MultiAllPass_VST3.write.1u.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/rc.command.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/rc.read.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAll.D6559071.tlog/rc.write.1.tlog
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.dll
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.exp
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.ilk
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.lib
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.pdb
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.vst3/Contents/Resources/moduleinfo.json
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass.vst3/Contents/x86_64-win/MultiAllPass.vst3
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/MultiAllPass_VST3.log
+MultiAllPass/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+MultiAllPass/JuceLibraryCode/include_juce_audio_basics.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_basics.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_devices.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_devices.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_formats.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_formats.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_processors.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_processors.mm
+MultiAllPass/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_utils.cpp
+MultiAllPass/JuceLibraryCode/include_juce_audio_utils.mm
+MultiAllPass/JuceLibraryCode/include_juce_core.cpp
+MultiAllPass/JuceLibraryCode/include_juce_core.mm
+MultiAllPass/JuceLibraryCode/include_juce_data_structures.cpp
+MultiAllPass/JuceLibraryCode/include_juce_data_structures.mm
+MultiAllPass/JuceLibraryCode/include_juce_events.cpp
+MultiAllPass/JuceLibraryCode/include_juce_events.mm
+MultiAllPass/JuceLibraryCode/include_juce_graphics.cpp
+MultiAllPass/JuceLibraryCode/include_juce_graphics.mm
+MultiAllPass/JuceLibraryCode/include_juce_gui_basics.cpp
+MultiAllPass/JuceLibraryCode/include_juce_gui_basics.mm
+MultiAllPass/JuceLibraryCode/include_juce_gui_extra.cpp
+MultiAllPass/JuceLibraryCode/include_juce_gui_extra.mm
+MultiAllPass/JuceLibraryCode/JuceHeader.h
+MultiAllPass/JuceLibraryCode/JucePluginDefines.h
+MultiAllPass/JuceLibraryCode/ReadMe.txt
