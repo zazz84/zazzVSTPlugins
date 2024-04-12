@@ -246,3 +246,67 @@ BiquadFilter/JuceLibraryCode/include_juce_gui_extra.mm
 BiquadFilter/JuceLibraryCode/JuceHeader.h
 BiquadFilter/JuceLibraryCode/JucePluginDefines.h
 BiquadFilter/JuceLibraryCode/ReadMe.txt
+BiquadFilter/Builds/VisualStudio2017/.vs/BiquadFilter/v15/ipch/AutoPCH/a4270eb6104d0852/PLUGINPROCESSOR.ipch
+BiquadFilter/Builds/VisualStudio2017/.vs/BiquadFilter/v15/ipch/AutoPCH/bb24450ccce05f9e/PLUGINEDITOR.ipch
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/BiquadFilter_SharedCode.lastbuildstate
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/CL.10052.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/CL.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/CL.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/Lib-link.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/Lib-link.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFi.4B49CC9B.tlog/Lib.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilter.lib
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilter.pdb
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilter_SharedCode.log
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/BiquadFilter_VST3ManifestHelper.lastbuildstate
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/CL.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/CL.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/CL.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/link.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/link.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/link.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/rc.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/rc.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFi.0ACFBAA1.tlog/rc.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BiquadFilter_VST3ManifestHelper.log
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/BiquadFilter_VST3.lastbuildstate
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/BiquadFilter_VST3.write.1u.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/CL.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/CL.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/CL.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/link.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/link.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/link.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/rc.command.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/rc.read.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFi.00670D83.tlog/rc.write.1.tlog
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.dll
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.exp
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.lib
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.pdb
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.vst3/Contents/Resources/moduleinfo.json
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.vst3/Contents/x86_64-win/BiquadFilter.vst3
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter_VST3.log
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/resources.res

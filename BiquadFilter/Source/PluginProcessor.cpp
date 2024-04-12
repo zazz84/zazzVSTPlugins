@@ -236,10 +236,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadFilterAudioProcessor::
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 0.3f), 500.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(        -12.0f,         12.0f, 0.01f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(        -18.0f,         18.0f, 0.01f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(          0.1f,          10.0, 0.01f, 1.0f),   0.7f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(          0.0f,           1.0, 0.01f, 1.0f),   1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(        -12.0f,         12.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(        -18.0f,         18.0f,  0.1f, 1.0f),   0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("LP", "LP", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("HP", "HP", false));

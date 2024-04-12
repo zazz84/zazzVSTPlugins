@@ -15,8 +15,6 @@ public:
     BiquadFilterAudioProcessor();
     ~BiquadFilterAudioProcessor() override;
 
-	static const int N_ALL_PASS_FO = 100;
-	static const int N_ALL_PASS_SO = 50;
 	static const int FREQUENCY_MIN = 20;
 	static const int FREQUENCY_MAX = 20000;
 	static const std::string paramsNames[];
@@ -53,15 +51,6 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
-
-	inline float FrequencyToMel(float frequency)
-	{
-		return 2595.0f * log10f(1.0f + frequency / 700.0f);
-	}
-	inline float MelToFrequency(float mel)
-	{
-		return 700.0f * (powf(10.0f, mel / 2595.0f) - 1.0f);
-	}
 
 	using APVTS = juce::AudioProcessorValueTreeState;
 	static APVTS::ParameterLayout createParameterLayout();
