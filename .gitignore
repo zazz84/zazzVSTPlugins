@@ -310,3 +310,5 @@ BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter.vst3/Contents
 BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/BiquadFilter_VST3.log
 BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
 BiquadFilter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+BiquadFilter/Builds/VisualStudio2017/.vs/BiquadFilter/v15/ipch/AutoPCH/394f7f2fa2fed501/PLUGINPROCESSOR.ipch
+BiquadFilter/Builds/VisualStudio2017/.vs/BiquadFilter/v15/ipch/AutoPCH/d9c84cb2e3f0935a/BIQUADFILTERS.ipch

@@ -35,7 +35,12 @@ BiquadFilterAudioProcessorEditor::BiquadFilterAudioProcessorEditor (BiquadFilter
 	createButton(type5Button, TYPE_BUTTON_GROUP);	
 	createButton(type6Button, TYPE_BUTTON_GROUP);	
 	createButton(type7Button, TYPE_BUTTON_GROUP);	
-	createButton(type8Button, TYPE_BUTTON_GROUP);	
+	createButton(type8Button, TYPE_BUTTON_GROUP);
+
+	createButton(algorithmType1Button, ALGORITHM_TYPE_BUTTON_GROUP);
+	createButton(algorithmType2Button, ALGORITHM_TYPE_BUTTON_GROUP);
+	createButton(algorithmType3Button, ALGORITHM_TYPE_BUTTON_GROUP);
+	createButton(algorithmType4Button, ALGORITHM_TYPE_BUTTON_GROUP);
 
 	addAndMakeVisible(type1Button);
 	addAndMakeVisible(type2Button);
@@ -46,6 +51,11 @@ BiquadFilterAudioProcessorEditor::BiquadFilterAudioProcessorEditor (BiquadFilter
 	addAndMakeVisible(type7Button);
 	addAndMakeVisible(type8Button);
 
+	addAndMakeVisible(algorithmType1Button);
+	addAndMakeVisible(algorithmType2Button);
+	addAndMakeVisible(algorithmType3Button);
+	addAndMakeVisible(algorithmType4Button);
+
 	button1Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "LP", type1Button));
 	button2Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "HP", type2Button));
 	button3Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "BP1", type3Button));
@@ -54,6 +64,11 @@ BiquadFilterAudioProcessorEditor::BiquadFilterAudioProcessorEditor (BiquadFilter
 	button6Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "P", type6Button));
 	button7Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "LS", type7Button));
 	button8Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "HS", type8Button));
+
+	button9Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "DF1", algorithmType1Button));
+	button10Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "DF2", algorithmType2Button));
+	button11Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "DF1T", algorithmType3Button));
+	button12Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "DF2T", algorithmType4Button));
 
 	// Canvas
 	createCanvas(*this, N_SLIDERS);
@@ -76,8 +91,8 @@ void BiquadFilterAudioProcessorEditor::resized()
 	// Buttons
 	const int height = getHeight();
 	const float fonthHeight = (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
-	const float buttonWidth = 2.0f * (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
-	const int posY = height - (int)(1.8f * fonthHeight);
+	const float buttonWidth = 1.5f * (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
+	int posY = height - (int)(1.8f * fonthHeight);
 	
 	const float width = getWidth() / N_SLIDERS;
 
@@ -89,4 +104,11 @@ void BiquadFilterAudioProcessorEditor::resized()
 	type6Button.setBounds((int)(3.0f * width), posY, buttonWidth, fonthHeight);
 	type7Button.setBounds((int)(4.0f * width - buttonWidth), posY, buttonWidth, fonthHeight);
 	type8Button.setBounds((int)(4.0f * width), posY, buttonWidth, fonthHeight);
+
+	posY = (int)(0.8f * fonthHeight);
+	algorithmType1Button.setBounds((int)(width - buttonWidth), posY, buttonWidth, fonthHeight);
+	algorithmType2Button.setBounds((int)(width), posY, buttonWidth, fonthHeight);
+
+	algorithmType3Button.setBounds((int)(2.0f * width - buttonWidth), posY, buttonWidth, fonthHeight);
+	algorithmType4Button.setBounds((int)(2.0f * width), posY, buttonWidth, fonthHeight);
 }

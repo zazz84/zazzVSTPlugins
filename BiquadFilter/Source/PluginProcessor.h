@@ -75,6 +75,11 @@ private:
 	juce::AudioParameterBool* button7Parameter = nullptr;
 	juce::AudioParameterBool* button8Parameter = nullptr;
 
+	juce::AudioParameterBool* button9Parameter = nullptr;
+	juce::AudioParameterBool* button10Parameter = nullptr;
+	juce::AudioParameterBool* button11Parameter = nullptr;
+	juce::AudioParameterBool* button12Parameter = nullptr;
+
 	BiquadFilter m_filter[2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadFilterAudioProcessor)

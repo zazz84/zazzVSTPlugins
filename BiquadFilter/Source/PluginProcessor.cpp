@@ -40,6 +40,11 @@ BiquadFilterAudioProcessor::BiquadFilterAudioProcessor()
 	button6Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("P"));
 	button7Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LS"));
 	button8Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("HS"));
+
+	button9Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("DF1"));
+	button10Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("DF2"));
+	button11Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("DF1T"));
+	button12Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("DF2T"));
 }
 
 BiquadFilterAudioProcessor::~BiquadFilterAudioProcessor()
@@ -157,6 +162,11 @@ void BiquadFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 	const auto button5 = button5Parameter->get();
 	const auto button6 = button6Parameter->get();
 	const auto button7 = button7Parameter->get();
+	
+	const auto button9 = button9Parameter->get();
+	const auto button10 = button10Parameter->get();
+	const auto button11 = button11Parameter->get();
+
 
 	// Get params
 	const auto frequency = frequencyParameter->load();
@@ -192,11 +202,42 @@ void BiquadFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 		else
 			filter.setHighShelf(frequency, Q, gain);
 
-		for (int sample = 0; sample < samples; sample++)
+
+		if (button9)
 		{
-			const float in = channelBuffer[sample];
-			const float inFiltered = filter.process(in);
-			channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
+			for (int sample = 0; sample < samples; sample++)
+			{
+				const float in = channelBuffer[sample];
+				const float inFiltered = filter.processDF1(in);
+				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
+			}
+		}
+		else if (button10)
+		{
+			for (int sample = 0; sample < samples; sample++)
+			{
+				const float in = channelBuffer[sample];
+				const float inFiltered = filter.processDF2(in);
+				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
+			}
+		}
+		else if (button11)
+		{
+			for (int sample = 0; sample < samples; sample++)
+			{
+				const float in = channelBuffer[sample];
+				const float inFiltered = filter.processDF1T(in);
+				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
+			}
+		}
+		else
+		{
+			for (int sample = 0; sample < samples; sample++)
+			{
+				const float in = channelBuffer[sample];
+				const float inFiltered = filter.processDF2T(in);
+				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
+			}
 		}
 	}
 }
@@ -249,6 +290,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadFilterAudioProcessor::
 	layout.add(std::make_unique<juce::AudioParameterBool>("P", "P", true));
 	layout.add(std::make_unique<juce::AudioParameterBool>("LS", "LS", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("HS", "HS", false));
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("DF1", "DF1", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("DF2", "DF2", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("DF1T", "DF1T", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("DF2T", "DF2T", true));
 
 	return layout;
 }

@@ -14,8 +14,10 @@ public:
 	void setLowShelf(float frequency, float Q, float gain);
 	void setHighShelf(float frequency, float Q, float gain);
 
-	
-	float process(float in);
+	float processDF1(float in);
+	float processDF2(float in);
+	float processDF1T(float in);
+	float processDF2T(float in);
 
 private:
 	void normalize();
