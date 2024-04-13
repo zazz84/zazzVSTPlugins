@@ -6,10 +6,10 @@
               pluginVST3Category="EQ">
   <MAINGROUP id="URmoww" name="StateVariableFilter">
     <GROUP id="{086D857F-82A7-646D-3D20-7E7C08257901}" name="Source">
-      <FILE id="j9cj6R" name="StateVariableFilter.cpp" compile="1" resource="0"
-            file="../Shared/Filters/StateVariableFilter.cpp"/>
-      <FILE id="WvBuHl" name="StateVariableFilter.h" compile="0" resource="0"
-            file="../Shared/Filters/StateVariableFilter.h"/>
+      <FILE id="ZF3mgE" name="StateVariableFilters.cpp" compile="1" resource="0"
+            file="../Shared/Filters/StateVariableFilters.cpp"/>
+      <FILE id="VnhD8h" name="StateVariableFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/StateVariableFilters.h"/>
       <FILE id="YGc3pR" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="U3wnTy" name="PluginProcessor.h" compile="0" resource="0"
