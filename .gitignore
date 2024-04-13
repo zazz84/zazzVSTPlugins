@@ -439,3 +439,81 @@ StateVariableFilter/JuceLibraryCode/include_juce_gui_extra.mm
 StateVariableFilter/JuceLibraryCode/JuceHeader.h
 StateVariableFilter/JuceLibraryCode/JucePluginDefines.h
 StateVariableFilter/JuceLibraryCode/ReadMe.txt
+StateVariableFilter/Builds/VisualStudio2017/StateVariableFilter_SharedCode.vcxproj.user
+StateVariableFilter/Builds/VisualStudio2017/StateVariableFilter_VST3.vcxproj.user
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.3800.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.3800.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.3944.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.3944.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.396.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.396.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.5976.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.5976.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.6260.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.6260.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.8736.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.8736.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/StateVariableFilter_SharedCode.lastbuildstate
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/unsuccessfulbuild
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVariableFilter.pdb
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVariableFilter_SharedCode.log
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVariableFilters.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/CL.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/CL.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/CL.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/link.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/link.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/link.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/rc.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/rc.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/rc.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVar.4254BA24.tlog/StateVariableFilter_VST3ManifestHelper.lastbuildstate
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/StateVariableFilter_VST3ManifestHelper.log
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.11980.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/CL.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/Lib-link.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/Lib-link.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVar.4F4C7E9F.tlog/Lib.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/Shared Code/StateVariableFilter.lib
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/StateVariableFilter_VST3.lastbuildstate
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/unsuccessfulbuild
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter.pdb
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter_VST3.log
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/CL.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/CL.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/CL.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/link.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/link.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/link.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/rc.command.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/rc.read.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/rc.write.1.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVar.BE0044C8.tlog/StateVariableFilter_VST3.write.1u.tlog
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter.dll
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter.exp
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter.lib
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter.vst3/Contents/Resources/moduleinfo.json
+StateVariableFilter/Builds/VisualStudio2017/x64/Release/VST3/StateVariableFilter.vst3/Contents/x86_64-win/StateVariableFilter.vst3
