@@ -1,7 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/Utilities/Convolutions.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/CombFilters.h"
+
 
 //==============================================================================
 class RoomReverbAudioProcessor  : public juce::AudioProcessor
@@ -15,12 +16,12 @@ public:
     RoomReverbAudioProcessor();
     ~RoomReverbAudioProcessor() override;
 
-	static const int N_ALL_PASS_FO = 100;
-	static const int N_ALL_PASS_SO = 50;
-	static const int FREQUENCY_MIN = 20;
-	static const int FREQUENCY_MAX = 20000;
 	static const std::string paramsNames[];
-	static const int IMPULSE_RESPONSE_SIZE = 8;
+	static const int combFilterDelayTimeMS[];
+	static const int allPassDelayTimeMS[];
+	static const float combFilterFeedbackFactor[];
+	static const float allPassFeedbackFactor[];
+	static const int N_COMPLEXITY = 8;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -63,15 +64,15 @@ public:
 private:	
 	//==============================================================================
 
-	std::atomic<float>* frequencyParameter = nullptr;
-	std::atomic<float>* styleParameter = nullptr;
+	std::atomic<float>* combFilterTimeParameter = nullptr;
+	std::atomic<float>* combFilterResonanceParameter = nullptr;
+	std::atomic<float>* allPassTimeParameter = nullptr;
+	std::atomic<float>* allPassResonanceParameter = nullptr;
+	std::atomic<float>* dampingParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	juce::AudioParameterBool* button1Parameter = nullptr;
-	juce::AudioParameterBool* button2Parameter = nullptr;
-
-	Convolution m_Convolution[2] = {};
+	CircularCombFilterAdvanced m_circularCombFilter[2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RoomReverbAudioProcessor)
 };

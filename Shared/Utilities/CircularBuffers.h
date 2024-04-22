@@ -5,15 +5,13 @@ public:
 
 	void init(int size);
 	void clear();
-	void writeSample(float sample)
+	inline void setSize(int size) { m_readOffset = m_bitMask - size; };
+	inline void writeSample(float sample)
 	{
 		m_buffer[m_head] = sample;
 		m_head = (m_head + 1) & m_bitMask;
 	}
-	float read() const
-	{
-		return m_buffer[m_head];
-	}
+	inline float read() const { return m_buffer[(m_head + m_readOffset) & m_bitMask]; };
 	float readDelay(int sample);
 	float readDelayLinearInterpolation(float sample);
 	float readDelayTriLinearInterpolation(float sample);
@@ -37,4 +35,5 @@ protected:
 	float *m_buffer;
 	int m_head = 0;
 	int m_bitMask = 0;
+	int m_readOffset = 0;
 };

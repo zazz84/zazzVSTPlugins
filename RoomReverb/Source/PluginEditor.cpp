@@ -27,16 +27,6 @@ RoomReverbAudioProcessorEditor::RoomReverbAudioProcessorEditor (RoomReverbAudioP
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
-	// Buttons
-	createButton(type1Button, TYPE_BUTTON_GROUP);
-	createButton(type2Button, TYPE_BUTTON_GROUP);
-
-	addAndMakeVisible(type1Button);
-	addAndMakeVisible(type2Button);
-
-	button1Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "Button1", type1Button));
-	button2Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "Button2", type2Button));
-
 	// Canvas
 	createCanvas(*this, N_SLIDERS);
 }
@@ -54,12 +44,4 @@ void RoomReverbAudioProcessorEditor::paint (juce::Graphics& g)
 void RoomReverbAudioProcessorEditor::resized()
 {
 	resize(*this, m_sliders, m_labels, N_SLIDERS);
-	
-	// Buttons
-	const int height = getHeight();
-	const float fonthHeight = (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
-	const int posY = height - (int)(1.8f * fonthHeight);
-
-	type1Button.setBounds((int)(getWidth() * 0.5f - fonthHeight * 1.1f), posY, fonthHeight, fonthHeight);
-	type2Button.setBounds((int)(getWidth() * 0.5f + fonthHeight * 0.1f), posY, fonthHeight, fonthHeight);
 }

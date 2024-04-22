@@ -5,6 +5,11 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Reverb">
   <MAINGROUP id="zQrTh6" name="RoomReverb">
     <GROUP id="{6DF08639-4008-7B2D-59BF-3D18092930B3}" name="Source">
+      <FILE id="mueSkg" name="BiquadFilters.cpp" compile="1" resource="0"
+            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="K3cQnp" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
+      <FILE id="btbrNt" name="CombFilters.cpp" compile="1" resource="0" file="../Shared/Filters/CombFilters.cpp"/>
+      <FILE id="m5ZsA7" name="CombFilters.h" compile="0" resource="0" file="../Shared/Filters/CombFilters.h"/>
       <FILE id="l7IgAy" name="Convolutions.cpp" compile="1" resource="0"
             file="../Shared/Utilities/Convolutions.cpp"/>
       <FILE id="AkT9tN" name="Convolutions.h" compile="0" resource="0" file="../Shared/Utilities/Convolutions.h"/>

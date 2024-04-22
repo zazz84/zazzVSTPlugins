@@ -644,3 +644,11 @@ RoomReverb/JuceLibraryCode/include_juce_gui_extra.mm
 RoomReverb/JuceLibraryCode/JuceHeader.h
 RoomReverb/JuceLibraryCode/JucePluginDefines.h
 RoomReverb/JuceLibraryCode/ReadMe.txt
+RoomReverb/Source/PluginProcessor.cpp~RFc47db2.TMP
+RoomReverb/Source/PluginProcessor.cpp~RFb13134.TMP
+RoomReverb/Builds/VisualStudio2017/x64/Debug/VST3/RoomReverb_VST3.tlog/link.delete.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilters.obj
+RoomReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/edc769c500f3cadb/COMBFILTERS.ipch
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/9043bc40a422ab6a/BIQUADFILTERS.ipch
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/232de5da54c684e2/BIQUADFILTERS.ipch

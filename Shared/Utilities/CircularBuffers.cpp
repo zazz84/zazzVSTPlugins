@@ -10,6 +10,8 @@ void CircularBuffer::init(int size)
 	m_head = 0;
 	const int sizePowerOfTwo = GetPowerOfTwo(size);
 	m_bitMask = sizePowerOfTwo - 1;
+
+	m_readOffset = m_bitMask - size;
 	
 	m_buffer = new float[sizePowerOfTwo];
 	memset(m_buffer, 0, sizePowerOfTwo * sizeof(float));
