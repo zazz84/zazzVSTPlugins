@@ -17,8 +17,8 @@ public:
     ~RoomReverbAudioProcessor() override;
 
 	static const std::string paramsNames[];
-	static const int combFilterDelayTimeMS[];
-	static const int allPassDelayTimeMS[];
+	static const float combFilterDelayTimeSeconds[];
+	static const float allPassDelayTimeSeconds[];
 	static const float combFilterFeedbackFactor[];
 	static const float allPassFeedbackFactor[];
 	static const int N_COMPLEXITY = 8;
@@ -64,10 +64,8 @@ public:
 private:	
 	//==============================================================================
 
-	std::atomic<float>* combFilterTimeParameter = nullptr;
-	std::atomic<float>* combFilterResonanceParameter = nullptr;
-	std::atomic<float>* allPassTimeParameter = nullptr;
-	std::atomic<float>* allPassResonanceParameter = nullptr;
+	std::atomic<float>* timeParameter = nullptr;
+	std::atomic<float>* resonanceParameter = nullptr;
 	std::atomic<float>* dampingParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;

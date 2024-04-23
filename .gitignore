@@ -652,3 +652,70 @@ RoomReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
 RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/edc769c500f3cadb/COMBFILTERS.ipch
 RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/9043bc40a422ab6a/BIQUADFILTERS.ipch
 RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/232de5da54c684e2/BIQUADFILTERS.ipch
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/240b173e4bcb0818/PLUGINPROCESSOR.ipch
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/297e10761802a3bb/COMBFILTERS.ipch
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilters.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/Convolutions.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/CL.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/CL.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/CL.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/Lib-link.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/Lib-link.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/Lib.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/RoomReverb_SharedCode.lastbuildstate
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReverb.lib
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReverb.pdb
+RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReverb_SharedCode.log
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/CL.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/CL.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/CL.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/link.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/link.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/link.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/rc.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/rc.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/rc.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReve.2B240A2A.tlog/RoomReverb_VST3ManifestHelper.lastbuildstate
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/RoomReverb_VST3ManifestHelper.log
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb.dll
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb.exp
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb.lib
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb.pdb
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb.vst3/Contents/Resources/moduleinfo.json
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb.vst3/Contents/x86_64-win/RoomReverb.vst3
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.log
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/CL.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/CL.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/CL.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/link.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/link.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/link.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/rc.command.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/rc.read.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/rc.write.1.tlog
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/RoomReverb_VST3.lastbuildstate
+RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/RoomReverb_VST3.write.1u.tlog

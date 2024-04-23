@@ -6,10 +6,11 @@ class CombFilter
 public:
 	CombFilter();
 
-	void init(int size) { m_buffer.init(size); };
-	void clear() { m_buffer.clear(); };
-	void setSize(int size) { m_buffer.setSize(size); };
-	void setFeedback(float feedback) { m_feedback = feedback; }
+	inline void init(int size) { m_buffer.init(size); };
+	inline void clear() { m_buffer.clear(); };
+	inline void setSize(int size) { m_buffer.setSize(size); };
+	inline float getSize() { return m_buffer.getSize(); };
+	inline void setFeedback(float feedback) { m_feedback = feedback; }
 	float process(float in);
 
 protected:

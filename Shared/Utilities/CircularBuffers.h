@@ -6,6 +6,7 @@ public:
 	void init(int size);
 	void clear();
 	inline void setSize(int size) { m_readOffset = m_bitMask - size; };
+	inline int getSize() { return m_bitMask - m_readOffset; };
 	inline void writeSample(float sample)
 	{
 		m_buffer[m_head] = sample;
