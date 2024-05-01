@@ -70,6 +70,7 @@ public:
 	void init(int complexity, int* size);
 	void setSize(const int* size);
 	void setFeedback(const float* feedback);
+	void setComplexity(int complexity) { m_complexity = complexity; };
 
 	float process(float in);
 

@@ -18,7 +18,7 @@ Allpass::Allpass()
 
 float Allpass::process(float in)
 {
-	const float inAtt = in * (1.0f - m_buffer.getSize() * 0.0001f);
+	const float inAtt = (1.0f - m_buffer.getSize() * 0.0001f) * in;
 	
 	const float delayOut = m_buffer.read();
 	m_buffer.writeSample(inAtt - m_feedback * delayOut);
@@ -141,14 +141,14 @@ float CircularCombFilterAdvanced::process(float in)
 
 	for (int i = 0; i < m_complexity; i++)
 	{
-		const float bufferOut = m_filter[i].processDF1(m_allPass[i].process(m_buffer[i].read()));
+		const auto bufferOut = m_filter[i].processDF1(m_allPass[i].process(m_buffer[i].read()));
 		out += bufferOut;
 
 		int writteIdx = i + 1;
 		if (writteIdx >= m_complexity)
 			writteIdx = 0;
 
-		m_buffer[writteIdx].writeSample(in * (1.0f - m_buffer[writteIdx].getSize() * 0.0001f) + m_feedback[writteIdx] * bufferOut);
+		m_buffer[writteIdx].writeSample((1.0f - m_buffer[writteIdx].getSize() * 0.0001f) * in + m_feedback[writteIdx] * bufferOut);
 	}
 
 	return out;

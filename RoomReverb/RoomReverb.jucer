@@ -5,6 +5,10 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Reverb">
   <MAINGROUP id="zQrTh6" name="RoomReverb">
     <GROUP id="{6DF08639-4008-7B2D-59BF-3D18092930B3}" name="Source">
+      <FILE id="SxkfKT" name="NoiseGenerator.cpp" compile="1" resource="0"
+            file="../Shared/Utilities/NoiseGenerator.cpp"/>
+      <FILE id="hlY1Ig" name="NoiseGenerator.h" compile="0" resource="0"
+            file="../Shared/Utilities/NoiseGenerator.h"/>
       <FILE id="mueSkg" name="BiquadFilters.cpp" compile="1" resource="0"
             file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="K3cQnp" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
