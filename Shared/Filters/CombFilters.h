@@ -1,5 +1,7 @@
-#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#pragma once
+
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 
 class CombFilter
 {

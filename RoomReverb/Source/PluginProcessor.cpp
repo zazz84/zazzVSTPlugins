@@ -11,7 +11,7 @@
 
 //==============================================================================
 
-const std::string RoomReverbAudioProcessor::paramsNames[] = { "Time", "Resonance", "Damping", "Width", "CSeed", "ASeed", "TimeMin", "Complexity", "Mix", "Volume" };
+const std::string RoomReverbAudioProcessor::paramsNames[] = { "ERTime", "ERDamping", "ER/LR", "Predelay", "Time", "Resonance", "Damping", "Width", "CSeed", "ASeed", "TimeMin", "Complexity", "Mix", "Volume" };
 const float RoomReverbAudioProcessor::m_dampingFrequencyMin = 220.0f;
 
 //==============================================================================
@@ -27,16 +27,20 @@ RoomReverbAudioProcessor::RoomReverbAudioProcessor()
                        )
 #endif
 {
-	timeParameter            = apvts.getRawParameterValue(paramsNames[0]);
-	resonanceParameter       = apvts.getRawParameterValue(paramsNames[1]);
-	dampingParameter         = apvts.getRawParameterValue(paramsNames[2]);
-	widthParameter           = apvts.getRawParameterValue(paramsNames[3]);
-	combFilterSeedParameter  = apvts.getRawParameterValue(paramsNames[4]);
-	allPassSeedParameter     = apvts.getRawParameterValue(paramsNames[5]);
-	timeMinParameter         = apvts.getRawParameterValue(paramsNames[6]);
-	complexityParameter      = apvts.getRawParameterValue(paramsNames[7]);
-	mixParameter             = apvts.getRawParameterValue(paramsNames[8]);
-	volumeParameter          = apvts.getRawParameterValue(paramsNames[9]);
+	ERTimeParameter          = apvts.getRawParameterValue(paramsNames[0]);
+	ERDampingParameter       = apvts.getRawParameterValue(paramsNames[1]);
+	ERLRParameter            = apvts.getRawParameterValue(paramsNames[2]);
+	predelayParameter        = apvts.getRawParameterValue(paramsNames[3]);
+	timeParameter            = apvts.getRawParameterValue(paramsNames[4]);
+	resonanceParameter       = apvts.getRawParameterValue(paramsNames[5]);
+	dampingParameter         = apvts.getRawParameterValue(paramsNames[6]);
+	widthParameter           = apvts.getRawParameterValue(paramsNames[7]);
+	combFilterSeedParameter  = apvts.getRawParameterValue(paramsNames[8]);
+	allPassSeedParameter     = apvts.getRawParameterValue(paramsNames[9]);
+	timeMinParameter         = apvts.getRawParameterValue(paramsNames[10]);
+	complexityParameter      = apvts.getRawParameterValue(paramsNames[11]);
+	mixParameter             = apvts.getRawParameterValue(paramsNames[12]);
+	volumeParameter          = apvts.getRawParameterValue(paramsNames[13]);
 }
 
 RoomReverbAudioProcessor::~RoomReverbAudioProcessor()
@@ -119,6 +123,12 @@ void RoomReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 
 	m_circularCombFilter[0].init(MAX_COMPLEXITY, delayCombFilterSamples, delayAllPassSamples);
 	m_circularCombFilter[1].init(MAX_COMPLEXITY, delayCombFilterSamples, delayAllPassSamples);
+
+
+	const int predelaySampes = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate);
+
+	m_earlyReflaction[0].init(predelaySampes, sampleRate);
+	m_earlyReflaction[1].init(predelaySampes, sampleRate);
 }
 
 void RoomReverbAudioProcessor::releaseResources()
@@ -155,6 +165,10 @@ bool RoomReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
+	const auto ERTime = ERTimeParameter->load();
+	const auto ERDamping = ERDampingParameter->load();
+	const auto ERLR = ERLRParameter->load();
+	const auto predelay = predelayParameter->load();
 	const auto combFilterTime = timeParameter->load();
 	const auto combFilterResonance = 0.4f - (0.2f * (1.0f - combFilterTime)) + 0.4f * resonanceParameter->load();
 	const auto allPassTime = combFilterTime;
@@ -173,12 +187,20 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const int samples = buffer.getNumSamples();
 	const auto sampleRate = getSampleRate();
 	const float frequencyMax = sampleRate * 0.45f;
+	const int predelaySamples = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate * predelay);
 	
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
+
+		// Early reflections pointer
+		auto& earlyReflection = m_earlyReflaction[channel];
+
+		const int size = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate * ERTime);
+		earlyReflection.setSize(size);
+		earlyReflection.setDamping(ERDamping);
 
 		// Circular comb filter pointer
 		auto& circularCombFilter = m_circularCombFilter[channel];
@@ -251,7 +273,14 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 		for (int sample = 0; sample < samples; sample++)
 		{
 			const float in = channelBuffer[sample];
-			const float out = 0.3f * circularCombFilter.process(in);
+
+			const float inEarlyReflections = earlyReflection.process(in);
+
+			const float inPreDelay = earlyReflection.readDelay(predelaySamples);
+
+			const float inCombFilter = 0.3f * circularCombFilter.process(inPreDelay);
+
+			const float out = (1.0f - ERLR) * inEarlyReflections + ERLR * inCombFilter;
 
 			channelBuffer[sample] = volume * ((1.0f - mix) * in + mix * out);
 		}
@@ -294,14 +323,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout RoomReverbAudioProcessor::cr
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.25f)));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.5f)));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,  (float)(PRE_DELAY_MAX_MS), 1.00f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   1.0f, (float)MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>( -12.0f, 12.0f, 0.10f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.25f)));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.5f)));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(   1.0f, (float)MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 0.0f,  1.0f, 0.01f, 1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>(-12.0f, 12.0f, 0.10f, 1.0f), 0.0f));
 
 	return layout;
 }

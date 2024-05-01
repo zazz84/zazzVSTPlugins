@@ -39,6 +39,15 @@ RoomReverbAudioProcessorEditor::~RoomReverbAudioProcessorEditor()
 void RoomReverbAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(ZazzLookAndFeel::LIGHT_COLOUR);
+
+	// Lines
+	g.setColour(ZazzLookAndFeel::MEDIUM_COLOUR);
+	const int width = (int)(getWidth() / N_SLIDERS);
+	const int height = getHeight();
+	
+	g.drawVerticalLine(3 * width, 0, height);
+	g.drawVerticalLine(8 * width, 0, height);
+	g.drawVerticalLine(12 * width, 0, height);
 }
 
 void RoomReverbAudioProcessorEditor::resized()

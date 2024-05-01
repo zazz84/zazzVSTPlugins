@@ -1,3 +1,7 @@
+#pragma once
+
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+
 class CircularBuffer
 {
 public:
@@ -37,4 +41,35 @@ protected:
 	int m_head = 0;
 	int m_bitMask = 0;
 	int m_readOffset = 0;
+};
+
+class RoomEarlyReflections : public CircularBuffer
+{
+public:
+	RoomEarlyReflections() {};
+
+	static const float delayTimesFactor[];
+	static const float delayGains[];
+	static const int N_DELAY_LINES = 7;
+
+	void init(int size, int sampleRate);
+	void setDamping(float damping) 
+	{
+		const float frequencyMax = m_sampleRate * 0.4f;
+		
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			//const float frequency = fminf(frequencyMax, 18000.0f - delayTimesFactor[i] * 16000.0f);
+			const float frequency = 18000.0f - damping * delayTimesFactor[i] * 17500.0f;
+			m_filter[i].setLowPass(frequency, 0.7f);
+		}
+		
+		m_damping = damping;
+	};
+	float process(float in);
+
+private:
+	float m_damping = 0.0f;
+	int m_sampleRate = 48000;
+	BiquadFilter m_filter[N_DELAY_LINES];
 };
