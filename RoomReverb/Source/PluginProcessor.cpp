@@ -41,6 +41,9 @@ RoomReverbAudioProcessor::RoomReverbAudioProcessor()
 	complexityParameter      = apvts.getRawParameterValue(paramsNames[11]);
 	mixParameter             = apvts.getRawParameterValue(paramsNames[12]);
 	volumeParameter          = apvts.getRawParameterValue(paramsNames[13]);
+
+	earlyReflectionsMuteParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("EarlyReflectionsMute"));
+	lateReflectionsMuteParameter  = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LateReflectionsMute"));
 }
 
 RoomReverbAudioProcessor::~RoomReverbAudioProcessor()
@@ -182,12 +185,16 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const auto mix = mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
+	const auto earlyReflectionsMute = earlyReflectionsMuteParameter->get();
+	const auto lateReflectionsMute = lateReflectionsMuteParameter->get();
+
 	// Mics constants
 	const int channels = getTotalNumOutputChannels();
 	const int samples = buffer.getNumSamples();
 	const auto sampleRate = getSampleRate();
 	const float frequencyMax = sampleRate * 0.45f;
 	const int predelaySamples = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate * predelay);
+	const float lateReflectionsVolumeCompensation = 0.4f - ((float)complexity * 0.004f);
 	
 
 	for (int channel = 0; channel < channels; ++channel)
@@ -274,11 +281,11 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 		{
 			const float in = channelBuffer[sample];
 
-			const float inEarlyReflections = earlyReflection.process(in);
+			const float inEarlyReflections = (earlyReflectionsMute) ? earlyReflection.process(in) * 0.0f : earlyReflection.process(in);
 
 			const float inPreDelay = earlyReflection.readDelay(predelaySamples);
 
-			const float inCombFilter = 0.3f * circularCombFilter.process(inPreDelay);
+			const float inCombFilter = (lateReflectionsMute) ? 0.0f : lateReflectionsVolumeCompensation * circularCombFilter.process(inPreDelay);
 
 			const float out = (1.0f - ERLR) * inEarlyReflections + ERLR * inCombFilter;
 
@@ -335,6 +342,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout RoomReverbAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(   1.0f, (float)MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 0.0f,  1.0f, 0.01f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>(-12.0f, 12.0f, 0.10f, 1.0f), 0.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("EarlyReflectionsMute", "EarlyReflectionsMute", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("LateReflectionsMute", "LateReflectionsMute", false));
 
 	return layout;
 }

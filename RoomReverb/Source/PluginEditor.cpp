@@ -27,6 +27,16 @@ RoomReverbAudioProcessorEditor::RoomReverbAudioProcessorEditor (RoomReverbAudioP
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
+	// Buttons
+	createButton(earlyReflectionsMuteButton);
+	createButton(lateReflectionsMuteButton);
+
+	addAndMakeVisible(earlyReflectionsMuteButton);
+	addAndMakeVisible(lateReflectionsMuteButton);
+
+	earlyReflectionsMuteButtonAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "EarlyReflectionsMute", earlyReflectionsMuteButton));
+	lateReflectionsMuteButtonAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "LateReflectionsMute", lateReflectionsMuteButton));
+
 	// Canvas
 	createCanvas(*this, N_SLIDERS);
 }
@@ -53,4 +63,15 @@ void RoomReverbAudioProcessorEditor::paint (juce::Graphics& g)
 void RoomReverbAudioProcessorEditor::resized()
 {
 	resize(*this, m_sliders, m_labels, N_SLIDERS);
+
+	// Buttons
+	const int height = getHeight();
+	const float fonthHeight = (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
+	const float buttonWidth = (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
+	int posY = height - (int)(1.8f * fonthHeight);
+
+	const float width = getWidth() / N_SLIDERS;
+
+	earlyReflectionsMuteButton.setBounds((int)(3.0f * width - 1.5f * buttonWidth), posY, buttonWidth, fonthHeight);
+	lateReflectionsMuteButton.setBounds((int)(8.0f * width - 1.5f * buttonWidth), posY, buttonWidth, fonthHeight);
 }

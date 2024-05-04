@@ -79,6 +79,9 @@ private:
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
+	juce::AudioParameterBool* earlyReflectionsMuteParameter = nullptr;
+	juce::AudioParameterBool* lateReflectionsMuteParameter = nullptr;
+
 	CircularCombFilterAdvanced m_circularCombFilter[2] = {};
 	RoomEarlyReflections m_earlyReflaction[2] = {};
 	LinearCongruentialNoiseGenerator m_noiseGenerator = {};

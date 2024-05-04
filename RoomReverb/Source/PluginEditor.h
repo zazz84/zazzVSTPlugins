@@ -31,5 +31,11 @@ private:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
+	juce::TextButton earlyReflectionsMuteButton{ "M" };
+	juce::TextButton lateReflectionsMuteButton{ "M" };
+
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> earlyReflectionsMuteButtonAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lateReflectionsMuteButtonAttachment;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RoomReverbAudioProcessorEditor)
 };
