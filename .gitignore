@@ -731,3 +731,5 @@ RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/Solution.VC.db-shm
 RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/Solution.VC.db-wal
 RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/link.delete.1.tlog
 RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseGenerator.obj
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/d724ffd24d4bfa69/INCLUDE_JUCE_GUI_BASICS.ipch
+RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/f15088ac63bd9389/INCLUDE_JUCE_GUI_BASICS.ipch

@@ -11,8 +11,7 @@
 
 //==============================================================================
 
-const std::string RoomReverbAudioProcessor::paramsNames[] = { "ERTime", "ERDamping", "ER/LR", "Predelay", "Time", "Resonance", "Damping", "Width", "CSeed", "ASeed", "TimeMin", "Complexity", "Mix", "Volume" };
-const float RoomReverbAudioProcessor::m_dampingFrequencyMin = 220.0f;
+const std::string RoomReverbAudioProcessor::paramsNames[] = { "ERTime", "ERDamping", "ERWidth", "ER/LR", "Predelay", "Time", "Resonance", "Damping", "Width", "CSeed", "ASeed", "TimeMin", "Complexity", "Mix", "Volume" };
 
 //==============================================================================
 RoomReverbAudioProcessor::RoomReverbAudioProcessor()
@@ -29,18 +28,19 @@ RoomReverbAudioProcessor::RoomReverbAudioProcessor()
 {
 	ERTimeParameter          = apvts.getRawParameterValue(paramsNames[0]);
 	ERDampingParameter       = apvts.getRawParameterValue(paramsNames[1]);
-	ERLRParameter            = apvts.getRawParameterValue(paramsNames[2]);
-	predelayParameter        = apvts.getRawParameterValue(paramsNames[3]);
-	timeParameter            = apvts.getRawParameterValue(paramsNames[4]);
-	resonanceParameter       = apvts.getRawParameterValue(paramsNames[5]);
-	dampingParameter         = apvts.getRawParameterValue(paramsNames[6]);
-	widthParameter           = apvts.getRawParameterValue(paramsNames[7]);
-	combFilterSeedParameter  = apvts.getRawParameterValue(paramsNames[8]);
-	allPassSeedParameter     = apvts.getRawParameterValue(paramsNames[9]);
-	timeMinParameter         = apvts.getRawParameterValue(paramsNames[10]);
-	complexityParameter      = apvts.getRawParameterValue(paramsNames[11]);
-	mixParameter             = apvts.getRawParameterValue(paramsNames[12]);
-	volumeParameter          = apvts.getRawParameterValue(paramsNames[13]);
+	ERWidthParameter         = apvts.getRawParameterValue(paramsNames[2]);
+	ERLRParameter            = apvts.getRawParameterValue(paramsNames[3]);
+	predelayParameter        = apvts.getRawParameterValue(paramsNames[4]);
+	timeParameter            = apvts.getRawParameterValue(paramsNames[5]);
+	resonanceParameter       = apvts.getRawParameterValue(paramsNames[6]);
+	dampingParameter         = apvts.getRawParameterValue(paramsNames[7]);
+	widthParameter           = apvts.getRawParameterValue(paramsNames[8]);
+	combFilterSeedParameter  = apvts.getRawParameterValue(paramsNames[9]);
+	allPassSeedParameter     = apvts.getRawParameterValue(paramsNames[10]);
+	timeMinParameter         = apvts.getRawParameterValue(paramsNames[11]);
+	complexityParameter      = apvts.getRawParameterValue(paramsNames[12]);
+	mixParameter             = apvts.getRawParameterValue(paramsNames[13]);
+	volumeParameter          = apvts.getRawParameterValue(paramsNames[14]);
 
 	earlyReflectionsMuteParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("EarlyReflectionsMute"));
 	lateReflectionsMuteParameter  = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LateReflectionsMute"));
@@ -115,23 +115,14 @@ void RoomReverbAudioProcessor::changeProgramName (int index, const juce::String&
 //==============================================================================
 void RoomReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {	
-	int delayCombFilterSamples[MAX_COMPLEXITY];
-	int delayAllPassSamples[MAX_COMPLEXITY];
-
-	for (int i = 0; i < MAX_COMPLEXITY; i++)
-	{
-		delayCombFilterSamples[i] = (int)(4.0f * COMB_FILTER_MAX_TIME_MS * 0.001f * sampleRate);
-		delayAllPassSamples[i] = (int)(4.0f * ALL_PASS_MAX_TIME_MS * 0.001f * sampleRate);
-	}
-
-	m_circularCombFilter[0].init(MAX_COMPLEXITY, delayCombFilterSamples, delayAllPassSamples);
-	m_circularCombFilter[1].init(MAX_COMPLEXITY, delayCombFilterSamples, delayAllPassSamples);
-
+	int sr = (int)sampleRate;
+	m_circularCombFilter[0].init(0, sr);
+	m_circularCombFilter[1].init(1, sr);
 
 	const int predelaySampes = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate);
 
-	m_earlyReflaction[0].init(predelaySampes, sampleRate);
-	m_earlyReflaction[1].init(predelaySampes, sampleRate);
+	m_earlyReflaction[0].init(predelaySampes, sr);
+	m_earlyReflaction[1].init(predelaySampes, sr);
 }
 
 void RoomReverbAudioProcessor::releaseResources()
@@ -170,18 +161,23 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	// Get params
 	const auto ERTime = ERTimeParameter->load();
 	const auto ERDamping = ERDampingParameter->load();
+	const auto ERWidth = ERWidthParameter->load();
 	const auto ERLR = ERLRParameter->load();
 	const auto predelay = predelayParameter->load();
-	const auto combFilterTime = timeParameter->load();
-	const auto combFilterResonance = 0.4f - (0.2f * (1.0f - combFilterTime)) + 0.4f * resonanceParameter->load();
-	const auto allPassTime = combFilterTime;
-	const auto allPassResonance = 0.7f * combFilterResonance;
-	const auto width = widthParameter->load();;
-	const auto damping = dampingParameter->load();
-	const long combFilterSeed =  (long)(combFilterSeedParameter->load());
-	const long allPassSeed = (long)(allPassSeedParameter->load());
-	const auto timeMin = timeMinParameter->load();
-	const int complexity = (int)(complexityParameter->load());
+
+	CircularCombFilterParams circularCombFilterParams;
+
+	circularCombFilterParams.combFilterTime = timeParameter->load();
+	circularCombFilterParams.combFilterResonance = 0.4f - (0.2f * (1.0f - circularCombFilterParams.combFilterTime)) + 0.4f * resonanceParameter->load();
+	circularCombFilterParams.allPassTime = circularCombFilterParams.combFilterTime;
+	circularCombFilterParams.allPassResonance = 0.7f * circularCombFilterParams.combFilterResonance;
+	circularCombFilterParams.width = widthParameter->load();;
+	circularCombFilterParams.damping = dampingParameter->load();
+	circularCombFilterParams.combFilterSeed =  (long)(combFilterSeedParameter->load());
+	circularCombFilterParams.allPassSeed = (long)(allPassSeedParameter->load());
+	circularCombFilterParams.timeMin = timeMinParameter->load();
+	circularCombFilterParams.complexity = (int)(complexityParameter->load());
+	
 	const auto mix = mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
@@ -192,90 +188,25 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const int channels = getTotalNumOutputChannels();
 	const int samples = buffer.getNumSamples();
 	const auto sampleRate = getSampleRate();
-	const float frequencyMax = sampleRate * 0.45f;
-	const int predelaySamples = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate * predelay);
-	const float lateReflectionsVolumeCompensation = 0.4f - ((float)complexity * 0.004f);
+	const auto sampleRateMS = 0.001f * sampleRate;
+	const int predelaySamples = (int)(sampleRateMS * predelay);
 	
-
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		// Early reflections pointer
+		// Early reflections setup
 		auto& earlyReflection = m_earlyReflaction[channel];
 
-		const int size = (int)(PRE_DELAY_MAX_MS * 0.001f * sampleRate * ERTime);
+		const float widthFactor = 1.0f - (channel * ERWidth * 0.25f);
+		const int size = (int)(PRE_DELAY_MAX_MS * ERTime * sampleRateMS * widthFactor);
 		earlyReflection.setSize(size);
 		earlyReflection.setDamping(ERDamping);
 
-		// Circular comb filter pointer
+		// Circular comb filter setup
 		auto& circularCombFilter = m_circularCombFilter[channel];
-		
-		// Generate circular comb filter parameters
-		int combFilterDelaySamples[MAX_COMPLEXITY];
-		int allPassDelaySamples[MAX_COMPLEXITY];
-		float combFilterFeedback[MAX_COMPLEXITY];
-		float allPassFeedback[MAX_COMPLEXITY];
-		float dampingFrequency[MAX_COMPLEXITY];
-
-		const auto combFilterWidth = (channel == 0) ? 1.0f - width * 0.1f : 1.0f;
-		const auto allPassWidth = (channel == 1) ? 1.0f - width * 0.1f : 1.0f;
-
-		m_noiseGenerator.setSeed(allPassSeed);
-
-		for (int i = 0; i < MAX_COMPLEXITY; i++)
-		{		
-			const float sing = (i % 2 == 0) ? -1.0f : 1.0f;
-			combFilterFeedback[i] = sing * combFilterResonance;
-			allPassFeedback[i] = allPassResonance * 0.9f + 0.2 * m_noiseGenerator.process();
-			//dampingFrequency[i] = fminf(frequencyMax, 3000.0f + (MAX_COMPLEXITY - i) * 500.0f + (1.0f - damping) * 18000.0f);
-			dampingFrequency[i] = fminf(frequencyMax, m_dampingFrequencyMin + (1.0f - damping) * (frequencyMax - m_dampingFrequencyMin) * 0.9f + 0.2 * m_noiseGenerator.process());
-		}
-
-		m_noiseGenerator.setSeed(combFilterSeed);
-		const float combFilterTimeFactor = COMB_FILTER_MAX_TIME_MS * 0.001f * sampleRate;
-		int combFilterSum = 0;
-
-		for (int i = 0; i < MAX_COMPLEXITY; i++)
-		{
-			const float rnd = timeMin + m_noiseGenerator.process() * (1.0f - timeMin);
-			const int samples = (int)(combFilterWidth * combFilterTime * rnd * combFilterTimeFactor);
-			combFilterDelaySamples[i] = samples;
-			combFilterSum += samples;
-		}
-
-		m_noiseGenerator.setSeed(allPassSeed);
-		const float allPassTimeFactor = ALL_PASS_MAX_TIME_MS * 0.001f * sampleRate;
-		int allPassSum = 0;
-
-		for (int i = 0; i < MAX_COMPLEXITY; i++)
-		{
-			const float rnd = timeMin + m_noiseGenerator.process() * (1.0f - timeMin);
-			const int samples = (int)(allPassWidth * allPassTime * rnd * allPassTimeFactor);
-			allPassDelaySamples[i] = samples;
-			allPassSum += samples;
-		}
-
-		//Normalize
-		const float combFilterNormalizeFactor = combFilterSum / (MAX_COMPLEXITY * combFilterTime * combFilterTimeFactor);
-		const float allPassNormalizeFactor = allPassSum / (MAX_COMPLEXITY * allPassTime * allPassTimeFactor);
-
-		for (int i = 0; i < MAX_COMPLEXITY; i++)
-		{
-			combFilterDelaySamples[i] = combFilterDelaySamples[i] * combFilterNormalizeFactor;
-			allPassDelaySamples[i] = allPassDelaySamples[i] * allPassNormalizeFactor;
-		}
-
-		// Set circular comb filter
-		circularCombFilter.setComplexity(complexity);
-		circularCombFilter.setSize(combFilterDelaySamples);
-		circularCombFilter.setFeedback(combFilterFeedback);
-		circularCombFilter.setAllPassSize(allPassDelaySamples);
-		circularCombFilter.setAllPassFeedback(allPassFeedback);
-		circularCombFilter.setDampingFrequency(dampingFrequency);
-
-		//=======================================================================
+		circularCombFilter.set(circularCombFilterParams);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -285,7 +216,7 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
 			const float inPreDelay = earlyReflection.readDelay(predelaySamples);
 
-			const float inCombFilter = (lateReflectionsMute) ? 0.0f : lateReflectionsVolumeCompensation * circularCombFilter.process(inPreDelay);
+			const float inCombFilter = (lateReflectionsMute) ? 0.0f : circularCombFilter.process(inPreDelay);
 
 			const float out = (1.0f - ERLR) * inEarlyReflections + ERLR * inCombFilter;
 
@@ -331,17 +262,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout RoomReverbAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,  (float)(PRE_DELAY_MAX_MS), 1.00f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  (float)(PRE_DELAY_MAX_MS), 1.00f, 1.0f), 0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.25f)));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.5f)));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(   1.0f, (float)MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 0.0f,  1.0f, 0.01f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>(-12.0f, 12.0f, 0.10f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.25f)));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.5f)));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>(   1.0f, (float)CircularCombFilterAdvanced::MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>( 0.0f,  1.0f, 0.01f, 1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[14], paramsNames[14], NormalisableRange<float>(-12.0f, 12.0f, 0.10f, 1.0f), 0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("EarlyReflectionsMute", "EarlyReflectionsMute", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("LateReflectionsMute", "LateReflectionsMute", false));

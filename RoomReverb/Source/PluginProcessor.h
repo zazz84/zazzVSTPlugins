@@ -2,7 +2,6 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Filters/CombFilters.h"
-#include "../../../zazzVSTPlugins/Shared/Utilities/NoiseGenerator.h"
 
 //==============================================================================
 class RoomReverbAudioProcessor : public juce::AudioProcessor
@@ -17,10 +16,6 @@ public:
 	~RoomReverbAudioProcessor() override;
 
 	static const std::string paramsNames[];
-	static const int MAX_COMPLEXITY = 64;
-	static const int COMB_FILTER_MAX_TIME_MS = 300;
-	static const int ALL_PASS_MAX_TIME_MS = 150;
-	static const float m_dampingFrequencyMin;
 	static const int PRE_DELAY_MAX_MS = 300;
 
 	//==============================================================================
@@ -66,6 +61,7 @@ private:
 
 	std::atomic<float>* ERTimeParameter = nullptr;
 	std::atomic<float>* ERDampingParameter = nullptr;
+	std::atomic<float>* ERWidthParameter = nullptr;
 	std::atomic<float>* ERLRParameter = nullptr;
 	std::atomic<float>* predelayParameter = nullptr;
 	std::atomic<float>* timeParameter = nullptr;
@@ -84,7 +80,6 @@ private:
 
 	CircularCombFilterAdvanced m_circularCombFilter[2] = {};
 	RoomEarlyReflections m_earlyReflaction[2] = {};
-	LinearCongruentialNoiseGenerator m_noiseGenerator = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RoomReverbAudioProcessor)
 };

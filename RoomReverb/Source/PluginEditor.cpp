@@ -55,9 +55,9 @@ void RoomReverbAudioProcessorEditor::paint (juce::Graphics& g)
 	const int width = (int)(getWidth() / N_SLIDERS);
 	const int height = getHeight();
 	
-	g.drawVerticalLine(3 * width, 0, height);
-	g.drawVerticalLine(8 * width, 0, height);
-	g.drawVerticalLine(12 * width, 0, height);
+	g.drawVerticalLine(4 * width, 0, height);
+	g.drawVerticalLine(9 * width, 0, height);
+	g.drawVerticalLine(13 * width, 0, height);
 }
 
 void RoomReverbAudioProcessorEditor::resized()
@@ -72,6 +72,6 @@ void RoomReverbAudioProcessorEditor::resized()
 
 	const float width = getWidth() / N_SLIDERS;
 
-	earlyReflectionsMuteButton.setBounds((int)(3.0f * width - 1.5f * buttonWidth), posY, buttonWidth, fonthHeight);
-	lateReflectionsMuteButton.setBounds((int)(8.0f * width - 1.5f * buttonWidth), posY, buttonWidth, fonthHeight);
+	earlyReflectionsMuteButton.setBounds((int)(4.0f * width - 1.5f * buttonWidth), posY, buttonWidth, fonthHeight);
+	lateReflectionsMuteButton.setBounds((int)(9.0f * width - 1.5f * buttonWidth), posY, buttonWidth, fonthHeight);
 }

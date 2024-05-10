@@ -13,7 +13,7 @@ public:
     ~RoomReverbAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 14;
+	static const int N_SLIDERS = 15;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;

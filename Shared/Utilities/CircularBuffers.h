@@ -59,7 +59,6 @@ public:
 		
 		for (int i = 0; i < N_DELAY_LINES; i++)
 		{
-			//const float frequency = fminf(frequencyMax, 18000.0f - delayTimesFactor[i] * 16000.0f);
 			const float frequency = 18000.0f - damping * delayTimesFactor[i] * 17500.0f;
 			m_filter[i].setLowPass(frequency, 0.7f);
 		}
