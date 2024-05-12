@@ -733,3 +733,193 @@ RoomReverb/Builds/VisualStudio2017/x64/Release/VST3/RoomReverb_VST3.tlog/link.de
 RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseGenerator.obj
 RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/d724ffd24d4bfa69/INCLUDE_JUCE_GUI_BASICS.ipch
 RoomReverb/Builds/VisualStudio2017/.vs/RoomReverb/v15/ipch/AutoPCH/f15088ac63bd9389/INCLUDE_JUCE_GUI_BASICS.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/.suo
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/Browse.VC.db
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/18919f129375a806/PLUGINPROCESSOR.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/42051e2a76a4f6c1/WAVESHAPERS.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/5deab8f1db6901e1/PLUGINEDITOR.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/ab87b371e15ac882/BIQUADFILTERS.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/e4ef0fae66055e41/PLUGINEDITOR.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/e6d7852783001092/PLUGINEDITOR.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/ipch/AutoPCH/fffa4e16749f9a6/PLUGINPROCESSOR.ipch
+TubePreamp/Builds/VisualStudio2017/.vs/TubePreamp/v15/Solution.VC.db
+TubePreamp/Builds/VisualStudio2017/resources.rc
+TubePreamp/Builds/VisualStudio2017/TubePreamp.sln
+TubePreamp/Builds/VisualStudio2017/TubePreamp_SharedCode.vcxproj
+TubePreamp/Builds/VisualStudio2017/TubePreamp_SharedCode.vcxproj.filters
+TubePreamp/Builds/VisualStudio2017/TubePreamp_SharedCode.vcxproj.user
+TubePreamp/Builds/VisualStudio2017/TubePreamp_StandalonePlugin.vcxproj
+TubePreamp/Builds/VisualStudio2017/TubePreamp_StandalonePlugin.vcxproj.filters
+TubePreamp/Builds/VisualStudio2017/TubePreamp_VST3.vcxproj
+TubePreamp/Builds/VisualStudio2017/TubePreamp_VST3.vcxproj.filters
+TubePreamp/Builds/VisualStudio2017/TubePreamp_VST3.vcxproj.user
+TubePreamp/Builds/VisualStudio2017/TubePreamp_VST3ManifestHelper.vcxproj
+TubePreamp/Builds/VisualStudio2017/TubePreamp_VST3ManifestHelper.vcxproj.filters
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/CL.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/CL.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/CL.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/Lib-link.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/Lib-link.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/Lib.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePrea.C7764447.tlog/TubePreamp_SharedCode.lastbuildstate
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePreamp.lib
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePreamp.pdb
+TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/TubePreamp_SharedCode.log
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/CL.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/CL.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/CL.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/link.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/link.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/link.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/rc.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/rc.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/rc.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePrea.BE78106C.tlog/TubePreamp_VST3ManifestHelper.lastbuildstate
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TubePreamp_VST3ManifestHelper.log
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.dll
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.exp
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.ilk
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.lib
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.pdb
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.vst3/Contents/Resources/moduleinfo.json
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp.vst3/Contents/x86_64-win/TubePreamp.vst3
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.log
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/CL.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/CL.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/CL.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/link.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/link.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/link.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/rc.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/rc.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/rc.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/TubePreamp_VST3.lastbuildstate
+TubePreamp/Builds/VisualStudio2017/x64/Debug/VST3/TubePreamp_VST3.tlog/TubePreamp_VST3.write.1u.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/CL.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/CL.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/CL.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/Lib-link.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/Lib-link.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/Lib.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePrea.C7764447.tlog/TubePreamp_SharedCode.lastbuildstate
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePreamp.lib
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePreamp.pdb
+TubePreamp/Builds/VisualStudio2017/x64/Release/Shared Code/TubePreamp_SharedCode.log
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/CL.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/CL.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/CL.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/link.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/link.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/link.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/rc.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/rc.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/rc.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePrea.BE78106C.tlog/TubePreamp_VST3ManifestHelper.lastbuildstate
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TubePreamp_VST3ManifestHelper.log
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp.dll
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp.exp
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp.lib
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp.pdb
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp.vst3/Contents/Resources/moduleinfo.json
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp.vst3/Contents/x86_64-win/TubePreamp.vst3
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.log
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/CL.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/CL.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/CL.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/link.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/link.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/link.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/rc.command.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/rc.read.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/rc.write.1.tlog
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/TubePreamp_VST3.lastbuildstate
+TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/TubePreamp_VST3.write.1u.tlog
+TubePreamp/JuceLibraryCode/include_juce_audio_basics.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_basics.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_devices.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_devices.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_formats.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_formats.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_processors.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_processors.mm
+TubePreamp/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_utils.cpp
+TubePreamp/JuceLibraryCode/include_juce_audio_utils.mm
+TubePreamp/JuceLibraryCode/include_juce_core.cpp
+TubePreamp/JuceLibraryCode/include_juce_core.mm
+TubePreamp/JuceLibraryCode/include_juce_data_structures.cpp
+TubePreamp/JuceLibraryCode/include_juce_data_structures.mm
+TubePreamp/JuceLibraryCode/include_juce_events.cpp
+TubePreamp/JuceLibraryCode/include_juce_events.mm
+TubePreamp/JuceLibraryCode/include_juce_graphics.cpp
+TubePreamp/JuceLibraryCode/include_juce_graphics.mm
+TubePreamp/JuceLibraryCode/include_juce_gui_basics.cpp
+TubePreamp/JuceLibraryCode/include_juce_gui_basics.mm
+TubePreamp/JuceLibraryCode/include_juce_gui_extra.cpp
+TubePreamp/JuceLibraryCode/include_juce_gui_extra.mm
+TubePreamp/JuceLibraryCode/JuceHeader.h
+TubePreamp/JuceLibraryCode/JucePluginDefines.h
+TubePreamp/JuceLibraryCode/ReadMe.txt
