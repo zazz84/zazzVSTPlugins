@@ -12,7 +12,7 @@ public:
 	inline void setSaturation(float saturation) { m_saturation = saturation; };
 
 	inline float processARRY(float in)
-	{ 
+	{
 		return 1.5f * in * (1.0f - in * in / 3.0f);
 	};
 
@@ -28,7 +28,7 @@ public:
 	inline float process(float in)
 	{
 		float out = 0.0f;
-		
+
 		if (in > SoftClipperThresholdPositive)
 		{
 			out = SoftClipperThresholdPositive + (in - SoftClipperThresholdPositive) * SoftClipperThresholdRatio;
