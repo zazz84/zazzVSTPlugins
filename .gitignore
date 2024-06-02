@@ -1116,3 +1116,5 @@ VocalCompressor/JuceLibraryCode/JuceHeader.h
 VocalCompressor/JuceLibraryCode/JucePluginDefines.h
 VocalCompressor/JuceLibraryCode/ReadMe.txt
 VocalCompressor/VocalCompressor.filtergraph
+Shared/Dynamics/Compressors.cpp~RF209299a.TMP
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/2c54e2a7fd7d5377/PLUGINPROCESSOR.ipch

@@ -16,20 +16,22 @@ public:
 		m_envelopeFollower.init(sampleRate);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
-	float process(float in);
-	float getGainReduction(float in);
+	float processHardKnee(float in);
+	float processSoftKnee(float in);
 
 protected:
 	EnvelopeFollower m_envelopeFollower;
 	float m_thresholddB = 0.0f;
+	float m_threshold = 1.0f;
 	float m_ratio = 2.0f;
 	float m_kneeWidth = 0.0f;
 	float m_attackTime = 0.0f;
 	float m_releaseTime = 0.0f;
 
 	float m_R_Inv_minus_One = 0.0f;
-	float m_T_minus_WHalf = 0.0f;
-	float m_T_plus_WHalf = 0.0f;
+	float m_T_minus_WHalfdB = 0.0f;
+	float m_T_minus_WHalf = 1.0f;
+	float m_T_plus_WHalfdB = 0.0f;
 	float m_minus_T_plus_WHalf = 0.0f;
 	float m_W2_inv = 0.0f;
 };
@@ -47,13 +49,14 @@ public:
 		m_highPassFilter.init(sampleRate);
 	};
 	void set(float thresholddB, float ratio, float attackTimeMS, float releaseTimeMS, float lowPassFrequency, float highPassFrequency);
-	float process(float in);
+	float processHardKnee(float in);
 
 protected:
 	EnvelopeFollower m_envelopeFollower;
 	BiquadFilter m_lowPassFilter;
 	BiquadFilter m_highPassFilter;
 	float m_thresholddB = 0.0f;
+	float m_threshold = 1.0f;
 	float m_ratio = 2.0f;
 	float m_R_Inv_minus_One = 0.0f;
 	float m_attackTime = 0.0f;

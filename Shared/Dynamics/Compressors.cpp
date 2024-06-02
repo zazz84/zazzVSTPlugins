@@ -11,6 +11,7 @@ Compressor::Compressor()
 void Compressor::set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS)
 {
 	m_thresholddB = thresholddB;
+	m_threshold = juce::Decibels::decibelsToGain(thresholddB);
 	m_ratio = ratio;
 	m_kneeWidth = kneeWidth;
 	m_attackTime = attackTimeMS;
@@ -19,52 +20,62 @@ void Compressor::set(float thresholddB, float ratio, float kneeWidth, float atta
 
 	// Soft knee params
 	const float W_Half = kneeWidth * 0.5f;
-	m_T_minus_WHalf = thresholddB - W_Half;
-	m_T_plus_WHalf = thresholddB + W_Half;
+	m_T_minus_WHalfdB = thresholddB - W_Half;
+	m_T_minus_WHalf = juce::Decibels::decibelsToGain(m_T_minus_WHalfdB);
+	m_T_plus_WHalfdB = thresholddB + W_Half;
 	m_minus_T_plus_WHalf = -1.0f * thresholddB + W_Half;
 	m_W2_inv = 1.0f / (kneeWidth * 2.0f);
 
 	m_envelopeFollower.setCoef(attackTimeMS, releaseTimeMS);
 }
 
-float Compressor::process(float in)
+float Compressor::processHardKnee(float in)
 {
 	// Smooth
 	const float smooth = m_envelopeFollower.process(in);
 
-	// Convert input from gain to dB
-	const float smoothdB = juce::Decibels::gainToDecibels(smooth + 0.000001f);
+	//Do nothing if below threshold
+	if (smooth < m_threshold)
+	{
+		return in;
+	}
 
 	//Get gain reduction, positive values
-	//const float attenuatedB = (smoothdB >= m_thresholddB) ? (smoothdB - m_thresholddB) * m_R_Inv_minus_One : 0.0f;
-	const float attenuatedB = getGainReduction(smoothdB);
+	const float attenuatedB = (juce::Decibels::gainToDecibels(smooth) - m_thresholddB) * m_R_Inv_minus_One;
 
 	// Apply gain reduction
 	return in * juce::Decibels::decibelsToGain(attenuatedB);
 }
 
-float Compressor::getGainReduction(float indB)
+float Compressor::processSoftKnee(float in)
 {
-	if (m_kneeWidth < 0.001f)
+	// Smooth
+	const float smooth = m_envelopeFollower.process(in);
+
+	//Do nothing if below threshold
+	if (smooth < m_T_minus_WHalf)
 	{
-		return (indB >= m_thresholddB) ? (indB - m_thresholddB) * m_R_Inv_minus_One : 0.0f;
+		return in;
+	}
+
+	// Convert input from gain to dB
+	const float smoothdB = juce::Decibels::gainToDecibels(smooth);
+
+	//Get gain reduction, positive values
+	float attenuatedB = 0.0f;
+
+	if (smoothdB > m_T_plus_WHalfdB)
+	{
+		attenuatedB = (smoothdB - m_thresholddB) * m_R_Inv_minus_One;
 	}
 	else
 	{
-		if (indB < m_T_minus_WHalf)
-		{
-			return 0.0f;
-		}
-		else if (indB > m_T_plus_WHalf)
-		{
-			return (indB - m_thresholddB) * m_R_Inv_minus_One;
-		}
-		else
-		{
-			const auto tmp = indB + m_minus_T_plus_WHalf;
-			return m_R_Inv_minus_One * (tmp * tmp) * m_W2_inv;
-		}
+		const auto tmp = smoothdB + m_minus_T_plus_WHalf;
+		attenuatedB = m_R_Inv_minus_One * (tmp * tmp) * m_W2_inv;
 	}
+
+	// Apply gain reduction
+	return in * juce::Decibels::decibelsToGain(attenuatedB);
 }
 
 //==============================================================================
@@ -75,6 +86,7 @@ SideChainCompressor::SideChainCompressor()
 void SideChainCompressor::set(float thresholddB, float ratio, float attackTimeMS, float releaseTimeMS, float lowPassFrequency, float highPassFrequency)
 {
 	m_thresholddB = thresholddB;
+	m_threshold = juce::Decibels::decibelsToGain(thresholddB);
 	m_ratio = ratio;
 	m_attackTime = attackTimeMS;
 	m_releaseTime = releaseTimeMS;
@@ -85,7 +97,7 @@ void SideChainCompressor::set(float thresholddB, float ratio, float attackTimeMS
 	m_envelopeFollower.setCoef(attackTimeMS, releaseTimeMS);
 }
 
-float SideChainCompressor::process(float in)
+float SideChainCompressor::processHardKnee(float in)
 {
 	//Apply filters
 	const float sideChainIn = m_lowPassFilter.processDF1(m_highPassFilter.processDF1(in));
@@ -93,11 +105,14 @@ float SideChainCompressor::process(float in)
 	// Smooth
 	const float smooth = m_envelopeFollower.process(sideChainIn);
 
-	// Convert input from gain to dB
-	const float smoothdB = juce::Decibels::gainToDecibels(smooth + 0.000001f);
+	//Do nothing if below threshold
+	if (smooth < m_threshold)
+	{
+		return in;
+	}
 
 	//Get gain reduction, positive values
-	const float attenuatedB = (smoothdB >= m_thresholddB) ? (smoothdB - m_thresholddB) * m_R_Inv_minus_One : 0.0f;
+	const float attenuatedB = (juce::Decibels::gainToDecibels(smooth) - m_thresholddB) * m_R_Inv_minus_One;
 
 	// Apply gain reduction
 	return in * juce::Decibels::decibelsToGain(attenuatedB);
@@ -110,5 +125,5 @@ VocalCompressor::VocalCompressor()
 
 float VocalCompressor::process(float in)
 {
-	return m_gainCompensation * m_compressor.process(m_tubeEmulation.process(m_leveler.process(in)));
+	return m_gainCompensation * m_compressor.processSoftKnee(m_tubeEmulation.process(m_leveler.processHardKnee(in)));
 }
