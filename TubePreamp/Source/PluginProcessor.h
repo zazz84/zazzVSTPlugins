@@ -15,7 +15,7 @@ public:
     TubePreampAudioProcessor();
     ~TubePreampAudioProcessor() override;
 
-	static const int N_STAGES = 8;
+	static const int N_STAGES = 16;
 	static const std::string paramsNames[];
 
     //==============================================================================
@@ -64,7 +64,7 @@ private:
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	TriodeAClass m_triode[2][N_STAGES];
+	TubeEmulation m_tubeEmulation[2][N_STAGES];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TubePreampAudioProcessor)
 };

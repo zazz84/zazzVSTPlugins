@@ -101,7 +101,15 @@ void TubePreampAudioProcessor::changeProgramName (int index, const juce::String&
 //==============================================================================
 void TubePreampAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+	const int sr = int(sampleRate);
 
+	for (int channel = 0; channel < 2; channel++)
+	{
+		for (int stage = 0; stage < N_STAGES; stage++)
+		{
+			m_tubeEmulation[channel][stage].init(sr);
+		}
+	}
 }
 
 void TubePreampAudioProcessor::releaseResources()
@@ -156,7 +164,7 @@ void TubePreampAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
 		for (int stage = 0; stage < stages; stage++)
 		{
-			 m_triode[channel][stage].setDrive(drivePerStage);
+			 m_tubeEmulation[channel][stage].setDrive(drivePerStage);
 		}
 
 		for (int sample = 0; sample < samples; sample++)
@@ -166,7 +174,7 @@ void TubePreampAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 			float out = in;
 			for (int stage = 0; stage < stages; stage++)
 			{
-				out = m_triode[channel][stage].process(out);
+				out = m_tubeEmulation[channel][stage].process(out);
 			}
 			
 			channelBuffer[sample] = volume * (mixInverse * in + mix * out);

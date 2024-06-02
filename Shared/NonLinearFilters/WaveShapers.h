@@ -1,8 +1,8 @@
 #pragma once
 
-constexpr auto SoftClipperThresholdPositive = 0.7f;
-constexpr auto SoftClipperThresholdNegative = -0.7f;
-constexpr auto SoftClipperThresholdRatio = 0.2f;
+constexpr auto SoftClipperThresholdPositive = 0.9f;
+constexpr auto SoftClipperThresholdNegative = -0.9f;
+constexpr auto SoftClipperThresholdRatio = 0.3f;		// for 48kHz
 
 class  WaveShaper
 {
@@ -25,17 +25,22 @@ class SoftClipper
 public:
 	SoftClipper() {};
 
+	inline void init(int sampleRate)
+	{
+		m_softClipperThresholdRatio = SoftClipperThresholdRatio * 48000.0f / (float)sampleRate;
+	};
+
 	inline float process(float in)
 	{
 		float out = 0.0f;
 
 		if (in > SoftClipperThresholdPositive)
 		{
-			out = SoftClipperThresholdPositive + (in - SoftClipperThresholdPositive) * SoftClipperThresholdRatio;
+			out = SoftClipperThresholdPositive + (in - SoftClipperThresholdPositive) * m_softClipperThresholdRatio;
 		}
 		else if (in < SoftClipperThresholdNegative)
 		{
-			out = SoftClipperThresholdNegative + (in - SoftClipperThresholdNegative) * SoftClipperThresholdRatio;
+			out = SoftClipperThresholdNegative + (in - SoftClipperThresholdNegative) * m_softClipperThresholdRatio;
 		}
 		else
 		{
@@ -44,20 +49,28 @@ public:
 
 		return fmaxf(-1.0f, fminf(1.0f, out));
 	};
+
+private:
+	float m_softClipperThresholdRatio = SoftClipperThresholdRatio;
 };
 
 
-class TriodeAClass
+class TubeEmulation
 {
 public:
-	TriodeAClass() {};
+	TubeEmulation() {};
+
+	inline void init(int sampleRate)
+	{ 
+		m_softClipper.init(sampleRate);
+	};
 
 	inline void setDrive(float drive) { m_drive = juce::Decibels::decibelsToGain(drive); };
 
 	inline float process(float in)
 	{
 		float out = m_softClipper.process(in * m_drive);
-		out = 0.707f * m_waveShaper.processARRY(out);
+		out = 0.675f * m_waveShaper.processARRY(out);
 		return out;
 	};
 
