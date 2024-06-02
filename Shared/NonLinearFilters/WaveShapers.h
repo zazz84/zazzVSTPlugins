@@ -1,5 +1,7 @@
 #pragma once
 
+#include <JuceHeader.h>
+
 constexpr auto SoftClipperThresholdPositive = 0.9f;
 constexpr auto SoftClipperThresholdNegative = -0.9f;
 constexpr auto SoftClipperThresholdRatio = 0.3f;		// for 48kHz

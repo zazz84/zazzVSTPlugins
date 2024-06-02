@@ -923,3 +923,196 @@ TubePreamp/JuceLibraryCode/include_juce_gui_extra.mm
 TubePreamp/JuceLibraryCode/JuceHeader.h
 TubePreamp/JuceLibraryCode/JucePluginDefines.h
 TubePreamp/JuceLibraryCode/ReadMe.txt
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/.suo
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/Browse.VC.db
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/4e85140fea118ae6/COMPRESSORS.ipch
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/5dc698a68124b877/PLUGINPROCESSOR.ipch
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/6d793f95075e4605/COMPRESSORS.ipch
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/ace52e60cbd08158/PLUGINEDITOR.ipch
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/b8b4234dcf50d7e6/COMPRESSORS.ipch
+VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/Solution.VC.db
+VocalCompressor/Builds/VisualStudio2017/resources.rc
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor.sln
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_SharedCode.vcxproj
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_SharedCode.vcxproj.filters
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_SharedCode.vcxproj.user
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_StandalonePlugin.vcxproj
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_StandalonePlugin.vcxproj.filters
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_VST3.vcxproj
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_VST3.vcxproj.filters
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_VST3.vcxproj.user
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_VST3ManifestHelper.vcxproj
+VocalCompressor/Builds/VisualStudio2017/VocalCompressor_VST3ManifestHelper.vcxproj.filters
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compressors.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/CL.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/CL.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/CL.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/Lib-link.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/Lib-link.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/Lib.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCom.E33A4FA0.tlog/VocalCompressor_SharedCode.lastbuildstate
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCompressor.lib
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCompressor.pdb
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/VocalCompressor_SharedCode.log
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/CL.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/CL.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/CL.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/link.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/link.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/link.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/rc.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/rc.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/rc.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/VocalCompressor_VST3ManifestHelper.lastbuildstate
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/VocalCompressor_VST3ManifestHelper.log
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/CL.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/CL.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/CL.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/link.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/link.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/link.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/rc.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/rc.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/rc.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/VocalCompressor_VST3.lastbuildstate
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCom.91272F63.tlog/VocalCompressor_VST3.write.1u.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.dll
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.exp
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.ilk
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.lib
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.pdb
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.vst3/Contents/Resources/moduleinfo.json
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor.vst3/Contents/x86_64-win/VocalCompressor.vst3
+VocalCompressor/Builds/VisualStudio2017/x64/Debug/VST3/VocalCompressor_VST3.log
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compressors.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/CL.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/CL.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/CL.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/Lib-link.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/Lib-link.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/Lib.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCom.E33A4FA0.tlog/VocalCompressor_SharedCode.lastbuildstate
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCompressor.lib
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCompressor.pdb
+VocalCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/VocalCompressor_SharedCode.log
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/CL.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/CL.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/CL.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/link.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/link.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/link.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/rc.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/rc.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/rc.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCom.D4D28C5F.tlog/VocalCompressor_VST3ManifestHelper.lastbuildstate
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/VocalCompressor_VST3ManifestHelper.log
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/CL.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/CL.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/CL.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/link.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/link.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/link.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/rc.command.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/rc.read.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/rc.write.1.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/VocalCompressor_VST3.lastbuildstate
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCom.91272F63.tlog/VocalCompressor_VST3.write.1u.tlog
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor.dll
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor.exp
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor.lib
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor.pdb
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor.vst3/Contents/Resources/moduleinfo.json
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor.vst3/Contents/x86_64-win/VocalCompressor.vst3
+VocalCompressor/Builds/VisualStudio2017/x64/Release/VST3/VocalCompressor_VST3.log
+VocalCompressor/JuceLibraryCode/include_juce_audio_basics.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_basics.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_devices.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_devices.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_formats.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_formats.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_processors.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_processors.mm
+VocalCompressor/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_utils.cpp
+VocalCompressor/JuceLibraryCode/include_juce_audio_utils.mm
+VocalCompressor/JuceLibraryCode/include_juce_core.cpp
+VocalCompressor/JuceLibraryCode/include_juce_core.mm
+VocalCompressor/JuceLibraryCode/include_juce_data_structures.cpp
+VocalCompressor/JuceLibraryCode/include_juce_data_structures.mm
+VocalCompressor/JuceLibraryCode/include_juce_events.cpp
+VocalCompressor/JuceLibraryCode/include_juce_events.mm
+VocalCompressor/JuceLibraryCode/include_juce_graphics.cpp
+VocalCompressor/JuceLibraryCode/include_juce_graphics.mm
+VocalCompressor/JuceLibraryCode/include_juce_gui_basics.cpp
+VocalCompressor/JuceLibraryCode/include_juce_gui_basics.mm
+VocalCompressor/JuceLibraryCode/include_juce_gui_extra.cpp
+VocalCompressor/JuceLibraryCode/include_juce_gui_extra.mm
+VocalCompressor/JuceLibraryCode/JuceHeader.h
+VocalCompressor/JuceLibraryCode/JucePluginDefines.h
+VocalCompressor/JuceLibraryCode/ReadMe.txt
+VocalCompressor/VocalCompressor.filtergraph
