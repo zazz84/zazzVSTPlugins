@@ -1118,3 +1118,383 @@ VocalCompressor/JuceLibraryCode/ReadMe.txt
 VocalCompressor/VocalCompressor.filtergraph
 Shared/Dynamics/Compressors.cpp~RF209299a.TMP
 VocalCompressor/Builds/VisualStudio2017/.vs/VocalCompressor/v15/ipch/AutoPCH/2c54e2a7fd7d5377/PLUGINPROCESSOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/.suo
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Browse.VC.db
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/3ae79345c8385e47/PLUGINEDITOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/7cad4b3905d14e50/PLUGINPROCESSOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/8fab4c0700d274f4/COMPRESSORS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/98defc1fb1d911b0/PLUGINPROCESSOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/9c6176f7d27c1186/COMPRESSORS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/a73f42ceacef8327/PLUGINEDITOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/eabc0b1e61311dbf/ENVELOPEFOLLOWERS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Solution.VC.db
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/.suo
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/Browse.VC.db
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/ipch/AutoPCH/2bbedc3f9869bc9d/ENVELOPEFOLLOWERS.ipch
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/ipch/AutoPCH/43b6f49c42ab9492/PLUGINPROCESSOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/ipch/AutoPCH/709401af95ad3156/COMPRESSORS.ipch
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/ipch/AutoPCH/89a2fe8a741b79c2/BIQUADFILTERS.ipch
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/ipch/AutoPCH/9659d2b9f45c4c55/PLUGINEDITOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/SmoothCompressor/v15/Solution.VC.db
+Compressor/Builds/VisualStudio2017/Compressor.sln
+Compressor/Builds/VisualStudio2017/Compressor_SharedCode.vcxproj
+Compressor/Builds/VisualStudio2017/Compressor_SharedCode.vcxproj.filters
+Compressor/Builds/VisualStudio2017/Compressor_VST3.vcxproj
+Compressor/Builds/VisualStudio2017/Compressor_VST3.vcxproj.filters
+Compressor/Builds/VisualStudio2017/Compressor_VST3ManifestHelper.vcxproj
+Compressor/Builds/VisualStudio2017/Compressor_VST3ManifestHelper.vcxproj.filters
+Compressor/Builds/VisualStudio2017/resources.rc
+Compressor/Builds/VisualStudio2017/SmoothCompressor.sln
+Compressor/Builds/VisualStudio2017/SmoothCompressor_SharedCode.vcxproj
+Compressor/Builds/VisualStudio2017/SmoothCompressor_SharedCode.vcxproj.filters
+Compressor/Builds/VisualStudio2017/SmoothCompressor_SharedCode.vcxproj.user
+Compressor/Builds/VisualStudio2017/SmoothCompressor_StandalonePlugin.vcxproj
+Compressor/Builds/VisualStudio2017/SmoothCompressor_StandalonePlugin.vcxproj.filters
+Compressor/Builds/VisualStudio2017/SmoothCompressor_VST3.vcxproj
+Compressor/Builds/VisualStudio2017/SmoothCompressor_VST3.vcxproj.filters
+Compressor/Builds/VisualStudio2017/SmoothCompressor_VST3.vcxproj.user
+Compressor/Builds/VisualStudio2017/SmoothCompressor_VST3ManifestHelper.vcxproj
+Compressor/Builds/VisualStudio2017/SmoothCompressor_VST3ManifestHelper.vcxproj.filters
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/Compressor_SharedCode.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/Lib-link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/Lib-link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/Lib.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compressor.lib
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compressor.pdb
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compressor_SharedCode.log
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compressors.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/Lib-link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/Lib-link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/Lib.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCo.574C289A.tlog/SmoothCompressor_SharedCode.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCompressor.lib
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCompressor.pdb
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SmoothCompressor_SharedCode.log
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/Compressor_VST3ManifestHelper.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/link.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/rc.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/rc.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compress.BAD664B9.tlog/rc.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Compressor_VST3ManifestHelper.log
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/link.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/rc.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/rc.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/rc.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCo.BAD664B9.tlog/SmoothCompressor_VST3ManifestHelper.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmoothCompressor_VST3ManifestHelper.log
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.dll
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.exp
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.ilk
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.lib
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.pdb
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.vst3/Contents/Resources/moduleinfo.json
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor.vst3/Contents/x86_64-win/Compressor.vst3
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.log
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/Compressor_VST3.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/Compressor_VST3.write.1u.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/link.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/rc.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/rc.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/rc.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/link.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/rc.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/rc.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/rc.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/SmoothCompressor_VST3.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCo.256BC85F.tlog/SmoothCompressor_VST3.write.1u.tlog
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.dll
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.exp
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.ilk
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.lib
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.pdb
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.vst3/Contents/Resources/moduleinfo.json
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor.vst3/Contents/x86_64-win/SmoothCompressor.vst3
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/SmoothCompressor_VST3.log
+Compressor/JuceLibraryCode/include_juce_audio_basics.cpp
+Compressor/JuceLibraryCode/include_juce_audio_basics.mm
+Compressor/JuceLibraryCode/include_juce_audio_devices.cpp
+Compressor/JuceLibraryCode/include_juce_audio_devices.mm
+Compressor/JuceLibraryCode/include_juce_audio_formats.cpp
+Compressor/JuceLibraryCode/include_juce_audio_formats.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+Compressor/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+Compressor/JuceLibraryCode/include_juce_audio_processors.cpp
+Compressor/JuceLibraryCode/include_juce_audio_processors.mm
+Compressor/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+Compressor/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+Compressor/JuceLibraryCode/include_juce_audio_utils.cpp
+Compressor/JuceLibraryCode/include_juce_audio_utils.mm
+Compressor/JuceLibraryCode/include_juce_core.cpp
+Compressor/JuceLibraryCode/include_juce_core.mm
+Compressor/JuceLibraryCode/include_juce_data_structures.cpp
+Compressor/JuceLibraryCode/include_juce_data_structures.mm
+Compressor/JuceLibraryCode/include_juce_events.cpp
+Compressor/JuceLibraryCode/include_juce_events.mm
+Compressor/JuceLibraryCode/include_juce_graphics.cpp
+Compressor/JuceLibraryCode/include_juce_graphics.mm
+Compressor/JuceLibraryCode/include_juce_gui_basics.cpp
+Compressor/JuceLibraryCode/include_juce_gui_basics.mm
+Compressor/JuceLibraryCode/include_juce_gui_extra.cpp
+Compressor/JuceLibraryCode/include_juce_gui_extra.mm
+Compressor/JuceLibraryCode/JuceHeader.h
+Compressor/JuceLibraryCode/JucePluginDefines.h
+Compressor/JuceLibraryCode/ReadMe.txt
+Compressor/Source/PluginEditor.cpp
+Compressor/Source/PluginEditor.h
+Compressor/Source/PluginProcessor.cpp
+Compressor/Source/PluginProcessor.h
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/.suo
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/Browse.VC.db
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/ipch/AutoPCH/27a8a8248ead7feb/PLUGINEDITOR.ipch
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/ipch/AutoPCH/68da0f8e2990ae6b/PLUGINEDITOR.ipch
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/ipch/AutoPCH/b0afa044eb5ff81c/PLUGINPROCESSOR.ipch
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/ipch/AutoPCH/c7038b7f646c529c/PLUGINPROCESSOR.ipch
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/ipch/AutoPCH/e9642c9323da2c0f/PLUGINPROCESSOR.ipch
+EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/Solution.VC.db
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner.sln
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_SharedCode.vcxproj
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_SharedCode.vcxproj.filters
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_StandalonePlugin.vcxproj
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_StandalonePlugin.vcxproj.filters
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_VST3.vcxproj
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_VST3.vcxproj.filters
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_VST3.vcxproj.user
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_VST3ManifestHelper.vcxproj
+EnvelopeCloner/Builds/VisualStudio2017/EnvelopeCloner_VST3ManifestHelper.vcxproj.filters
+EnvelopeCloner/Builds/VisualStudio2017/resources.rc
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/AllPassFilters .obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/CL.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/CL.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/CL.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/EnvelopeCloner_SharedCode.lastbuildstate
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/Lib-link.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/Lib-link.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.DDADE190.tlog/Lib.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeCloner.lib
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeCloner.pdb
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeCloner_SharedCode.log
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/CL.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/CL.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/CL.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/EnvelopeCloner_VST3ManifestHelper.lastbuildstate
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/link.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/link.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/link.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/rc.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/rc.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.D45D423C.tlog/rc.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/EnvelopeCloner_VST3ManifestHelper.log
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/CL.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/CL.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/CL.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/EnvelopeCloner_VST3.lastbuildstate
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/EnvelopeCloner_VST3.write.1u.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/link.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/link.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/link.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/rc.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/rc.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.A974DD1C.tlog/rc.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.dll
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.exp
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.ilk
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.lib
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.pdb
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.vst3/Contents/Resources/moduleinfo.json
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner.vst3/Contents/x86_64-win/EnvelopeCloner.vst3
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeCloner_VST3.log
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/AllPassFilters .obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/CL.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/CL.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/CL.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/EnvelopeCloner_SharedCode.lastbuildstate
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/Lib-link.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/Lib-link.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.DDADE190.tlog/Lib.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeCloner.lib
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeCloner.pdb
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeCloner_SharedCode.log
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/CL.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/CL.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/CL.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/EnvelopeCloner_VST3ManifestHelper.lastbuildstate
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/link.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/link.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/link.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/rc.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/rc.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.D45D423C.tlog/rc.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/EnvelopeCloner_VST3ManifestHelper.log
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/CL.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/CL.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/CL.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/EnvelopeCloner_VST3.lastbuildstate
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/EnvelopeCloner_VST3.write.1u.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/link.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/link.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/link.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/rc.command.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/rc.read.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/Envelope.A974DD1C.tlog/rc.write.1.tlog
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner.dll
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner.exp
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner.lib
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner.pdb
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner.vst3/Contents/Resources/moduleinfo.json
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner.vst3/Contents/x86_64-win/EnvelopeCloner.vst3
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeCloner_VST3.log
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+EnvelopeCloner/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_basics.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_basics.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_devices.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_devices.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_formats.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_formats.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_processors.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_processors.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_utils.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_audio_utils.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_core.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_core.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_data_structures.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_data_structures.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_events.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_events.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_graphics.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_graphics.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_gui_basics.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_gui_basics.mm
+EnvelopeCloner/JuceLibraryCode/include_juce_gui_extra.cpp
+EnvelopeCloner/JuceLibraryCode/include_juce_gui_extra.mm
+EnvelopeCloner/JuceLibraryCode/JuceHeader.h
+EnvelopeCloner/JuceLibraryCode/JucePluginDefines.h
+EnvelopeCloner/JuceLibraryCode/ReadMe.txt

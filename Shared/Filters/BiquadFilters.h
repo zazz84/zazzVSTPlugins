@@ -40,3 +40,35 @@ private:
 	float y1 = 0.0f;
 	float y2 = 0.0f;
 };
+
+//==============================================================================
+class LinkwitzRileySecondOrder
+{
+public:
+	LinkwitzRileySecondOrder();
+
+	void init(int sampleRate);
+	void setFrequency(float frequency);
+	float processLP(float in);
+	float processHP(float in);
+
+protected:
+	int m_SampleRate = 48000;
+	
+	float m_b1 = 0.0f;
+	float m_b2 = 0.0f;
+
+	float m_a0_lp = 0.0f;
+	float m_a1_lp = 0.0f;
+	float m_a2_lp = 0.0f;
+
+	float m_a0_hp = 0.0f;
+	float m_a1_hp = 0.0f;
+	float m_a2_hp = 0.0f;
+
+	float m_x1_lp = 0.0f;
+	float m_x0_lp = 0.0f;
+
+	float m_x1_hp = 0.0f;
+	float m_x0_hp = 0.0f;
+};

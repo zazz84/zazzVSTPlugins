@@ -2,6 +2,7 @@
 #include <cmath>
 
 #define M_LN2 0.69314718f
+#define M_PI  3.14159268f
 #define M_PI2 6.28318536f
 #define DN    1.0e-20f
 
@@ -212,4 +213,67 @@ float BiquadFilter::processDF2T(float in)
 	x1 = b2 * in - a2 * out;
 
 	return out;
+}
+
+//==============================================================================
+LinkwitzRileySecondOrder::LinkwitzRileySecondOrder()
+{
+}
+
+void LinkwitzRileySecondOrder::init(int sampleRate)
+{
+	m_SampleRate = sampleRate;
+}
+
+void LinkwitzRileySecondOrder::setFrequency(float frequency)
+{
+	if (m_SampleRate == 0)
+	{
+		return;
+	}
+
+	const float fpi = M_PI * frequency;
+	const float wc = 2.0f * fpi;
+	const float wc2 = wc * wc;
+	const float wc22 = 2.0f * wc2;
+	const float k = wc / tanf(fpi / m_SampleRate);
+	const float k2 = k * k;
+	const float k22 = 2 * k2;
+	const float wck2 = 2 * wc * k;
+	const float tmpk = k2 + wc2 + wck2;
+	
+	m_b1 = (-k22 + wc22) / tmpk;
+	m_b2 = (-wck2 + k2 + wc2) / tmpk;
+	
+	//---------------
+	// low-pass
+	//---------------
+	m_a0_lp = wc2 / tmpk;
+	m_a1_lp = wc22 / tmpk;
+	m_a2_lp = wc2 / tmpk;
+	
+	//----------------
+	// high-pass
+	//----------------
+	m_a0_hp = k2 / tmpk;
+	m_a1_hp = -k22 / tmpk;
+	m_a2_hp = k2 / tmpk;	
+}
+
+float LinkwitzRileySecondOrder::processLP(float in)
+{
+	const float y0 = m_a0_lp * in + m_x0_lp;
+	m_x0_lp = m_a1_lp * in - m_b1 * y0 + m_x1_lp;
+	m_x1_lp = m_a2_lp * in - m_b2 * y0;
+
+	return y0;
+}
+
+float LinkwitzRileySecondOrder::processHP(float in)
+{
+	const float y0 = m_a0_hp * in + m_x0_hp;
+	m_x0_hp = m_a1_hp * in - m_b1 * y0 + m_x1_hp;
+	m_x1_hp = m_a2_hp * in - m_b2 * y0;
+
+	return -y0;
 }

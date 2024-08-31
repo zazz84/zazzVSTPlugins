@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
+
 //==============================================================================
 class EnvelopeFollower
 {
@@ -7,7 +10,7 @@ public:
 	EnvelopeFollower();
 
 	void init(int sampleRate) { m_SampleRate = sampleRate; }
-	void setCoef(float attackTime, float releaseTime);
+	void setCoef(float attackTimeMs, float releaseTimeMs);
 	float process(float in);
 
 protected:
