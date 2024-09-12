@@ -1,4 +1,5 @@
 #include "CircularBuffers.h"
+#include <math.h>
 #include <string.h>
 
 CircularBuffer::CircularBuffer()
@@ -168,4 +169,15 @@ float RoomEarlyReflections::process(float in)
 	}
 
 	return out;
+}
+
+//==============================================================================
+float RMSBuffer::getRMS()
+{
+	const int size = getSize();
+
+	m_rms = m_rms + ((fabsf(readDelay(1)) - fabsf(readDelay(size - 1))) / (float)size);
+
+	// 1.5 is magic number
+	return 1.5f * m_rms;
 }

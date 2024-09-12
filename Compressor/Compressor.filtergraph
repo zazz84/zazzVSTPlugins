@@ -65,7 +65,7 @@
           uiLastY_Normal="5" uiopen_Normal="1">
     <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
             version="1.0.0" file="C:\Program Files\Common Files\VST3\AudioFilePlayer.vst3\Contents\x86_64-win\AudioFilePlayer.vst3"
-            uniqueId="79fe81c" isInstrument="0" fileTime="18bda15444a" infoUpdateTime="18ffdb5df11"
+            uniqueId="79fe81c" isInstrument="0" fileTime="18bda15444a" infoUpdateTime="191e1a67212"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e95d02c7"/>
     <STATE>307.VMjLgnR....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCM13BTIISX1UEaho2ZVkUdAAkKAwDUigWRWkEcQ0VTucmUY4BQl4TQLolShUELhsVRxHlXucEV071QWQDNwfELvXUVzEkLhIVPEkkXQUUV4EkLTUWUsElZMczUJUkQUc1bwHEdEEiXzslLWESQosjLEw1Xt3hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
@@ -78,14 +78,13 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="13" x="0.51875" y="0.5564516129032258" useARA="0" uiLastX_Normal="343"
-          uiLastY_Normal="634" uiopen_Normal="1">
-    <PLUGIN name="SmoothCompressor" format="VST3" category="Fx|Dynamics"
-            manufacturer="zazz" version="1.0.0" file="C:\Program Files\Common Files\VST3\SmoothCompressor.vst3\Contents\x86_64-win\SmoothCompressor.vst3"
-            uniqueId="f36de828" isInstrument="0" fileTime="18ffdb373eb" infoUpdateTime="18ffdb5df12"
+  <FILTER uid="7" x="0.49125" y="0.4959677419354839" useARA="0">
+    <PLUGIN name="Compressor" format="VST3" category="Fx|Dynamics" manufacturer="zazz"
+            version="1.0.0" file="C:\Program Files\Common Files\VST3\Compressor.vst3\Contents\x86_64-win\Compressor.vst3"
+            uniqueId="f36de828" isInstrument="0" fileTime="191e1a55c67" infoUpdateTime="191e1a67213"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e9532fb5"/>
-    <STATE>559.VMjLgXh....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9LyL03hUMoFSm4FTt3hKt7zJlcUXxEDZisVRxH1a3vVX3fjTLQmKogjYTwVXogiQY8FMwjENHIUUTkEUKMCR38TNtHzSPUDahcFLVkkdUwlX4QyPOAUQpQUPvPDRuEkUOgFQDMldEECVwkjPHESQFEFLUY0SnQTZKYGR3sTN1MDUAkTUP0TPRokZvjFRGUjUZQWRBgTLEYTXvTkUOgFSosTdtLDS14xTLcGTC0jdtLkS2YVZHU2LC8DTEoFUAACQH8VTV8DZ5QkVyjjPHESQFEFLUY0Sn4RZKYGR3sTN1MDUAkTUP0TPRokZvjFRRUjQi8FNrgjYXcEVxU0UYgCRB0DctjFR0MyPOAUQpQUPvPDRuEkUOgFRUkkbUYEV4UEaHYFVWgkbUcUV3fjTLYmKosjcHg2R4X2PTETRUAUSAIkVpASZHYENFEFLvXUVn4BZic1cVM1ZvjFR1MiPLg1Mn8zM2HDUmkzUXMWUFM1ZIIiX43hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <STATE>799.VMjLgXw....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9TSL03hUMoFSmMSXt3hKt7zJlcUXxEDZisVRxH1a3vVX3fjTLQmKogjYTwVXogiQY8FMwjENHIUUTkEUKMCR38TNtHzSPUDahcFLVkkdUwlX4QyPOAUQpQUPvPDRuEkUOgFQDMldEECVwkjPHESQFEFLUY0SnQzPLQmKCwjctLDS1o1TMkGV40jdLkFSncCZOciKUAkTEQ0TlolQYgCR3AkbUYEVzkjPHESQFEFLUY0SnQTZKYGR3sTN1MDUAkTUP0TPRokZvjFRGUjUZQWRBgTLEYTXvTkUOglKosjcHg2R4X2PTETRUAUSAIkVpASZHwzZpMEZtf1XmcmUisFLogjcyHDSncCZOciKUAkTEQ0TlolQYgCRBM0SioFRlg0UXIWUWkENHIESz4RZHU2LC8DTEoFUAACQH8VTV8DZ5QkVyjjPHESQFEFLUY0SnQTZKYGR3sTN1MDUAkTUP0TPRokZvjFRPUkUXEWRBgTLEYTXvTkUOgFQosjcHg2R4X2PTETRUAUSAIkVpASZHIEL5QEZtf1XmcmUisFLogjcyHDSncCZOciKUAkTEQ0TlolQYgCRnQ0YQckV0kjPHESQFEFLUY0SnAUZKYGR3sTN1MDUAkTUP0TPRokZvjFRRUkQgsVQwH1ZIIDRwTjQgASUV8DZDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHITU3UTLh4VRBgTLEYTXvTkUOglKosjcHg2R4X2PTETRUAUSAIkVpASZHYENFEFLvXUVn4BZic1cVM1ZvjFR1MiPLg1Mn8zM2HDUmkzUXMWUFM1ZIIiX43hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
     <LAYOUT>
       <INPUTS>
         <BUS index="0" layout="L R"/>
@@ -95,8 +94,7 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="13" dstChannel="0"/>
-  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="13" dstChannel="1"/>
-  <CONNECTION srcFilter="13" srcChannel="0" dstFilter="3" dstChannel="0"/>
-  <CONNECTION srcFilter="13" srcChannel="1" dstFilter="3" dstChannel="1"/>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="7" dstChannel="0"/>
+  <CONNECTION srcFilter="7" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="7" srcChannel="1" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>

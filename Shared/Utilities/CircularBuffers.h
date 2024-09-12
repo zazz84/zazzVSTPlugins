@@ -72,3 +72,12 @@ private:
 	int m_sampleRate = 48000;
 	BiquadFilter m_filter[N_DELAY_LINES];
 };
+
+class RMSBuffer : public CircularBuffer
+{
+public:
+	float getRMS();
+
+private:
+	float m_rms = 0.0f;
+};

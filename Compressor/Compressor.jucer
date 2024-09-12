@@ -5,6 +5,10 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
   <MAINGROUP id="CmjmdB" name="Compressor">
     <GROUP id="{D20D41EA-EDA5-188B-BC6B-62FA9976F1CD}" name="Source">
+      <FILE id="KQD6Ax" name="CircularBuffers.cpp" compile="1" resource="0"
+            file="../Shared/Utilities/CircularBuffers.cpp"/>
+      <FILE id="Du5GWu" name="CircularBuffers.h" compile="0" resource="0"
+            file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="n4xDJ2" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="iWfQ7j" name="Compressors.cpp" compile="1" resource="0" file="../Shared/Dynamics/Compressors.cpp"/>
       <FILE id="ymMLBi" name="Compressors.h" compile="0" resource="0" file="../Shared/Dynamics/Compressors.h"/>

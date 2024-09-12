@@ -3,6 +3,7 @@
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include <JuceHeader.h>
 
 //==============================================================================
@@ -14,13 +15,20 @@ public:
 	void init(int sampleRate)
 	{ 
 		m_envelopeFollower.init(sampleRate);
+		m_circularBuffer.init(sampleRate);
+		const int size = (int)(0.01f * sampleRate);
+		m_circularBuffer.setSize(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
-	float processHardKnee(float in);
-	float processSoftKnee(float in);
+	float processHardKneeLinPeak(float in);
+	float processHardKneeLogPeak(float in);
+	float processHardKneeLinRMS(float in);
+	float processHardKneeLogRMS(float in);
+	float processSoftKneeLinPeak(float in);
 
 protected:
 	EnvelopeFollower m_envelopeFollower;
+	RMSBuffer m_circularBuffer;
 	float m_thresholddB = 0.0f;
 	float m_threshold = 1.0f;
 	float m_ratio = 2.0f;
@@ -96,4 +104,45 @@ protected:
 	Compressor m_compressor;
 	TubeEmulation m_tubeEmulation;
 	float m_gainCompensation = 1.0f;
+};
+
+//==============================================================================
+class SlewCompressor
+{
+public:
+	SlewCompressor();
+
+	void init(int sampleRate)
+	{
+		m_envelopeFollowerLog.init(sampleRate);
+		m_envelopeFollowerLinear.init(sampleRate);
+
+		m_circularBuffer.init(sampleRate);
+		const int size = (int)(0.01f * sampleRate);
+		m_circularBuffer.setSize(size);
+	};
+	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
+	float processHardKneeLinPeak(float in);
+	float processHardKneeLogPeak(float in);
+	float processHardKneeLinRMS(float in);
+	float processHardKneeLogRMS(float in);
+	float processSoftKnee(float in);
+
+protected:
+	SlewEnvelopeFollower m_envelopeFollowerLog;
+	SlewEnvelopeFollower m_envelopeFollowerLinear;
+	RMSBuffer m_circularBuffer;
+	float m_thresholddB = 0.0f;
+	float m_threshold = 1.0f;
+	float m_ratio = 2.0f;
+	float m_kneeWidth = 0.0f;
+	float m_attackTime = 0.0f;
+	float m_releaseTime = 0.0f;
+
+	float m_R_Inv_minus_One = 0.0f;
+	float m_T_minus_WHalfdB = 0.0f;
+	float m_T_minus_WHalf = 1.0f;
+	float m_T_plus_WHalfdB = 0.0f;
+	float m_minus_T_plus_WHalf = 0.0f;
+	float m_W2_inv = 0.0f;
 };

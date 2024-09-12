@@ -33,13 +33,13 @@ public:
 	inline void createCanvas(juce::AudioProcessorEditor& audioProcessorEditor, int sliderCount)
 	{
 		audioProcessorEditor.setResizable(true, true);
-		const float width = ZazzLookAndFeel::SLIDER_WIDTH * sliderCount;
+		const int width = ZazzLookAndFeel::SLIDER_WIDTH * sliderCount;
 		audioProcessorEditor.setSize(width, ZazzLookAndFeel::SLIDER_WIDTH);
 
 		if (auto* constrainer = audioProcessorEditor.getConstrainer())
 		{
 			constrainer->setFixedAspectRatio(sliderCount);
-			constrainer->setSizeLimits(width * 0.7f, ZazzLookAndFeel::SLIDER_WIDTH * 0.7, width * 2.0f, ZazzLookAndFeel::SLIDER_WIDTH * 2.0f);
+			constrainer->setSizeLimits((int)((float)width * 0.7f), (int)((float)ZazzLookAndFeel::SLIDER_WIDTH * 0.7), (int)((float)width * 2.0f), (int)((float)ZazzLookAndFeel::SLIDER_WIDTH * 2.0f));
 		}
 	}
 

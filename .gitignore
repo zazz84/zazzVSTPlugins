@@ -1498,3 +1498,78 @@ EnvelopeCloner/JuceLibraryCode/include_juce_gui_extra.mm
 EnvelopeCloner/JuceLibraryCode/JuceHeader.h
 EnvelopeCloner/JuceLibraryCode/JucePluginDefines.h
 EnvelopeCloner/JuceLibraryCode/ReadMe.txt
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/3cddbc1779f0b406/COMPRESSORS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/4756aecb010077fc/CIRCULARBUFFERS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/7a53596c7b29217c/CIRCULARBUFFERS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/c19cd3b91401a8d0/PLUGINPROCESSOR.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/dc17954f2f87d0ed/ENVELOPEFOLLOWERS.ipch
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/ipch/AutoPCH/ebba3de0fc5906a0/INCLUDE_JUCE_AUDIO_PROCESSORS.ipch
+Compressor/Builds/VisualStudio2017/Compressor_SharedCode.vcxproj.user
+Compressor/Builds/VisualStudio2017/Compressor_VST3.vcxproj.user
+Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+Compressor/Builds/VisualStudio2017/x64/Debug/VST3/Compressor_VST3.tlog/unsuccessfulbuild
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/Compressor_SharedCode.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/Lib-link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/Lib-link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/Lib.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compressor.lib
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compressor.pdb
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compressor_SharedCode.log
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compressors.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/Compressor_VST3ManifestHelper.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/link.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/rc.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/rc.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compress.BAD664B9.tlog/rc.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Compressor_VST3ManifestHelper.log
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Compressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor.dll
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor.exp
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor.lib
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor.pdb
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor.vst3/Contents/Resources/moduleinfo.json
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor.vst3/Contents/x86_64-win/Compressor.vst3
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.log
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/CL.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/CL.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/CL.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/Compressor_VST3.lastbuildstate
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/Compressor_VST3.write.1u.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/link.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/link.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/link.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/rc.command.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/rc.read.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/Compressor_VST3.tlog/rc.write.1.tlog
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+Compressor/Builds/VisualStudio2017/x64/Release/VST3/resources.res
