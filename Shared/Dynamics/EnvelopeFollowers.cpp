@@ -144,3 +144,29 @@ float DualEnvelopeFollower::process(float in)
 
 	return m_OutLast = m_FilterFast.process(inAbsFilterFast) + m_FilterSlow.process(inAbsFilterSlow);
 }
+
+//==============================================================================
+float GainCompensation::getGainCompensation(float in, float out)
+{
+	const float inputLoudness = m_inputEnvelopeFollower.process(in);
+	const float outputLoudness = m_outputEnvelopeFollower.process(out);
+	float gainComponesation = 1.0f;
+
+	if (outputLoudness > 0.001f)
+	{
+		gainComponesation = inputLoudness / outputLoudness;
+
+		if (gainComponesation < 1.0f)
+		{
+			const float delta = 1.0f - gainComponesation;
+			gainComponesation = 1.0f - (delta * m_dynamics);
+		}
+		else
+		{
+			const float delta = gainComponesation - 1.0f;
+			gainComponesation = 1.0f + (delta * m_dynamics);
+		}
+	}
+
+	return gainComponesation;
+}

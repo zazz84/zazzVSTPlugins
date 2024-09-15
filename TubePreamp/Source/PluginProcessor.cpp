@@ -164,7 +164,7 @@ void TubePreampAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
 		for (int stage = 0; stage < stages; stage++)
 		{
-			 m_tubeEmulation[channel][stage].setDrive(drivePerStage);
+			 m_tubeEmulation[channel][stage].set(drivePerStage);
 		}
 
 		for (int sample = 0; sample < samples; sample++)

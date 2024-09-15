@@ -94,3 +94,27 @@ protected:
 
 	float m_OutLast = 0.0f;
 };
+
+//==============================================================================
+class GainCompensation
+{
+public:
+	GainCompensation() {};
+
+	void init(int sampleRate)
+	{
+		m_inputEnvelopeFollower.init(sampleRate);
+		m_outputEnvelopeFollower.init(sampleRate);
+
+		m_inputEnvelopeFollower.setCoef(5.0f, 15.0f);
+		m_outputEnvelopeFollower.setCoef(5.0f, 15.0f);
+	}
+	void set(float dynamics) { m_dynamics = dynamics; };
+	float getGainCompensation(float in, float out);
+
+private:
+	EnvelopeFollower m_inputEnvelopeFollower;
+	EnvelopeFollower m_outputEnvelopeFollower;
+
+	float m_dynamics = 0.0f;
+};
