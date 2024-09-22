@@ -28,7 +28,6 @@ public:
 
 protected:
 	EnvelopeFollower m_envelopeFollower;
-	//DualEnvelopeFollower m_envelopeFollower;
 	RMSBuffer m_circularBuffer;
 	float m_thresholddB = 0.0f;
 	float m_threshold = 1.0f;
@@ -43,6 +42,45 @@ protected:
 	float m_T_plus_WHalfdB = 0.0f;
 	float m_minus_T_plus_WHalf = 0.0f;
 	float m_W2_inv = 0.0f;
+};
+
+//==============================================================================
+template <class EnvelopeFollower, class T>
+class Compressor1
+{
+public:
+	Compressor1() {};
+
+	void init(int sampleRate)
+	{
+		m_envelopeFollower.init(sampleRate);
+		m_circularBuffer.init(sampleRate);
+		const int size = (int)(0.01f * sampleRate);
+		m_circularBuffer.setSize(size);
+	};
+	void set(T thresholddB, T ratio, T kneeWidth, T attackTimeMS, T releaseTimeMS);
+	T processHardKneeLinPeak(T in);
+	T processHardKneeLogPeak(T in);
+	T processHardKneeLinRMS(T in);
+	T processHardKneeLogRMS(T in);
+	T processSoftKneeLinPeak(T in);
+
+protected:
+	EnvelopeFollower<T> m_envelopeFollower;
+	RMSBuffer m_circularBuffer;
+	T m_thresholddB = 0.0;
+	T m_threshold = 1.0;
+	T m_ratio = 2.0;
+	T m_kneeWidth = 0.0;
+	T m_attackTime = 0.0;
+	T m_releaseTime = 0.0;
+
+	T m_R_Inv_minus_One = 0.0;
+	T m_T_minus_WHalfdB = 0.0;
+	T m_T_minus_WHalf = 1.0;
+	T m_T_plus_WHalfdB = 0.0;
+	T m_minus_T_plus_WHalf = 0.0;
+	T m_W2_inv = 0.0;
 };
 
 //==============================================================================
@@ -94,7 +132,7 @@ public:
 		m_compressor.set(-23.0f, 50.0f, 60.0f, 3.0f, 75.0f);
 
 		// Set tube emilation
-		m_tubeEmulation.setDrive(-0.5f);
+		m_tubeEmulation.set(-0.5f);
 
 		m_gainCompensation = juce::Decibels::decibelsToGain(14.0f);
 	};

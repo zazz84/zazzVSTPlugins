@@ -1773,3 +1773,247 @@ Distortion/JuceLibraryCode/JucePluginDefines.h
 Distortion/JuceLibraryCode/ReadMe.txt
 TubePreamp/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
 TubePreamp/Builds/VisualStudio2017/x64/Release/VST3/TubePreamp_VST3.tlog/unsuccessfulbuild
+SineWaveshaper/JuceLibraryCode/ReadMe.txt
+SineWaveshaper/JuceLibraryCode/JucePluginDefines.h
+SineWaveshaper/JuceLibraryCode/JuceHeader.h
+SineWaveshaper/JuceLibraryCode/include_juce_gui_extra.mm
+SineWaveshaper/JuceLibraryCode/include_juce_gui_extra.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_gui_basics.mm
+SineWaveshaper/JuceLibraryCode/include_juce_gui_basics.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_graphics.mm
+SineWaveshaper/JuceLibraryCode/include_juce_graphics.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_events.mm
+SineWaveshaper/JuceLibraryCode/include_juce_events.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_data_structures.mm
+SineWaveshaper/JuceLibraryCode/include_juce_data_structures.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_core.mm
+SineWaveshaper/JuceLibraryCode/include_juce_core.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_utils.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_utils.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_processors.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_processors.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_formats.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_formats.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_devices.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_devices.cpp
+SineWaveshaper/JuceLibraryCode/include_juce_audio_basics.mm
+SineWaveshaper/JuceLibraryCode/include_juce_audio_basics.cpp
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper_VST3.log
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper.vst3/Contents/x86_64-win/SineWaveshaper.vst3
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper.vst3/Contents/Resources/moduleinfo.json
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper.pdb
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper.lib
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper.exp
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWaveshaper.dll
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/SineWaveshaper_VST3.write.1u.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/SineWaveshaper_VST3.lastbuildstate
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/rc.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/rc.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/rc.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/link.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/link.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/link.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/CL.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/CL.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/SineWave.FEC7C573.tlog/CL.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWaveshaper_VST3ManifestHelper.log
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/SineWaveshaper_VST3ManifestHelper.lastbuildstate
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/rc.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/rc.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/rc.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/link.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/link.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/link.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/CL.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/CL.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/CL.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWaveshaper_SharedCode.log
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWaveshaper.pdb
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWaveshaper.lib
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/SineWaveshaper_SharedCode.lastbuildstate
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/Lib.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/Lib-link.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/Lib-link.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/CL.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/CL.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/CL.12732.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper_VST3.log
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.vst3/Contents/x86_64-win/SineWaveshaper.vst3
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.vst3/Contents/Resources/moduleinfo.json
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.pdb
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.lib
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.ilk
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.exp
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWaveshaper.dll
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/SineWaveshaper_VST3.write.1u.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/SineWaveshaper_VST3.lastbuildstate
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/rc.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/rc.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/rc.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/link.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/link.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/link.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/CL.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/CL.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/SineWave.FEC7C573.tlog/CL.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWaveshaper_VST3ManifestHelper.log
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/SineWaveshaper_VST3ManifestHelper.lastbuildstate
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/rc.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/rc.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/rc.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/link.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/link.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/link.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/CL.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/CL.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SineWave.C1E5CF41.tlog/CL.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWaveshaper_SharedCode.log
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWaveshaper.pdb
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWaveshaper.lib
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/SineWaveshaper_SharedCode.lastbuildstate
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/Lib.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/Lib-link.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/Lib-link.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/CL.write.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/CL.read.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/SineWave.E48D8692.tlog/CL.command.1.tlog
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_VST3ManifestHelper.vcxproj.filters
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_VST3ManifestHelper.vcxproj
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_VST3.vcxproj.user
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_VST3.vcxproj.filters
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_VST3.vcxproj
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_StandalonePlugin.vcxproj.filters
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_StandalonePlugin.vcxproj
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_SharedCode.vcxproj.filters
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_SharedCode.vcxproj
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper.sln
+SineWaveshaper/Builds/VisualStudio2017/resources.rc
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/Solution.VC.db
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/ipch/AutoPCH/d6550ba65a49714a/PLUGINPROCESSOR.ipch
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/ipch/AutoPCH/c19e44c301807b6d/PLUGINEDITOR.ipch
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/ipch/AutoPCH/bfbb36e389f7244a/PLUGINPROCESSOR.ipch
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/ipch/AutoPCH/9946ce63b6ae8780/HOSTSTARTUP.ipch
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/Browse.VC.db
+SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/.suo
+SineWaveshaper/SineWaveshaper.filtergraph
+ImpactDesigner/JuceLibraryCode/ReadMe.txt
+ImpactDesigner/JuceLibraryCode/JucePluginDefines.h
+ImpactDesigner/JuceLibraryCode/JuceHeader.h
+ImpactDesigner/JuceLibraryCode/include_juce_gui_extra.mm
+ImpactDesigner/JuceLibraryCode/include_juce_gui_extra.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_gui_basics.mm
+ImpactDesigner/JuceLibraryCode/include_juce_gui_basics.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_graphics.mm
+ImpactDesigner/JuceLibraryCode/include_juce_graphics.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_events.mm
+ImpactDesigner/JuceLibraryCode/include_juce_events.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_data_structures.mm
+ImpactDesigner/JuceLibraryCode/include_juce_data_structures.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_core.mm
+ImpactDesigner/JuceLibraryCode/include_juce_core.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_utils.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_utils.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_processors.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_processors.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_formats.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_formats.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_devices.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_devices.cpp
+ImpactDesigner/JuceLibraryCode/include_juce_audio_basics.mm
+ImpactDesigner/JuceLibraryCode/include_juce_audio_basics.cpp
+ImpactDesigner/Builds/VisualStudio2017/resources.rc
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_VST3ManifestHelper.vcxproj.filters
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_VST3ManifestHelper.vcxproj
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_VST3.vcxproj.filters
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_VST3.vcxproj
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_StandalonePlugin.vcxproj.filters
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_StandalonePlugin.vcxproj
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_SharedCode.vcxproj.filters
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner_SharedCode.vcxproj
+ImpactDesigner/Builds/VisualStudio2017/ImpactDesigner.sln
+ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/Solution.VC.db
+ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/ipch/AutoPCH/be500a9f788b1b74/PLUGINPROCESSOR.ipch
+ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/ipch/AutoPCH/69f7a736df1be643/PLUGINEDITOR.ipch
+ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/Browse.VC.db
+ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/.suo
