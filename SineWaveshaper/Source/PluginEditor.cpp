@@ -30,12 +30,15 @@ SineWaveshaperAudioProcessorEditor::SineWaveshaperAudioProcessorEditor (SineWave
 	// Buttons
 	createButton(button1, TYPE_BUTTON_GROUP);
 	createButton(button2, TYPE_BUTTON_GROUP);
+	createButton(button3);
 
 	addAndMakeVisible(button1);
 	addAndMakeVisible(button2);
+	addAndMakeVisible(button3);
 
 	button1Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "1", button1));
 	button2Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "2", button2));
+	button3Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "8x", button3));
 
 	// Canvas
 	createCanvas(*this, N_SLIDERS);
@@ -61,8 +64,11 @@ void SineWaveshaperAudioProcessorEditor::resized()
 	const float buttonWidth = 1.8f * (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
 	int posY = height - (int)(1.2f * fonthHeight);
 
-	const float width = (float)getWidth() / (float)N_SLIDERS;
+	const float canvasWidth = (float)getWidth();
+	const float width = canvasWidth / (float)N_SLIDERS;
 
 	button1.setBounds((int)(1.0f * width - 1.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
 	button2.setBounds((int)(1.0f * width + 0.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
+	
+	button3.setBounds((int)(canvasWidth - buttonWidth), 0, (int)buttonWidth, (int)fonthHeight);
 }

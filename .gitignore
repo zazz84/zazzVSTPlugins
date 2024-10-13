@@ -2017,3 +2017,442 @@ ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/ipch/AutoPCH/be500
 ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/ipch/AutoPCH/69f7a736df1be643/PLUGINEDITOR.ipch
 ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/Browse.VC.db
 ImpactDesigner/Builds/VisualStudio2017/.vs/ImpactDesigner/v15/.suo
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/.suo
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Browse.VC.db
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/ipch/AutoPCH/5ed0cc51e0d4c9d7/PLUGINEDITOR.ipch
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/ipch/AutoPCH/9ae2be94376e5c0/PLUGINPROCESSOR.ipch
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/ipch/AutoPCH/b96db60d066a057/PLUGINEDITOR.ipch
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/ipch/AutoPCH/bcb8c3515dba5984/PLUGINEDITOR.ipch
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/ipch/AutoPCH/f794f42c10d5283/PLUGINPROCESSOR.ipch
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Solution.VC.db
+CombFilter/Builds/VisualStudio2017/CombFilter.sln
+CombFilter/Builds/VisualStudio2017/CombFilter_SharedCode.vcxproj
+CombFilter/Builds/VisualStudio2017/CombFilter_SharedCode.vcxproj.filters
+CombFilter/Builds/VisualStudio2017/CombFilter_VST3.vcxproj
+CombFilter/Builds/VisualStudio2017/CombFilter_VST3.vcxproj.filters
+CombFilter/Builds/VisualStudio2017/CombFilter_VST3ManifestHelper.vcxproj
+CombFilter/Builds/VisualStudio2017/CombFilter_VST3ManifestHelper.vcxproj.filters
+CombFilter/Builds/VisualStudio2017/resources.rc
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/CL.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/CL.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/CombFilter_SharedCode.lastbuildstate
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/Lib-link.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/Lib-link.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilt.964B31B9.tlog/Lib.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilter.lib
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilter.pdb
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilter_SharedCode.log
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CL.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CL.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CombFilter_VST3ManifestHelper.lastbuildstate
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/link.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/link.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/link.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/rc.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/rc.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/rc.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/CombFilter_VST3ManifestHelper.log
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.dll
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.exp
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.ilk
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.lib
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.pdb
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.vst3/Contents/Resources/moduleinfo.json
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter.vst3/Contents/x86_64-win/CombFilter.vst3
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.log
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/CL.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/CL.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/CombFilter_VST3.lastbuildstate
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/CombFilter_VST3.write.1u.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/link.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/link.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/link.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/rc.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/rc.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/CombFilter_VST3.tlog/rc.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+CombFilter/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/CL.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/CL.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/CombFilter_SharedCode.lastbuildstate
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/Lib-link.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/Lib-link.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilt.964B31B9.tlog/Lib.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilter.lib
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilter.pdb
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/CombFilter_SharedCode.log
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CL.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CL.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/CombFilter_VST3ManifestHelper.lastbuildstate
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/link.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/link.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/link.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/rc.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/rc.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilt.8C4ACC51.tlog/rc.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/CombFilter_VST3ManifestHelper.log
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter.dll
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter.exp
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter.lib
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter.pdb
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter.vst3/Contents/Resources/moduleinfo.json
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter.vst3/Contents/x86_64-win/CombFilter.vst3
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.log
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/CL.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/CL.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/CombFilter_VST3.lastbuildstate
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/CombFilter_VST3.write.1u.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/link.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/link.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/link.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/rc.command.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/rc.read.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/CombFilter_VST3.tlog/rc.write.1.tlog
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+CombFilter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+CombFilter/Builds/VisualStudio2022/CombFilter.sln
+CombFilter/Builds/VisualStudio2022/CombFilter_SharedCode.vcxproj
+CombFilter/Builds/VisualStudio2022/CombFilter_SharedCode.vcxproj.filters
+CombFilter/Builds/VisualStudio2022/CombFilter_StandalonePlugin.vcxproj
+CombFilter/Builds/VisualStudio2022/CombFilter_StandalonePlugin.vcxproj.filters
+CombFilter/Builds/VisualStudio2022/CombFilter_VST3.vcxproj
+CombFilter/Builds/VisualStudio2022/CombFilter_VST3.vcxproj.filters
+CombFilter/Builds/VisualStudio2022/CombFilter_VST3ManifestHelper.vcxproj
+CombFilter/Builds/VisualStudio2022/CombFilter_VST3ManifestHelper.vcxproj.filters
+CombFilter/Builds/VisualStudio2022/resources.rc
+CombFilter/JuceLibraryCode/include_juce_audio_basics.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_basics.mm
+CombFilter/JuceLibraryCode/include_juce_audio_devices.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_devices.mm
+CombFilter/JuceLibraryCode/include_juce_audio_formats.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_formats.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+CombFilter/JuceLibraryCode/include_juce_audio_processors.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_processors.mm
+CombFilter/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_utils.cpp
+CombFilter/JuceLibraryCode/include_juce_audio_utils.mm
+CombFilter/JuceLibraryCode/include_juce_core.cpp
+CombFilter/JuceLibraryCode/include_juce_core.mm
+CombFilter/JuceLibraryCode/include_juce_data_structures.cpp
+CombFilter/JuceLibraryCode/include_juce_data_structures.mm
+CombFilter/JuceLibraryCode/include_juce_events.cpp
+CombFilter/JuceLibraryCode/include_juce_events.mm
+CombFilter/JuceLibraryCode/include_juce_graphics.cpp
+CombFilter/JuceLibraryCode/include_juce_graphics.mm
+CombFilter/JuceLibraryCode/include_juce_gui_basics.cpp
+CombFilter/JuceLibraryCode/include_juce_gui_basics.mm
+CombFilter/JuceLibraryCode/include_juce_gui_extra.cpp
+CombFilter/JuceLibraryCode/include_juce_gui_extra.mm
+CombFilter/JuceLibraryCode/JuceHeader.h
+CombFilter/JuceLibraryCode/JucePluginDefines.h
+CombFilter/JuceLibraryCode/ReadMe.txt
+TerbleBooster/JuceLibraryCode/ReadMe.txt
+TerbleBooster/JuceLibraryCode/JucePluginDefines.h
+TerbleBooster/JuceLibraryCode/JuceHeader.h
+TerbleBooster/JuceLibraryCode/include_juce_gui_extra.mm
+TerbleBooster/JuceLibraryCode/include_juce_gui_extra.cpp
+TerbleBooster/JuceLibraryCode/include_juce_gui_basics.mm
+TerbleBooster/JuceLibraryCode/include_juce_gui_basics.cpp
+TerbleBooster/JuceLibraryCode/include_juce_graphics.mm
+TerbleBooster/JuceLibraryCode/include_juce_graphics.cpp
+TerbleBooster/JuceLibraryCode/include_juce_events.mm
+TerbleBooster/JuceLibraryCode/include_juce_events.cpp
+TerbleBooster/JuceLibraryCode/include_juce_data_structures.mm
+TerbleBooster/JuceLibraryCode/include_juce_data_structures.cpp
+TerbleBooster/JuceLibraryCode/include_juce_core.mm
+TerbleBooster/JuceLibraryCode/include_juce_core.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_utils.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_utils.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_processors.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_processors.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_formats.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_formats.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_devices.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_devices.cpp
+TerbleBooster/JuceLibraryCode/include_juce_audio_basics.mm
+TerbleBooster/JuceLibraryCode/include_juce_audio_basics.cpp
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster_VST3.log
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster.vst3/Contents/x86_64-win/TerbleBooster.vst3
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster.vst3/Contents/Resources/moduleinfo.json
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster.lib
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster.exp
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBooster.dll
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/TerbleBooster_VST3.write.1u.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/TerbleBooster_VST3.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/rc.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/rc.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/rc.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/link.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/TerbleBo.AC36B175.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBooster_VST3ManifestHelper.log
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/TerbleBooster_VST3ManifestHelper.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/rc.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/rc.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/rc.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/link.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBooster_SharedCode.log
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBooster.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBooster.lib
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/TerbleBooster_SharedCode.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/Lib.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/Lib-link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/Lib-link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/TerbleBo.C7C24F3B.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster_VST3.log
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.vst3/Contents/x86_64-win/TerbleBooster.vst3
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.vst3/Contents/Resources/moduleinfo.json
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.lib
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.ilk
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.exp
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBooster.dll
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/TerbleBooster_VST3.write.1u.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/TerbleBooster_VST3.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/rc.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/rc.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/rc.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/link.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/TerbleBo.AC36B175.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/rc.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/rc.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/rc.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/link.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/HissRemoval_VST3.write.1u.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/HissRemoval_VST3.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval_VST3.log
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.vst3/Contents/x86_64-win/HissRemoval.vst3
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.vst3/Contents/Resources/moduleinfo.json
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.lib
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.ilk
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.exp
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3/HissRemoval.dll
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBooster_VST3ManifestHelper.log
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/TerbleBooster_VST3ManifestHelper.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/rc.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/rc.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/rc.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/link.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TerbleBo.18FEB29C.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemoval_VST3ManifestHelper.log
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/rc.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/rc.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/rc.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/link.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/HissRemoval_VST3ManifestHelper.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/HissRemo.18FEB29C.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBooster_SharedCode.log
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBooster.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBooster.lib
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/TerbleBooster_SharedCode.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/Lib.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/Lib-link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/Lib-link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/TerbleBo.C7C24F3B.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemoval_SharedCode.log
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemoval.pdb
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemoval.lib
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/Lib.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/Lib-link.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/Lib-link.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/HissRemoval_SharedCode.lastbuildstate
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/CL.write.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/CL.read.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/HissRemo.C7C24F3B.tlog/CL.command.1.tlog
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+TerbleBooster/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster_VST3ManifestHelper.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster_VST3ManifestHelper.vcxproj
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster_VST3.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster_VST3.vcxproj
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster_SharedCode.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster_SharedCode.vcxproj
+TerbleBooster/Builds/VisualStudio2017/TerbleBooster.sln
+TerbleBooster/Builds/VisualStudio2017/resources.rc
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_VST3ManifestHelper.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_VST3ManifestHelper.vcxproj
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_VST3.vcxproj.user
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_VST3.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_VST3.vcxproj
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_StandalonePlugin.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_StandalonePlugin.vcxproj
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_SharedCode.vcxproj.filters
+TerbleBooster/Builds/VisualStudio2017/HissRemoval_SharedCode.vcxproj
+TerbleBooster/Builds/VisualStudio2017/HissRemoval.sln
+TerbleBooster/Builds/VisualStudio2017/.vs/TerbleBooster/v15/Solution.VC.db
+TerbleBooster/Builds/VisualStudio2017/.vs/TerbleBooster/v15/ipch/AutoPCH/6705ecee9f760d9/PLUGINPROCESSOR.ipch
+TerbleBooster/Builds/VisualStudio2017/.vs/TerbleBooster/v15/ipch/AutoPCH/3f2e76c0df4a95b6/PLUGINEDITOR.ipch
+TerbleBooster/Builds/VisualStudio2017/.vs/TerbleBooster/v15/ipch/AutoPCH/27f02f8ee3978839/PLUGINPROCESSOR.ipch
+TerbleBooster/Builds/VisualStudio2017/.vs/TerbleBooster/v15/Browse.VC.db
+TerbleBooster/Builds/VisualStudio2017/.vs/TerbleBooster/v15/.suo
+TerbleBooster/Builds/VisualStudio2017/.vs/HissRemoval/v15/Solution.VC.db
+TerbleBooster/Builds/VisualStudio2017/.vs/HissRemoval/v15/ipch/AutoPCH/f92455ec86c95a2b/PLUGINEDITOR.ipch
+TerbleBooster/Builds/VisualStudio2017/.vs/HissRemoval/v15/ipch/AutoPCH/13e0424c4d1fb3dc/PLUGINPROCESSOR.ipch
+TerbleBooster/Builds/VisualStudio2017/.vs/HissRemoval/v15/Browse.VC.db
+TerbleBooster/Builds/VisualStudio2017/.vs/HissRemoval/v15/.suo
+SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_SharedCode.vcxproj.user
+SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Oversampling.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Oversampling.obj
+SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/CL.write.1.tlog

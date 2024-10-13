@@ -1,12 +1,35 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
-#include "../../../zazzVSTPlugins/Shared/Utilities/Oversampling.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 
 //==============================================================================
-class SineWaveshaperAudioProcessor  : public juce::AudioProcessor
+class CombFilter
+{
+public:
+	CombFilter() {};
+
+	void init(const int size)
+	{
+		m_buffer.init(size);
+	};
+	void set(const float delay)
+	{
+		m_delay = delay;
+	}
+	float process(const float in)
+	{
+		m_buffer.writeSample(in);				
+		return 0.5f * (in - m_buffer.readDelay((int)m_delay));
+	}
+
+private:
+	CircularBuffer m_buffer = {};
+	float m_delay = 0.0f;;
+};
+
+//==============================================================================
+class CombFilterAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -14,11 +37,13 @@ class SineWaveshaperAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    SineWaveshaperAudioProcessor();
-    ~SineWaveshaperAudioProcessor() override;
+    CombFilterAudioProcessor();
+    ~CombFilterAudioProcessor() override;
 
 	static const std::string paramsNames[];
-	static const int OVERSAMPLE = 8;
+	static const int STAGES_MAX = 24;
+	static const int FREQUENY_MIN = 40;
+	static const int FREQUENY_MAX = 10000;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -61,22 +86,16 @@ public:
 private:	
 	//==============================================================================
 
-	std::atomic<float>* gainParameter = nullptr;
-	std::atomic<float>* shapeParameter = nullptr;
-	std::atomic<float>* spreadParameter = nullptr;
+	std::atomic<float>* frequencyParameter = nullptr;
+	std::atomic<float>* stagesParameter = nullptr;
+	std::atomic<float>* lowCutParameter = nullptr;
+	std::atomic<float>* highCutParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	juce::AudioParameterBool* button1Parameter = nullptr;
-	juce::AudioParameterBool* button2Parameter = nullptr;
-	juce::AudioParameterBool* button3Parameter = nullptr;
+	CombFilter m_combFilter[STAGES_MAX][2];
+	BiquadFilter m_lowCutFilter[2] = {};
+	BiquadFilter m_highCutFilter[2] = {};
 
-	InflatorWaveShaper m_inflatorWaveShaper[2] = {};
-	SineWaveShaper m_sineWaveShaper[2] = {};
-	BiquadFilter m_DCFilter[2] = {};
-
-	BiquadFilter m_oversampleFilter[2] = {};
-	BiquadFilter m_downsampleFilter[2] = {};
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SineWaveshaperAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombFilterAudioProcessor)
 };

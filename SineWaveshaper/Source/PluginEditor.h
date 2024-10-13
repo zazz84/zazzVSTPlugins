@@ -34,9 +34,11 @@ private:
 
 	juce::TextButton button1{ "1" };
 	juce::TextButton button2{ "2" };
+	juce::TextButton button3{ "8x" };
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button1Attachment;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button2Attachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button3Attachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SineWaveshaperAudioProcessorEditor)
 };

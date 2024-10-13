@@ -201,7 +201,7 @@ public:
 	};
 
 private:
-	float m_gain;
+	float m_gain = 1.0f;
 	ARRYWaveShaper m_waveShaper;
 	SoftClipper m_softClipper;
 };

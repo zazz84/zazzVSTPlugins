@@ -8,6 +8,9 @@
       <FILE id="iyosBh" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="pTzDDa" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
+      <FILE id="S1s5F5" name="Oversampling.cpp" compile="1" resource="0"
+            file="../Shared/Utilities/Oversampling.cpp"/>
+      <FILE id="Bg2foJ" name="Oversampling.h" compile="0" resource="0" file="../Shared/Utilities/Oversampling.h"/>
       <FILE id="XAeokE" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="zw1v0c" name="ZazzLookAndFeel.h" compile="0" resource="0"
