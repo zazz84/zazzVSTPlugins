@@ -2456,3 +2456,193 @@ SineWaveshaper/Builds/VisualStudio2017/SineWaveshaper_SharedCode.vcxproj.user
 SineWaveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Oversampling.obj
 SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Oversampling.obj
 SineWaveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/SineWave.E48D8692.tlog/CL.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/.suo
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/Browse.VC.db
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/ipch/AutoPCH/74430e7bc2deb393/PLUGINPROCESSOR.ipch
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/ipch/AutoPCH/8f6e155b8645469c/PLUGINEDITOR.ipch
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/ipch/AutoPCH/b32317f2b0c71cbc/CIRCULARBUFFERS.ipch
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/ipch/AutoPCH/bda15c869557c41c/PLUGINEDITOR.ipch
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/ipch/AutoPCH/f1ad16a5752fc213/PLUGINPROCESSOR.ipch
+FDNReverb/Builds/VisualStudio2017/.vs/FDNReverb/v15/Solution.VC.db
+FDNReverb/Builds/VisualStudio2017/FDNReverb.sln
+FDNReverb/Builds/VisualStudio2017/FDNReverb_SharedCode.vcxproj
+FDNReverb/Builds/VisualStudio2017/FDNReverb_SharedCode.vcxproj.filters
+FDNReverb/Builds/VisualStudio2017/FDNReverb_StandalonePlugin.vcxproj
+FDNReverb/Builds/VisualStudio2017/FDNReverb_StandalonePlugin.vcxproj.filters
+FDNReverb/Builds/VisualStudio2017/FDNReverb_VST3.vcxproj
+FDNReverb/Builds/VisualStudio2017/FDNReverb_VST3.vcxproj.filters
+FDNReverb/Builds/VisualStudio2017/FDNReverb_VST3.vcxproj.user
+FDNReverb/Builds/VisualStudio2017/FDNReverb_VST3ManifestHelper.vcxproj
+FDNReverb/Builds/VisualStudio2017/FDNReverb_VST3ManifestHelper.vcxproj.filters
+FDNReverb/Builds/VisualStudio2017/resources.rc
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/CL.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/CL.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/CL.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/FDNReverb_SharedCode.lastbuildstate
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/Lib-link.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/Lib-link.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNRever.32A1B442.tlog/Lib.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNReverb.lib
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNReverb.pdb
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/FDNReverb_SharedCode.log
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/CL.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/CL.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/CL.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/FDNReverb_VST3ManifestHelper.lastbuildstate
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/link.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/link.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/link.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/rc.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/rc.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNRever.A30E2443.tlog/rc.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/FDNReverb_VST3ManifestHelper.log
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.dll
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.exp
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.ilk
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.lib
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.pdb
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.vst3/Contents/Resources/moduleinfo.json
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb.vst3/Contents/x86_64-win/FDNReverb.vst3
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.log
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/CL.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/CL.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/CL.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/FDNReverb_VST3.lastbuildstate
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/FDNReverb_VST3.write.1u.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/link.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/link.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/link.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/rc.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/rc.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/FDNReverb_VST3.tlog/rc.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+FDNReverb/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/CL.10840.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/CL.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/CL.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/FDNReverb_SharedCode.lastbuildstate
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/Lib-link.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/Lib-link.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNRever.32A1B442.tlog/Lib.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNReverb.lib
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNReverb.pdb
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/FDNReverb_SharedCode.log
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/CL.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/CL.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/CL.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/FDNReverb_VST3ManifestHelper.lastbuildstate
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/link.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/link.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/link.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/rc.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/rc.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNRever.A30E2443.tlog/rc.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/FDNReverb_VST3ManifestHelper.log
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb.dll
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb.exp
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb.lib
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb.pdb
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb.vst3/Contents/Resources/moduleinfo.json
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb.vst3/Contents/x86_64-win/FDNReverb.vst3
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.log
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/CL.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/CL.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/CL.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/FDNReverb_VST3.lastbuildstate
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/FDNReverb_VST3.write.1u.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/link.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/link.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/link.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/rc.command.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/rc.read.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/FDNReverb_VST3.tlog/rc.write.1.tlog
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+FDNReverb/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+FDNReverb/JuceLibraryCode/include_juce_audio_basics.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_basics.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_devices.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_devices.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_formats.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_formats.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_processors.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_processors.mm
+FDNReverb/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_utils.cpp
+FDNReverb/JuceLibraryCode/include_juce_audio_utils.mm
+FDNReverb/JuceLibraryCode/include_juce_core.cpp
+FDNReverb/JuceLibraryCode/include_juce_core.mm
+FDNReverb/JuceLibraryCode/include_juce_data_structures.cpp
+FDNReverb/JuceLibraryCode/include_juce_data_structures.mm
+FDNReverb/JuceLibraryCode/include_juce_events.cpp
+FDNReverb/JuceLibraryCode/include_juce_events.mm
+FDNReverb/JuceLibraryCode/include_juce_graphics.cpp
+FDNReverb/JuceLibraryCode/include_juce_graphics.mm
+FDNReverb/JuceLibraryCode/include_juce_gui_basics.cpp
+FDNReverb/JuceLibraryCode/include_juce_gui_basics.mm
+FDNReverb/JuceLibraryCode/include_juce_gui_extra.cpp
+FDNReverb/JuceLibraryCode/include_juce_gui_extra.mm
+FDNReverb/JuceLibraryCode/JuceHeader.h
+FDNReverb/JuceLibraryCode/JucePluginDefines.h
+FDNReverb/JuceLibraryCode/ReadMe.txt
+FDNReverb/FDNReverb.filtergraph
