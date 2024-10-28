@@ -2646,3 +2646,191 @@ FDNReverb/JuceLibraryCode/JuceHeader.h
 FDNReverb/JuceLibraryCode/JucePluginDefines.h
 FDNReverb/JuceLibraryCode/ReadMe.txt
 FDNReverb/FDNReverb.filtergraph
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/.suo
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/Browse.VC.db
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/ipch/AutoPCH/2df510ab0145f04b/PLUGINPROCESSOR.ipch
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/ipch/AutoPCH/308ea932a2b5ed0f/PLUGINEDITOR.ipch
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/ipch/AutoPCH/36bf0cb376fa79af/PLUGINEDITOR.ipch
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/ipch/AutoPCH/7ac0c4e5d74e6598/PLUGINPROCESSOR.ipch
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/ipch/AutoPCH/7ef22ddb5f140bb8/PLUGINPROCESSOR.ipch
+BassEnhancer/Builds/VisualStudio2017/.vs/BassEnhancer/v15/Solution.VC.db
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer.sln
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_SharedCode.vcxproj
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_SharedCode.vcxproj.filters
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_StandalonePlugin.vcxproj
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_StandalonePlugin.vcxproj.filters
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_VST3.vcxproj
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_VST3.vcxproj.filters
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_VST3ManifestHelper.vcxproj
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_VST3ManifestHelper.vcxproj.filters
+BassEnhancer/Builds/VisualStudio2017/resources.rc
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/AllPassFilters .obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/BassEnhancer_SharedCode.lastbuildstate
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/CL.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/CL.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/CL.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/Lib-link.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/Lib-link.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnha.9830750F.tlog/Lib.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnhancer.lib
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnhancer.pdb
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BassEnhancer_SharedCode.log
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/BassEnhancer_VST3ManifestHelper.lastbuildstate
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/CL.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/CL.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/CL.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/link.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/link.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/link.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/rc.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/rc.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/rc.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BassEnhancer_VST3ManifestHelper.log
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/BassEnhancer_VST3.lastbuildstate
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/BassEnhancer_VST3.write.1u.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/CL.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/CL.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/CL.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/link.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/link.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/link.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/rc.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/rc.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnha.972A9513.tlog/rc.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.dll
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.exp
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.ilk
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.lib
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.pdb
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.vst3/Contents/Resources/moduleinfo.json
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer.vst3/Contents/x86_64-win/BassEnhancer.vst3
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/BassEnhancer_VST3.log
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/AllPassFilters .obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/BassEnhancer_SharedCode.lastbuildstate
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1316.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/Lib-link.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/Lib-link.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/Lib.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnhancer.lib
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnhancer.pdb
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnhancer_SharedCode.log
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/BassEnhancer_VST3ManifestHelper.lastbuildstate
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/CL.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/CL.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/CL.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/link.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/link.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/link.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/rc.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/rc.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnha.EA466C9B.tlog/rc.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BassEnhancer_VST3ManifestHelper.log
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/BassEnhancer_VST3.lastbuildstate
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/BassEnhancer_VST3.write.1u.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/CL.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/CL.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/CL.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/link.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/link.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/link.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/rc.command.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/rc.read.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnha.972A9513.tlog/rc.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer.dll
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer.exp
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer.lib
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer.pdb
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer.vst3/Contents/Resources/moduleinfo.json
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer.vst3/Contents/x86_64-win/BassEnhancer.vst3
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/BassEnhancer_VST3.log
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+BassEnhancer/JuceLibraryCode/include_juce_audio_basics.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_basics.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_devices.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_devices.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_formats.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_formats.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_processors.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_processors.mm
+BassEnhancer/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_utils.cpp
+BassEnhancer/JuceLibraryCode/include_juce_audio_utils.mm
+BassEnhancer/JuceLibraryCode/include_juce_core.cpp
+BassEnhancer/JuceLibraryCode/include_juce_core.mm
+BassEnhancer/JuceLibraryCode/include_juce_data_structures.cpp
+BassEnhancer/JuceLibraryCode/include_juce_data_structures.mm
+BassEnhancer/JuceLibraryCode/include_juce_events.cpp
+BassEnhancer/JuceLibraryCode/include_juce_events.mm
+BassEnhancer/JuceLibraryCode/include_juce_graphics.cpp
+BassEnhancer/JuceLibraryCode/include_juce_graphics.mm
+BassEnhancer/JuceLibraryCode/include_juce_gui_basics.cpp
+BassEnhancer/JuceLibraryCode/include_juce_gui_basics.mm
+BassEnhancer/JuceLibraryCode/include_juce_gui_extra.cpp
+BassEnhancer/JuceLibraryCode/include_juce_gui_extra.mm
+BassEnhancer/JuceLibraryCode/JuceHeader.h
+BassEnhancer/JuceLibraryCode/JucePluginDefines.h
+BassEnhancer/JuceLibraryCode/ReadMe.txt
