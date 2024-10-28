@@ -94,8 +94,6 @@ private:
 	std::atomic<float>* volumeParameter = nullptr;
 
 	MovingAverage m_filter[2] = {};
-	BiquadFilter m_DCFilter[2] = {};
-	TubeEmulation m_waveShaper[2] = {};
 
 	float m_inLast[2];
 

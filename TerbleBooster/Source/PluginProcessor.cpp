@@ -104,16 +104,6 @@ void TerbleBoosterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 	const int samples = 13 * frequencyFactor;
 	m_filter[0].init(samples);
 	m_filter[1].init(samples);
-
-	const int sr = (int)sampleRate;
-	m_DCFilter[0].init(sr);
-	m_DCFilter[1].init(sr);
-
-	m_DCFilter[0].setHighPass(30.0f, 1.0f);
-	m_DCFilter[1].setHighPass(30.0f, 1.0f);
-
-	m_waveShaper[0].init(sr);
-	m_waveShaper[1].init(sr);
 }
 
 void TerbleBoosterAudioProcessor::releaseResources()
@@ -163,6 +153,7 @@ void TerbleBoosterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 	const auto samples = buffer.getNumSamples();
 	const auto volumeFactor = sampleRate / 44100.0f;
 	const auto gain = (3.0f * 10.0f) * frequency * volumeFactor;
+	const auto gainMix = mix * gain;
 	
 	for (int channel = 0; channel < channels; ++channel)
 	{
@@ -171,8 +162,6 @@ void TerbleBoosterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 
 		auto& inLast = m_inLast[channel];
 		auto& filter = m_filter[channel];
-		auto& DCFilter = m_DCFilter[channel];
-		auto& waveShaper = m_waveShaper[channel];
 		filter.set(frequency * frequencyFactor);
 
 		for (int sample = 0; sample < samples; sample++)
@@ -180,13 +169,10 @@ void TerbleBoosterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 			const float in = channelBuffer[sample];
 			
 			const float diff = in - inLast;
-			const float diffAverage = filter.process(diff);
-			float out = gain * diffAverage;
-			out = DCFilter.processDF1(out);
-			out = (2.5f * 0.1f) * waveShaper.process(out);
+			const float out = filter.process(diff);
 			inLast = in;
 
-			channelBuffer[sample] = volume * (mixInverse * in + mix * out);
+			channelBuffer[sample] = volume * (mixInverse * in + gainMix * out);
 		}
 	}
 }
