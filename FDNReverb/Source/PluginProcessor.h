@@ -129,9 +129,16 @@ private:
 	OnePoleFilter m_filter[2][DELAY_LINES_COUNT];
 	BiquadFilter m_lowShelf[2];
 	BiquadFilter m_highShelf[2];
-	BiquadFilter m_lowPass[2];
 	float m_tmp[DELAY_LINES_COUNT];
+	float m_bGain[DELAY_LINES_COUNT];
+	float m_cGain[DELAY_LINES_COUNT];
+
+	// More reflective
 	const int m_primeNumbers[DELAY_LINES_COUNT] = { 631, 7, 839, 83, 29, 757, 23, 887, 31, 941, 211, 719, 857, 569, 47, 991 };
+	// More smooth
+	//const int m_primeNumbers[DELAY_LINES_COUNT] = { 631, 443, 509, 83, 29, 757, 23, 809, 337, 157, 211, 719, 857, 569, 47, 991 };
+	//const int m_primeNumbers[DELAY_LINES_COUNT] = { 631, 443, 509, 83, 39, 757, 23, 809, 337, 157, 211, 719, 857, 569, 47, 991 };
+
 	float m_delayTimes[DELAY_LINES_COUNT];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FDNReverbAudioProcessor)

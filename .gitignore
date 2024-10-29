@@ -2834,3 +2834,4 @@ BassEnhancer/JuceLibraryCode/include_juce_gui_extra.mm
 BassEnhancer/JuceLibraryCode/JuceHeader.h
 BassEnhancer/JuceLibraryCode/JucePluginDefines.h
 BassEnhancer/JuceLibraryCode/ReadMe.txt
+FDNReverb/Builds/VisualStudio2017/FDNReverb_SharedCode.vcxproj.user

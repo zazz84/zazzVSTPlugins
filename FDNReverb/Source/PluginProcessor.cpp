@@ -112,8 +112,6 @@ void FDNReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 	{
 		m_lowShelf[channel].init(sr);
 		m_highShelf[channel].init(sr);
-		m_lowPass[channel].init(sr);
-		m_lowPass[channel].setLowPass(14000.0f, 0.7f);
 
 		for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
 		{
@@ -121,6 +119,15 @@ void FDNReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 			m_filter[channel][buffer].init(sr);
 		}
 	}
+
+	/*for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
+	{
+		//Get distance
+		const float delayTime = MAXIMUM_DELAY_TIME * m_primeNumbers[buffer] / (float)m_primeNumbers[DELAY_LINES_COUNT - 1];
+		const float distance = delayTime * 343.0f;
+		constexpr auto a = 3.0f;
+		m_bGain[buffer] = a / (distance + a);
+	}*/
 }
 
 void FDNReverbAudioProcessor::releaseResources()
@@ -170,29 +177,32 @@ void FDNReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 	const auto mixAdjustedGain = 0.25f * mix;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto sampleRate = getSampleRate();
+	const auto sampleRate = (float)getSampleRate();
 	const auto delayTime = 0.001f + (MAXIMUM_DELAY_TIME - 0.001f) * size;
-	const auto feedback = 0.99f * resonance;
+	const auto feedback = 0.95f * resonance;
 	const auto gain = color * 6.0f;
-	const auto widthFactor = 1.0f - width * 0.02f;	
+	const auto widthFactor = 1.0f - width * 0.015f;	
 	const float primeNumbersNormalize = 1.0f / (float)m_primeNumbers[15];
 	const float samplesMultiplier = delayTime * sampleRate * primeNumbersNormalize;
+	const auto damping3 = 0.01f * damping * damping * damping;
 
 	for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
 	{
-		const float primeNumber = (float)m_primeNumbers[buffer];
-		
-		m_delayTimes[buffer] = primeNumber * samplesMultiplier;
-		const float delayNormalized = primeNumber * primeNumbersNormalize;
-		m_filter[0][buffer].set(16000.0f - 15000.0f * damping * delayNormalized);
-		m_filter[1][buffer].set(16000.0f - 15000.0f * damping * delayNormalized);
-		m_buffer[0][buffer].setSize((int)m_delayTimes[buffer]);
-	}
+		// Set delay time
+		const float delayTime = (float)m_primeNumbers[buffer] * samplesMultiplier;
+		m_buffer[0][buffer].setSize((int)delayTime);
+		m_buffer[1][buffer].setSize((int)(widthFactor * delayTime));
 
-	for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
-	{		
-		// Add width
-		m_buffer[1][buffer].setSize((int)(widthFactor * m_delayTimes[buffer]));
+		//Set bGain
+		const float time = MAXIMUM_DELAY_TIME * (float)m_primeNumbers[buffer] * primeNumbersNormalize;
+		const float distance = time * 343.0f;
+		constexpr auto a = 10.0f;
+		m_bGain[buffer] = a / (distance + a);
+
+		// Set filter
+		const auto frequency = 16000.0f * std::expf(-damping3 * distance);
+		m_filter[0][buffer].set(frequency);
+		m_filter[1][buffer].set(frequency);
 	}
 
 	// Process buffer
@@ -202,7 +212,6 @@ void FDNReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 		auto* channelBuffer = buffer.getWritePointer(channel);
 		auto& lowShelf = m_lowShelf[channel];
 		auto& highShelf = m_highShelf[channel];
-		auto& lowPass = m_lowPass[channel];
 
 		lowShelf.setLowShelf(660.0f, 0.4f, -gain);
 		highShelf.setHighShelf(660.0f, 0.4f, gain);
@@ -212,17 +221,18 @@ void FDNReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 			const float in = channelBuffer[sample];
 
 			// Add color
-			const float inColor = lowPass.processDF1(lowShelf.processDF1(highShelf.processDF1(in)));
+			const float inColor = lowShelf.processDF1(highShelf.processDF1(in));
 
 			//Read samples
 			float out = 0.0f;
 			for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
 			{
 				m_tmp[buffer] = m_buffer[channel][buffer].read();
-				out += m_tmp[buffer];
 
 				// Filter
 				m_tmp[buffer] = m_filter[channel][buffer].process(m_tmp[buffer]);
+
+				out += m_tmp[buffer];
 			}
 
 			// FWHT
@@ -231,7 +241,8 @@ void FDNReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 			// Writte sample
 			for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
 			{
-				m_buffer[channel][buffer].writeSample(inColor + feedback * m_tmp[buffer]);
+				m_buffer[channel][buffer].writeSample(m_bGain[buffer] * inColor + feedback * m_tmp[buffer]);
+				//m_buffer[channel][buffer].writeSample(inColor + feedback * m_tmp[buffer]);
 			}
 			
 			channelBuffer[sample] = volume * (mixInverse * in + mixAdjustedGain * out);

@@ -64,7 +64,7 @@ private:
 	FirstOrderAllPass m_allPassFilter[2];
 
 	std::atomic<float>* frequencyParameter = nullptr;
-	std::atomic<float>* ammountParameter = nullptr;
+	std::atomic<float>* amountParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassEnhancerAudioProcessor)

@@ -11,7 +11,7 @@
 
 //==============================================================================
 
-const std::string BassEnhancerAudioProcessor::paramsNames[] = { "Frequency", "Ammount", "Volume" };
+const std::string BassEnhancerAudioProcessor::paramsNames[] = { "Frequency", "Amount", "Volume" };
 
 //==============================================================================
 BassEnhancerAudioProcessor::BassEnhancerAudioProcessor()
@@ -27,7 +27,7 @@ BassEnhancerAudioProcessor::BassEnhancerAudioProcessor()
 #endif
 {
 	frequencyParameter = apvts.getRawParameterValue(paramsNames[0]);
-	ammountParameter       = apvts.getRawParameterValue(paramsNames[1]);
+	amountParameter       = apvts.getRawParameterValue(paramsNames[1]);
 	volumeParameter    = apvts.getRawParameterValue(paramsNames[2]);
 }
 
@@ -150,7 +150,7 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
 	// Get params
 	const auto frequency = frequencyParameter->load();
-	const auto ammount = ammountParameter->load();
+	const auto amount = amountParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -158,7 +158,7 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 	const auto samples = buffer.getNumSamples();
 	constexpr float maxVolume = 18.0f;
 	const auto resonanceGain = juce::Decibels::decibelsToGain(maxVolume);
-	const auto lowGain = 0.5f * gain * resonanceGain * juce::Decibels::decibelsToGain(-2.0f * maxVolume * (1.0f - ammount));
+	const auto lowGain = 0.5f * gain * resonanceGain * juce::Decibels::decibelsToGain(-2.0f * maxVolume * (1.0f - amount));
 	
 	for (int channel = 0; channel < channels; ++channel)
 	{
