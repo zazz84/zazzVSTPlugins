@@ -38,7 +38,7 @@ SineWaveshaperAudioProcessorEditor::SineWaveshaperAudioProcessorEditor (SineWave
 
 	button1Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "1", button1));
 	button2Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "2", button2));
-	button3Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "8x", button3));
+	button3Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "32x", button3));
 
 	// Canvas
 	createCanvas(*this, N_SLIDERS);

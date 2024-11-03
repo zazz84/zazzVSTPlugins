@@ -13,7 +13,7 @@ public:
     ~FDNReverbAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 7;
+	static const int N_SLIDERS = 9;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;

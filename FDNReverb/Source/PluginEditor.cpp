@@ -45,7 +45,8 @@ void FDNReverbAudioProcessorEditor::paint (juce::Graphics& g)
 	const int width = (int)(getWidth() / N_SLIDERS);
 	const int height = getHeight();
 
-	g.drawVerticalLine(5 * width, 0, height);
+	g.drawVerticalLine(3 * width, 0, height);
+	g.drawVerticalLine(7 * width, 0, height);
 }
 
 void FDNReverbAudioProcessorEditor::resized()

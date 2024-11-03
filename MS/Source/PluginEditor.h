@@ -6,15 +6,14 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
 //==============================================================================
-class SineWaveshaperAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class MSAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
 {
 public:
-    SineWaveshaperAudioProcessorEditor (SineWaveshaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~SineWaveshaperAudioProcessorEditor() override;
+    MSAudioProcessorEditor (MSAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~MSAudioProcessorEditor() override;
 
 	// GUI setup
 	static const int N_SLIDERS = 5;
-	static const int TYPE_BUTTON_GROUP = 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -24,7 +23,7 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 
 private:
-    SineWaveshaperAudioProcessor& audioProcessor;
+    MSAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
@@ -32,13 +31,5 @@ private:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
-	juce::TextButton button1{ "1" };
-	juce::TextButton button2{ "2" };
-	juce::TextButton button3{ "32x" };
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button1Attachment;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button2Attachment;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button3Attachment;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SineWaveshaperAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MSAudioProcessorEditor)
 };

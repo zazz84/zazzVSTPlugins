@@ -34,7 +34,7 @@ SineWaveshaperAudioProcessor::SineWaveshaperAudioProcessor()
 
 	button1Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("1"));
 	button2Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("2"));
-	button3Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("8x"));
+	button3Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("32x"));
 }
 
 SineWaveshaperAudioProcessor::~SineWaveshaperAudioProcessor()
@@ -112,8 +112,8 @@ void SineWaveshaperAudioProcessor::prepareToPlay (double sampleRate, int samples
 	m_DCFilter[0].init(sr);
 	m_DCFilter[1].init(sr);
 
-	m_DCFilter[0].setHighPass(20.0f, 1.0f);
-	m_DCFilter[1].setHighPass(20.0f, 1.0f);
+	m_DCFilter[0].setHighPass(15.0f, 0.7f);
+	m_DCFilter[1].setHighPass(15.0f, 0.7f);
 
 	m_oversampleFilter[0].init(oversampleRate);
 	m_oversampleFilter[1].init(oversampleRate);
@@ -121,8 +121,8 @@ void SineWaveshaperAudioProcessor::prepareToPlay (double sampleRate, int samples
 	m_downsampleFilter[0].init(oversampleRate);
 	m_downsampleFilter[1].init(oversampleRate);
 
-	const float f = 22000.0f;
-	const float q = 0.8f;
+	const float f = fminf(30000.0f, 0.5f * (float)sampleRate);
+	const float q = 0.75f;
 	m_oversampleFilter[0].setLowPass(f, q);
 	m_oversampleFilter[1].setLowPass(f, q);
 
@@ -178,6 +178,7 @@ void SineWaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 	const auto mixInverse = 1.0f - mix;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto gainReduction = juce::Decibels::decibelsToGain(-30.0f);
 
 	if (button3)
 	{
@@ -199,34 +200,23 @@ void SineWaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 				{
 					const float in = channelBuffer[sample];
 
-					float in1 = oversampleFilter.processDF1(9.5f * gain * in);
-					float in2 = oversampleFilter.processDF1(0.0f);
-					float in3 = oversampleFilter.processDF1(0.0f);
-					float in4 = oversampleFilter.processDF1(0.0f);
-					float in5 = oversampleFilter.processDF1(0.0f);
-					float in6 = oversampleFilter.processDF1(0.0f);
-					float in7 = oversampleFilter.processDF1(0.0f);
-					float in8 = oversampleFilter.processDF1(0.0f);
+					m_temp[0] = oversampleFilter.processDF1((float)OVERSAMPLE * gain * in);
 
-					in1 = waveShaper.process(in1 + offset);
-					in2 = waveShaper.process(in2 + offset);
-					in3 = waveShaper.process(in3 + offset);
-					in4 = waveShaper.process(in4 + offset);
-					in5 = waveShaper.process(in5 + offset);
-					in6 = waveShaper.process(in6 + offset);
-					in7 = waveShaper.process(in7 + offset);
-					in8 = waveShaper.process(in8 + offset);
+					for (int i = 1; i < OVERSAMPLE; i++)
+					{
+						m_temp[i] = oversampleFilter.processDF1(0.0f);
+					}
+					
+					float sum = 0.0f;
+					for (int i = 0; i < OVERSAMPLE; i++)
+					{
+						float tmp = m_temp[i];
+						tmp = waveShaper.process(tmp + offset);
+						tmp = downsampleFilter.processDF1(tmp);
+						sum += tmp;
+					}
 
-					in1 = downsampleFilter.processDF1(in1);
-					in2 = downsampleFilter.processDF1(in2);
-					in3 = downsampleFilter.processDF1(in3);
-					in4 = downsampleFilter.processDF1(in4);
-					in5 = downsampleFilter.processDF1(in5);
-					in6 = downsampleFilter.processDF1(in6);
-					in7 = downsampleFilter.processDF1(in7);
-					in8 = downsampleFilter.processDF1(in8);
-
-					float out = DCFilter.processDF1(0.125f * (in1 + in2 + in3 + in4 + in5 + in6 + in7));
+					const float out = DCFilter.processDF1(gainReduction * sum);
 
 					channelBuffer[sample] = volume * (mixInverse * in + mix * out);
 				}
@@ -240,34 +230,23 @@ void SineWaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 				{
 					const float in = channelBuffer[sample];
 
-					float in1 = oversampleFilter.processDF1(9.5f * gain * in);
-					float in2 = oversampleFilter.processDF1(0.0f);
-					float in3 = oversampleFilter.processDF1(0.0f);
-					float in4 = oversampleFilter.processDF1(0.0f);
-					float in5 = oversampleFilter.processDF1(0.0f);
-					float in6 = oversampleFilter.processDF1(0.0f);
-					float in7 = oversampleFilter.processDF1(0.0f);
-					float in8 = oversampleFilter.processDF1(0.0f);
+					m_temp[0] = oversampleFilter.processDF1((float)OVERSAMPLE * gain * in);
 
-					in1 = waveShaper.process(in1 + offset);
-					in2 = waveShaper.process(in2 + offset);
-					in3 = waveShaper.process(in3 + offset);
-					in4 = waveShaper.process(in4 + offset);
-					in5 = waveShaper.process(in5 + offset);
-					in6 = waveShaper.process(in6 + offset);
-					in7 = waveShaper.process(in7 + offset);
-					in8 = waveShaper.process(in8 + offset);
+					for (int i = 1; i < OVERSAMPLE; i++)
+					{
+						m_temp[i] = oversampleFilter.processDF1(0.0f);
+					}
 
-					in1 = downsampleFilter.processDF1(in1);
-					in2 = downsampleFilter.processDF1(in2);
-					in3 = downsampleFilter.processDF1(in3);
-					in4 = downsampleFilter.processDF1(in4);
-					in5 = downsampleFilter.processDF1(in5);
-					in6 = downsampleFilter.processDF1(in6);
-					in7 = downsampleFilter.processDF1(in7);
-					in8 = downsampleFilter.processDF1(in8);
+					float sum = 0.0f;
+					for (int i = 0; i < OVERSAMPLE; i++)
+					{
+						float tmp = m_temp[i];
+						tmp = waveShaper.process(tmp + offset);
+						tmp = downsampleFilter.processDF1(tmp);
+						sum += tmp;
+					}
 
-					float out = DCFilter.processDF1(0.125f * (in1 + in2 + in3 + in4 + in5 + in6 + in7));
+					const float out = DCFilter.processDF1(gainReduction * sum);
 
 					channelBuffer[sample] = volume * (mixInverse * in + mix * out);
 				}
@@ -361,7 +340,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SineWaveshaperAudioProcessor
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("1", "1", true));
 	layout.add(std::make_unique<juce::AudioParameterBool>("2", "2", false));
-	layout.add(std::make_unique<juce::AudioParameterBool>("8x", "8x", true));
+	layout.add(std::make_unique<juce::AudioParameterBool>("32x", "32x", true));
 
 	return layout;
 }

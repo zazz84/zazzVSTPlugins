@@ -1,11 +1,9 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
-class SineWaveshaperAudioProcessor  : public juce::AudioProcessor
+class MSAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -13,11 +11,10 @@ class SineWaveshaperAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    SineWaveshaperAudioProcessor();
-    ~SineWaveshaperAudioProcessor() override;
+    MSAudioProcessor();
+    ~MSAudioProcessor() override;
 
 	static const std::string paramsNames[];
-	static const int OVERSAMPLE = 32;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -59,25 +56,11 @@ public:
 
 private:	
 	//==============================================================================
-
-	std::atomic<float>* gainParameter = nullptr;
-	std::atomic<float>* shapeParameter = nullptr;
-	std::atomic<float>* spreadParameter = nullptr;
-	std::atomic<float>* mixParameter = nullptr;
+	std::atomic<float>* mGainParameter = nullptr;
+	std::atomic<float>* sGainParameter = nullptr;
+	std::atomic<float>* mPanParameter = nullptr;
+	std::atomic<float>* sPanParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	juce::AudioParameterBool* button1Parameter = nullptr;
-	juce::AudioParameterBool* button2Parameter = nullptr;
-	juce::AudioParameterBool* button3Parameter = nullptr;
-
-	InflatorWaveShaper m_inflatorWaveShaper[2] = {};
-	SineWaveShaper m_sineWaveShaper[2] = {};
-	BiquadFilter m_DCFilter[2] = {};
-
-	BiquadFilter m_oversampleFilter[2] = {};
-	BiquadFilter m_downsampleFilter[2] = {};
-
-	float m_temp[OVERSAMPLE];
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SineWaveshaperAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MSAudioProcessor)
 };
