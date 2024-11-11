@@ -128,8 +128,8 @@ void CircularCombFilterAdvanced::init(int channel, int sampleRate)
 
 void CircularCombFilterAdvanced::set(CircularCombFilterParams params)
 {
-	if (!paramsChanged(params))
-		return;
+	//if (!paramsChanged(params))
+	//	return;
 
 	int combFilterDelaySamples[MAX_COMPLEXITY];
 	int allPassDelaySamples[MAX_COMPLEXITY];
@@ -141,7 +141,7 @@ void CircularCombFilterAdvanced::set(CircularCombFilterParams params)
 	const auto allPassWidth = (m_channel == 1) ? 1.0f - params.width * 0.1f : 1.0f;
 	const float frequencyMax = fminf(20000.0f, 0.48f * m_sampleRate);
 
-	m_noiseGenerator.setSeed(params.allPassSeed);
+	m_noiseGenerator.setSeed((long)params.allPassSeed);
 
 	for (int i = 0; i < MAX_COMPLEXITY; i++)
 	{
