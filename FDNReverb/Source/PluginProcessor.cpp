@@ -11,8 +11,26 @@
 
 //==============================================================================
 
-const std::string FDNReverbAudioProcessor::paramsNames[] = { "L", "W", "H", "Resonance", "Absorbrion", "Color", "Width", "Mix", "Volume" };
-const float FDNReverbAudioProcessor::MAXIMUM_DELAY_TIME = 0.1f;
+const std::string FDNReverbAudioProcessor::paramsNames[] = { "L", "W", "H", "Reflections", "ER Damping", "ER Width", "Predelay", "Time", "Size", "Color", "LR Damping", "LR Width", "ER Volume", "LR Volume", "Mix", "Volume" };
+const std::string FDNReverbAudioProcessor::paramsUnitNames[] = { " m", " m", " m", "", " %", " %", " ms", " s", "", "", " %", " %", " dB", " dB", " %", " dB" };
+const float FDNReverbAudioProcessor::MAXIMUM_DELAY_TIME = 0.08f;
+const float FDNReverbAudioProcessor::AVERAGE_DELAY_TIME = 0.452648f;
+const float FDNReverbAudioProcessor::MAXIMUM_ROOM_DIMENSION = 40.0f;
+/*const float FDNReverbAudioProcessor::LATE_REFLECTION_DELAY_TIME_NORMALIZED[] = {0.636737f, 0.446518f, 0.513624f, 0.083762f,
+																				0.029272f, 0.763866f, 0.023210f, 0.816345f,
+																				0.340262f, 0.158223f, 0.212917f, 0.725045f,
+																				0.865289f, 0.574166f, 0.047429f, 1.000000f };*/
+
+const float FDNReverbAudioProcessor::LATE_REFLECTION_DELAY_TIME_NORMALIZED[] = { 0.9137f, 0.5557f, 0.1591f, 0.0544f,
+																				 0.5253f, 0.8724f, 0.0168f, 0.6907f,
+																				 0.6329f, 0.0941f, 0.8688f, 0.7679f,
+																				 0.0428f, 0.4224f, 0.6195f, 1.0000f };
+
+/*const float FDNReverbAudioProcessor::LATE_REFLECTION_DELAY_TIME_NORMALIZED[] = { 0.0612f, 0.0577f, 0.0971f, 0.1593f,
+																				 0.1836f, 0.2519f, 0.3399f, 0.3627f,
+																				 0.4628f, 0.5190f, 0.6070f, 0.7026f,
+																				 0.7860f, 0.8255f, 0.9196f, 1.0000f };*/
+
 
 //==============================================================================
 FDNReverbAudioProcessor::FDNReverbAudioProcessor()
@@ -27,15 +45,25 @@ FDNReverbAudioProcessor::FDNReverbAudioProcessor()
                        )
 #endif
 {
-	LParameter    = apvts.getRawParameterValue(paramsNames[0]);
-	WParameter     = apvts.getRawParameterValue(paramsNames[1]);
-	HParameter    = apvts.getRawParameterValue(paramsNames[2]);
-	resonanceParameter = apvts.getRawParameterValue(paramsNames[3]);
-	dampingParameter   = apvts.getRawParameterValue(paramsNames[4]);
-	colorParameter     = apvts.getRawParameterValue(paramsNames[5]);
-	widthParameter     = apvts.getRawParameterValue(paramsNames[6]);
-	mixParameter       = apvts.getRawParameterValue(paramsNames[7]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[8]);
+	// Early reflections
+	LParameter = apvts.getRawParameterValue(paramsNames[0]);
+	WParameter = apvts.getRawParameterValue(paramsNames[1]);
+	HParameter = apvts.getRawParameterValue(paramsNames[2]);
+	ReflectionsParameter = apvts.getRawParameterValue(paramsNames[3]);
+	ERDampingParameter = apvts.getRawParameterValue(paramsNames[4]);
+	ERWidthParameter = apvts.getRawParameterValue(paramsNames[5]);
+	// Late reflections
+	LRPredelayParameter = apvts.getRawParameterValue(paramsNames[6]);
+	timeParameter = apvts.getRawParameterValue(paramsNames[7]);
+	sizeParameter = apvts.getRawParameterValue(paramsNames[8]);
+	colorParameter = apvts.getRawParameterValue(paramsNames[9]);
+	LRDampingParameter = apvts.getRawParameterValue(paramsNames[10]);
+	LRWidthParameter = apvts.getRawParameterValue(paramsNames[11]);
+	// Mix
+	ERVolumeParameter = apvts.getRawParameterValue(paramsNames[12]);
+	LRVolumeParameter = apvts.getRawParameterValue(paramsNames[13]);
+	mixParameter = apvts.getRawParameterValue(paramsNames[14]);
+	volumeParameter = apvts.getRawParameterValue(paramsNames[15]);
 }
 
 FDNReverbAudioProcessor::~FDNReverbAudioProcessor()
@@ -107,29 +135,31 @@ void FDNReverbAudioProcessor::changeProgramName (int index, const juce::String& 
 //==============================================================================
 void FDNReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	const int maximumSize = (int)(MAXIMUM_DELAY_TIME * sampleRate);
+	const int maximumERSize = (int)(2.0 * (double)MAXIMUM_ROOM_DIMENSION * sampleRate / SPEED_OF_SOUND);
+	const float maximumLRSize = MAXIMUM_DELAY_TIME * (float)sampleRate;
 	const int sr = (int)sampleRate;
+	const int maximumPredelayTimeSamples = (int)((float)sampleRate * MAXIMUM_PREDELAY_MS * 0.001f);
 	
 	for (int channel = 0; channel < 2; channel++)
 	{
+		// Early reflection
+		m_earlyReflections[channel].init(MAXIMUM_ROOM_DIMENSION, sr, MAXIMUM_REFLECTIONS_COUNT);
+
+		// Late reflactions
+		m_predelay[channel].init(maximumPredelayTimeSamples);
+		
+		// Colour filters
 		m_lowShelf[channel].init(sr);
 		m_highShelf[channel].init(sr);
+		m_highPass[channel].init(sr);
 
-		for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
+		// Late reflections
+		for (int delayLine = 0; delayLine < DELAY_LINES_COUNT; delayLine++)
 		{
-			m_buffer[channel][buffer].init(maximumSize);
-			m_filter[channel][buffer].init(sr);
+			m_bufferLR[channel][delayLine].init((int)(maximumLRSize * LATE_REFLECTION_DELAY_TIME_NORMALIZED[delayLine]));
+			m_filterLR[channel][delayLine].init(sr);
 		}
 	}
-
-	/*for (int buffer = 0; buffer < DELAY_LINES_COUNT; buffer++)
-	{
-		//Get distance
-		const float delayTime = MAXIMUM_DELAY_TIME * m_primeNumbers[buffer] / (float)m_primeNumbers[DELAY_LINES_COUNT - 1];
-		const float distance = delayTime * 343.0f;
-		constexpr auto a = 3.0f;
-		m_bGain[buffer] = a / (distance + a);
-	}*/
 }
 
 void FDNReverbAudioProcessor::releaseResources()
@@ -166,58 +196,78 @@ bool FDNReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 void FDNReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	Params params(LParameter->load(),
+	Params params
+	(
+		// Early reflections
+		LParameter->load(),
 		WParameter->load(),
 		HParameter->load(),
-		resonanceParameter->load(),
-		dampingParameter->load(),
+		ReflectionsParameter->load(),
+		ERDampingParameter->load(),
+		ERWidthParameter->load(),
+		// Late reflections
+		LRPredelayParameter->load(),
+		timeParameter->load(),
+		sizeParameter->load(),
+		LRDampingParameter->load(),
 		colorParameter->load(),
-		widthParameter->load(),
+		LRWidthParameter->load(),
+		// Mix
+		juce::Decibels::decibelsToGain(ERVolumeParameter->load()),
+		juce::Decibels::decibelsToGain(LRVolumeParameter->load()),
 		mixParameter->load(),
-		juce::Decibels::decibelsToGain(volumeParameter->load()));
+		juce::Decibels::decibelsToGain(volumeParameter->load())
+	);
 
 	// TODO: Do not update if params did not change
 	OnParamsChanged(params);
 
 	// Mics constants
 	const auto mixInverse = 1.0f - params.mix;
-	const auto mixAdjustedGain = 0.25f * params.mix;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto sampleRate = (float)getSampleRate();
-	const auto feedback = 0.95f * params.resonance;
-	const auto gain = params.color * 6.0f;
+	const auto feedback = fminf(0.97f, m_feedback);
+	const auto shelfFilterGain = params.color * 4.5f;
 
 	// Process buffer
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
-		auto& buffer = m_buffer[channel];
-		auto& filter = m_filter[channel];
+		auto& bufferLR = m_bufferLR[channel];
+		auto& filterLF = m_filterLR[channel];
 		auto& lowShelf = m_lowShelf[channel];
 		auto& highShelf = m_highShelf[channel];
+		auto& highPass = m_highPass[channel];
+		auto& gainsLR = m_gainsLR[channel];
+		auto& earlyReflections = m_earlyReflections[channel];
+		auto& predelay = m_predelay[channel];
 
-		lowShelf.setLowShelf(660.0f, 0.4f, -gain);
-		highShelf.setHighShelf(660.0f, 0.4f, gain);
+		lowShelf.setLowShelf(660.0f, 0.4f, -shelfFilterGain);
+		highShelf.setHighShelf(660.0f, 0.4f, shelfFilterGain);
+		highPass.setHighPass(40.0f * (2.0f + params.color), 0.6f);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			const float in = channelBuffer[sample];
 
-			// Add color
-			const float inColor = lowShelf.processDF1(highShelf.processDF1(in));
+			// Early reflections
+			float er = earlyReflections.process(in);
 
-			//Read samples
-			float out = 0.0f;
+			// Late reflections
+			// Add color
+			predelay.writeSample(in);
+			const float inColorDelayed = highPass.processDF1(lowShelf.processDF1(highShelf.processDF1(predelay.read())));
+
+			float lr = 0.0f;
 			for (int i = 0; i < DELAY_LINES_COUNT; i++)
 			{
-				m_tmp[i] = buffer[i].read();
+				m_tmp[i] = bufferLR[i].read();
 
 				// Filter
-				m_tmp[i] = filter[i].process(m_tmp[i]);
+				m_tmp[i] = filterLF[i].process(m_tmp[i]);
 
-				out += m_tmp[i];
+				lr += m_tmp[i];
 			}
 
 			// FWHT
@@ -226,10 +276,10 @@ void FDNReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 			// Writte sample
 			for (int i = 0; i < DELAY_LINES_COUNT; i++)
 			{
-				buffer[i].writeSample(m_bGain[channel][i] * inColor + feedback * m_tmp[i]);
+				bufferLR[i].writeSample(gainsLR[i] * inColorDelayed + feedback * m_tmp[i]);
 			}
 			
-			channelBuffer[sample] = params.volume * (mixInverse * in + mixAdjustedGain * out);
+			channelBuffer[sample] = params.volume * (mixInverse * in + params.mix * (params.ERvolume * er + params.LRvolume * lr));
 		}
 	}
 }
@@ -268,15 +318,26 @@ juce::AudioProcessorValueTreeState::ParameterLayout FDNReverbAudioProcessor::cre
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f, 20.0f,  0.1f, 1.0f), 5.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, 20.0f,  0.1f, 1.0f), 4.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   1.0f, 20.0f,  0.1f, 1.0f), 3.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(  -1.0f,  1.0f, 0.01f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( -18.0f, 18.0f,  0.1f, 1.0f), 0.0f));
+	// Early reflections
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 1.0f, MAXIMUM_ROOM_DIMENSION, 0.1f, 1.0f), 9.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( 1.0f, MAXIMUM_ROOM_DIMENSION, 0.1f, 1.0f), 7.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( 1.0f, MAXIMUM_ROOM_DIMENSION, 0.1f, 1.0f), 4.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( 2.0f, MAXIMUM_REFLECTIONS_COUNT, 1.0f, 1.0f), 8.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	
+	// Late reflections
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( 0.0f, MAXIMUM_PREDELAY_MS, 0.01f, 1.0f), 10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>( 0.1f, 4.0f, 0.01f, 1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( 0.0f, 1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>(-1.0f, 1.0f, 0.01f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	// Mix
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>(-60.0f, 0.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>(-60.0f, 0.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[14], paramsNames[14], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[15], paramsNames[15], NormalisableRange<float>(-18.0f, 18.0f,  0.1f, 1.0f), 0.0f));
 
 	return layout;
 }

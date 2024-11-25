@@ -3018,3 +3018,176 @@ MS/JuceLibraryCode/JuceHeader.h
 MS/JuceLibraryCode/JucePluginDefines.h
 MS/JuceLibraryCode/ReadMe.txt
 SineWaveshaper/Builds/VisualStudio2017/.vs/SineWaveshaper/v15/ipch/AutoPCH/b138ee40c8f3c66d/PLUGINEDITOR.ipch
+*.ipch
+NEDDelay/Builds/VisualStudio2017/.vs/NEDCFReverb/v15/.suo
+NEDDelay/Builds/VisualStudio2017/.vs/NEDCFReverb/v15/Browse.VC.db
+NEDDelay/Builds/VisualStudio2017/.vs/NEDCFReverb/v15/Solution.VC.db
+NEDDelay/Builds/VisualStudio2017/.vs/NEDDelay/v15/.suo
+NEDDelay/Builds/VisualStudio2017/.vs/NEDDelay/v15/Browse.VC.db
+NEDDelay/Builds/VisualStudio2017/.vs/NEDDelay/v15/Solution.VC.db
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb.sln
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_SharedCode.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_SharedCode.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_StandalonePlugin.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_StandalonePlugin.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_VST3.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_VST3.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_VST3ManifestHelper.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDCFReverb_VST3ManifestHelper.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/NEDDelay.sln
+NEDDelay/Builds/VisualStudio2017/NEDDelay_SharedCode.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDDelay_SharedCode.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/NEDDelay_VST3.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDDelay_VST3.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/NEDDelay_VST3ManifestHelper.vcxproj
+NEDDelay/Builds/VisualStudio2017/NEDDelay_VST3ManifestHelper.vcxproj.filters
+NEDDelay/Builds/VisualStudio2017/resources.rc
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/CombFilters.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/CL.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/CL.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/CL.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/Lib-link.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/Lib-link.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/Lib.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFRev.41D5E38C.tlog/NEDCFReverb_SharedCode.lastbuildstate
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFReverb.lib
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFReverb.pdb
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDCFReverb_SharedCode.log
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/CL.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/CL.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/CL.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/Lib-link.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/Lib-link.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/Lib.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.41D5E38C.tlog/NEDDelay_SharedCode.lastbuildstate
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.lib
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay.pdb
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NEDDelay_SharedCode.log
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/NoiseGenerator.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/CL.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/CL.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/CL.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/link.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/link.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/link.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/NEDCFReverb_VST3ManifestHelper.lastbuildstate
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/rc.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/rc.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFRev.C40AC711.tlog/rc.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDCFReverb_VST3ManifestHelper.log
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/CL.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/CL.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/CL.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/link.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/link.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/link.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/NEDDelay_VST3ManifestHelper.lastbuildstate
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/rc.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/rc.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay.C40AC711.tlog/rc.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/NEDDelay_VST3ManifestHelper.log
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.dll
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.exp
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.ilk
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.lib
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.pdb
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.vst3/Contents/Resources/moduleinfo.json
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb.vst3/Contents/x86_64-win/NEDCFReverb.vst3
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.log
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/CL.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/CL.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/CL.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/link.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/link.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/link.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/NEDCFReverb_VST3.lastbuildstate
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/NEDCFReverb_VST3.write.1u.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/rc.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/rc.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDCFReverb_VST3.tlog/rc.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.dll
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.exp
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.ilk
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.lib
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.pdb
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.vst3/Contents/Resources/moduleinfo.json
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay.vst3/Contents/x86_64-win/NEDDelay.vst3
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.log
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/CL.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/CL.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/CL.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/link.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/link.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/link.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/NEDDelay_VST3.lastbuildstate
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/NEDDelay_VST3.write.1u.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/rc.command.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/rc.read.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/NEDDelay_VST3.tlog/rc.write.1.tlog
+NEDDelay/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+NEDDelay/JuceLibraryCode/include_juce_audio_basics.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_basics.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_devices.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_devices.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_formats.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_formats.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_processors.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_processors.mm
+NEDDelay/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_utils.cpp
+NEDDelay/JuceLibraryCode/include_juce_audio_utils.mm
+NEDDelay/JuceLibraryCode/include_juce_core.cpp
+NEDDelay/JuceLibraryCode/include_juce_core.mm
+NEDDelay/JuceLibraryCode/include_juce_data_structures.cpp
+NEDDelay/JuceLibraryCode/include_juce_data_structures.mm
+NEDDelay/JuceLibraryCode/include_juce_events.cpp
+NEDDelay/JuceLibraryCode/include_juce_events.mm
+NEDDelay/JuceLibraryCode/include_juce_graphics.cpp
+NEDDelay/JuceLibraryCode/include_juce_graphics.mm
+NEDDelay/JuceLibraryCode/include_juce_gui_basics.cpp
+NEDDelay/JuceLibraryCode/include_juce_gui_basics.mm
+NEDDelay/JuceLibraryCode/include_juce_gui_extra.cpp
+NEDDelay/JuceLibraryCode/include_juce_gui_extra.mm
+NEDDelay/JuceLibraryCode/JuceHeader.h
+NEDDelay/JuceLibraryCode/JucePluginDefines.h
+NEDDelay/JuceLibraryCode/ReadMe.txt

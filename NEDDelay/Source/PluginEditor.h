@@ -6,17 +6,14 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
 //==============================================================================
-class FDNReverbAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class NEDDelayAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
 {
 public:
-    FDNReverbAudioProcessorEditor (FDNReverbAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~FDNReverbAudioProcessorEditor() override;
+    NEDDelayAudioProcessorEditor (NEDDelayAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~NEDDelayAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 16;
-	static const int SLIDERS[];
-	static const int COLUMN_OFFSET[];
-	static const int N_ROWS = 3;
+	static const int N_SLIDERS = 6;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -26,7 +23,7 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 
 private:
-    FDNReverbAudioProcessor& audioProcessor;
+    NEDDelayAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
@@ -34,5 +31,5 @@ private:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FDNReverbAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NEDDelayAudioProcessorEditor)
 };

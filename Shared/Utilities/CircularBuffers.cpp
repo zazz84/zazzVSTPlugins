@@ -1,11 +1,8 @@
 #include "CircularBuffers.h"
-#include <math.h>
+
 #include <string.h>
 
-CircularBuffer::CircularBuffer()
-{
-}
-
+//==============================================================================
 void CircularBuffer::init(int size)
 {
 	m_head = 0;
@@ -120,64 +117,4 @@ float CircularBuffer::readDelayOptimalCubicInterpolation(float sample)
 	float c3 = odd1 * -0.36030925263849456f + odd2 * 0.10174985775982505f;
 	
 	return ((c3 * z + c2) * z + c1) * z + c0;
-}
-
-//==============================================================================
-const float RoomEarlyReflections::delayTimesFactor[] = {
-															0.3580f,
-															0.4617f,
-															0.5753f,
-															0.5975f,
-															0.9555f,
-															0.7481f,
-															1.0000f
-};
-
-const float RoomEarlyReflections::delayGains[] = {
-													0.5968f,
-													0.5228f,
-													0.4540f,
-													0.4421f,
-													0.2996f,
-													0.3718f,
-													0.2871f
-};
-
-void RoomEarlyReflections::init(int size, int sampleRate)
-{
-	__super::init(size);
-
-	m_sampleRate = sampleRate;
-
-	for (auto filter : m_filter)
-	{
-		filter.init(sampleRate);
-	}
-}
-
-float RoomEarlyReflections::process(float in)
-{
-	writeSample(in);
-	
-	const auto size = getSize();
-	float out = 0.0f;
-
-	for (int i = 0; i < N_DELAY_LINES; i++)
-	{
-		const float delayLineOut = delayGains[i] * readDelay((int)(size * delayTimesFactor[i]));
-		out += m_filter[i].processDF1(delayLineOut);
-	}
-
-	return out;
-}
-
-//==============================================================================
-float RMSBuffer::getRMS()
-{
-	const int size = getSize();
-
-	m_rms = m_rms + ((fabsf(readDelay(1)) - fabsf(readDelay(size - 1))) / (float)size);
-
-	// 1.5 is magic number
-	return 1.5f * m_rms;
 }

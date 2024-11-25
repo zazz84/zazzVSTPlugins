@@ -1,11 +1,20 @@
 #pragma once
 
+#include <immintrin.h>
+#include <vector>
+#include <math.h>
+#include <array>
+
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
+#define M_PI  3.14159268f
+#define SPEED_OF_SOUND 343.0f
+
+//==============================================================================
 class CircularBuffer
 {
 public:
-	CircularBuffer();
+	CircularBuffer() {};
 
 	void init(int size);
 	void clear();
@@ -22,6 +31,29 @@ public:
 	float readDelayTriLinearInterpolation(float sample);
 	float readDelayHermiteCubicInterpolation(float sample);
 	float readDelayOptimalCubicInterpolation(float sample);
+	/*void readSIMDFloat(const float* buffer, const size_t* indices, float* output, size_t count, size_t buffer_size) {
+		for (size_t i = 0; i < count; i += 8) {
+			// Load 8 indices
+			__m256i offsets = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(indices + i));
+
+			// Scalar fallback for modulo
+			alignas(32) int mod_offsets[8];
+			_mm256_store_si256(reinterpret_cast<__m256i*>(mod_offsets), offsets);
+
+			for (int j = 0; j < 8; ++j) {
+				mod_offsets[j] %= static_cast<int>(buffer_size); // Scalar modulo
+			}
+
+			// Load modulo results back into a SIMD register
+			__m256i mod_offsets_vec = _mm256_load_si256(reinterpret_cast<const __m256i*>(mod_offsets));
+
+			// Gather float values
+			__m256 values = _mm256_i32gather_ps(buffer, mod_offsets_vec, 4);
+
+			// Store results in the output array
+			_mm256_storeu_ps(output + i, values);
+		}
+	}*/
 	inline int GetPowerOfTwo(int i)
 	{
 		int n = i - 1;
@@ -37,46 +69,25 @@ public:
 	}
 
 protected:
-	float *m_buffer;
+	float* m_buffer;
 	int m_head = 0;
 	int m_bitMask = 0;
 	int m_readOffset = 0;
 };
 
-class RoomEarlyReflections : public CircularBuffer
-{
-public:
-	RoomEarlyReflections() {};
-
-	static const float delayTimesFactor[];
-	static const float delayGains[];
-	static const int N_DELAY_LINES = 7;
-
-	void init(int size, int sampleRate);
-	void setDamping(float damping) 
-	{
-		const float frequencyMax = m_sampleRate * 0.4f;
-		
-		for (int i = 0; i < N_DELAY_LINES; i++)
-		{
-			const float frequency = 18000.0f - damping * delayTimesFactor[i] * 17500.0f;
-			m_filter[i].setLowPass(frequency, 0.7f);
-		}
-		
-		m_damping = damping;
-	};
-	float process(float in);
-
-private:
-	float m_damping = 0.0f;
-	int m_sampleRate = 48000;
-	BiquadFilter m_filter[N_DELAY_LINES];
-};
-
+//==============================================================================
 class RMSBuffer : public CircularBuffer
 {
 public:
-	float getRMS();
+	float getRMS()
+	{
+		const int size = getSize();
+
+		m_rms = m_rms + ((fabsf(readDelay(1)) - fabsf(readDelay(size - 1))) / (float)size);
+
+		// 1.5 is magic number
+		return 1.5f * m_rms;
+	};
 
 private:
 	float m_rms = 0.0f;

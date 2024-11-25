@@ -148,3 +148,78 @@ private:
 	int m_sampleRate = 48000;
 	float m_volumeCompensation = 1.0f;
 };
+
+//==============================================================================
+class NEDCombFilter
+{
+public:
+	NEDCombFilter() {};
+
+	inline void init(int size)
+	{
+		m_buffer1.init(size);
+		m_buffer2.init(size);
+	};
+	inline void set(float feedback, int size)
+	{
+		m_feedback = feedback;
+		m_buffer1.setSize(size);
+		m_buffer2.setSize(size);
+	};
+	inline float process(float sample)
+	{
+		float tmp1 = m_buffer1.read();
+		m_buffer1.writeSample(sample + tmp1 * m_feedback);
+		float tmp2 = m_buffer2.read();
+		m_buffer2.writeSample(tmp1 + tmp2 * m_feedback);
+
+		return (1.0f + m_feedback) * tmp1 + tmp2;
+	}
+
+private:
+	CircularBuffer m_buffer1, m_buffer2;
+	float m_feedback = 0.0f;
+};
+
+//==============================================================================
+/*class NEDCombFilter
+{
+public:
+	NEDCombFilter() {};
+
+	inline void init(int size)
+	{
+		m_buffer1.init(size);
+		m_buffer2.init(size);
+		m_buffer3.init(size);
+	};
+	inline void set(float feedback, int size)
+	{
+		m_feedback = feedback;
+		m_buffer1.setSize(size);
+		m_buffer2.setSize(size / 12);
+		m_buffer3.setSize(size / 12);
+
+		n1 = size / 15;
+		n2 = size / 6;
+		n3 = size / 3;
+		n4 = size;
+	};
+	inline float process(float sample)
+	{
+		m_buffer1.writeSample(sample);
+		float FIR = 0.125f * sample - 0.142f * m_buffer1.readDelay(n1) + 0.017f * m_buffer1.readDelay(n2) - 0.01f * m_buffer1.readDelay(n3) + 0.01f * m_buffer1.readDelay(n4);
+		float b2 = m_buffer2.read();
+		m_buffer2.writeSample(FIR + m_feedback * b2);
+		float b3 = m_buffer3.read();
+		m_buffer3.writeSample(b2 + m_feedback * b3);
+
+		return b3;
+	}
+
+private:
+	CircularBuffer m_buffer1, m_buffer2, m_buffer3;
+	int n1, n2, n3, n4;
+	float m_feedback = 0.0f;
+
+};*/
