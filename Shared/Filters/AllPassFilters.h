@@ -11,7 +11,7 @@ public:
 	float process(float in);
 
 protected:
-	float m_SampleRate;
+	int m_SampleRate;
 	float m_a1 = -1.0f; // all pass filter coeficient
 	float m_d = 0.0f;   // history d = x[n-1] - a1y[n-1]
 };

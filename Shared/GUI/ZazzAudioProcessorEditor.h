@@ -4,32 +4,17 @@ class ZazzAudioProcessorEditor
 {
 public:
 	ZazzLookAndFeel zazzLookAndFeel;
-	ZazzLookAndFeel_V2 zazzLookAndFeel_V2;
-
-	inline void createLabel(juce::Label& label, std::string text)
-	{
-		label.setText(text, juce::dontSendNotification);
-		label.setFont(juce::Font(ZazzLookAndFeel::getFontHeight(), juce::Font::bold));
-		label.setJustificationType(juce::Justification::centred);
-	}
-
-	inline void createSlider(juce::Slider& slider)
-	{
-		slider.setLookAndFeel(&zazzLookAndFeel);
-		slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-		slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 70, ZazzLookAndFeel::SLIDER_FONT_SIZE);
-	}
 
 	inline void createSliderWithLabel(juce::Slider& slider, juce::Label& label, const std::string text, const std::string unit)
 	{
 		// Configure the slider
-		slider.setLookAndFeel(&zazzLookAndFeel_V2);
+		slider.setLookAndFeel(&zazzLookAndFeel);
 		slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
 		slider.setTextValueSuffix(unit);
 
 		// Configure the label
 		label.setText(text, juce::dontSendNotification);
-		label.setFont(juce::Font(ZazzLookAndFeel_V2::SLIDER_FONT_SIZE));
+		label.setFont(juce::Font(ZazzLookAndFeel::LABEL_FONT_SIZE));
 		label.setJustificationType(juce::Justification::centred);
 	}
 
@@ -46,20 +31,7 @@ public:
 		button.setLookAndFeel(&zazzLookAndFeel);
 	}
 
-	inline void createCanvas(juce::AudioProcessorEditor& audioProcessorEditor, int sliderCount)
-	{
-		audioProcessorEditor.setResizable(true, true);
-		const int width = ZazzLookAndFeel::SLIDER_WIDTH * sliderCount;
-		audioProcessorEditor.setSize(width, ZazzLookAndFeel::SLIDER_WIDTH);
-
-		if (auto* constrainer = audioProcessorEditor.getConstrainer())
-		{
-			constrainer->setFixedAspectRatio(sliderCount);
-			constrainer->setSizeLimits((int)((float)width * 0.7f), (int)((float)ZazzLookAndFeel::SLIDER_WIDTH * 0.7f), (int)((float)width * 2.0f), (int)((float)ZazzLookAndFeel::SLIDER_WIDTH * 2.0f));
-		}
-	}
-
-	inline void createCanvasMultiRow(juce::AudioProcessorEditor& audioProcessorEditor, const int slidersCount[], int rows)
+	inline void createCanvas(juce::AudioProcessorEditor& audioProcessorEditor, const int slidersCount[], int rows)
 	{
 		// TODO: Cash
 		int slidersMax = 0;
@@ -73,46 +45,23 @@ public:
 		}
 		
 		audioProcessorEditor.setResizable(true, true);
-
-		constexpr int widthScale = 65; // percentage
-
-		const int canvasWidth = widthScale * ZazzLookAndFeel_V2::SLIDER_WIDTH * slidersMax / 100;
-		const int canvasHeight = ZazzLookAndFeel_V2::SLIDER_WIDTH * rows;
+		
+		const int canvasWidth = ZazzLookAndFeel::ELEMENT_WIDTH * slidersMax;
+		const int canvasHeight = ZazzLookAndFeel::TOP_HEIGHT + ZazzLookAndFeel::NAME_HEIGHT + ZazzLookAndFeel::ELEMENT_HEIGHT * rows;
+		
 		audioProcessorEditor.setSize(canvasWidth, canvasHeight);
 
 		if (auto* constrainer = audioProcessorEditor.getConstrainer())
 		{
-			constexpr int minScale = 70; // percentage
+			constexpr int minScale = 50; // percentage
 			constexpr int maxScale = 200; // percentage
 
-			constrainer->setFixedAspectRatio(0.75 * (double)slidersMax / (double)rows);
+			constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
 			constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 		}
 	}
 
-	inline void resize(juce::AudioProcessorEditor& audioProcessorEditor, juce::Slider sliders[], juce::Label labels[], int sliderCount)
-	{
-		const int width = (int)(audioProcessorEditor.getWidth() / sliderCount);
-		const int height = audioProcessorEditor.getHeight();
-		const float fonthHeight = (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
-		const int labelOffset = zazzLookAndFeel.getLabelOffset();
-
-		// Sliders + Labels
-		for (int i = 0; i < sliderCount; i++)
-		{
-			juce::Rectangle<int> rectangle;
-
-			rectangle.setSize(width, height);
-			rectangle.setPosition(i * width, 0);
-			sliders[i].setBounds(rectangle);
-
-			rectangle.removeFromBottom(labelOffset);
-			labels[i].setBounds(rectangle);
-			labels[i].setFont(juce::Font(fonthHeight, juce::Font::bold));
-		}
-	}
-
-	inline void resizeMultiRow(juce::AudioProcessorEditor& audioProcessorEditor, juce::Slider sliders[], juce::Label labels[], const int slidersCount[], const int columnOffset[], int rows)
+	inline void resize(juce::AudioProcessorEditor& audioProcessorEditor, juce::Slider sliders[], juce::Label labels[], const int slidersCount[], const int columnOffset[], int rows, juce::Label& pluginName)
 	{
 		int slidersMax = 0;
 		for (int i = 0; i < rows; i++)
@@ -125,18 +74,43 @@ public:
 
 		const int canvasWidth = audioProcessorEditor.getWidth();
 		const int canvasHeight = audioProcessorEditor.getHeight();
+
+		const int canvasHeightUnscaled = ZazzLookAndFeel::TOP_HEIGHT + ZazzLookAndFeel::NAME_HEIGHT + ZazzLookAndFeel::ELEMENT_HEIGHT * rows;
 		
 		const int elementWidth = canvasWidth / slidersMax;
-		const int elemenHeight = canvasHeight / rows;
+		const float elementHeightRatio = (float)ZazzLookAndFeel::ELEMENT_HEIGHT / (float)canvasHeightUnscaled;
+		const int elemenHeight = (int)((float)canvasHeight * elementHeightRatio);
 		
-		const int height5 = elemenHeight / 20;	// 5% height
-		const int height10 = elemenHeight / 10;	// 10% height
+		const float topHeightRatio = (float)ZazzLookAndFeel::TOP_HEIGHT / (float)canvasHeightUnscaled;
+		const int topHeight = (int)((float)canvasHeight * topHeightRatio);
 
-		const int labelHeight = height10;					// 10%
-		const int sliderHeight = 6 * height10 + height5;	// 65%
-			
-		const float fonthHeight = (float)elemenHeight / (float)ZazzLookAndFeel_V2::FONT_DIVISOR_MULTI_ROW;
-		zazzLookAndFeel_V2.setSliderTextSize(fonthHeight);
+		const float nameHeightRatio = (float)ZazzLookAndFeel::NAME_HEIGHT / (float)canvasHeightUnscaled;
+		const int nameHeight = (int)((float)canvasHeight * nameHeightRatio);
+		
+		const float headerHeightRatio = (float)ZazzLookAndFeel::NAME_HEIGHT / (float)ZazzLookAndFeel::ELEMENT_HEIGHT;
+		const float sliderHeightRatio = (float)ZazzLookAndFeel::SLIDER_HEIGHT / (float)ZazzLookAndFeel::ELEMENT_HEIGHT;
+		const float footerHeightRatio = (float)ZazzLookAndFeel::FOOTER_HEIGHT / (float)ZazzLookAndFeel::ELEMENT_HEIGHT;
+		const int headerHeight = (int)((float)elemenHeight * headerHeightRatio);
+		const int sliderHeight = (int)((float)elemenHeight * sliderHeightRatio);
+		const int footerHeight = (int)((float)elemenHeight * footerHeightRatio);
+		
+		const float nameFontRatio = ZazzLookAndFeel::NAME_FONT_SIZE / (float)canvasHeightUnscaled;
+		const float nameFontSize = (float)elemenHeight * nameFontRatio;		
+		
+		const float labelFontRatio = ZazzLookAndFeel::LABEL_FONT_SIZE / (float)canvasHeightUnscaled;
+		const float labelFontSize = (float)elemenHeight * labelFontRatio;
+		
+		const float valueFontRatio = ZazzLookAndFeel::VALUE_FONT_SIZE / (float)canvasHeightUnscaled;
+		const float valueFontSize = (float)elemenHeight * valueFontRatio;
+		zazzLookAndFeel.setSliderTextSize(valueFontSize);
+
+		juce::Rectangle<int> pluginNameRectangle;
+		pluginNameRectangle.setSize(canvasWidth, nameHeight);
+		pluginNameRectangle.setPosition(0, topHeight);
+
+		pluginName.setBounds(pluginNameRectangle);
+		pluginName.setFont(juce::Font("Century Gothic", nameFontSize, juce::Font::bold));
+		pluginName.setColour(juce::Label::textColourId, ZazzLookAndFeel::DARK_COLOUR);
 
 		int i = 0;
 
@@ -148,23 +122,22 @@ public:
 				juce::Rectangle<int> rectangle;
 
 				const int xPos = (columnOffset[row] + column) * elementWidth;
-				const int yPos = row * elemenHeight + height10;
+				const int yPos = topHeight + nameHeight + row * elemenHeight;
 
 				// Label
-				rectangle.setSize(elementWidth, labelHeight);
+				rectangle.setSize(elementWidth, headerHeight);
 				rectangle.setPosition(xPos, yPos);
 
 				labels[i].setBounds(rectangle);
-				labels[i].setFont(juce::Font(fonthHeight, juce::Font::bold));
+				labels[i].setFont(juce::Font("Century Gothic", labelFontSize, juce::Font::bold));
 
 				// Slider
 				rectangle.setSize(elementWidth, sliderHeight);
-				rectangle.setPosition(xPos, yPos + labelHeight + height5);
+				rectangle.setPosition(xPos, yPos + headerHeight);
 				sliders[i].setBounds(rectangle);
 
 				// Resize text box
-				// TODO: How to get rid of this?
-				sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, (int)(fonthHeight * 1.2f));
+				sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, (int)(labelFontSize));
 
 				i++;
 			}

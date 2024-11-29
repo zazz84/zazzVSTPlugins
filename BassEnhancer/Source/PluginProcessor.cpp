@@ -12,6 +12,7 @@
 //==============================================================================
 
 const std::string BassEnhancerAudioProcessor::paramsNames[] = { "Frequency", "Amount", "Volume" };
+const std::string BassEnhancerAudioProcessor::paramsUnitNames[] = { "Hz", "%", "dB" };
 
 //==============================================================================
 BassEnhancerAudioProcessor::BassEnhancerAudioProcessor()
@@ -27,7 +28,7 @@ BassEnhancerAudioProcessor::BassEnhancerAudioProcessor()
 #endif
 {
 	frequencyParameter = apvts.getRawParameterValue(paramsNames[0]);
-	amountParameter       = apvts.getRawParameterValue(paramsNames[1]);
+	amountParameter    = apvts.getRawParameterValue(paramsNames[1]);
 	volumeParameter    = apvts.getRawParameterValue(paramsNames[2]);
 }
 
@@ -150,7 +151,7 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
 	// Get params
 	const auto frequency = frequencyParameter->load();
-	const auto amount = amountParameter->load();
+	const auto amount = 0.01f * amountParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -183,7 +184,7 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 			const float in = channelBuffer[sample];
 			
 			// Split
-			float inLow = 2.0f * lowPasssFilter.processDF1(in);
+			float inLow = 4.0f * lowPasssFilter.processDF1(in);
 			float inHigh = highPasssFilter.processDF1(in);
 			
 			// AllPass hight
@@ -192,17 +193,18 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 			// Distort low
 			// Chebyshev polynom
 			inLow = 2.0f * inLow * inLow - 1.0f;
-			// ARRY waveshaper
-			inLow = 1.5f * inLow * (1.0f - inLow * inLow / 3.0f);
 
 			// Filter low
 			inLow = resonanceFilter.processDF1(inLow);
 			
 			// AllPass low
 			inLow = allPassFilter.process(inLow);
-				
-			// Writte
-			channelBuffer[sample] = gain * in + lowGain * inLow;
+			
+			// Out
+			const float out = gain * in + lowGain * inLow;
+
+			// ARRY + Writte
+			channelBuffer[sample] = 1.5f * out * (1.0f - out * out / 3.0f);
 		}
 	}
 }
@@ -242,7 +244,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout BassEnhancerAudioProcessor::
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  40.0f, 200.0f,  1.0f, 1.0f), 80.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 50.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 
 	return layout;

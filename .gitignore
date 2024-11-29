@@ -3191,3 +3191,11 @@ NEDDelay/JuceLibraryCode/include_juce_gui_extra.mm
 NEDDelay/JuceLibraryCode/JuceHeader.h
 NEDDelay/JuceLibraryCode/JucePluginDefines.h
 NEDDelay/JuceLibraryCode/ReadMe.txt
+BassEnhancer/Builds/VisualStudio2017/BassEnhancer_VST3.vcxproj.user
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/Compressors.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1068.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1068.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1068.write.1.tlog
+BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1068.write.1.tlog

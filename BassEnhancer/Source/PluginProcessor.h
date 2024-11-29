@@ -17,6 +17,7 @@ public:
     ~BassEnhancerAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string paramsUnitNames[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

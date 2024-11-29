@@ -136,7 +136,7 @@ float Compressor::processSoftKneeLinPeak(float in)
 }
 
 //==============================================================================
-template <class EnvelopeFollower, class T>
+/*template <class EnvelopeFollower, class T>
 void Compressor1<EnvelopeFollower, T>::set(T thresholddB, T ratio, T kneeWidth, T attackTimeMS, T releaseTimeMS)
 {
 	// Hard knee + shared params
@@ -267,8 +267,7 @@ T Compressor1<EnvelopeFollower, T>::processSoftKneeLinPeak(T in)
 
 	// Apply gain reduction
 	return in * juce::Decibels::decibelsToGain(attenuatedB);
-}
-
+}*/
 
 //==============================================================================
 SideChainCompressor::SideChainCompressor()

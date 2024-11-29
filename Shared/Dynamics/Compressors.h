@@ -45,7 +45,7 @@ protected:
 };
 
 //==============================================================================
-template <class EnvelopeFollower, class T>
+/*template <class EnvelopeFollower, class T>
 class Compressor1
 {
 public:
@@ -81,7 +81,7 @@ protected:
 	T m_T_plus_WHalfdB = 0.0;
 	T m_minus_T_plus_WHalf = 0.0;
 	T m_W2_inv = 0.0;
-};
+};*/
 
 //==============================================================================
 class SideChainCompressor
