@@ -1,7 +1,5 @@
 #include "CircularBuffers.h"
 
-#include <string.h>
-
 //==============================================================================
 void CircularBuffer::init(int size)
 {
@@ -22,7 +20,6 @@ void CircularBuffer::clear()
 
 float CircularBuffer::readDelay(int sample)
 {
-	//const int readIdx = (m_head + m_bitMask - (int)(sample)) & m_bitMask;	
 	const int readIdx = (m_head - 1 - sample) & m_bitMask;	
 
 	return m_buffer[readIdx];

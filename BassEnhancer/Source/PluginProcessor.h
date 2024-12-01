@@ -60,7 +60,6 @@ public:
 private:	
 	//==============================================================================
 	BiquadFilter m_lowPassFilter[2];
-	BiquadFilter m_highPassFilter[2];
 	BiquadFilter m_resonanceFilter[2];
 	FirstOrderAllPass m_allPassFilter[2];
 

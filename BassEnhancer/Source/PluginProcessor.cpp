@@ -9,6 +9,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <immintrin.h>
+
 //==============================================================================
 
 const std::string BassEnhancerAudioProcessor::paramsNames[] = { "Frequency", "Amount", "Volume" };
@@ -111,9 +113,6 @@ void BassEnhancerAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
 	m_lowPassFilter[0].init(sr);
 	m_lowPassFilter[1].init(sr);
-
-	m_highPassFilter[0].init(sr);
-	m_highPassFilter[1].init(sr);
 }
 
 void BassEnhancerAudioProcessor::releaseResources()
@@ -157,10 +156,9 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	constexpr float maxVolume = 18.0f;
-	const auto resonanceGain = juce::Decibels::decibelsToGain(maxVolume);
-	const auto lowGain = 0.5f * gain * resonanceGain * juce::Decibels::decibelsToGain(-2.0f * maxVolume * (1.0f - amount));
-	
+	const float inputGain = 1.0f + 12.0f * amount;
+	const float outputGain = gain / inputGain;
+
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
@@ -168,43 +166,31 @@ void BassEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
 		//Filters references
 		auto& lowPasssFilter = m_lowPassFilter[channel];
-		auto& highPasssFilter = m_highPassFilter[channel];
 		auto& resonanceFilter = m_resonanceFilter[channel];
 		auto& allPassFilter = m_allPassFilter[channel];
 
 		//Set filters
-		lowPasssFilter.setLowPass(frequency, 1.0f);
-		highPasssFilter.setHighPass(frequency, 2.5f);
-		resonanceFilter.setBandPassPeakGain(frequency, 2.0f);
+		lowPasssFilter.setLowPass(frequency, 0.7f);
+		resonanceFilter.setBandPassPeakGain(frequency, 0.7f);
 		allPassFilter.setFrequency(0.5f * frequency);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
-			const float in = channelBuffer[sample];
+			const float in = inputGain * channelBuffer[sample];
 			
-			// Split
-			float inLow = 4.0f * lowPasssFilter.processDF1(in);
-			float inHigh = highPasssFilter.processDF1(in);
-			
-			// AllPass hight
-			inHigh = allPassFilter.process(inHigh);
+			// Low filter
+			float inLow = lowPasssFilter.processDF1(in);
 
 			// Distort low
 			// Chebyshev polynom
 			inLow = 2.0f * inLow * inLow - 1.0f;
 
-			// Filter low
+			// Remove DC offset
 			inLow = resonanceFilter.processDF1(inLow);
-			
-			// AllPass low
-			inLow = allPassFilter.process(inLow);
-			
-			// Out
-			const float out = gain * in + lowGain * inLow;
 
-			// ARRY + Writte
-			channelBuffer[sample] = 1.5f * out * (1.0f - out * out / 3.0f);
+			//Out
+			channelBuffer[sample] = outputGain * (allPassFilter.process(in) + amount * inLow);
 		}
 	}
 }

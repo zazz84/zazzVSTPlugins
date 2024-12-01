@@ -11,7 +11,8 @@
 
 //==============================================================================
 
-const std::string CombFilterAudioProcessor::paramsNames[] = { "Frequency", "Stages", "LowCut", "HighCut", "Mix", "Volume" };
+const std::string CombFilterAudioProcessor::paramsNames[] = { "Frequency", "Stages", "Low Cut", "High Cut", "Mix", "Volume" };
+const std::string CombFilterAudioProcessor::paramsUnitNames[] = { "Hz", "", "Hz" , "Hz", "%", "dB"};
 
 //==============================================================================
 CombFilterAudioProcessor::CombFilterAudioProcessor()
@@ -239,8 +240,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout CombFilterAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, (float)STAGES_MAX, 1.0f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>((float)FREQUENY_MIN, 20000.0f, 1.0f, 0.3f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>((float)FREQUENY_MIN, 20000.0f, 1.0f, 0.3f), 10000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f, 18.0f,  0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f,  18.0f, 0.1f, 1.0f), 0.0f));
 
 	return layout;
 }

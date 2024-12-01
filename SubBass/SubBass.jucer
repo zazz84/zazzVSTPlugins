@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="vGSG0H" name="SubBass" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Generator">
+  <MAINGROUP id="MXQLIA" name="SubBass">
+    <GROUP id="{08D99A83-2B6E-AC37-8F3F-6D10F25FB265}" name="Source">
+      <FILE id="BsD8W7" name="CircularBuffers.cpp" compile="1" resource="0"
+            file="../Shared/Utilities/CircularBuffers.cpp"/>
+      <FILE id="WF8Bwx" name="CircularBuffers.h" compile="0" resource="0"
+            file="../Shared/Utilities/CircularBuffers.h"/>
+      <FILE id="amCGbV" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="l9NuU4" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="rhskjD" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="Hv1uVa" name="BiquadFilters.cpp" compile="1" resource="0"
+            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="Oy6dXZ" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
+      <FILE id="FMH36t" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="VPb8rB" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="JD82DY" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
+      <FILE id="xrBgfj" name="ZazzLookAndFeel.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzLookAndFeel.h"/>
+      <FILE id="DEyVKP" name="Random.h" compile="0" resource="0" file="../Shared/Utilities/Random.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <VS2017 targetFolder="Builds/VisualStudio2017">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SubBass" enablePluginBinaryCopyStep="1"
+                       vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="SubBass" enablePluginBinaryCopyStep="1"
+                       vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2017>
+  </EXPORTFORMATS>
+</JUCERPROJECT>

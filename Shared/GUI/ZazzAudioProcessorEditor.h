@@ -4,6 +4,10 @@ class ZazzAudioProcessorEditor
 {
 public:
 	ZazzLookAndFeel zazzLookAndFeel;
+	juce::Label m_pluginName;
+
+	static const int SLIDERS[];
+	static const int COLUMN_OFFSET[];
 
 	inline void createSliderWithLabel(juce::Slider& slider, juce::Label& label, const std::string text, const std::string unit)
 	{
@@ -76,6 +80,7 @@ public:
 		const int canvasHeight = audioProcessorEditor.getHeight();
 
 		const int canvasHeightUnscaled = ZazzLookAndFeel::TOP_HEIGHT + ZazzLookAndFeel::NAME_HEIGHT + ZazzLookAndFeel::ELEMENT_HEIGHT * rows;
+		const int canvasHeightUnscaledOneRow = ZazzLookAndFeel::TOP_HEIGHT + ZazzLookAndFeel::NAME_HEIGHT + ZazzLookAndFeel::ELEMENT_HEIGHT;
 		
 		const int elementWidth = canvasWidth / slidersMax;
 		const float elementHeightRatio = (float)ZazzLookAndFeel::ELEMENT_HEIGHT / (float)canvasHeightUnscaled;
@@ -94,13 +99,13 @@ public:
 		const int sliderHeight = (int)((float)elemenHeight * sliderHeightRatio);
 		const int footerHeight = (int)((float)elemenHeight * footerHeightRatio);
 		
-		const float nameFontRatio = ZazzLookAndFeel::NAME_FONT_SIZE / (float)canvasHeightUnscaled;
+		const float nameFontRatio = ZazzLookAndFeel::NAME_FONT_SIZE / (float)canvasHeightUnscaledOneRow;
 		const float nameFontSize = (float)elemenHeight * nameFontRatio;		
 		
-		const float labelFontRatio = ZazzLookAndFeel::LABEL_FONT_SIZE / (float)canvasHeightUnscaled;
+		const float labelFontRatio = ZazzLookAndFeel::LABEL_FONT_SIZE / (float)canvasHeightUnscaledOneRow;
 		const float labelFontSize = (float)elemenHeight * labelFontRatio;
 		
-		const float valueFontRatio = ZazzLookAndFeel::VALUE_FONT_SIZE / (float)canvasHeightUnscaled;
+		const float valueFontRatio = ZazzLookAndFeel::VALUE_FONT_SIZE / (float)canvasHeightUnscaledOneRow;
 		const float valueFontSize = (float)elemenHeight * valueFontRatio;
 		zazzLookAndFeel.setSliderTextSize(valueFontSize);
 

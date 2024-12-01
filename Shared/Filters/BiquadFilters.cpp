@@ -216,6 +216,58 @@ float BiquadFilter::processDF2T(float in)
 }
 
 //==============================================================================
+/*void BiquadFilterSIMD::setLowPass(float frequency, float Q)
+{
+	const float omega = M_PI2 * frequency / m_SampleRate;
+	const float sn = sin(omega);
+	const float cs = cos(omega);
+	const float alpha = sn / (2.0f * Q);
+
+	const float tmp = 1.0f - cs;
+	float b0 = tmp * 0.5f;
+	float b1 = tmp;
+	float b2 = b0;
+	float a0 = 1.0f + alpha;
+	float a1 = -2.0f * cs;
+	float a2 = 1.0f - alpha;
+
+	// Normalize
+	b0 = b0 / a0;
+	b1 = b1 / a0;
+	b2 = b2 / a0;
+	a1 = a1 / a0;
+	a2 = a2 / a0;
+
+	// Set member variables
+	m_b0 = _mm256_set1_ps(b0);
+	m_b1 = _mm256_set1_ps(b1);
+	m_b2 = _mm256_set1_ps(b2);
+	m_a1 = _mm256_set1_ps(a1);
+	m_a2 = _mm256_set1_ps(a2);
+	m_x1 = m_x2 = m_y1 = m_y2 = _mm256_setzero_ps();
+}
+
+__m256 BiquadFilterSIMD::processDF1(__m256 in)
+{
+	// Compute the output for the SIMD vector
+	__m256 out = _mm256_sub_ps(
+		_mm256_add_ps(
+			_mm256_add_ps(_mm256_mul_ps(m_b0, in), _mm256_mul_ps(m_b1, m_x1)),
+			_mm256_mul_ps(m_b2, m_x2)),
+		_mm256_add_ps(_mm256_mul_ps(m_a1, m_y1), _mm256_mul_ps(m_a2, m_y2))
+	);
+
+	// Update history
+	m_x2 = m_x1;
+	m_x1 = in;
+
+	m_y2 = m_y1;
+	m_y1 = out;
+
+	return out;
+}*/
+
+//==============================================================================
 LinkwitzRileySecondOrder::LinkwitzRileySecondOrder()
 {
 }

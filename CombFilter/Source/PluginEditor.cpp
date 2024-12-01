@@ -6,29 +6,35 @@ const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.45f,
 const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.45f, 0.5f, 0.5f, 1.0f);
 const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.45f, 0.5f, 0.4f, 1.0f);
 
+const int CombFilterAudioProcessorEditor::SLIDERS[] = { 6 };
+const int CombFilterAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };
+
 //==============================================================================
 CombFilterAudioProcessorEditor::CombFilterAudioProcessorEditor (CombFilterAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {	
+	// Plugin name
+	m_pluginName.setText("Comb Filter", juce::dontSendNotification);
+	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
+	m_pluginName.setJustificationType(juce::Justification::centred);
+	addAndMakeVisible(m_pluginName);
+
 	// Lables and sliders
 	for (int i = 0; i < N_SLIDERS; i++)
 	{
 		auto& label = m_labels[i];
 		auto& slider = m_sliders[i];
-		std::string text = CombFilterAudioProcessor::paramsNames[i];
+		const std::string text = CombFilterAudioProcessor::paramsNames[i];
+		const std::string unit = CombFilterAudioProcessor::paramsUnitNames[i];
 
-		//Lable
-		createLabel(label, text);
+		createSliderWithLabel(slider, label, text, unit);
 		addAndMakeVisible(label);
-
-		//Slider
-		createSlider(slider);
 		addAndMakeVisible(slider);
+
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
-	// Canvas
-	createCanvas(*this, N_SLIDERS);
+	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
 CombFilterAudioProcessorEditor::~CombFilterAudioProcessorEditor()
@@ -39,17 +45,9 @@ CombFilterAudioProcessorEditor::~CombFilterAudioProcessorEditor()
 void CombFilterAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(ZazzLookAndFeel::LIGHT_COLOUR);
-
-	// Lines
-	g.setColour(ZazzLookAndFeel::MEDIUM_COLOUR);
-	const int width = (int)(getWidth() / N_SLIDERS);
-	const int height = getHeight();
-
-	g.drawVerticalLine(2 * width, 0, height);
-	g.drawVerticalLine(4 * width, 0, height);
 }
 
 void CombFilterAudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, N_SLIDERS);
+	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
 }

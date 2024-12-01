@@ -41,6 +41,7 @@ public:
     ~CombFilterAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string paramsUnitNames[];
 	static const int STAGES_MAX = 24;
 	static const int FREQUENY_MIN = 40;
 	static const int FREQUENY_MAX = 10000;

@@ -11,7 +11,7 @@
 
 //==============================================================================
 
-const std::string FDNReverbAudioProcessor::paramsNames[] = { "L", "W", "H", "Reflections", "ER Damping", "ER Width", "Predelay", "Time", "Size", "Color", "LR Damping", "LR Width", "ER Volume", "LR Volume", "Mix", "Volume" };
+const std::string FDNReverbAudioProcessor::paramsNames[] = { "Lenght", "Width", "Height", "Echoes", "ER Damp", "ER Width", "Predelay", "Time", "Size", "Color", "LR Damp", "LR Width", "ER Volume", "LR Volume", "Mix", "Volume" };
 const std::string FDNReverbAudioProcessor::paramsUnitNames[] = { " m", " m", " m", "", " %", " %", " ms", " s", "", "", " %", " %", " dB", " dB", " %", " dB" };
 const float FDNReverbAudioProcessor::MAXIMUM_DELAY_TIME = 0.08f;
 const float FDNReverbAudioProcessor::AVERAGE_DELAY_TIME = 0.452648f;

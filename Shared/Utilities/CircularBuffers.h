@@ -1,14 +1,11 @@
 #pragma once
 
-#include <immintrin.h>
+//#include <immintrin.h>
 #include <vector>
 #include <math.h>
 #include <array>
 
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
-
 #define M_PI  3.14159268f
-#define SPEED_OF_SOUND 343.0f
 
 //==============================================================================
 class CircularBuffer
