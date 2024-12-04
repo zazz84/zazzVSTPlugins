@@ -3394,3 +3394,186 @@ SubBass/JuceLibraryCode/JucePluginDefines.h
 SubBass/JuceLibraryCode/ReadMe.txt
 BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1068.write.1.tlog
 BassEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BassEnha.9830750F.tlog/CL.1068.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/.vs/SimpleCompressor/v15/.suo
+SimpleCompressor/Builds/VisualStudio2017/.vs/SimpleCompressor/v15/Browse.VC.db
+SimpleCompressor/Builds/VisualStudio2017/.vs/SimpleCompressor/v15/Solution.VC.db
+SimpleCompressor/Builds/VisualStudio2017/resources.rc
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor.sln
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_SharedCode.vcxproj
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_SharedCode.vcxproj.filters
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_SharedCode.vcxproj.user
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_StandalonePlugin.vcxproj
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_StandalonePlugin.vcxproj.filters
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_VST3.vcxproj
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_VST3.vcxproj.filters
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_VST3.vcxproj.user
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_VST3ManifestHelper.vcxproj
+SimpleCompressor/Builds/VisualStudio2017/SimpleCompressor_VST3ManifestHelper.vcxproj.filters
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/CL.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/CL.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/CL.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/Lib-link.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/Lib-link.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/Lib.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCo.45E3AF85.tlog/SimpleCompressor_SharedCode.lastbuildstate
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCompressor.lib
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCompressor.pdb
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/Shared Code/SimpleCompressor_SharedCode.log
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/CL.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/CL.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/CL.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/link.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/link.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/link.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/rc.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/rc.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/rc.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/SimpleCompressor_VST3ManifestHelper.lastbuildstate
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SimpleCompressor_VST3ManifestHelper.log
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/CL.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/CL.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/CL.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/link.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/link.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/link.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/rc.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/rc.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/rc.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/SimpleCompressor_VST3.lastbuildstate
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCo.0C6CAC96.tlog/SimpleCompressor_VST3.write.1u.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.dll
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.exp
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.ilk
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.lib
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.pdb
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.vst3/Contents/Resources/moduleinfo.json
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor.vst3/Contents/x86_64-win/SimpleCompressor.vst3
+SimpleCompressor/Builds/VisualStudio2017/x64/Debug/VST3/SimpleCompressor_VST3.log
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/CL.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/CL.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/CL.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/Lib-link.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/Lib-link.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/Lib.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCo.45E3AF85.tlog/SimpleCompressor_SharedCode.lastbuildstate
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCompressor.lib
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCompressor.pdb
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/Shared Code/SimpleCompressor_SharedCode.log
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/CL.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/CL.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/CL.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/link.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/link.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/link.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/rc.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/rc.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/rc.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCo.9288FF4C.tlog/SimpleCompressor_VST3ManifestHelper.lastbuildstate
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SimpleCompressor_VST3ManifestHelper.log
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/CL.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/CL.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/CL.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/link.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/link.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/link.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/rc.command.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/rc.read.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/rc.write.1.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/SimpleCompressor_VST3.lastbuildstate
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCo.0C6CAC96.tlog/SimpleCompressor_VST3.write.1u.tlog
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor.dll
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor.exp
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor.lib
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor.pdb
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor.vst3/Contents/Resources/moduleinfo.json
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor.vst3/Contents/x86_64-win/SimpleCompressor.vst3
+SimpleCompressor/Builds/VisualStudio2017/x64/Release/VST3/SimpleCompressor_VST3.log
+SimpleCompressor/JuceLibraryCode/include_juce_audio_basics.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_basics.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_devices.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_devices.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_formats.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_formats.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_processors.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_processors.mm
+SimpleCompressor/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_utils.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_audio_utils.mm
+SimpleCompressor/JuceLibraryCode/include_juce_core.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_core.mm
+SimpleCompressor/JuceLibraryCode/include_juce_data_structures.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_data_structures.mm
+SimpleCompressor/JuceLibraryCode/include_juce_events.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_events.mm
+SimpleCompressor/JuceLibraryCode/include_juce_graphics.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_graphics.mm
+SimpleCompressor/JuceLibraryCode/include_juce_gui_basics.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_gui_basics.mm
+SimpleCompressor/JuceLibraryCode/include_juce_gui_extra.cpp
+SimpleCompressor/JuceLibraryCode/include_juce_gui_extra.mm
+SimpleCompressor/JuceLibraryCode/JuceHeader.h
+SimpleCompressor/JuceLibraryCode/JucePluginDefines.h
+SimpleCompressor/JuceLibraryCode/ReadMe.txt

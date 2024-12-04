@@ -142,7 +142,7 @@ public:
 				sliders[i].setBounds(rectangle);
 
 				// Resize text box
-				sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, (int)(labelFontSize));
+				sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, (int)(labelFontSize));
 
 				i++;
 			}

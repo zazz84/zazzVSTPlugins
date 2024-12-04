@@ -8,10 +8,10 @@ EnvelopeFollower::EnvelopeFollower()
 {
 }
 
-void EnvelopeFollower::setCoef(float attackTimeMs, float releaseTimeMs)
-{
-	m_AttackCoef = exp(-1000.0f / (attackTimeMs * m_SampleRate));
-	m_ReleaseCoef = exp(-1000.0f / (releaseTimeMs * m_SampleRate));
+void EnvelopeFollower::set(float attackTimeMS, float releaseTimeMS)
+{	
+	m_AttackCoef = exp(-1000.0f / (attackTimeMS * m_SampleRate));
+	m_ReleaseCoef = exp(-1000.0f / (releaseTimeMS * m_SampleRate));
 }
 
 float EnvelopeFollower::process(float in)
@@ -140,7 +140,7 @@ float DualEnvelopeFollower::process(float in)
 	// Adjust attacka and release time
 	const float diff = fabsf(in - m_OutLast);
 	const float timeFactor = 1.0f + 0.15f * (diff - 4.0f);
-	m_FilterFast.setCoef(timeFactor * m_AttackTime, timeFactor * m_ReleaseTime);
+	m_FilterFast.set(timeFactor * m_AttackTime, timeFactor * m_ReleaseTime);
 
 	return m_OutLast = m_FilterFast.process(inAbsFilterFast) + m_FilterSlow.process(inAbsFilterSlow);
 }

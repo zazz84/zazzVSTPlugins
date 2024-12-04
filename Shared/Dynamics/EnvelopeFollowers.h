@@ -8,7 +8,7 @@ public:
 	EnvelopeFollower();
 
 	void init(int sampleRate) { m_SampleRate = sampleRate; }
-	void setCoef(float attackTimeMs, float releaseTimeMs);
+	void set(float attackTimeMS, float releaseTimeMS);
 	float process(float in);
 
 protected:
@@ -18,6 +18,25 @@ protected:
 
 	float m_OutLast = 0.0f;
 	float m_Out1Last = 0.0f;
+};
+
+//==============================================================================
+class BranchingSmoothEnvelopeFollower : public EnvelopeFollower
+{
+public:
+	BranchingSmoothEnvelopeFollower() {};
+
+	inline float process(float in)
+	{
+		if (in > m_OutLast)
+		{
+			return m_OutLast = in + m_AttackCoef * (m_OutLast - in);
+		}
+		else
+		{
+			return m_OutLast = in + m_ReleaseCoef * (m_OutLast - in);
+		}
+	}
 };
 
 //==============================================================================
@@ -138,8 +157,8 @@ public:
 		m_AttackTime = attackTimeMs;
 		m_ReleaseTime = releaseTimeMs;
 		
-		m_FilterFast.setCoef(attackTimeMs, releaseTimeMs);
-		m_FilterSlow.setCoef(150.0f, 600.0f);
+		m_FilterFast.set(attackTimeMs, releaseTimeMs);
+		m_FilterSlow.set(150.0f, 600.0f);
 	}
 	void setThreshold(float threshold) { m_Threshold = threshold; }
 	float process(float in);
@@ -166,8 +185,8 @@ public:
 		m_inputEnvelopeFollower.init(sampleRate);
 		m_outputEnvelopeFollower.init(sampleRate);
 
-		m_inputEnvelopeFollower.setCoef(5.0f, 15.0f);
-		m_outputEnvelopeFollower.setCoef(5.0f, 15.0f);
+		m_inputEnvelopeFollower.set(5.0f, 15.0f);
+		m_outputEnvelopeFollower.set(5.0f, 15.0f);
 	}
 	void set(float dynamics) { m_dynamics = dynamics; };
 	float getGainCompensation(float in, float out);
