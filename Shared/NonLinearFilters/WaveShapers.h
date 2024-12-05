@@ -9,6 +9,104 @@ constexpr auto SoftClipperThresholdPositive = 0.9f;
 constexpr auto SoftClipperThresholdNegative = -0.9f;
 constexpr auto SoftClipperThresholdRatio = 0.3f;		// for 48kHz
 
+
+// Waveshapers are gain compensated, so all methods produce more or less the same amount of distortion for the same input
+class Waveshapers
+{
+public:
+	inline static float Tanh(float in, float drive)
+	{
+		return std::tanhf(drive * in);
+	}
+
+	inline static float Reciprocal(float in, float drive)
+	{
+		const float drive2in = 1.3f * drive * in;
+		return drive2in / (1.0f + std::fabsf(drive2in));
+	}
+
+	inline static float Atan(float in, float drive)
+	{
+		constexpr float factor = 1.0f / (0.5f * 3.141592);
+		return factor * std::atanf(1.7f * drive * in);
+	}
+
+	inline static float Sin(float in, float drive)
+	{
+		const float driveAdjusted = 1.9f * drive;
+		const float limit = 3.141592 / driveAdjusted;
+
+		if (in < -limit)
+		{
+			return -1.0f;
+		}
+		else if (in > limit)
+		{
+			return 1.0f;
+		}
+		else
+		{
+			return std::sinf(0.5f * driveAdjusted * in);
+		}
+	}
+	inline static float ARRY(float in, float drive)
+	{
+		const float driveAdjusted = 0.65f * drive;
+		const float limit = 1.0f / driveAdjusted;
+		const float driveAdjustedIn = driveAdjusted * in;
+
+		if (in < -limit)
+		{
+			return -1.0f;
+		}
+		else if (in > limit)
+		{
+			return 1.0f;
+		}
+		else
+		{
+			return 1.5f * driveAdjustedIn * (1 - (driveAdjustedIn * driveAdjustedIn) / 3.0f);
+		}
+	}
+	inline static float Linear(float in, float drive)
+	{
+		const float driveAdjusted = 0.9f * drive;
+		const float limit = 1.0f / (0.7f * drive);
+
+		if (in < -limit)
+		{	
+			return -1.0f;
+		}
+		else if (in > limit)
+		{
+			return 1.0f;
+		}
+		else
+		{
+			return driveAdjusted * in;
+		}
+	}
+	inline static float Quadratic(float in, float drive)
+	{
+		const float driveAdjusted = 0.25f * drive;
+		const float limit = 1.0f / (2.0f * driveAdjusted);
+		const float driveAdjustedIn = driveAdjusted * in;
+
+		if (in < -limit)
+		{
+			return -1.0f;
+		}
+		else if (in > limit)
+		{
+			return 1.0f;
+		}
+		else
+		{
+			return driveAdjustedIn / (0.25f + driveAdjustedIn * driveAdjustedIn);
+		}
+	}
+};
+
 class  ARRYWaveShaper
 {
 public:
@@ -28,7 +126,7 @@ public:
 	void init(int sampleRate)
 	{
 		m_envelopeShaper.init(sampleRate);
-		m_envelopeShaper.setCoef(5.0f, 15.0f);
+		m_envelopeShaper.set(5.0f, 15.0f);
 		m_hightPassFilter.init(sampleRate);
 		m_hightPassFilter.setHighPass(10.0f, 0.707f);
 	}
@@ -65,7 +163,7 @@ public:
 	void init(int sampleRate)
 	{
 		m_envelopeShaper.init(sampleRate);
-		m_envelopeShaper.setCoef(5.0f, 15.0f);
+		m_envelopeShaper.set(5.0f, 15.0f);
 		m_hightPassFilter.init(sampleRate);
 		m_hightPassFilter.setHighPass(10.0f, 0.707f);
 	}

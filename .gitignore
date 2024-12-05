@@ -3577,3 +3577,184 @@ SimpleCompressor/JuceLibraryCode/include_juce_gui_extra.mm
 SimpleCompressor/JuceLibraryCode/JuceHeader.h
 SimpleCompressor/JuceLibraryCode/JucePluginDefines.h
 SimpleCompressor/JuceLibraryCode/ReadMe.txt
+Waveshaper/Builds/VisualStudio2017/.vs/Waveshaper/v15/.suo
+Waveshaper/Builds/VisualStudio2017/.vs/Waveshaper/v15/Browse.VC.db
+Waveshaper/Builds/VisualStudio2017/.vs/Waveshaper/v15/Solution.VC.db
+Waveshaper/Builds/VisualStudio2017/resources.rc
+Waveshaper/Builds/VisualStudio2017/Waveshaper.sln
+Waveshaper/Builds/VisualStudio2017/Waveshaper_SharedCode.vcxproj
+Waveshaper/Builds/VisualStudio2017/Waveshaper_SharedCode.vcxproj.filters
+Waveshaper/Builds/VisualStudio2017/Waveshaper_SharedCode.vcxproj.user
+Waveshaper/Builds/VisualStudio2017/Waveshaper_StandalonePlugin.vcxproj
+Waveshaper/Builds/VisualStudio2017/Waveshaper_StandalonePlugin.vcxproj.filters
+Waveshaper/Builds/VisualStudio2017/Waveshaper_VST3.vcxproj
+Waveshaper/Builds/VisualStudio2017/Waveshaper_VST3.vcxproj.filters
+Waveshaper/Builds/VisualStudio2017/Waveshaper_VST3.vcxproj.user
+Waveshaper/Builds/VisualStudio2017/Waveshaper_VST3ManifestHelper.vcxproj
+Waveshaper/Builds/VisualStudio2017/Waveshaper_VST3ManifestHelper.vcxproj.filters
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/CL.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/CL.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/CL.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/Lib-link.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/Lib-link.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/Lib.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshap.01B43B81.tlog/Waveshaper_SharedCode.lastbuildstate
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshaper.lib
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshaper.pdb
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Waveshaper_SharedCode.log
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/CL.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/CL.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/CL.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/link.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/link.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/link.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/rc.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/rc.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/rc.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/Waveshaper_VST3ManifestHelper.lastbuildstate
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Waveshaper_VST3ManifestHelper.log
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.dll
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.exp
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.ilk
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.lib
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.pdb
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.vst3/Contents/Resources/moduleinfo.json
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper.vst3/Contents/x86_64-win/Waveshaper.vst3
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.log
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/CL.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/CL.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/CL.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/link.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/link.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/link.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/rc.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/rc.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/rc.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/Waveshaper_VST3.lastbuildstate
+Waveshaper/Builds/VisualStudio2017/x64/Debug/VST3/Waveshaper_VST3.tlog/Waveshaper_VST3.write.1u.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/CL.10348.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/CL.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/CL.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/Lib-link.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/Lib-link.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/Lib.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/Waveshaper_SharedCode.lastbuildstate
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshaper.lib
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshaper.pdb
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshaper_SharedCode.log
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/CL.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/CL.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/CL.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/link.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/link.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/link.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/rc.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/rc.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/rc.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshap.E1143D6E.tlog/Waveshaper_VST3ManifestHelper.lastbuildstate
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Waveshaper_VST3ManifestHelper.log
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper.dll
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper.exp
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper.lib
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper.pdb
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper.vst3/Contents/Resources/moduleinfo.json
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper.vst3/Contents/x86_64-win/Waveshaper.vst3
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.log
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/CL.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/CL.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/CL.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/link.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/link.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/link.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/rc.command.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/rc.read.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/rc.write.1.tlog
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/Waveshaper_VST3.lastbuildstate
+Waveshaper/Builds/VisualStudio2017/x64/Release/VST3/Waveshaper_VST3.tlog/Waveshaper_VST3.write.1u.tlog
+Waveshaper/JuceLibraryCode/include_juce_audio_basics.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_basics.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_devices.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_devices.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_formats.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_formats.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_processors.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_processors.mm
+Waveshaper/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_utils.cpp
+Waveshaper/JuceLibraryCode/include_juce_audio_utils.mm
+Waveshaper/JuceLibraryCode/include_juce_core.cpp
+Waveshaper/JuceLibraryCode/include_juce_core.mm
+Waveshaper/JuceLibraryCode/include_juce_data_structures.cpp
+Waveshaper/JuceLibraryCode/include_juce_data_structures.mm
+Waveshaper/JuceLibraryCode/include_juce_events.cpp
+Waveshaper/JuceLibraryCode/include_juce_events.mm
+Waveshaper/JuceLibraryCode/include_juce_graphics.cpp
+Waveshaper/JuceLibraryCode/include_juce_graphics.mm
+Waveshaper/JuceLibraryCode/include_juce_gui_basics.cpp
+Waveshaper/JuceLibraryCode/include_juce_gui_basics.mm
+Waveshaper/JuceLibraryCode/include_juce_gui_extra.cpp
+Waveshaper/JuceLibraryCode/include_juce_gui_extra.mm
+Waveshaper/JuceLibraryCode/JuceHeader.h
+Waveshaper/JuceLibraryCode/JucePluginDefines.h
+Waveshaper/JuceLibraryCode/ReadMe.txt
