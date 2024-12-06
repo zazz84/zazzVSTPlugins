@@ -3758,3 +3758,191 @@ Waveshaper/JuceLibraryCode/include_juce_gui_extra.mm
 Waveshaper/JuceLibraryCode/JuceHeader.h
 Waveshaper/JuceLibraryCode/JucePluginDefines.h
 Waveshaper/JuceLibraryCode/ReadMe.txt
+TransientShaper/Builds/VisualStudio2017/.vs/TransientShaper/v15/.suo
+TransientShaper/Builds/VisualStudio2017/.vs/TransientShaper/v15/Browse.VC.db
+TransientShaper/Builds/VisualStudio2017/.vs/TransientShaper/v15/Browse.VC.opendb
+TransientShaper/Builds/VisualStudio2017/.vs/TransientShaper/v15/Solution.VC.db
+TransientShaper/Builds/VisualStudio2017/.vs/TransientShaper/v15/Solution.VC.db-shm
+TransientShaper/Builds/VisualStudio2017/.vs/TransientShaper/v15/Solution.VC.db-wal
+TransientShaper/Builds/VisualStudio2017/resources.rc
+TransientShaper/Builds/VisualStudio2017/TransientShaper.sln
+TransientShaper/Builds/VisualStudio2017/TransientShaper_SharedCode.vcxproj
+TransientShaper/Builds/VisualStudio2017/TransientShaper_SharedCode.vcxproj.filters
+TransientShaper/Builds/VisualStudio2017/TransientShaper_SharedCode.vcxproj.user
+TransientShaper/Builds/VisualStudio2017/TransientShaper_StandalonePlugin.vcxproj
+TransientShaper/Builds/VisualStudio2017/TransientShaper_StandalonePlugin.vcxproj.filters
+TransientShaper/Builds/VisualStudio2017/TransientShaper_VST3.vcxproj
+TransientShaper/Builds/VisualStudio2017/TransientShaper_VST3.vcxproj.filters
+TransientShaper/Builds/VisualStudio2017/TransientShaper_VST3.vcxproj.user
+TransientShaper/Builds/VisualStudio2017/TransientShaper_VST3ManifestHelper.vcxproj
+TransientShaper/Builds/VisualStudio2017/TransientShaper_VST3ManifestHelper.vcxproj.filters
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/CL.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/CL.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/CL.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/Lib-link.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/Lib-link.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/Lib.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/Transien.78D8E2B4.tlog/TransientShaper_SharedCode.lastbuildstate
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/TransientShaper.lib
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/TransientShaper.pdb
+TransientShaper/Builds/VisualStudio2017/x64/Debug/Shared Code/TransientShaper_SharedCode.log
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/CL.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/CL.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/CL.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/link.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/link.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/link.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/rc.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/rc.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/rc.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Transien.256B3E37.tlog/TransientShaper_VST3ManifestHelper.lastbuildstate
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/TransientShaper_VST3ManifestHelper.log
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/CL.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/CL.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/CL.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/link.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/link.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/link.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/rc.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/rc.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/rc.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/TransientShaper_VST3.lastbuildstate
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/Transien.ABA72A93.tlog/TransientShaper_VST3.write.1u.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.dll
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.exp
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.ilk
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.lib
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.pdb
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.vst3/Contents/Resources/moduleinfo.json
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper.vst3/Contents/x86_64-win/TransientShaper.vst3
+TransientShaper/Builds/VisualStudio2017/x64/Debug/VST3/TransientShaper_VST3.log
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/CL.10048.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/CL.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/CL.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/Lib-link.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/Lib-link.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/Lib.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/TransientShaper_SharedCode.lastbuildstate
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/TransientShaper.lib
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/TransientShaper.pdb
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/TransientShaper_SharedCode.log
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/CL.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/CL.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/CL.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/link.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/link.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/link.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/rc.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/rc.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/rc.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Transien.256B3E37.tlog/TransientShaper_VST3ManifestHelper.lastbuildstate
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/TransientShaper_VST3ManifestHelper.log
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/CL.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/CL.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/CL.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/link.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/link.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/link.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/rc.command.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/rc.read.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/rc.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/TransientShaper_VST3.lastbuildstate
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/TransientShaper_VST3.write.1u.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper.dll
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper.exp
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper.lib
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper.pdb
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper.vst3/Contents/Resources/moduleinfo.json
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper.vst3/Contents/x86_64-win/TransientShaper.vst3
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/TransientShaper_VST3.log
+TransientShaper/JuceLibraryCode/include_juce_audio_basics.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_basics.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_devices.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_devices.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_formats.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_formats.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_processors.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_processors.mm
+TransientShaper/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_utils.cpp
+TransientShaper/JuceLibraryCode/include_juce_audio_utils.mm
+TransientShaper/JuceLibraryCode/include_juce_core.cpp
+TransientShaper/JuceLibraryCode/include_juce_core.mm
+TransientShaper/JuceLibraryCode/include_juce_data_structures.cpp
+TransientShaper/JuceLibraryCode/include_juce_data_structures.mm
+TransientShaper/JuceLibraryCode/include_juce_events.cpp
+TransientShaper/JuceLibraryCode/include_juce_events.mm
+TransientShaper/JuceLibraryCode/include_juce_graphics.cpp
+TransientShaper/JuceLibraryCode/include_juce_graphics.mm
+TransientShaper/JuceLibraryCode/include_juce_gui_basics.cpp
+TransientShaper/JuceLibraryCode/include_juce_gui_basics.mm
+TransientShaper/JuceLibraryCode/include_juce_gui_extra.cpp
+TransientShaper/JuceLibraryCode/include_juce_gui_extra.mm
+TransientShaper/JuceLibraryCode/JuceHeader.h
+TransientShaper/JuceLibraryCode/JucePluginDefines.h
+TransientShaper/JuceLibraryCode/ReadMe.txt
