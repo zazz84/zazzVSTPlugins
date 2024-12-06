@@ -3946,3 +3946,5 @@ TransientShaper/JuceLibraryCode/include_juce_gui_extra.mm
 TransientShaper/JuceLibraryCode/JuceHeader.h
 TransientShaper/JuceLibraryCode/JucePluginDefines.h
 TransientShaper/JuceLibraryCode/ReadMe.txt
+TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/CL.write.1.tlog
+TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/unsuccessfulbuild

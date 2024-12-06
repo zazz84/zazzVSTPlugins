@@ -13,8 +13,8 @@
 
 //==============================================================================
 
-const std::string TransientShaperAudioProcessor::paramsNames[] = { "Attack Time", "Attack", "Sustain Time", "Sustain", "Volume" };
-const std::string TransientShaperAudioProcessor::paramsUnitNames[] = { " ms", " dB", " ms", " dB", " dB" };
+const std::string TransientShaperAudioProcessor::paramsNames[] = { "Attack", "Sustain", "Volume" };
+const std::string TransientShaperAudioProcessor::paramsUnitNames[] = { "", "", " dB" };
 
 //==============================================================================
 TransientShaperAudioProcessor::TransientShaperAudioProcessor()
@@ -29,11 +29,9 @@ TransientShaperAudioProcessor::TransientShaperAudioProcessor()
                        )
 #endif
 {
-	attackTimeParameter  = apvts.getRawParameterValue(paramsNames[0]);
-	attackParameter      = apvts.getRawParameterValue(paramsNames[1]);
-	sustainTimeParameter = apvts.getRawParameterValue(paramsNames[2]);
-	sustainParameter     = apvts.getRawParameterValue(paramsNames[3]);
-	volumeParameter      = apvts.getRawParameterValue(paramsNames[4]);
+	attackParameter      = apvts.getRawParameterValue(paramsNames[0]);
+	sustainParameter     = apvts.getRawParameterValue(paramsNames[1]);
+	volumeParameter      = apvts.getRawParameterValue(paramsNames[2]);
 }
 
 TransientShaperAudioProcessor::~TransientShaperAudioProcessor()
@@ -113,21 +111,17 @@ void TransientShaperAudioProcessor::prepareToPlay (double sampleRate, int sample
 	m_envelopeFollowerFast[0].init(sr);
 	m_envelopeFollowerFast[1].init(sr);
 
-	m_hpFilter[0].init(sr);
-	m_hpFilter[1].init(sr);
+	constexpr float attackTimeSlow = 5.0f;
+	constexpr float releaseTimeSlow = 150.0f;
 
-	m_hpFilter[0].setHighPass(80.0f, 0.8f);
-	m_hpFilter[1].setHighPass(80.0f, 0.8f);
+	m_envelopeFollowerSlow[0].set(attackTimeSlow, releaseTimeSlow);
+	m_envelopeFollowerSlow[1].set(attackTimeSlow, releaseTimeSlow);
+	
+	constexpr float attackTime = 0.3f;
+	constexpr float releaseTime = 30.0f;
 
-	constexpr float attackTime = 1.0f;
-
-	m_envelopeFollowerSlow[0].set(attackTime, 150.0f);
-	m_envelopeFollowerSlow[1].set(attackTime, 150.0f);
-
-	constexpr float releaseTime = 40.0f;
-
-	m_envelopeFollowerFast[0].set(0.5f, releaseTime);
-	m_envelopeFollowerFast[1].set(0.5f, releaseTime);
+	m_envelopeFollowerFast[0].set(attackTime, releaseTime);
+	m_envelopeFollowerFast[1].set(attackTime, releaseTime);
 }
 
 void TransientShaperAudioProcessor::releaseResources()
@@ -163,10 +157,8 @@ bool TransientShaperAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 void TransientShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto attackTime = attackTimeParameter->load();
-	const auto attackGain = juce::Decibels::decibelsToGain(attackParameter->load());
-	const auto sustainTime = sustainTimeParameter->load();
-	const auto sustainGain = juce::Decibels::decibelsToGain(sustainParameter->load());
+	const auto attackGain = 0.01f * attackParameter->load();
+	const auto sustainGain = -0.01f * sustainParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -181,39 +173,18 @@ void TransientShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		// Envelope follower
 		auto& envelopeFollowerSlow = m_envelopeFollowerSlow[channel];
 		auto& envelopeFollowerFast = m_envelopeFollowerFast[channel];
-		envelopeFollowerSlow.set(attackTime, sustainTime);
-
-		auto& hpFilter = m_hpFilter[channel];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			float& in = channelBuffer[sample];
-			const float envelopeIn = std::fabsf(hpFilter.processDF1(in));
+			const float envelopeIn = std::fabsf(in);
 			const float envelopeSlow = envelopeFollowerSlow.process(envelopeIn);
 			const float envelopeFast = envelopeFollowerFast.process(envelopeIn);
 
-			float gain = 0.0f;
 			float differencedB = juce::Decibels::gainToDecibels(envelopeFast) - juce::Decibels::gainToDecibels(envelopeSlow);
-			
-			constexpr float threshold = 0.1f;
-			constexpr float interpolationThreshold = 10.0f;
+			const float gaindB = differencedB > 0.0f ? differencedB * attackGain : differencedB * sustainGain;
 
-			// Attack
-			if (differencedB > threshold)
-			{
-				gain = remap(differencedB, threshold, interpolationThreshold, 1.0f, attackGain);
-			}
-			// Release
-			else if (differencedB < -threshold)
-			{
-				gain = remap(differencedB, -interpolationThreshold, -threshold, sustainGain, 1.0f);
-			}
-			else
-			{
-				gain = 1.0f;
-			}
-
-			in = volume * gain * in;
+			in = volume * juce::Decibels::decibelsToGain(gaindB) * in;
 		}
 	}
 }
@@ -252,11 +223,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout TransientShaperAudioProcesso
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  1.0f,  10.0f, 1.0f, 1.0f),   7.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(  100.0f, 300.0f, 1.0f, 1.0f), 150.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f),    0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f),    0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f), 0.0f));
 
 	return layout;
 }

@@ -2,7 +2,6 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
 class TransientShaperAudioProcessor  : public juce::AudioProcessor
@@ -76,7 +75,6 @@ private:
 	}
 	
 	//==============================================================================
-	BiquadFilter m_hpFilter[2];
 	BranchingSmoothEnvelopeFollower m_envelopeFollowerSlow[2];
 	BranchingSmoothEnvelopeFollower m_envelopeFollowerFast[2];
 
