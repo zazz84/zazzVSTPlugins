@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/TransientShaper.h"
 
 //==============================================================================
 class TransientShaperAudioProcessor  : public juce::AudioProcessor
@@ -58,29 +58,9 @@ public:
 
 private:	
 	//==============================================================================
-	float remap(float value, float inMin, float inMax, float outMin, float outMax)
-	{
-		if (value <= inMin)
-		{
-			return outMin;
-		}
-		else if (value >= inMax)
-		{
-			return outMax;
-		}
-		else
-		{
-			return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);
-		}
-	}
-	
-	//==============================================================================
-	BranchingSmoothEnvelopeFollower m_envelopeFollowerSlow[2];
-	BranchingSmoothEnvelopeFollower m_envelopeFollowerFast[2];
+	TransientShaper m_transientShaper[2];
 
-	std::atomic<float>* attackTimeParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
-	std::atomic<float>* sustainTimeParameter = nullptr;
 	std::atomic<float>* sustainParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 

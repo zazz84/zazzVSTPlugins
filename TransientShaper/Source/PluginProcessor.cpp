@@ -105,23 +105,8 @@ void TransientShaperAudioProcessor::prepareToPlay (double sampleRate, int sample
 {
 	const int sr = (int)sampleRate;
 
-	m_envelopeFollowerSlow[0].init(sr);
-	m_envelopeFollowerSlow[1].init(sr);
-
-	m_envelopeFollowerFast[0].init(sr);
-	m_envelopeFollowerFast[1].init(sr);
-
-	constexpr float attackTimeSlow = 5.0f;
-	constexpr float releaseTimeSlow = 150.0f;
-
-	m_envelopeFollowerSlow[0].set(attackTimeSlow, releaseTimeSlow);
-	m_envelopeFollowerSlow[1].set(attackTimeSlow, releaseTimeSlow);
-	
-	constexpr float attackTime = 0.3f;
-	constexpr float releaseTime = 30.0f;
-
-	m_envelopeFollowerFast[0].set(attackTime, releaseTime);
-	m_envelopeFollowerFast[1].set(attackTime, releaseTime);
+	m_transientShaper[0].init(sr);
+	m_transientShaper[1].init(sr);
 }
 
 void TransientShaperAudioProcessor::releaseResources()
@@ -158,7 +143,7 @@ void TransientShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 {
 	// Get params
 	const auto attackGain = 0.01f * attackParameter->load();
-	const auto sustainGain = -0.01f * sustainParameter->load();
+	const auto sustainGain = 0.01f * sustainParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -170,23 +155,18 @@ void TransientShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		// Envelope follower
-		auto& envelopeFollowerSlow = m_envelopeFollowerSlow[channel];
-		auto& envelopeFollowerFast = m_envelopeFollowerFast[channel];
+		// Transient shaper
+		auto& transientShaper = m_transientShaper[channel];
+		transientShaper.set(attackGain, sustainGain);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
-			float& in = channelBuffer[sample];
-			const float envelopeIn = std::fabsf(in);
-			const float envelopeSlow = envelopeFollowerSlow.process(envelopeIn);
-			const float envelopeFast = envelopeFollowerFast.process(envelopeIn);
-
-			float differencedB = juce::Decibels::gainToDecibels(envelopeFast) - juce::Decibels::gainToDecibels(envelopeSlow);
-			const float gaindB = differencedB > 0.0f ? differencedB * attackGain : differencedB * sustainGain;
-
-			in = volume * juce::Decibels::decibelsToGain(gaindB) * in;
+			transientShaper.process(channelBuffer[sample]);
 		}
 	}
+
+	// Uses SIMD
+	buffer.applyGain(volume);
 }
 
 //==============================================================================
@@ -225,7 +205,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout TransientShaperAudioProcesso
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f,  18.0f, 1.0f, 1.0f), 0.0f));
 
 	return layout;
 }

@@ -5,9 +5,6 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
   <MAINGROUP id="eOCWoC" name="TransientShaper">
     <GROUP id="{D1570B5D-7FF4-281E-3A2A-53A93623A733}" name="Source">
-      <FILE id="NyCBH8" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
-      <FILE id="fHYJmE" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="MxZuQ7" name="EnvelopeFollowers.cpp" compile="1" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.cpp"/>
       <FILE id="ckGOzA" name="EnvelopeFollowers.h" compile="0" resource="0"
@@ -16,6 +13,8 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="RG6lYR" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="aDvzhi" name="TransientShaper.h" compile="0" resource="0"
+            file="../Shared/Dynamics/TransientShaper.h"/>
       <FILE id="FnsMMm" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="JWfqOQ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
