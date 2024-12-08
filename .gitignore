@@ -3948,3 +3948,182 @@ TransientShaper/JuceLibraryCode/JucePluginDefines.h
 TransientShaper/JuceLibraryCode/ReadMe.txt
 TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/CL.write.1.tlog
 TransientShaper/Builds/VisualStudio2017/x64/Release/VST3/Transien.ABA72A93.tlog/unsuccessfulbuild
+Clipper/Builds/VisualStudio2017/.vs/Clipper/v15/.suo
+Clipper/Builds/VisualStudio2017/.vs/Clipper/v15/Browse.VC.db
+Clipper/Builds/VisualStudio2017/.vs/Clipper/v15/Solution.VC.db
+Clipper/Builds/VisualStudio2017/Clipper.sln
+Clipper/Builds/VisualStudio2017/Clipper_SharedCode.vcxproj
+Clipper/Builds/VisualStudio2017/Clipper_SharedCode.vcxproj.filters
+Clipper/Builds/VisualStudio2017/Clipper_StandalonePlugin.vcxproj
+Clipper/Builds/VisualStudio2017/Clipper_StandalonePlugin.vcxproj.filters
+Clipper/Builds/VisualStudio2017/Clipper_VST3.vcxproj
+Clipper/Builds/VisualStudio2017/Clipper_VST3.vcxproj.filters
+Clipper/Builds/VisualStudio2017/Clipper_VST3ManifestHelper.vcxproj
+Clipper/Builds/VisualStudio2017/Clipper_VST3ManifestHelper.vcxproj.filters
+Clipper/Builds/VisualStudio2017/resources.rc
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper.lib
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper.pdb
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/CL.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/CL.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/CL.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/Clipper_SharedCode.lastbuildstate
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/Lib-link.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/Lib-link.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_.968CC69E.tlog/Lib.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/Clipper_SharedCode.log
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/CL.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/CL.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/CL.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/Clipper_VST3ManifestHelper.lastbuildstate
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/link.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/link.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/link.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/rc.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/rc.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/rc.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Clipper_VST3ManifestHelper.log
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.dll
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.exp
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.ilk
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.lib
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.pdb
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.vst3/Contents/Resources/moduleinfo.json
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper.vst3/Contents/x86_64-win/Clipper.vst3
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.log
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/CL.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/CL.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/CL.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/Clipper_VST3.lastbuildstate
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/Clipper_VST3.write.1u.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/link.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/link.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/link.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/rc.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/rc.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/Clipper_VST3.tlog/rc.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+Clipper/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper.lib
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper.pdb
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/CL.10116.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/CL.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/CL.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/Clipper_SharedCode.lastbuildstate
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/Lib-link.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/Lib-link.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/Lib.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_SharedCode.log
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/CL.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/CL.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/CL.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/Clipper_VST3ManifestHelper.lastbuildstate
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/link.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/link.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/link.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/rc.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/rc.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_.0498AD3A.tlog/rc.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Clipper_VST3ManifestHelper.log
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Clipper/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper.dll
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper.exp
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper.lib
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper.pdb
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper.vst3/Contents/Resources/moduleinfo.json
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper.vst3/Contents/x86_64-win/Clipper.vst3
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.log
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/CL.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/CL.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/CL.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/Clipper_VST3.lastbuildstate
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/Clipper_VST3.write.1u.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/link.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/link.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/link.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/rc.command.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/rc.read.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/Clipper_VST3.tlog/rc.write.1.tlog
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+Clipper/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+Clipper/JuceLibraryCode/include_juce_audio_basics.cpp
+Clipper/JuceLibraryCode/include_juce_audio_basics.mm
+Clipper/JuceLibraryCode/include_juce_audio_devices.cpp
+Clipper/JuceLibraryCode/include_juce_audio_devices.mm
+Clipper/JuceLibraryCode/include_juce_audio_formats.cpp
+Clipper/JuceLibraryCode/include_juce_audio_formats.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+Clipper/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+Clipper/JuceLibraryCode/include_juce_audio_processors.cpp
+Clipper/JuceLibraryCode/include_juce_audio_processors.mm
+Clipper/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+Clipper/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+Clipper/JuceLibraryCode/include_juce_audio_utils.cpp
+Clipper/JuceLibraryCode/include_juce_audio_utils.mm
+Clipper/JuceLibraryCode/include_juce_core.cpp
+Clipper/JuceLibraryCode/include_juce_core.mm
+Clipper/JuceLibraryCode/include_juce_data_structures.cpp
+Clipper/JuceLibraryCode/include_juce_data_structures.mm
+Clipper/JuceLibraryCode/include_juce_events.cpp
+Clipper/JuceLibraryCode/include_juce_events.mm
+Clipper/JuceLibraryCode/include_juce_graphics.cpp
+Clipper/JuceLibraryCode/include_juce_graphics.mm
+Clipper/JuceLibraryCode/include_juce_gui_basics.cpp
+Clipper/JuceLibraryCode/include_juce_gui_basics.mm
+Clipper/JuceLibraryCode/include_juce_gui_extra.cpp
+Clipper/JuceLibraryCode/include_juce_gui_extra.mm
+Clipper/JuceLibraryCode/JuceHeader.h
+Clipper/JuceLibraryCode/JucePluginDefines.h
+Clipper/JuceLibraryCode/ReadMe.txt
