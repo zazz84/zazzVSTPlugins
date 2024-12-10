@@ -5,10 +5,10 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
   <MAINGROUP id="CmjmdB" name="Compressor">
     <GROUP id="{D20D41EA-EDA5-188B-BC6B-62FA9976F1CD}" name="Source">
-      <FILE id="HHMHqp" name="StateVariableFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/StateVariableFilters.cpp"/>
-      <FILE id="FieWLI" name="StateVariableFilters.h" compile="0" resource="0"
-            file="../Shared/Filters/StateVariableFilters.h"/>
+      <FILE id="TYm242" name="ZazzAudioProcessorEditor_OLD.h" compile="0"
+            resource="0" file="../Shared/GUI/ZazzAudioProcessorEditor_OLD.h"/>
+      <FILE id="TZfceU" name="ZazzLookAndFeel_OLD.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzLookAndFeel_OLD.h"/>
       <FILE id="KQD6Ax" name="CircularBuffers.cpp" compile="1" resource="0"
             file="../Shared/Utilities/CircularBuffers.cpp"/>
       <FILE id="Du5GWu" name="CircularBuffers.h" compile="0" resource="0"

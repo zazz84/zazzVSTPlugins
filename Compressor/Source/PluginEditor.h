@@ -2,8 +2,8 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel_OLD.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor_OLD.h"
 
 //==============================================================================
 class CompressorAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor

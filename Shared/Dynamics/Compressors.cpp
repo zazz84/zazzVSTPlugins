@@ -285,7 +285,7 @@ void SideChainCompressor::set(float thresholddB, float ratio, float attackTimeMS
 	m_lowPassFilter.setLowPass(lowPassFrequency, 1.0f);
 	m_highPassFilter.setHighPass(highPassFrequency, 1.0f);
 
-	m_envelopeFollower.setCoef(attackTimeMS, releaseTimeMS);
+	m_envelopeFollower.set(attackTimeMS, releaseTimeMS);
 }
 
 float SideChainCompressor::processHardKnee(float in)
