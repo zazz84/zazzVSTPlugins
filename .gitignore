@@ -1303,10 +1303,6 @@ Compressor/JuceLibraryCode/include_juce_gui_extra.mm
 Compressor/JuceLibraryCode/JuceHeader.h
 Compressor/JuceLibraryCode/JucePluginDefines.h
 Compressor/JuceLibraryCode/ReadMe.txt
-Compressor/Source/PluginEditor.cpp
-Compressor/Source/PluginEditor.h
-Compressor/Source/PluginProcessor.cpp
-Compressor/Source/PluginProcessor.h
 EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/.suo
 EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/Browse.VC.db
 EnvelopeCloner/Builds/VisualStudio2017/.vs/EnvelopeCloner/v15/ipch/AutoPCH/27a8a8248ead7feb/PLUGINEDITOR.ipch
