@@ -13,8 +13,8 @@
 
 //==============================================================================
 
-const std::string TransientShaperAudioProcessor::paramsNames[] = { "Attack", "Sustain", "Volume" };
-const std::string TransientShaperAudioProcessor::paramsUnitNames[] = { "", "", " dB" };
+const std::string TransientShaperAudioProcessor::paramsNames[] = { "Attack Time", "Attack", "Sustain", "Clip", "Volume" };
+const std::string TransientShaperAudioProcessor::paramsUnitNames[] = { " ms", "", "", " dB", " dB" };
 
 //==============================================================================
 TransientShaperAudioProcessor::TransientShaperAudioProcessor()
@@ -29,9 +29,11 @@ TransientShaperAudioProcessor::TransientShaperAudioProcessor()
                        )
 #endif
 {
-	attackParameter      = apvts.getRawParameterValue(paramsNames[0]);
-	sustainParameter     = apvts.getRawParameterValue(paramsNames[1]);
-	volumeParameter      = apvts.getRawParameterValue(paramsNames[2]);
+	attackTimeParameter  = apvts.getRawParameterValue(paramsNames[0]);
+	attackParameter      = apvts.getRawParameterValue(paramsNames[1]);
+	sustainParameter     = apvts.getRawParameterValue(paramsNames[2]);
+	clipParameter        = apvts.getRawParameterValue(paramsNames[3]);
+	volumeParameter      = apvts.getRawParameterValue(paramsNames[4]);
 }
 
 TransientShaperAudioProcessor::~TransientShaperAudioProcessor()
@@ -142,8 +144,10 @@ bool TransientShaperAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 void TransientShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
+	const auto attackTime = 0.3f + attackTimeParameter->load();
 	const auto attackGain = 0.01f * attackParameter->load();
 	const auto sustainGain = 0.01f * sustainParameter->load();
+	const auto clipGain = juce::Decibels::decibelsToGain(clipParameter->load());
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -157,7 +161,7 @@ void TransientShaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
 		// Transient shaper
 		auto& transientShaper = m_transientShaper[channel];
-		transientShaper.set(attackGain, sustainGain);
+		transientShaper.set(attackGain, sustainGain, attackTime, clipGain);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -203,9 +207,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout TransientShaperAudioProcesso
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f,  18.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f,  50.0f, 1.0f, 0.7f),  5.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(-100.0f, 100.0f, 1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,  18.0f, 1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f, 1.0f, 1.0f),  0.0f));
 
 	return layout;
 }

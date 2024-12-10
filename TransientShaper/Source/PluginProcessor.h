@@ -60,8 +60,10 @@ private:
 	//==============================================================================
 	TransientShaper m_transientShaper[2];
 
+	std::atomic<float>* attackTimeParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
 	std::atomic<float>* sustainParameter = nullptr;
+	std::atomic<float>* clipParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransientShaperAudioProcessor)
