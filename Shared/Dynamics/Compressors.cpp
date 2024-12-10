@@ -27,7 +27,7 @@ void Compressor::set(float thresholddB, float ratio, float kneeWidth, float atta
 	m_minus_T_plus_WHalf = -1.0f * thresholddB + W_Half;
 	m_W2_inv = 1.0f / (kneeWidth * 2.0f);
 
-	m_envelopeFollower.setCoef(attackTimeMS, releaseTimeMS);
+	m_envelopeFollower.set(attackTimeMS, releaseTimeMS);
 }
 
 float Compressor::processHardKneeLinPeak(float in)
