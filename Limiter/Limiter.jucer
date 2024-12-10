@@ -5,6 +5,8 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
   <MAINGROUP id="Xy6ZHl" name="Limiter">
     <GROUP id="{9B0CDA92-217B-67BC-61BD-0F82E7C56F12}" name="Source">
+      <FILE id="VyRBsq" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
+      <FILE id="GBOfTo" name="Limiter.h" compile="0" resource="0" file="../Shared/Dynamics/Limiter.h"/>
       <FILE id="eNlXw8" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="RrIKY9" name="ZazzLookAndFeel.h" compile="0" resource="0"

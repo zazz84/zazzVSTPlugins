@@ -2,7 +2,8 @@
 
 #include <JuceHeader.h>
 
-#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter.h"
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/Clippers.h"
 
 //==============================================================================
 class LimiterAudioProcessor  : public juce::AudioProcessor
@@ -59,12 +60,9 @@ public:
 
 private:	
 	//==============================================================================
-	CircularBuffer m_buffer[2];
-
-	float m_currentPeak[2];
-	float m_interpolationMultiplier[2];
-	float m_interpolationSpeed[2];
-	int m_samplesToPeak[2];
+	Limiter m_limiter1[2];
+	Limiter m_limiter2[2];
+	SlopeClipper m_clipper[2];
 
 	std::atomic<float>* attackParameter = nullptr;
 	std::atomic<float>* releaseParameter = nullptr;

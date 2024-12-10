@@ -23,6 +23,11 @@ public:
 		m_head = (m_head + 1) & m_bitMask;
 	}
 	inline float read() const { return m_buffer[(m_head + m_readOffset) & m_bitMask]; };
+	inline void release()
+	{
+		delete[] m_buffer;
+		m_buffer = nullptr;
+	}
 	float readDelay(int sample);
 	float readDelayLinearInterpolation(float sample);
 	float readDelayTriLinearInterpolation(float sample);

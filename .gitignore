@@ -4248,3 +4248,65 @@ Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
 Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
 Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/CL.write.1.tlog
 TransientShaper/Builds/VisualStudio2017/x64/Release/Shared Code/Transien.78D8E2B4.tlog/unsuccessfulbuild
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter.lib
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter.pdb
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/CL.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/CL.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/CL.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/Lib-link.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/Lib-link.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/Lib.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_.DE8D9840.tlog/Limiter_SharedCode.lastbuildstate
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/Limiter_SharedCode.log
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/CL.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/CL.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/CL.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/Limiter_VST3ManifestHelper.lastbuildstate
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/link.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/link.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/link.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/rc.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/rc.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_.0493351B.tlog/rc.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Limiter_VST3ManifestHelper.log
+Limiter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter.dll
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter.exp
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter.lib
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter.pdb
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter.vst3/Contents/Resources/moduleinfo.json
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter.vst3/Contents/x86_64-win/Limiter.vst3
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.log
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/CL.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/CL.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/CL.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/Limiter_VST3.lastbuildstate
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/Limiter_VST3.write.1u.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/link.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/link.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/link.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.command.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.read.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.write.1.tlog
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
