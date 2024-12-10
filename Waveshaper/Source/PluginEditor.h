@@ -13,7 +13,7 @@ public:
     ~WaveshaperAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 5;
+	static const int N_SLIDERS = 6;
 	static const int SLIDERS[];
 	static const int COLUMN_OFFSET[];
 	static const int N_ROWS = 1;

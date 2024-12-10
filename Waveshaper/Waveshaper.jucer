@@ -5,6 +5,9 @@
               companyName="zazz" pluginFormats="buildVST3">
   <MAINGROUP id="njm7Tj" name="Waveshaper">
     <GROUP id="{7E5A61C9-1855-0A97-1192-F96E0F1285C7}" name="Source">
+      <FILE id="Rg31GW" name="BiquadFilters.cpp" compile="1" resource="0"
+            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="rsAV3N" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="xFGDkE" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="LbVGID" name="ZazzLookAndFeel.h" compile="0" resource="0"

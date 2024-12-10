@@ -4248,3 +4248,6 @@ Limiter/JuceLibraryCode/include_juce_gui_extra.mm
 Limiter/JuceLibraryCode/JuceHeader.h
 Limiter/JuceLibraryCode/JucePluginDefines.h
 Limiter/JuceLibraryCode/ReadMe.txt
+Waveshaper/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+Waveshaper/Builds/VisualStudio2017/x64/Release/Shared Code/Waveshap.01B43B81.tlog/CL.write.1.tlog

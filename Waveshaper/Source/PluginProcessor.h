@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
 class WaveshaperAudioProcessor  : public juce::AudioProcessor
@@ -58,10 +59,13 @@ public:
 
 private:	
 	//==============================================================================
+	BiquadFilter m_preFilter[2];
+	BiquadFilter m_postFilter[2];
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* driveParameter = nullptr;
+	std::atomic<float>* colorParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
