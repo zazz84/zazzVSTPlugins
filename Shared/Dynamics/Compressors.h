@@ -16,8 +16,8 @@ public:
 	{ 
 		m_envelopeFollower.init(sampleRate);
 		m_circularBuffer.init(sampleRate);
-		const int size = (int)(0.01f * sampleRate);
-		m_circularBuffer.setSize(size);
+		const int size = (int)(0.01f * (float)sampleRate);
+		m_circularBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
 	float processHardKneeLinPeak(float in);
@@ -158,7 +158,7 @@ public:
 
 		m_circularBuffer.init(sampleRate);
 		const int size = (int)(0.01f * sampleRate);
-		m_circularBuffer.setSize(size);
+		m_circularBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
 	float processHardKneeLinPeak(float in);
@@ -199,7 +199,7 @@ public:
 
 		m_RMSBuffer.init(sampleRate);
 		const int size = (int)(0.01f * sampleRate);
-		m_RMSBuffer.setSize(size);
+		m_RMSBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
 	float processHardKneeLinPeak(float in);
@@ -240,7 +240,7 @@ public:
 
 		m_RMSBuffer.init(sampleRate);
 		const int size = (int)(0.01f * sampleRate);
-		m_RMSBuffer.setSize(size);
+		m_RMSBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
 	float processHardKneeLinPeak(float in);

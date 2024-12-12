@@ -51,7 +51,7 @@ float Compressor::processHardKneeLinPeak(float in)
 float Compressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.writeSample(in);
+	m_circularBuffer.write(in);
 	const float rms = m_circularBuffer.getRMS();
 
 	// Smooth
@@ -88,7 +88,7 @@ float Compressor::processHardKneeLogPeak(float in)
 float Compressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.writeSample(in);
+	m_circularBuffer.write(in);
 	const float rms = m_circularBuffer.getRMS();
 
 	// Convert input from gain to dB
@@ -369,7 +369,7 @@ float SlewCompressor::processHardKneeLinPeak(float in)
 float SlewCompressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.writeSample(in);
+	m_circularBuffer.write(in);
 	const float rms = m_circularBuffer.getRMS();
 
 	// Smooth
@@ -406,7 +406,7 @@ float SlewCompressor::processHardKneeLogPeak(float in)
 float SlewCompressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.writeSample(in);
+	m_circularBuffer.write(in);
 	const float rms = m_circularBuffer.getRMS();
 
 	// Convert input from gain to dB
@@ -503,7 +503,7 @@ float OptoCompressor::processHardKneeLinPeak(float in)
 float OptoCompressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.writeSample(in);
+	m_RMSBuffer.write(in);
 	const float rms = m_RMSBuffer.getRMS();
 
 	// Smooth
@@ -540,7 +540,7 @@ float OptoCompressor::processHardKneeLogPeak(float in)
 float OptoCompressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.writeSample(in);
+	m_RMSBuffer.write(in);
 	const float rms = m_RMSBuffer.getRMS();
 
 	// Convert input from gain to dB
@@ -637,7 +637,7 @@ float DualCompressor::processHardKneeLinPeak(float in)
 float DualCompressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.writeSample(in);
+	m_RMSBuffer.write(in);
 	const float rms = m_RMSBuffer.getRMS();
 
 	// Smooth
@@ -674,7 +674,7 @@ float DualCompressor::processHardKneeLogPeak(float in)
 float DualCompressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.writeSample(in);
+	m_RMSBuffer.write(in);
 	const float rms = m_RMSBuffer.getRMS();
 
 	// Convert input from gain to dB
