@@ -2,9 +2,9 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.45f, 0.5f, 0.6f, 1.0f);
-const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.45f, 0.5f, 0.5f, 1.0f);
-const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.45f, 0.5f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
+const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
+const juce::Colour ZazzLookAndFeel::DARK_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
 
 const int CombFilterAudioProcessorEditor::SLIDERS[] = { 6 };
 const int CombFilterAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };

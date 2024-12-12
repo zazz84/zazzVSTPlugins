@@ -13,8 +13,14 @@ public:
     ~CombFilterAudioProcessorEditor() override;
 
 	// GUI setup
+	// Total number of sliders
 	static const int N_SLIDERS = 6;
+	// Total number of fows
 	static const int N_ROWS = 1;
+	// Number of sliders per row
+	static const int SLIDERS[];
+	// Number of slider width offset (from left) per row
+	static const int COLUMN_OFFSET[];
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;

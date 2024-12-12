@@ -158,7 +158,7 @@ void CombFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const int stages = (int)(std::round(stagesParameter->load()));
 	const auto lowCut = lowCutParameter->load();
 	const auto highCut = highCutParameter->load();
-	const auto mix = mixParameter->load();
+	const auto mix = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants

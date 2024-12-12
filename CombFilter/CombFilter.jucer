@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="P88DoS" name="CombFilter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Delay">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Delay"
+              version="1.0.1">
   <MAINGROUP id="Y7xaGw" name="CombFilter">
     <GROUP id="{44300FCD-8FE1-52AE-9DC3-23FC75D1A288}" name="Source">
       <FILE id="Vbeqsy" name="BiquadFilters.cpp" compile="1" resource="0"

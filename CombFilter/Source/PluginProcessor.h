@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
 class CombFilter
