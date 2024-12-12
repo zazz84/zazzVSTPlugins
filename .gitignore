@@ -4310,3 +4310,5 @@ Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.command.1.
 Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.read.1.tlog
 Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.write.1.tlog
 Limiter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+CombFilter/Builds/VisualStudio2017/CombFilter_VST3.vcxproj.user
+CombFilter/Builds/VisualStudio2017/CombFilter_SharedCode.vcxproj.user

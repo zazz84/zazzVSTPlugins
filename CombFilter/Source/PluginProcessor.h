@@ -5,31 +5,6 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
-class CombFilter
-{
-public:
-	CombFilter() {};
-
-	void init(const int size)
-	{
-		m_buffer.init(size);
-	};
-	void set(const float delay)
-	{
-		m_delay = delay;
-	}
-	float process(const float in)
-	{
-		m_buffer.writeSample(in);				
-		return 0.5f * (in - m_buffer.readDelay((int)m_delay));
-	}
-
-private:
-	CircularBuffer m_buffer = {};
-	float m_delay = 0.0f;;
-};
-
-//==============================================================================
 class CombFilterAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
@@ -87,6 +62,9 @@ public:
 
 private:	
 	//==============================================================================
+	CombFilter m_combFilter[STAGES_MAX][2];
+	BiquadFilter m_lowCutFilter[2] = {};
+	BiquadFilter m_highCutFilter[2] = {};
 
 	std::atomic<float>* frequencyParameter = nullptr;
 	std::atomic<float>* stagesParameter = nullptr;
@@ -94,10 +72,6 @@ private:
 	std::atomic<float>* highCutParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
-
-	CombFilter m_combFilter[STAGES_MAX][2];
-	BiquadFilter m_lowCutFilter[2] = {};
-	BiquadFilter m_highCutFilter[2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombFilterAudioProcessor)
 };

@@ -180,7 +180,7 @@ void CombFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
 		for (int i = 0; i < stages; i++)
 		{
-			m_combFilter[i][channel].set(delay);
+			m_combFilter[i][channel].CircularBuffer::set(delay);
 		}
 
 		for (int sample = 0; sample < samples; sample++)

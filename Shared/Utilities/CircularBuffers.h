@@ -1,11 +1,8 @@
 #pragma once
 
-//#include <immintrin.h>
-#include <vector>
+#include <cstdarg>
 #include <math.h>
-#include <array>
 
-#define M_PI  3.14159268f
 
 //==============================================================================
 class CircularBuffer
@@ -13,49 +10,135 @@ class CircularBuffer
 public:
 	CircularBuffer() {};
 
-	void init(int size);
-	void clear();
-	inline void setSize(int size) { m_readOffset = m_bitMask - size; };
-	inline int getSize() { return m_bitMask - m_readOffset; };
-	inline void writeSample(float sample)
+	inline void init(int size)
+	{
+		m_head = 0;
+		const int sizePowerOfTwo = GetPowerOfTwo(size);
+		m_bitMask = sizePowerOfTwo - 1;
+
+		m_readOffset = m_bitMask - size;
+
+		m_buffer = new float[sizePowerOfTwo];
+		memset(m_buffer, 0, sizePowerOfTwo * sizeof(float));
+	}
+	inline void set(const int size) 
+	{
+		m_readOffset = m_bitMask - size;
+	};
+	inline int getSize() const
+	{
+		return m_bitMask - m_readOffset;
+	};
+	inline void write(const float sample)
 	{
 		m_buffer[m_head] = sample;
 		m_head = (m_head + 1) & m_bitMask;
 	}
-	inline float read() const { return m_buffer[(m_head + m_readOffset) & m_bitMask]; };
+	inline float read() const
+	{ 
+		return m_buffer[(m_head + m_readOffset) & m_bitMask];
+	};
 	inline void release()
 	{
+		m_head = 0;
+		
 		delete[] m_buffer;
 		m_buffer = nullptr;
 	}
-	float readDelay(int sample);
-	float readDelayLinearInterpolation(float sample);
-	float readDelayTriLinearInterpolation(float sample);
-	float readDelayHermiteCubicInterpolation(float sample);
-	float readDelayOptimalCubicInterpolation(float sample);
-	/*void readSIMDFloat(const float* buffer, const size_t* indices, float* output, size_t count, size_t buffer_size) {
-		for (size_t i = 0; i < count; i += 8) {
-			// Load 8 indices
-			__m256i offsets = _mm256_loadu_si256(reinterpret_cast<const __m256i*>(indices + i));
+	inline float readDelay(int sample) const
+	{
+		const int readIdx = (m_head - 1 - sample) & m_bitMask;
+		return m_buffer[readIdx];
+	}
+	inline float readDelayLinearInterpolation(float sample)
+	{
+		const int sampleTrunc = (int)(sample);
 
-			// Scalar fallback for modulo
-			alignas(32) int mod_offsets[8];
-			_mm256_store_si256(reinterpret_cast<__m256i*>(mod_offsets), offsets);
+		const int readIdx = m_head + m_bitMask - sampleTrunc;
+		const float weight = sample - sampleTrunc;
 
-			for (int j = 0; j < 8; ++j) {
-				mod_offsets[j] %= static_cast<int>(buffer_size); // Scalar modulo
-			}
+		const int iPrev = readIdx & m_bitMask;
+		const int iNext = (readIdx + 1) & m_bitMask;
 
-			// Load modulo results back into a SIMD register
-			__m256i mod_offsets_vec = _mm256_load_si256(reinterpret_cast<const __m256i*>(mod_offsets));
+		return m_buffer[iNext] + weight * (m_buffer[iPrev] - m_buffer[iNext]);
+	}
+	float readDelayTriLinearInterpolation(float sample)
+	{
+		const int sampleTrunc = (int)(sample);
+		const int readIdx = m_head + m_bitMask - sampleTrunc;
+		const float x = 1.0f - (sample - sampleTrunc);
 
-			// Gather float values
-			__m256 values = _mm256_i32gather_ps(buffer, mod_offsets_vec, 4);
+		const int idx1 = (readIdx - 1) & m_bitMask;
+		const int idx2 = readIdx & m_bitMask;
+		const int idx3 = (readIdx + 1) & m_bitMask;
+		const int idx4 = (readIdx + 2) & m_bitMask;
 
-			// Store results in the output array
-			_mm256_storeu_ps(output + i, values);
-		}
-	}*/
+		const float yz1 = m_buffer[idx1];
+		const float y0 = m_buffer[idx2];
+		const float y1 = m_buffer[idx3];
+		const float y2 = m_buffer[idx4];
+
+		// 4-point, 2nd-order Watte tri-linear (x-form)
+		float ym1py2 = yz1 + y2;
+		float c0 = y0;
+		float c1 = 3.0f / 2.0f * y1 - 1.0f / 2.0f * (y0 + ym1py2);
+		float c2 = 1.0f / 2.0f * (ym1py2 - y0 - y1);
+
+		return (c2 * x + c1) * x + c0;
+	}
+	float readDelayHermiteCubicInterpolation(float sample)
+	{
+		const int sampleTrunc = (int)(sample);
+		const int readIdx = m_head + m_bitMask - sampleTrunc;
+		const float x = 1.0f - (sample - sampleTrunc);
+
+		const int idx1 = (readIdx - 1) & m_bitMask;
+		const int idx2 = readIdx & m_bitMask;
+		const int idx3 = (readIdx + 1) & m_bitMask;
+		const int idx4 = (readIdx + 2) & m_bitMask;
+
+		const float yz1 = m_buffer[idx1];
+		const float y0 = m_buffer[idx2];
+		const float y1 = m_buffer[idx3];
+		const float y2 = m_buffer[idx4];
+
+		// 4-point, 3rd-order Hermite (x-form)
+		float c0 = y0;
+		float c1 = 1.0f / 2.0f * (y1 - yz1);
+		float c2 = yz1 - 5.0f / 2.0f * y0 + 2.0f * y1 - 1.0f / 2.0f * y2;
+		float c3 = 1.0f / 2.0f * (y2 - yz1) + 3.0f / 2.0f * (y0 - y1);
+
+		return ((c3 * x + c2) * x + c1) * x + c0;
+	}
+	float readDelayOptimalCubicInterpolation(float sample)
+	{
+		const int sampleTrunc = (int)(sample);
+		const int readIdx = m_head + m_bitMask - sampleTrunc;
+		const float x = 1.0f - (sample - sampleTrunc);
+
+		const int idx1 = (readIdx - 1) & m_bitMask;
+		const int idx2 = readIdx & m_bitMask;
+		const int idx3 = (readIdx + 1) & m_bitMask;
+		const int idx4 = (readIdx + 2) & m_bitMask;
+
+		const float yz1 = m_buffer[idx1];
+		const float y0 = m_buffer[idx2];
+		const float y1 = m_buffer[idx3];
+		const float y2 = m_buffer[idx4];
+
+		// Optimal 2x (4-point, 3rd-order) (z-form)
+		float z = x - 1.0f / 2.0f;
+		float even1 = y1 + y0, odd1 = y1 - y0;
+		float even2 = y2 + yz1, odd2 = y2 - yz1;
+		float c0 = even1 * 0.45868970870461956f + even2 * 0.04131401926395584f;
+		float c1 = odd1 * 0.48068024766578432f + odd2 * 0.17577925564495955f;
+		float c2 = even1 * -0.246185007019907091f + even2 * 0.24614027139700284f;
+		float c3 = odd1 * -0.36030925263849456f + odd2 * 0.10174985775982505f;
+
+		return ((c3 * z + c2) * z + c1) * z + c0;
+	}
+
+private:
 	inline int GetPowerOfTwo(int i)
 	{
 		int n = i - 1;
@@ -70,7 +153,6 @@ public:
 		return n;
 	}
 
-protected:
 	float* m_buffer;
 	int m_head = 0;
 	int m_bitMask = 0;
@@ -85,7 +167,7 @@ public:
 	{
 		const int size = getSize();
 
-		m_rms = m_rms + ((fabsf(readDelay(1)) - fabsf(readDelay(size - 1))) / (float)size);
+		m_rms = m_rms + ((std::fabsf(readDelay(1)) - std::fabsf(readDelay(size - 1))) / (float)size);
 
 		// 1.5 is magic number
 		return 1.5f * m_rms;
@@ -93,4 +175,25 @@ public:
 
 private:
 	float m_rms = 0.0f;
+};
+
+//==============================================================================
+class CombFilter : public CircularBuffer
+{
+public:
+	CombFilter() {};
+
+	inline void set(const int size, const float feedback)
+	{
+		CircularBuffer::set(size);
+		m_feedback = feedback;
+	};
+	inline float process(const float in)
+	{
+		write(in);
+		return m_feedback * (in - read());
+	};
+
+private:
+	float m_feedback = 0.5f;
 };
