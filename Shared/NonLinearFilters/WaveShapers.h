@@ -11,17 +11,35 @@ constexpr auto SoftClipperThresholdRatio = 0.3f;		// for 48kHz
 
 
 // Waveshapers are gain compensated, so all methods produce more or less the same amount of distortion for the same input
+// Note: Tanh, Atan, Sin, SinAproximation, ARRY and ReciprocalQuadratic sound very similar
 class Waveshapers
 {
 public:
-	inline static float Tanh(float in, float drive)
+	inline static float Tanh(const float in, const float drive)
 	{
-		return std::tanhf(drive * in);
+		//return std::tanhf(drive * in);
+
+		// Tanh aproximation for small values
+		const float driveIn = drive * in;
+		
+		if (driveIn < -3.0f)
+		{
+			return -1.0f;
+		}
+		else if (driveIn > 3.0)
+		{
+			return 1.0f;
+		}
+		else
+		{
+			float driveIn2 = driveIn * driveIn;
+			return driveIn * (27.0f + driveIn2) / (27.0f + 9.0f * driveIn2);
+		}
 	}
 
 	inline static float Reciprocal(float in, float drive)
 	{
-		const float drive2in = 1.3f * drive * in;
+		const float drive2in = 1.35f * drive * in;
 		return drive2in / (1.0f + std::fabsf(drive2in));
 	}
 
@@ -49,6 +67,32 @@ public:
 			return std::sinf(0.5f * driveAdjusted * in);
 		}
 	}
+	inline static float SinAproximation(float in, float drive)
+	{
+		// Using hyperbolas to aproximate sin function
+		const float driveAdjusted = 0.53f * drive;
+		const float limit = 1.0f / driveAdjusted;
+
+		if (in < -limit)
+		{
+			return -1.0f;
+		}
+		else if (in < 0.0f)
+		{
+			const float inDriveAdjusted = in * driveAdjusted;
+			return inDriveAdjusted * (inDriveAdjusted + 2.0f);
+		}
+		else if (in < limit)
+		{
+			const float inDriveAdjusted = in * driveAdjusted;
+			return -inDriveAdjusted * (inDriveAdjusted - 2.0f);
+		}
+		else
+		{
+			return 1.0f;
+		}
+	}
+
 	inline static float ARRY(float in, float drive)
 	{
 		const float driveAdjusted = 0.65f * drive;
@@ -68,25 +112,8 @@ public:
 			return 1.5f * driveAdjustedIn * (1 - (driveAdjustedIn * driveAdjustedIn) / 3.0f);
 		}
 	}
-	inline static float Linear(float in, float drive)
-	{
-		const float driveAdjusted = 0.9f * drive;
-		const float limit = 1.0f / (0.7f * drive);
 
-		if (in < -limit)
-		{	
-			return -1.0f;
-		}
-		else if (in > limit)
-		{
-			return 1.0f;
-		}
-		else
-		{
-			return driveAdjusted * in;
-		}
-	}
-	inline static float Quadratic(float in, float drive)
+	inline static float ReciprocalQuadratic(float in, float drive)
 	{
 		const float driveAdjusted = 0.25f * drive;
 		const float limit = 1.0f / (2.0f * driveAdjusted);
@@ -104,6 +131,15 @@ public:
 		{
 			return driveAdjustedIn / (0.25f + driveAdjustedIn * driveAdjustedIn);
 		}
+	}
+
+	inline static float Exponential(float in, float drive)
+	{
+		const float driveAdjusted = 0.5f + std::expf(-0.5f * drive);
+		const float inAbs = std::fabsf(in);
+		const float sign = (in > 0.0f) ? 1.0f : -1.0f;
+
+		return sign * std::powf(inAbs, driveAdjusted);
 	}
 };
 

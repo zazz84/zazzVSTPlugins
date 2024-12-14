@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="QPbKdp" name="Waveshaper" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3">
+              companyName="zazz" pluginFormats="buildVST3" version="1.0.2">
   <MAINGROUP id="njm7Tj" name="Waveshaper">
     <GROUP id="{7E5A61C9-1855-0A97-1192-F96E0F1285C7}" name="Source">
       <FILE id="Rg31GW" name="BiquadFilters.cpp" compile="1" resource="0"

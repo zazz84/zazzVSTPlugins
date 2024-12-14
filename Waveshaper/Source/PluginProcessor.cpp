@@ -199,23 +199,7 @@ void WaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 		}
 		else if (type == 3)
 		{
-			PROCESS_WAVESHAPER(Waveshapers::Atan)
-		}
-		else if (type == 4)
-		{
-			PROCESS_WAVESHAPER(Waveshapers::Sin)
-		}
-		else if (type == 5)
-		{
-			PROCESS_WAVESHAPER(Waveshapers::ARRY)
-		}
-		else if (type == 6)
-		{
-			PROCESS_WAVESHAPER(Waveshapers::Linear)
-		}
-		else if (type == 7)
-		{
-			PROCESS_WAVESHAPER(Waveshapers::Quadratic)
+			PROCESS_WAVESHAPER(Waveshapers::Exponential)
 		}
 	}
 }
@@ -254,7 +238,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout WaveshaperAudioProcessor::cr
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(    1.0f,   7.0f,  1.0f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(    1.0f,   3.0f,  1.0f, 1.0f),   1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
