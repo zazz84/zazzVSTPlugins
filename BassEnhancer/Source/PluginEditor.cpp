@@ -34,7 +34,7 @@ BassEnhancerAudioProcessorEditor::BassEnhancerAudioProcessorEditor (BassEnhancer
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
-	createCanvas(*this, SLIDERS, N_ROWS);;
+	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
 BassEnhancerAudioProcessorEditor::~BassEnhancerAudioProcessorEditor()
