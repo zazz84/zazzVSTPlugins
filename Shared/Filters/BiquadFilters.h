@@ -1,13 +1,15 @@
 #pragma once
 
-//#include <immintrin.h>
-
+//==============================================================================
 class  BiquadFilter
 {
 public:
 	BiquadFilter() {};
 
-	inline void init(int sampleRate) { m_SampleRate = sampleRate; }
+	inline void init(int sampleRate)
+	{ 
+		m_SampleRate = sampleRate;
+	}
 	
 	void setLowPass(float frequency, float Q);
 	void setHighPass(float frequency, float Q);
@@ -25,8 +27,6 @@ public:
 
 private:
 	void normalize();
-
-	int m_SampleRate = 48000;
 	
 	float a0 = 0.0f;
 	float a1 = 0.0f;
@@ -41,54 +41,25 @@ private:
 
 	float y1 = 0.0f;
 	float y2 = 0.0f;
-};
-
-//==============================================================================
-/*class  BiquadFilterSIMD
-{
-public:
-	BiquadFilterSIMD() {};
-
-	inline void init(int sampleRate) { m_SampleRate = sampleRate; }
-
-	void setLowPass(float frequency, float Q);
-	//void setHighPass(float frequency, float Q);
-	//void setBandPassSkirtGain(float frequency, float Q);
-	//void setBandPassPeakGain(float frequency, float Q);
-	//void setNotch(float frequency, float Q);
-	//void setPeak(float frequency, float Q, float gain);
-	//void setLowShelf(float frequency, float Q, float gain);
-	//void setHighShelf(float frequency, float Q, float gain);
-
-	__m256 processDF1(__m256 in);
-	//__m256 processDF2(__m256 in);
-	//__m256 processDF1T(__m256 in);
-	//__m256 processDF2T(__m256 in);
-
-private:
-	//void normalize();
 
 	int m_SampleRate = 48000;
-
-	__m256 m_x1, m_x2; // Input history
-	__m256 m_y1, m_y2; // Output history
-	__m256 m_b0, m_b1, m_b2, m_a1, m_a2; // Filter coefficients
-};*/
+};
 
 //==============================================================================
 class LinkwitzRileySecondOrder
 {
 public:
-	LinkwitzRileySecondOrder();
+	LinkwitzRileySecondOrder() {};
 
-	void init(int sampleRate);
+	inline void init(const int sampleRate)
+	{
+		m_SampleRate = sampleRate;
+	};
 	void setFrequency(float frequency);
 	float processLP(float in);
 	float processHP(float in);
 
-protected:
-	int m_SampleRate = 48000;
-	
+protected:	
 	float m_b1 = 0.0f;
 	float m_b2 = 0.0f;
 
@@ -105,4 +76,6 @@ protected:
 
 	float m_x1_hp = 0.0f;
 	float m_x0_hp = 0.0f;
+
+	int m_SampleRate = 48000;
 };

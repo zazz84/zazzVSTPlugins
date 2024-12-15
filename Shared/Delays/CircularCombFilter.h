@@ -1,103 +1,164 @@
-#include "CombFilters.h"
+#pragma once
 
-CombFilter::CombFilter()
-{
-}
-
-float CombFilter::process(float in)
-{
-	const float delayOut = m_buffer.read();
-	m_buffer.writeSample(in - m_feedback * delayOut);
-	return delayOut;
-}
+#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 
 //==============================================================================
-Allpass::Allpass()
+class CircularCombFilter
 {
-}
+public:
+	CircularCombFilter() {};
 
-float Allpass::process(float in)
-{
-	const float inAtt = (1.0f - m_buffer.getSize() * 0.0001f) * in;
-	
-	const float delayOut = m_buffer.read();
-	m_buffer.writeSample(inAtt - m_feedback * delayOut);
+	inline void init(int complexity, int* size)
+	{
+		m_buffer = new CircularBuffer[complexity];
+		m_feedback = new float[complexity];
+		m_complexity = complexity;
 
-	return delayOut + m_feedback * inAtt;
-}
+		for (int i = 0; i < m_complexity; i++)
+		{
+			m_buffer[i].init(size[i]);
+		}
+	};
+	void setSize(const float* feedback, const int* size, const int complexity)
+	{
+		m_complexity = complexity
+		
+		for (int i = 0; i < complexity; i++)
+		{
+			m_feedback[i] = feedback[i];
+			m_buffer[i].setSize(size[i]);
+		}
+	};
+	inline float process(float in)
+	{
+		float out = 0.0;
+
+		for (int i = 0; i < m_complexity; i++)
+		{
+			const float bufferOut = m_buffer[i].read();
+			out += bufferOut;
+
+			int writteIdx = i + 1;
+			if (writteIdx >= m_complexity)
+				writteIdx = 0;
+
+			m_buffer[writteIdx].writeSample(in + m_feedback[writteIdx] * bufferOut);
+		}
+
+		return out;
+	}
+
+protected:
+	CircularBuffer* m_buffer;
+	float* m_feedback;
+	int m_complexity = 0;
+};
 
 //==============================================================================
-NestedCombFilter::NestedCombFilter()
+struct CircularCombFilterParams
 {
-}
+	float combFilterTime = 0.0f;
+	float combFilterResonance = 0.0f;
+	float allPassTime = 0.0f;
+	float allPassResonance = 0.0f;
+	float width = 0.0f;
+	float damping = 0.0f;
+	float combFilterSeed = 0.0f;
+	float allPassSeed = 0.0f;
+	float timeMin = 0.0f;
+	float complexity = 0.0f;
+};
 
-float NestedCombFilter::process(float in)
+class CircularCombFilterAdvanced
 {
-	const float delayOut = m_buffer.read();
-	m_buffer.writeSample(in - m_allPass.process(m_filter.processDF1(m_feedback * delayOut)));
-	return delayOut;
-}
+public:
+	CircularCombFilterAdvanced() {};
+
+	static const int MAX_COMPLEXITY = 64;
+	static const int COMB_FILTER_MAX_TIME_MS = 300;
+	static const int ALL_PASS_MAX_TIME_MS = 150;
+	static constexpr float m_dampingFrequencyMin = 220.0f;
+
+	void set(CircularCombFilterParams params);
+	void setDampingFrequency(const float* dampingFrequency);
+	void setAllPassSize(const int* size);
+	void setAllPassFeedback(const float* feedback);
+
+	void init(int channel = 0, int sampleRate = 48000);
+	float process(float in);
+
+private:
+	bool paramsChanged(CircularCombFilterParams params)
+	{
+		if (params.combFilterTime != m_paramsLast.combFilterTime ||
+			params.combFilterResonance != m_paramsLast.combFilterResonance ||
+			params.allPassTime != m_paramsLast.allPassTime ||
+			params.allPassResonance != m_paramsLast.allPassResonance ||
+			params.width != m_paramsLast.width ||
+			params.damping != m_paramsLast.damping ||
+			params.combFilterSeed != m_paramsLast.combFilterSeed ||
+			params.allPassSeed != m_paramsLast.allPassSeed ||
+			params.timeMin != m_paramsLast.timeMin ||
+			params.complexity != m_paramsLast.complexity)
+		{
+			m_paramsLast = params;
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	CircularCombFilterParams m_paramsLast;
+	BiquadFilter* m_filter;
+	Allpass* m_allPass;
+	LinearCongruentialNoiseGenerator m_noiseGenerator;
+	int m_channel = 0;
+	int m_sampleRate = 48000;
+	float m_volumeCompensation = 1.0f;
+};
 
 //==============================================================================
-CircularCombFilter::CircularCombFilter()
+class NEDCombFilter
 {
+public:
+	NEDCombFilter() {};
 
-}
-
-void CircularCombFilter::init(int complexity, int* size)
-{
-	m_buffer = new CircularBuffer[complexity];
-	m_feedback = new float[complexity];
-	m_complexity = complexity;
-
-	for (int i = 0; i < m_complexity; i++)
+	inline void init(int size)
 	{
-		m_buffer[i].init(size[i]);
-	}
-}
-
-void CircularCombFilter::setSize(const int* size)
-{
-	for (int i = 0; i < m_complexity; i++)
+		m_buffer1.init(size);
+		m_buffer2.init(size);
+	};
+	inline void set(float feedback, int size)
 	{
-		m_buffer[i].setSize(size[i]);
-	}
-}
-
-void CircularCombFilter::setFeedback(const float* feedback)
-{
-	for (int i = 0; i < m_complexity; i++)
+		m_feedback = feedback;
+		m_buffer1.setSize(size);
+		m_buffer2.setSize(size);
+	};
+	inline float process(float sample)
 	{
-		m_feedback[i] = feedback[i];
-	}
-}
+		float tmp1 = m_buffer1.read();
+		m_buffer1.writeSample(sample + tmp1 * m_feedback);
+		float tmp2 = m_buffer2.read();
+		m_buffer2.writeSample(tmp1 + tmp2 * m_feedback);
 
-float CircularCombFilter::process(float in)
-{
-	float out = 0.0;
-
-	for (int i = 0; i < m_complexity; i++)
-	{
-		const float bufferOut = m_buffer[i].read();
-		out += bufferOut;
-
-		int writteIdx = i + 1;
-		if (writteIdx >= m_complexity)
-			writteIdx = 0;
-
-		m_buffer[writteIdx].writeSample(in + m_feedback[writteIdx] * bufferOut);
+		return (1.0f + m_feedback) * tmp1 + tmp2;
 	}
 
-	return out;
-}
+private:
+	CircularBuffer m_buffer1, m_buffer2;
+	float m_feedback = 0.0f;
+};
 
-//==============================================================================
-const float CircularCombFilterAdvanced::m_dampingFrequencyMin = 220.0f;
 
-CircularCombFilterAdvanced::CircularCombFilterAdvanced()
-{
 
-}
+
+-----------------------------
+TODO:
+
+
 
 void CircularCombFilterAdvanced::init(int channel, int sampleRate)
 {
@@ -109,7 +170,7 @@ void CircularCombFilterAdvanced::init(int channel, int sampleRate)
 		delayCombFilterSamples[i] = (int)(4.0f * COMB_FILTER_MAX_TIME_MS * 0.001f * sampleRate);
 		delayAllPassSamples[i] = (int)(4.0f * ALL_PASS_MAX_TIME_MS * 0.001f * sampleRate);
 	}
-	
+
 	__super::init(MAX_COMPLEXITY, delayCombFilterSamples);
 
 	m_filter = new BiquadFilter[MAX_COMPLEXITY];
@@ -233,7 +294,7 @@ float CircularCombFilterAdvanced::process(float in)
 		if (writteIdx >= m_complexity)
 			writteIdx = 0;
 
-		m_buffer[writteIdx].writeSample((1.0f - m_buffer[writteIdx].getSize() * 0.0001f) * in + m_feedback[writteIdx] * bufferOut);
+		m_buffer[writteIdx].write((1.0f - m_buffer[writteIdx].getSize() * 0.0001f) * in + m_feedback[writteIdx] * bufferOut);
 	}
 
 	return m_volumeCompensation * out;

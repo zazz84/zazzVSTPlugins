@@ -4502,3 +4502,5 @@ AmbientDelay/JuceLibraryCode/ReadMe.txt
 Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/unsuccessfulbuild
 Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
 Limiter/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+NEDDelay/Builds/VisualStudio2017/NEDDelay_SharedCode.vcxproj.user
+NEDDelay/Builds/VisualStudio2017/NEDDelay_VST3.vcxproj.user

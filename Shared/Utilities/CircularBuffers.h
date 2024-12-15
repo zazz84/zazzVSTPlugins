@@ -10,7 +10,7 @@ class CircularBuffer
 public:
 	CircularBuffer() {};
 
-	inline void init(int size)
+	inline void init(const int size)
 	{
 		m_head = 0;
 		const int sizePowerOfTwo = GetPowerOfTwo(size);
@@ -45,12 +45,12 @@ public:
 		delete[] m_buffer;
 		m_buffer = nullptr;
 	}
-	inline float readDelay(int sample) const
+	inline float readDelay(const int sample) const
 	{
 		const int readIdx = (m_head - 1 - sample) & m_bitMask;
 		return m_buffer[readIdx];
 	}
-	inline float readDelayLinearInterpolation(float sample)
+	inline float readDelayLinearInterpolation(const float sample)
 	{
 		const int sampleTrunc = (int)(sample);
 
@@ -62,7 +62,7 @@ public:
 
 		return m_buffer[iNext] + weight * (m_buffer[iPrev] - m_buffer[iNext]);
 	}
-	float readDelayTriLinearInterpolation(float sample)
+	float readDelayTriLinearInterpolation(const float sample)
 	{
 		const int sampleTrunc = (int)(sample);
 		const int readIdx = m_head + m_bitMask - sampleTrunc;
