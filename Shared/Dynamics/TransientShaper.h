@@ -26,7 +26,7 @@ public:
 	{
 		const float envelopeIn = std::fabsf(in);
 		// Add 1e-6 to avoid division by 0. Envelope output is alway > 0
-		const float envelopeSlow = 1e-6 + m_envelopeFollowerSlow.process(envelopeIn);
+		const float envelopeSlow = 1e-6f + m_envelopeFollowerSlow.process(envelopeIn);
 		const float envelopeFast = m_envelopeFollowerFast.process(envelopeIn);
 
 		// Clamp to ~ -12.0db, 12dB

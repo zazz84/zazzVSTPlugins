@@ -4312,3 +4312,190 @@ Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/rc.write.1.tl
 Limiter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
 CombFilter/Builds/VisualStudio2017/CombFilter_VST3.vcxproj.user
 CombFilter/Builds/VisualStudio2017/CombFilter_SharedCode.vcxproj.user
+AmbientDelay/Builds/VisualStudio2017/.vs/AmbientDelay/v15/.suo
+AmbientDelay/Builds/VisualStudio2017/.vs/AmbientDelay/v15/Browse.VC.db
+AmbientDelay/Builds/VisualStudio2017/.vs/AmbientDelay/v15/Solution.VC.db
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay.sln
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_SharedCode.vcxproj
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_SharedCode.vcxproj.filters
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_SharedCode.vcxproj.user
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_StandalonePlugin.vcxproj
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_StandalonePlugin.vcxproj.filters
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_VST3.vcxproj
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_VST3.vcxproj.filters
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_VST3.vcxproj.user
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_VST3ManifestHelper.vcxproj
+AmbientDelay/Builds/VisualStudio2017/AmbientDelay_VST3ManifestHelper.vcxproj.filters
+AmbientDelay/Builds/VisualStudio2017/resources.rc
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/AmbientDelay_SharedCode.lastbuildstate
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/CL.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/CL.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/CL.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/Lib-link.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/Lib-link.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientD.0087392B.tlog/Lib.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientDelay.lib
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientDelay.pdb
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/AmbientDelay_SharedCode.log
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/CircularBuffers.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/AmbientDelay_VST3ManifestHelper.lastbuildstate
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/CL.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/CL.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/CL.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/link.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/link.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/link.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/rc.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/rc.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/rc.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AmbientDelay_VST3ManifestHelper.log
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/AmbientDelay_VST3.lastbuildstate
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/AmbientDelay_VST3.write.1u.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/CL.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/CL.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/CL.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/link.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/link.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/link.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/rc.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/rc.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientD.4324FFC0.tlog/rc.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.dll
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.exp
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.ilk
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.lib
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.pdb
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.vst3/Contents/Resources/moduleinfo.json
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay.vst3/Contents/x86_64-win/AmbientDelay.vst3
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/AmbientDelay_VST3.log
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/AmbientDelay_SharedCode.lastbuildstate
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/CL.11024.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/CL.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/CL.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/Lib-link.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/Lib-link.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientD.0087392B.tlog/Lib.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientDelay.lib
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientDelay.pdb
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/AmbientDelay_SharedCode.log
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/CircularBuffers.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/AmbientDelay_VST3ManifestHelper.lastbuildstate
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/CL.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/CL.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/CL.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/link.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/link.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/link.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/rc.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/rc.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientD.51F4A8F0.tlog/rc.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/AmbientDelay_VST3ManifestHelper.log
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/AmbientDelay_VST3.lastbuildstate
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/AmbientDelay_VST3.write.1u.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/CL.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/CL.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/CL.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/link.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/link.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/link.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/rc.command.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/rc.read.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientD.4324FFC0.tlog/rc.write.1.tlog
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay.dll
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay.exp
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay.lib
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay.pdb
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay.vst3/Contents/Resources/moduleinfo.json
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay.vst3/Contents/x86_64-win/AmbientDelay.vst3
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/AmbientDelay_VST3.log
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+AmbientDelay/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+AmbientDelay/JuceLibraryCode/include_juce_audio_basics.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_basics.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_devices.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_devices.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_formats.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_formats.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_processors.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_processors.mm
+AmbientDelay/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_utils.cpp
+AmbientDelay/JuceLibraryCode/include_juce_audio_utils.mm
+AmbientDelay/JuceLibraryCode/include_juce_core.cpp
+AmbientDelay/JuceLibraryCode/include_juce_core.mm
+AmbientDelay/JuceLibraryCode/include_juce_data_structures.cpp
+AmbientDelay/JuceLibraryCode/include_juce_data_structures.mm
+AmbientDelay/JuceLibraryCode/include_juce_events.cpp
+AmbientDelay/JuceLibraryCode/include_juce_events.mm
+AmbientDelay/JuceLibraryCode/include_juce_graphics.cpp
+AmbientDelay/JuceLibraryCode/include_juce_graphics.mm
+AmbientDelay/JuceLibraryCode/include_juce_gui_basics.cpp
+AmbientDelay/JuceLibraryCode/include_juce_gui_basics.mm
+AmbientDelay/JuceLibraryCode/include_juce_gui_extra.cpp
+AmbientDelay/JuceLibraryCode/include_juce_gui_extra.mm
+AmbientDelay/JuceLibraryCode/JuceHeader.h
+AmbientDelay/JuceLibraryCode/JucePluginDefines.h
+AmbientDelay/JuceLibraryCode/ReadMe.txt

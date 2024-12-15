@@ -9,17 +9,6 @@ class OnePoleFilter
 public:
 	OnePoleFilter() {};
 
-	void init(int sampleRate)
-	{
-	};
-	void set(float frequency)
-	{
-	};
-	float process(float sample)
-	{
-		return 0.0f;
-	};
-
 protected:
 	float m_samplePeriod = 0.00002f;
 	float m_sampleLast = 0.0f;
