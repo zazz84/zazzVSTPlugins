@@ -2,33 +2,39 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.65f, 0.5f, 0.6f, 1.0f);
-const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.65f, 0.5f, 0.5f, 1.0f);
-const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.65f, 0.5f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
+const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
+const juce::Colour ZazzLookAndFeel::DARK_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
+
+const int NEDDelayAudioProcessorEditor::SLIDERS[] = { 6 };
+const int NEDDelayAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };
 
 //==============================================================================
 NEDDelayAudioProcessorEditor::NEDDelayAudioProcessorEditor (NEDDelayAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {	
+	// Plugin name
+	m_pluginName.setText("NED Delay", juce::dontSendNotification);
+	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
+	m_pluginName.setJustificationType(juce::Justification::centred);
+	addAndMakeVisible(m_pluginName);
+
 	// Lables and sliders
 	for (int i = 0; i < N_SLIDERS; i++)
 	{
 		auto& label = m_labels[i];
 		auto& slider = m_sliders[i];
-		std::string text = NEDDelayAudioProcessor::paramsNames[i];
+		const std::string text = NEDDelayAudioProcessor::paramsNames[i];
+		const std::string unit = NEDDelayAudioProcessor::paramsUnitNames[i];
 
-		//Lable
-		createLabel(label, text);
+		createSliderWithLabel(slider, label, text, unit);
 		addAndMakeVisible(label);
-
-		//Slider
-		createSlider(slider);
 		addAndMakeVisible(slider);
+
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
-	// Canvas
-	createCanvas(*this, N_SLIDERS);
+	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
 NEDDelayAudioProcessorEditor::~NEDDelayAudioProcessorEditor()
@@ -43,5 +49,5 @@ void NEDDelayAudioProcessorEditor::paint (juce::Graphics& g)
 
 void NEDDelayAudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, N_SLIDERS);
+	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
 }

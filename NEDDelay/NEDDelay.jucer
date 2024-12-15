@@ -5,19 +5,14 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Delay">
   <MAINGROUP id="HiobfY" name="NEDDelay">
     <GROUP id="{01C58BD1-FEEA-7DB3-6116-C106779D21E3}" name="Source">
-      <FILE id="vjmqNu" name="CircularBuffers.cpp" compile="1" resource="0"
-            file="../Shared/Utilities/CircularBuffers.cpp"/>
+      <FILE id="V8bVyo" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="AyXAh8" name="NEDCombFilter.h" compile="0" resource="0" file="../Shared/Delays/NEDCombFilter.h"/>
       <FILE id="iWSD3a" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
-      <FILE id="ObsmQ9" name="NoiseGenerator.cpp" compile="1" resource="0"
-            file="../Shared/Utilities/NoiseGenerator.cpp"/>
-      <FILE id="Tklnpm" name="NoiseGenerator.h" compile="0" resource="0"
-            file="../Shared/Utilities/NoiseGenerator.h"/>
       <FILE id="wqlses" name="BiquadFilters.cpp" compile="1" resource="0"
             file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="YGXgCC" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="IQFL5F" name="CombFilters.cpp" compile="1" resource="0" file="../Shared/Filters/CombFilters.cpp"/>
-      <FILE id="nolEeI" name="CombFilters.h" compile="0" resource="0" file="../Shared/Filters/CombFilters.h"/>
       <FILE id="TmZxbu" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="aC1cpW" name="ZazzLookAndFeel.h" compile="0" resource="0"

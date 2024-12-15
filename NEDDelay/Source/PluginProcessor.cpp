@@ -11,7 +11,8 @@
 
 //==============================================================================
 
-const std::string NEDDelayAudioProcessor::paramsNames[] = { "Time", "Feedback", "LC", "HC", "Mix", "Volume" };
+const std::string NEDDelayAudioProcessor::paramsNames[] = { "Time", "Feedback", "Low Cut", "High Cut", "Mix", "Volume" };
+const std::string NEDDelayAudioProcessor::paramsUnitNames[] = { " ms", " %", " Hz", " Hz", " %", " dB" };
 
 //==============================================================================
 NEDDelayAudioProcessor::NEDDelayAudioProcessor()
@@ -152,51 +153,40 @@ void NEDDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 {
 	// Get params
 	const auto time = timeParameter->load();
-	const auto feedback = feedbackParameter->load();
+	const auto feedback = 0.01f * feedbackParameter->load();
 	const auto lowCutFrequency = lowCutFrequencyParameter->load();
 	const auto highCutFrequency = highCutFrequencyParameter->load();
-	const auto mix = mixParameter->load();
+	const auto mix = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto samples = buffer.getNumSamples();
 	const auto channels = buffer.getNumChannels();
-
-	const int sizeTarget = int(0.001f * time * (float)getSampleRate());
-	int size = 0;
+	const int size = (int)(0.001 * (double)time * getSampleRate());
 
 	for (int channel = 0; channel < channels; channel++)
 	{
-		size = m_sizeLast;
-
 		auto* channelBuffer = buffer.getWritePointer(channel);
+		
 		auto& combFilter = m_combFilter[channel];
 		auto& lowCutFilter = m_lowCutFilter[channel];
 		auto& highCutFilter = m_highCutFilter[channel];
+		
 		lowCutFilter.setHighPass(lowCutFrequency, 0.7f);
 		highCutFilter.setLowPass(highCutFrequency, 0.7f);
 
+		combFilter.set(feedback, size);
+
 		for (int sample = 0; sample < samples; sample++)
-		{
-			if (size < sizeTarget)
-			{
-				size++;
-				combFilter.set(feedback, size);
-			}
-			else if (size > sizeTarget)
-			{
-				size--;
-				combFilter.set(feedback, size);
-			}
-			
+		{			
 			const float in = channelBuffer[sample];
 			float out = combFilter.process(lowCutFilter.processDF1(highCutFilter.processDF1(in)));
 
-			channelBuffer[sample] = volume * ((1.0f - mix) * in + mix * out);
+			channelBuffer[sample] = (1.0f - mix) * in + mix * out;
 		}
 	}
 
-	m_sizeLast = size;
+	buffer.applyGain(volume);
 }
 
 //==============================================================================
@@ -234,10 +224,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout NEDDelayAudioProcessor::crea
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,500.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,  1.0f,  0.01f, 1.0f), 0.2f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   20.0f,  20000.0f,  1.0f, 0.3f), 20.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   20.0f,  20000.0f,  1.0f, 0.3f), 16000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 20.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   20.0f,  20000.0f,  1.0f, 0.4f), 20.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   20.0f,  20000.0f,  1.0f, 0.4f), 16000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f, 18.0f,  0.1f, 1.0f), 0.0f));
 
 	return layout;

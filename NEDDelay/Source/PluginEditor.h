@@ -14,6 +14,9 @@ public:
 
 	// GUI setup
 	static const int N_SLIDERS = 6;
+	static const int SLIDERS[];
+	static const int COLUMN_OFFSET[];
+	static const int N_ROWS = 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -27,6 +30,7 @@ private:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
+	juce::Label m_pluginName;
 	juce::Label m_labels[N_SLIDERS] = {};
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};

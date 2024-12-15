@@ -1,8 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/Filters/CombFilters.h"
-#include"../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#include "../../../zazzVSTPlugins/Shared/Delays/NEDCombFilter.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
 class NEDDelayAudioProcessor  : public juce::AudioProcessor
@@ -17,6 +17,7 @@ public:
     ~NEDDelayAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string paramsUnitNames[];
 	static const int TIME_MAX = 500;
 
     //==============================================================================
