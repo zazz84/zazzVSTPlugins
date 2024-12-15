@@ -4499,3 +4499,6 @@ AmbientDelay/JuceLibraryCode/include_juce_gui_extra.mm
 AmbientDelay/JuceLibraryCode/JuceHeader.h
 AmbientDelay/JuceLibraryCode/JucePluginDefines.h
 AmbientDelay/JuceLibraryCode/ReadMe.txt
+Limiter/Builds/VisualStudio2017/x64/Release/VST3/Limiter_VST3.tlog/unsuccessfulbuild
+Limiter/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+Limiter/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj

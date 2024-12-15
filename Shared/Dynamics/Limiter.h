@@ -22,7 +22,7 @@ public:
 	{
 		// In
 		const float inDelayed = m_buffer.readDelay(m_attackSize);
-		m_buffer.writeSample(in);
+		m_buffer.write(in);
 
 		// Start attack
 		const float inAbs = std::fabsf(in);

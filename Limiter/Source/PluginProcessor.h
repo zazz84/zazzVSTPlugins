@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter2.h"
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/Clippers.h"
 
 //==============================================================================
@@ -64,6 +65,10 @@ private:
 	Limiter m_limiter2[2];
 	SlopeClipper m_clipper[2];
 
+	Limiter2 m_logLimiter[2];
+	SlopeClipper m_clipper2[2];
+
+	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
 	std::atomic<float>* releaseParameter = nullptr;
 	std::atomic<float>* thresholdParameter = nullptr;

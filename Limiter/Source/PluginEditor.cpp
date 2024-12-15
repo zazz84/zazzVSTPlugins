@@ -6,7 +6,7 @@ const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.75f,
 const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
 const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
 
-const int LimiterAudioProcessorEditor::SLIDERS[] = { 4 };
+const int LimiterAudioProcessorEditor::SLIDERS[] = { 5 };
 const int LimiterAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };
 
 //==============================================================================

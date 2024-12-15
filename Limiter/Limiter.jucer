@@ -2,9 +2,15 @@
 
 <JUCERPROJECT id="tPty7N" name="Limiter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
+              version="1.0.1">
   <MAINGROUP id="Xy6ZHl" name="Limiter">
     <GROUP id="{9B0CDA92-217B-67BC-61BD-0F82E7C56F12}" name="Source">
+      <FILE id="S59kcA" name="EnvelopeFollowers.cpp" compile="1" resource="0"
+            file="../Shared/Dynamics/EnvelopeFollowers.cpp"/>
+      <FILE id="jsD2eN" name="EnvelopeFollowers.h" compile="0" resource="0"
+            file="../Shared/Dynamics/EnvelopeFollowers.h"/>
+      <FILE id="QpFsi2" name="Limiter2.h" compile="0" resource="0" file="../Shared/Dynamics/Limiter2.h"/>
       <FILE id="VyRBsq" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
       <FILE id="GBOfTo" name="Limiter.h" compile="0" resource="0" file="../Shared/Dynamics/Limiter.h"/>
       <FILE id="eNlXw8" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
