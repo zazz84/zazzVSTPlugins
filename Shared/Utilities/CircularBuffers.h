@@ -23,7 +23,7 @@ public:
 	}
 	inline void set(const int size) 
 	{
-		m_readOffset = m_bitMask - size;
+		m_readOffset = m_bitMask - size + 1;
 	};
 	inline int getSize() const
 	{
@@ -41,13 +41,15 @@ public:
 	inline void release()
 	{
 		m_head = 0;
+
+		std::memset(m_buffer, 0, (m_bitMask + 1) * sizeof(float));
 		
-		delete[] m_buffer;
-		m_buffer = nullptr;
+		//delete[] m_buffer;
+		//m_buffer = nullptr;
 	}
 	inline float readDelay(const int sample) const
 	{
-		const int readIdx = (m_head - 1 - sample) & m_bitMask;
+		const int readIdx = (m_head - sample) & m_bitMask;
 		return m_buffer[readIdx];
 	}
 	inline float readDelayLinearInterpolation(const float sample)

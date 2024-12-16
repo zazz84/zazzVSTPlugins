@@ -71,7 +71,5 @@ private:
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	float m_sizeLast;
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NEDDelayAudioProcessor)
 };

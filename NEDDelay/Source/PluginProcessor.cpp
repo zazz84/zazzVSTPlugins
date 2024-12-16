@@ -12,7 +12,7 @@
 //==============================================================================
 
 const std::string NEDDelayAudioProcessor::paramsNames[] = { "Time", "Feedback", "Low Cut", "High Cut", "Mix", "Volume" };
-const std::string NEDDelayAudioProcessor::paramsUnitNames[] = { " ms", " %", " Hz", " Hz", " %", " dB" };
+const std::string NEDDelayAudioProcessor::paramsUnitNames[] = { " ms", "", " Hz", " Hz", " %", " dB" };
 
 //==============================================================================
 NEDDelayAudioProcessor::NEDDelayAudioProcessor()
@@ -115,8 +115,6 @@ void NEDDelayAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
 	m_lowCutFilter[1].init(sr);
 	m_highCutFilter[0].init(sr);
 	m_highCutFilter[1].init(sr);
-	
-	m_sizeLast = int(0.001f * timeParameter->load() * (float)getSampleRate());
 }
 
 void NEDDelayAudioProcessor::releaseResources()
@@ -153,15 +151,16 @@ void NEDDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 {
 	// Get params
 	const auto time = timeParameter->load();
-	const auto feedback = 0.01f * feedbackParameter->load();
+	const auto feedback = (int)(std::round(feedbackParameter->load()));
 	const auto lowCutFrequency = lowCutFrequencyParameter->load();
 	const auto highCutFrequency = highCutFrequencyParameter->load();
-	const auto mix = 0.01f * mixParameter->load();
+	const auto wet = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto samples = buffer.getNumSamples();
 	const auto channels = buffer.getNumChannels();
+	const auto dry = 1.0f - wet;
 	const int size = (int)(0.001 * (double)time * getSampleRate());
 
 	for (int channel = 0; channel < channels; channel++)
@@ -182,7 +181,7 @@ void NEDDelayAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 			const float in = channelBuffer[sample];
 			float out = combFilter.process(lowCutFilter.processDF1(highCutFilter.processDF1(in)));
 
-			channelBuffer[sample] = (1.0f - mix) * in + mix * out;
+			channelBuffer[sample] = dry * in + wet * out;
 		}
 	}
 
@@ -224,7 +223,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout NEDDelayAudioProcessor::crea
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,500.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 20.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f,  20.0f,  1.0f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   20.0f,  20000.0f,  1.0f, 0.4f), 20.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   20.0f,  20000.0f,  1.0f, 0.4f), 16000.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
