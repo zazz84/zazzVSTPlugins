@@ -5,6 +5,7 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Delay">
   <MAINGROUP id="HiobfY" name="NEDDelay">
     <GROUP id="{01C58BD1-FEEA-7DB3-6116-C106779D21E3}" name="Source">
+      <FILE id="sN0EdV" name="Delay.h" compile="0" resource="0" file="../Shared/Delays/Delay.h"/>
       <FILE id="V8bVyo" name="OnePoleFilters.h" compile="0" resource="0"
             file="../Shared/Filters/OnePoleFilters.h"/>
       <FILE id="AyXAh8" name="NEDCombFilter.h" compile="0" resource="0" file="../Shared/Delays/NEDCombFilter.h"/>

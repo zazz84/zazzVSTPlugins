@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Delays/NEDCombFilter.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Delays/Delay.h"
 
 //==============================================================================
 class NEDDelayAudioProcessor  : public juce::AudioProcessor
@@ -61,6 +62,7 @@ public:
 private:	
 	//==============================================================================
 	NEDCombFilter m_combFilter[2];
+	Delay m_delay[2];
 	BiquadFilter m_lowCutFilter[2];
 	BiquadFilter m_highCutFilter[2];
 
@@ -68,6 +70,7 @@ private:
 	std::atomic<float>* feedbackParameter = nullptr;
 	std::atomic<float>* lowCutFrequencyParameter = nullptr;
 	std::atomic<float>* highCutFrequencyParameter = nullptr;
+	std::atomic<float>* exponentialParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
