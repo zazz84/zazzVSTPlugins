@@ -13,7 +13,10 @@ public:
     ~RoomReverbAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 15;
+	static const int N_SLIDERS = 18;
+	static const int SLIDERS[];
+	static const int COLUMN_OFFSET[];
+	static const int N_ROWS = 4;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -30,12 +33,6 @@ private:
 	juce::Label m_labels[N_SLIDERS] = {};
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
-
-	juce::TextButton earlyReflectionsMuteButton{ "M" };
-	juce::TextButton lateReflectionsMuteButton{ "M" };
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> earlyReflectionsMuteButtonAttachment;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lateReflectionsMuteButtonAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RoomReverbAudioProcessorEditor)
 };

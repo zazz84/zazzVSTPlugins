@@ -7,17 +7,17 @@ public:
 	static const juce::Colour MEDIUM_COLOUR;
 	static const juce::Colour DARK_COLOUR;
 
-	static const int NAME_FONT_SIZE = 60;
-	static const int LABEL_FONT_SIZE = 40;
-	static const int VALUE_FONT_SIZE = 30;
+	static const int NAME_FONT_SIZE = 30;
+	static const int LABEL_FONT_SIZE = 20;
+	static const int VALUE_FONT_SIZE = 15;
 
-	static const int ELEMENT_WIDTH = 160;
-	static const int TOP_HEIGHT = 10;
-	static const int NAME_HEIGHT = 50;
-	static const int ELEMENT_HEIGHT = 240;
+	static const int ELEMENT_WIDTH = 80;
+	static const int TOP_HEIGHT = 5;
+	static const int NAME_HEIGHT = 25;
+	static const int ELEMENT_HEIGHT = 120;
 	
-	static const int HEADER_HEIGHT = 60;
-	static const int SLIDER_HEIGHT = 180;
+	static const int HEADER_HEIGHT = 30;
+	static const int SLIDER_HEIGHT = 90;
 	static const int FOOTER_HEIGHT = 0;
 
 	float m_sliderTextSize = 16.0f;

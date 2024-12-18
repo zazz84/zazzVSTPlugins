@@ -2,10 +2,10 @@
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 
-class Allpass
+class AllPassFilter
 {
 public:
-	Allpass();
+	AllPassFilter() {};
 
 	inline void init(const int size)
 	{ 
@@ -14,7 +14,7 @@ public:
 	inline void set(const float feedback, const int size) 
 	{ 
 		m_feedback = feedback;
-		m_buffer.setSize(size);
+		m_buffer.set(size);
 	};
 	float process(const float in)
 	{

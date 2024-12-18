@@ -1,7 +1,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/Filters/CombFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Delays/CircularCombFilterAdvanced.h"
+#include "../../../zazzVSTPlugins/Shared/Reverbs/RoomEarlyReflection.h"
 
 //==============================================================================
 class RoomReverbAudioProcessor : public juce::AudioProcessor
@@ -16,7 +17,12 @@ public:
 	~RoomReverbAudioProcessor() override;
 
 	static const std::string paramsNames[];
-	static const int PRE_DELAY_MAX_MS = 300;
+	static const std::string paramsUnitNames[];
+	static const int MIN_ER_PREDELAY_TIME = 1;
+	static const int MAX_ER_PREDELAY_TIME = 50;
+	static const int MIN_ER_TIME = 10;
+	static const int MAX_ER_TIME = 100;
+	static const int MAX_COMPLEXITY = 32;
 
 	//==============================================================================
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
@@ -58,28 +64,30 @@ public:
 
 private:
 	//==============================================================================
+	CircularCombFilterAdvanced m_circularCombFilter[2] = {};
+	RoomEarlyReflections m_earlyReflaction[2] = {};
 
+	std::atomic<float>* ERPredelayParameter = nullptr;
 	std::atomic<float>* ERTimeParameter = nullptr;
+	std::atomic<float>* ERAttenuationParameter = nullptr;
 	std::atomic<float>* ERDampingParameter = nullptr;
 	std::atomic<float>* ERWidthParameter = nullptr;
-	std::atomic<float>* ERLRParameter = nullptr;
+
 	std::atomic<float>* predelayParameter = nullptr;
 	std::atomic<float>* timeParameter = nullptr;
 	std::atomic<float>* resonanceParameter = nullptr;
 	std::atomic<float>* dampingParameter = nullptr;
 	std::atomic<float>* widthParameter = nullptr;
+
 	std::atomic<float>* combFilterSeedParameter = nullptr;
 	std::atomic<float>* allPassSeedParameter = nullptr;
 	std::atomic<float>* timeMinParameter = nullptr;
 	std::atomic<float>* complexityParameter = nullptr;
+
+	std::atomic<float>* ERVolumeParameter = nullptr;
+	std::atomic<float>* LRVolumeParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
-
-	juce::AudioParameterBool* earlyReflectionsMuteParameter = nullptr;
-	juce::AudioParameterBool* lateReflectionsMuteParameter = nullptr;
-
-	CircularCombFilterAdvanced m_circularCombFilter[2] = {};
-	RoomEarlyReflections m_earlyReflaction[2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RoomReverbAudioProcessor)
 };
