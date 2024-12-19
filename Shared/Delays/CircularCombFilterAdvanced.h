@@ -24,9 +24,9 @@ class CircularCombFilterAdvanced
 public:
 	CircularCombFilterAdvanced() {};
 
-	static const int COMB_FILTER_MAX_TIME_MS = 300;
-	static const int ALL_PASS_MAX_TIME_MS = 150;
-	static constexpr float m_dampingFrequencyMin = 220.0f;
+	static const int COMB_FILTER_MAX_TIME_MS = 220;
+	static const int ALL_PASS_MAX_TIME_MS = 70;
+	static constexpr float m_dampingFrequencyMin = 440.0f;
 
 	inline void init(const int complexity, const int channel, const int sampleRate)
 	{	
@@ -37,142 +37,141 @@ public:
 		m_lowPassFilter = new BiquadFilter[complexity];
 		m_allPassFilter = new AllPassFilter[complexity];
 
-		const int combFilterSize = (int)(4.0f * COMB_FILTER_MAX_TIME_MS * 0.001f * sampleRate);
-		const int allPassFilterSize = (int)(4.0f * ALL_PASS_MAX_TIME_MS * 0.001f * sampleRate);
+		const int combFilterSize = (int)(COMB_FILTER_MAX_TIME_MS * 0.001f * sampleRate);
+		const int allPassFilterSize = (int)(ALL_PASS_MAX_TIME_MS * 0.001f * sampleRate);
 
 		m_buffer = new CircularBuffer[complexity];
 		m_feedback = new float[complexity];
 		memset(m_feedback, 0.0f, complexity * sizeof(float));
+		m_gain = new float[complexity];
+		memset(m_gain, 0.0f, complexity * sizeof(float));
+		m_gainAllPass = new float[complexity];
+		memset(m_gainAllPass, 0.0f, complexity * sizeof(float));
 
 		for (int i = 0; i < complexity; i++)
 		{
-			m_buffer[i].init(combFilterSize);
-			
+			m_buffer[i].init(combFilterSize);		
 			m_lowPassFilter[i].init(sampleRate);
-
 			m_allPassFilter[i].init(allPassFilterSize);
-			m_allPassFilter[i].set(0.2f, allPassFilterSize);
 		}
 	};
-	inline void set(CircularCombFilterAdvancedParams params)
+	inline void set(const CircularCombFilterAdvancedParams& params)
 	{
-		int* combFilterDelaySamples = new int[m_maxComplexity];
-		memset(combFilterDelaySamples, 0, m_maxComplexity * sizeof(int));
-		int* allPassDelaySamples = new int[m_maxComplexity];
-		memset(allPassDelaySamples, 0, m_maxComplexity * sizeof(int));
-		float* combFilterFeedback = new float[m_maxComplexity];
-		memset(combFilterFeedback, 0.0f, m_maxComplexity * sizeof(float));
-		float* allPassFeedback = new float[m_maxComplexity];
-		memset(combFilterFeedback, 0.0f, m_maxComplexity * sizeof(float));
-		float* dampingFrequency = new float[m_maxComplexity];
-		memset(dampingFrequency, 0.0f, m_maxComplexity * sizeof(float));
+		float* tmp = new float[params.complexity];
+		memset(tmp, 0.0f, params.complexity * sizeof(float));
 
-		const auto combFilterWidth = (m_channel == 0) ? 1.0f - params.width * 0.1f : 1.0f;
-		const auto allPassWidth = (m_channel == 1) ? 1.0f - params.width * 0.1f : 1.0f;
-		const float frequencyMax = fminf(20000.0f, 0.48f * m_sampleRate);
-
-		m_random.set((long)params.allPassSeed);
-
-		for (int i = 0; i < m_maxComplexity; i++)
-		{
-			const float sing = (i % 2 == 0) ? -1.0f : 1.0f;
-			combFilterFeedback[i] = sing * params.combFilterResonance;
-			allPassFeedback[i] = params.allPassResonance * 0.9f + 0.2 * m_random.process();
-			dampingFrequency[i] = fminf(frequencyMax, m_dampingFrequencyMin + (1.0f - params.damping) * (frequencyMax - m_dampingFrequencyMin) * 0.9f + 0.2 * m_random.process());
-		}
-
-		m_random.set(params.combFilterSeed);
-		const float combFilterTimeFactor = COMB_FILTER_MAX_TIME_MS * 0.001f * m_sampleRate;
-		int combFilterSum = 0;
-
-		for (int i = 0; i < m_maxComplexity; i++)
-		{
-			const float rnd = params.timeMin + m_random.process() * (1.0f - params.timeMin);
-			const int samples = (int)(combFilterWidth * params.combFilterTime * rnd * combFilterTimeFactor);
-			combFilterDelaySamples[i] = samples;
-			combFilterSum += samples;
-		}
-
-		m_random.set(params.allPassSeed);
-		const float allPassTimeFactor = ALL_PASS_MAX_TIME_MS * 0.001f * m_sampleRate;
-		int allPassSum = 0;
-
-		for (int i = 0; i < m_maxComplexity; i++)
-		{
-			const float rnd = params.timeMin + m_random.process() * (1.0f - params.timeMin);
-			const int samples = (int)(allPassWidth * params.allPassTime * rnd * allPassTimeFactor);
-			allPassDelaySamples[i] = samples;
-			allPassSum += samples;
-		}
-
-		//Normalize
-		const float combFilterNormalizeFactor = combFilterSum / (m_maxComplexity * params.combFilterTime * combFilterTimeFactor);
-		const float allPassNormalizeFactor = allPassSum / (m_maxComplexity * params.allPassTime * allPassTimeFactor);
-
-		for (int i = 0; i < m_maxComplexity; i++)
-		{
-			combFilterDelaySamples[i] = combFilterDelaySamples[i] * combFilterNormalizeFactor;
-			allPassDelaySamples[i] = allPassDelaySamples[i] * allPassNormalizeFactor;
-		}
+		// Local constants
+		const float combFilterWidth = (m_channel == 0) ? 1.0f - params.width * 0.1f : 1.0f;
+		const float allPassWidth = (m_channel == 1) ? 1.0f - params.width * 0.1f : 1.0f;
+		// Condition for low sample rates
+		const float frequencyMax = fminf(18000.0f, 0.5f * m_sampleRate);
 
 		// Set params
-		m_volumeCompensation = 0.4f - (params.complexity * 0.004f);
+		m_volumeCompensation = 0.4f - (params.complexity * 0.004f) + 0.7f * params.combFilterTime;
 		m_complexity = params.complexity;
-		
-		setLowPassFilter(dampingFrequency);
-		setAllPassFilter(allPassFeedback, allPassDelaySamples);
-		setCombFilter(combFilterFeedback, combFilterDelaySamples);
+
+		// Generate random numbers
+		float rndMax = 0.0f;
+
+		auto GenerateRandomNumbers = [&]()
+		{
+			rndMax = 0.0f;
+
+			for (int i = 0; i < m_complexity; i++)
+			{
+				const float rnd = m_random.process();
+				tmp[i] = rnd;
+
+				if (rnd > rndMax)
+				{
+					rndMax = rnd;
+				}
+			}
+		};
+
+		// Get random numbers for comb filter
+		m_random.set(params.combFilterSeed);
+		GenerateRandomNumbers();
+
+		// Set comb filter size and input gain
+		const float combFilterSizeMax = combFilterWidth * params.combFilterTime * 0.001f * COMB_FILTER_MAX_TIME_MS * m_sampleRate;
+		rndMax = 1.0f / rndMax;
+
+		for (int i = 0; i < m_complexity; i++)
+		{
+			const float rndNormalized = tmp[i] * rndMax;
+			const float rndClamp = params.timeMin + rndNormalized * (1.0f - params.timeMin);
+			m_buffer[i].set((int)(rndClamp * combFilterSizeMax));
+			
+			// Longer buffers have quieter dry input gains
+			const float sing = (i % 2 == 0) ? 1.0f : -1.0f;
+			m_gain[i] = sing * (1.0f - 0.8f * rndNormalized);
+		}
+
+		// Get random numbers for all pass filter
+		m_random.set(params.allPassSeed);
+		GenerateRandomNumbers();
+
+		// Set all pass filter size
+		const float allPassFilterSizeMax = combFilterWidth * params.combFilterTime * 0.001f * ALL_PASS_MAX_TIME_MS * m_sampleRate;
+		rndMax = 1.0f / rndMax;
+
+		for (int i = 0; i < m_complexity; i++)
+		{
+			const float rnd = tmp[i];
+			const float rndNormalized = tmp[i] * rndMax;
+			const float rndClamp = params.timeMin + rndNormalized * (1.0f - params.timeMin);
+			const int size = (int)(rndClamp * allPassFilterSizeMax);
+			const float feedback = 0.6f * params.allPassResonance + 0.4f * rnd;
+
+			m_allPassFilter[i].set(feedback, size);
+
+			// Longer buffers have quieter dry input gains
+			const float sing = (i % 3 == 0) ? 1.0f : -1.0f;
+			m_gainAllPass[i] = sing * (1.0f - 0.8f * rndNormalized);
+			
+			//m_gainAllPass[i] = 1.0f - size * 0.0001f; //Original calculation
+		}
+
+		// Set comb filter feedback
+		for (int i = 0; i < m_complexity; i++)
+		{
+			const float sing = (i % 2 == 0) ? -1.0f : 1.0f;
+			m_feedback[i] = sing * params.combFilterResonance;
+		}
+
+		// Set damping frequency
+		m_random.set((long)params.allPassSeed);
+		const float dampingFrequencyBase = m_dampingFrequencyMin + (1.0f - params.damping) * (frequencyMax - m_dampingFrequencyMin);
+
+		for (int i = 0; i < m_complexity; i++)
+		{
+			const float f = 0.7f * dampingFrequencyBase + 0.3f * m_random.process() * dampingFrequencyBase;
+			m_lowPassFilter[i].setLowPass(f, 0.5f);
+		}
 
 		// Delete
-		delete[] combFilterDelaySamples;
-		delete[] allPassDelaySamples;
-		delete[] combFilterFeedback;
-		delete[] allPassFeedback;
-		delete[] dampingFrequency;
+		delete[] tmp;
 	};
-	void setLowPassFilter(const float* dampingFrequency)
+	inline float process(const float in)
 	{
-		for (int i = 0; i < m_complexity; i++)
-		{
-			m_lowPassFilter[i].setLowPass(dampingFrequency[i], 0.4f);
-		}
-	};
-	void setAllPassFilter(const float* feedback, const int* size)
-	{
-		for (int i = 0; i < m_complexity; i++)
-		{
-			m_allPassFilter[i].set(feedback[i], size[i]);
-		}
-	};
-	void setCombFilter(const float* feedback, const int* size)
-	{
-		for (int i = 0; i < m_complexity; i++)
-		{
-			m_feedback[i] = feedback[i];
-			m_buffer[i].set(size[i]);
-		}
-	};	
-	inline float process(float in)
-	{
-		float out = 0.0;
+		float out = 0.0f;
 
 		for (int i = 0; i < m_complexity; i++)
 		{
-			const auto bufferOut = m_lowPassFilter[i].processDF1(m_allPassFilter[i].process(m_buffer[i].read()));
+			const auto bufferOut = m_lowPassFilter[i].processDF1(m_allPassFilter[i].process(m_gainAllPass[i] * m_buffer[i].read()));
 			out += bufferOut;
 
-			int writteIdx = i + 1;
-			if (writteIdx >= m_complexity)
-				writteIdx = 0;
-
-			m_buffer[writteIdx].write((1.0f - m_buffer[writteIdx].getSize() * 0.0001f) * in + m_feedback[writteIdx] * bufferOut);
+			const int writteIdx = (i + 1) % m_complexity;
+			m_buffer[writteIdx].write(m_gain[writteIdx] * in + m_feedback[writteIdx] * bufferOut);
 		}
 
 		return m_volumeCompensation * out;
 	};
 	inline void release()
 	{
-
+		delete[] m_feedback;
+		delete[] m_gain;
 	}
 
 private:
@@ -203,6 +202,8 @@ private:
 	BiquadFilter* m_lowPassFilter;
 	AllPassFilter* m_allPassFilter;
 	float* m_feedback;
+	float* m_gain;
+	float* m_gainAllPass;
 	CircularCombFilterAdvancedParams m_paramsLast;
 	LinearCongruentialRandom01 m_random;
 	float m_volumeCompensation = 1.0f;

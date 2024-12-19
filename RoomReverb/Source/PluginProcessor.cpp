@@ -12,8 +12,8 @@
 //==============================================================================
 
 const std::string RoomReverbAudioProcessor::paramsNames[] = {		"ER Predelay",	"ER Time",		"ER Att",		"ER Damp",		"ER Width", 
-																	"LR Predelay",	"LR Time",		"LR Resonance",	"LR Damping",	"LR Width",
-																	"CSeed",		"ASeed",		"Time Min",		"Complexity",
+																	"LR Predelay",	"LR Time",		"LR Size",   	"LR Damping",	"LR Width",
+																	"Seed 1",		"Seed 2",		"Time Min",		"Complexity",
 																	"ER Volume",	"LR Volume",	"Mix",			"Volume" };
 
 const std::string RoomReverbAudioProcessor::paramsUnitNames[] = {	" ms",			" ms",			" dB",			"",				"",
@@ -179,12 +179,12 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 
 	CircularCombFilterAdvancedParams circularCombFilterParams;
 
-	circularCombFilterParams.combFilterTime = timeParameter->load();
-	circularCombFilterParams.combFilterResonance = 0.4f - (0.2f * (1.0f - circularCombFilterParams.combFilterTime)) + 0.4f * resonanceParameter->load();
+	circularCombFilterParams.combFilterTime = 0.02f + 0.98f * timeParameter->load();
+	circularCombFilterParams.combFilterResonance = 0.4f - (0.2f * (1.0f - circularCombFilterParams.combFilterTime)) + 0.45f * resonanceParameter->load();
 	circularCombFilterParams.allPassTime = circularCombFilterParams.combFilterTime;
-	circularCombFilterParams.allPassResonance = 0.7f * circularCombFilterParams.combFilterResonance;
+	circularCombFilterParams.allPassResonance = 0.6f * circularCombFilterParams.combFilterResonance;
 	circularCombFilterParams.width = widthParameter->load();
-	circularCombFilterParams.damping = 0.5f * dampingParameter->load();
+	circularCombFilterParams.damping = 0.75f * dampingParameter->load();
 	circularCombFilterParams.combFilterSeed =  (long)(combFilterSeedParameter->load());
 	circularCombFilterParams.allPassSeed = (long)(allPassSeedParameter->load());
 	circularCombFilterParams.timeMin = timeMinParameter->load();

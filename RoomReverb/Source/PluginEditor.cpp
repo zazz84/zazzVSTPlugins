@@ -7,7 +7,7 @@ const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.40f,
 const juce::Colour ZazzLookAndFeel::DARK_COLOUR = juce::Colour::fromHSV(0.40f, 0.5f, 0.4f, 1.0f);
 
 const int RoomReverbAudioProcessorEditor::SLIDERS[] = { 5, 5, 4, 4 };
-const int RoomReverbAudioProcessorEditor::COLUMN_OFFSET[] = { 0, 0, 0, 0 };
+const float RoomReverbAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f, 0.0f, 0.5f, 0.5f };
 
 //==============================================================================
 RoomReverbAudioProcessorEditor::RoomReverbAudioProcessorEditor (RoomReverbAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)

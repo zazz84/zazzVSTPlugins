@@ -65,7 +65,7 @@ public:
 		}
 	}
 
-	inline void resize(juce::AudioProcessorEditor& audioProcessorEditor, juce::Slider sliders[], juce::Label labels[], const int slidersCount[], const int columnOffset[], int rows, juce::Label& pluginName)
+	inline void resize(juce::AudioProcessorEditor& audioProcessorEditor, juce::Slider sliders[], juce::Label labels[], const int slidersCount[], const float columnOffset[], int rows, juce::Label& pluginName)
 	{
 		int slidersMax = 0;
 		for (int i = 0; i < rows; i++)
@@ -126,7 +126,7 @@ public:
 			{
 				juce::Rectangle<int> rectangle;
 
-				const int xPos = (columnOffset[row] + column) * elementWidth;
+				const int xPos = (int)((columnOffset[row] + (float)column) * (float)elementWidth);
 				const int yPos = topHeight + nameHeight + row * elemenHeight;
 
 				// Label

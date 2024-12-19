@@ -15,7 +15,7 @@ public:
 	// GUI setup
 	static const int N_SLIDERS = 18;
 	static const int SLIDERS[];
-	static const int COLUMN_OFFSET[];
+	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 4;
 	
 	//==============================================================================

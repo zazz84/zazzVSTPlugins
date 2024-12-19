@@ -18,12 +18,10 @@ public:
 	};
 	float process(const float in)
 	{
-		const float inAtt = (1.0f - m_buffer.getSize() * 0.0001f) * in;
-
 		const float delayOut = m_buffer.read();
-		m_buffer.write(inAtt - m_feedback * delayOut);
+		m_buffer.write(in - m_feedback * delayOut);
 
-		return delayOut + m_feedback * inAtt;
+		return delayOut + m_feedback * in;
 	};
 
 private:
