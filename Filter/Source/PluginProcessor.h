@@ -59,18 +59,8 @@ public:
 
 private:	
 	//==============================================================================
-	EighthOrderLowPassFilter m_LowPass8[2];
-	EighthOrderHighPassFilter m_HighPass8[2];
-	
-	SixthOrderLowPassFilter m_LowPass6[2];
-	SixthOrderHighPassFilter m_HighPass6[2];
-
-	ForthOrderLowPassFilter m_LowPass4[2];
-	ForthOrderHighPassFilter m_HighPass4[2];
-
-	BiquadFilter m_LowPass2[2];
-	BiquadFilter m_HighPass2[2];
-
+	MultiOrderHighPassFilter m_HPFilter[2];
+	MultiOrderHighPassFilter m_LPFilter[2];
 
 	std::atomic<float>* HPSlopeParameter = nullptr;
 	std::atomic<float>* HPFrequencyParameter = nullptr;

@@ -168,3 +168,95 @@ public:
 private:
 	BiquadFilter m_filter1, m_filter2, m_filter3, m_filter4;
 };
+
+//==============================================================================
+class MultiOrderHighPassFilter
+{
+public:
+	enum FilterType
+	{
+		LowPass,
+		HighPass
+	};
+
+	MultiOrderHighPassFilter() {};
+
+	inline void init(const int sampleRate)
+	{
+		m_filter[0].init(sampleRate);
+		m_filter[1].init(sampleRate);
+		m_filter[2].init(sampleRate);
+		m_filter[3].init(sampleRate);
+	};
+	inline void set(const float frequency, int order,  FilterType type)
+	{
+		m_orderHalf = order / 2;
+
+		if (type == FilterType::LowPass)
+		{
+			if (order == 8)
+			{
+				m_filter[0].setLowPass(frequency, 0.510f);
+				m_filter[1].setLowPass(frequency, 0.600f);
+				m_filter[2].setLowPass(frequency, 0.900f);
+				m_filter[3].setLowPass(frequency, 2.560f);
+			}
+			else if (order == 6)
+			{
+				m_filter[0].setLowPass(frequency, 0.520f);
+				m_filter[1].setLowPass(frequency, 0.710f);
+				m_filter[2].setLowPass(frequency, 1.930f);
+			}
+			else if (order == 4)
+			{
+				m_filter[0].setLowPass(frequency, 0.540f);
+				m_filter[1].setLowPass(frequency, 1.310f);
+			}
+			else
+			{
+				m_filter[0].setLowPass(frequency, 0.710f);
+			}
+		}
+		else
+		{
+			if (order == 8)
+			{
+				m_filter[0].setHighPass(frequency, 0.510f);
+				m_filter[1].setHighPass(frequency, 0.600f);
+				m_filter[2].setHighPass(frequency, 0.900f);
+				m_filter[3].setHighPass(frequency, 2.560f);
+			}
+			else if (order == 6)
+			{
+				m_filter[0].setHighPass(frequency, 0.520f);
+				m_filter[1].setHighPass(frequency, 0.710f);
+				m_filter[2].setHighPass(frequency, 1.930f);
+			}
+			else if (order == 4)
+			{
+				m_filter[0].setHighPass(frequency, 0.540f);
+				m_filter[1].setHighPass(frequency, 1.310f);
+			}
+			else
+			{
+				m_filter[0].setHighPass(frequency, 0.710f);
+			}
+		}
+
+	};
+	inline float process(const float in)
+	{
+		float output = in;
+		
+		for (int i = 0; i < m_orderHalf; i++)
+		{
+			output = m_filter[i].processDF1(output);
+		}
+
+		return output;
+	};
+
+private:
+	BiquadFilter m_filter[4];
+	int m_orderHalf = 1;
+};

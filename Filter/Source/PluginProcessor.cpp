@@ -112,25 +112,11 @@ void FilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 {
 	const int sr = (int)sampleRate;
 
-	m_LowPass8[0].init(sr);
-	m_LowPass8[1].init(sr);
-	m_HighPass8[0].init(sr);
-	m_HighPass8[1].init(sr);
+	m_HPFilter[0].init(sr);
+	m_HPFilter[1].init(sr);
 
-	m_LowPass6[0].init(sr);
-	m_LowPass6[1].init(sr);
-	m_HighPass6[0].init(sr);
-	m_HighPass6[1].init(sr);
-
-	m_LowPass4[0].init(sr);
-	m_LowPass4[1].init(sr);
-	m_HighPass4[0].init(sr);
-	m_HighPass4[1].init(sr);
-
-	m_LowPass2[0].init(sr);
-	m_LowPass2[1].init(sr);
-	m_HighPass2[0].init(sr);
-	m_HighPass2[1].init(sr);
+	m_LPFilter[0].init(sr);
+	m_LPFilter[1].init(sr);
 }
 
 void FilterAudioProcessor::releaseResources()
@@ -184,41 +170,11 @@ void FilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		// Set frequency
-		if (HPSlope == 12.0f)
-		{
-			m_HighPass2[channel].setHighPass(HPFrequency, 0.710f);
-		}
-		else if ((HPSlope == 24.0f))
-		{
-			m_HighPass4[channel].set(HPFrequency);
-		}
-		else if ((HPSlope == 36.0f))
-		{
-			m_HighPass6[channel].set(HPFrequency);
-		}
-		else
-		{
-			m_HighPass8[channel].set(HPFrequency);
-		}
+		auto& HPfilter = m_HPFilter[channel];
+		auto& LPfilter = m_LPFilter[channel];
 
-		// Low pass filter
-		if (LPSlope == 12.0f)
-		{
-			m_LowPass2[channel].setLowPass(LPFrequency, 0.710f);
-		}
-		else if ((LPSlope == 24.0f))
-		{
-			m_LowPass4[channel].set(LPFrequency);
-		}
-		else if ((LPSlope == 36.0f))
-		{
-			m_LowPass6[channel].set(LPFrequency);
-		}
-		else
-		{
-			m_LowPass8[channel].set(LPFrequency);
-		}
+		HPfilter.set(HPFrequency, (int)(std::roundf(HPSlope / 6.0f)), MultiOrderHighPassFilter::FilterType::HighPass);
+		LPfilter.set(LPFrequency, (int)(std::roundf(LPSlope / 6.0f)), MultiOrderHighPassFilter::FilterType::LowPass);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -226,42 +182,11 @@ void FilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 			const float in = channelBuffer[sample];
 
 			// High pass filter
-			float out = 0.0f;
-			if (HPSlope == 12.0f)
-			{
-				out = m_HighPass2[channel].processDF1(in);
-			}
-			else if ((HPSlope == 24.0f))
-			{
-				out = m_HighPass4[channel].process(in);
-			}
-			else if ((HPSlope == 36.0f))
-			{
-				out = m_HighPass6[channel].process(in);
-			}
-			else
-			{
-				out = m_HighPass8[channel].process(in);
-			}
-
-			// Low pass filter
-			if (LPSlope == 12.0f)
-			{
-				out = m_LowPass2[channel].processDF1(out);
-			}
-			else if ((LPSlope == 24.0f))
-			{
-				out = m_LowPass4[channel].process(out);
-			}
-			else if ((LPSlope == 36.0f))
-			{
-				out = m_LowPass6[channel].process(out);
-			}
-			else
-			{
-				out = m_LowPass8[channel].process(out);
-			}
+			float out = HPfilter.process(in);
 			
+			// Low pass filter
+			out = LPfilter.process(out);
+
 			// Output
 			channelBuffer[sample] = dry * in + wet * out;
 		}
