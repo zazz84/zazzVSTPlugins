@@ -190,16 +190,17 @@ void RoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	circularCombFilterParams.timeMin = timeMinParameter->load();
 	circularCombFilterParams.complexity = (int)(complexityParameter->load());
 	
+	const auto laterReflectionsGainCompensation = 0.4f - (circularCombFilterParams.complexity * 0.004f) + 0.5f * circularCombFilterParams.combFilterTime;
+
 	const auto ERGain = juce::Decibels::decibelsToGain(ERVolumeParameter->load());
-	const auto LRGain = juce::Decibels::decibelsToGain(LRVolumeParameter->load());
+	const auto LRGain = laterReflectionsGainCompensation * juce::Decibels::decibelsToGain(LRVolumeParameter->load());
 	const auto wet = 0.01f * mixParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const int channels = getTotalNumOutputChannels();
 	const int samples = buffer.getNumSamples();
-	const auto sampleRate = (float)getSampleRate();
-	const auto sampleRateMS = 0.001f * sampleRate;
+	const auto sampleRateMS = 0.001f * (float)getSampleRate();
 	const int predelaySamples = (int)(sampleRateMS * predelay);
 	const auto dry = 1.0f - wet;
 
@@ -283,7 +284,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout RoomReverbAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.25f)));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(   0.0f, (float)0x7fff, 1.00f), (float)(0x7fff * 0.5f)));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>(   1.0f, (float)MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>(   4.0f, (float)MAX_COMPLEXITY, 1.00f, 1.0f), 8.0f));
 
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[14], paramsNames[14], NormalisableRange<float>( -60.0f,   0.0f, 1.0f, 1.0f),  0.0f));

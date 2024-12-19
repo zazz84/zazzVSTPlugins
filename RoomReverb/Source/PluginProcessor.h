@@ -22,7 +22,7 @@ public:
 	static const int MAX_ER_PREDELAY_TIME = 50;
 	static const int MIN_ER_TIME = 10;
 	static const int MAX_ER_TIME = 100;
-	static const int MAX_COMPLEXITY = 32;
+	static const int MAX_COMPLEXITY = 16;
 
 	//==============================================================================
 	void prepareToPlay(double sampleRate, int samplesPerBlock) override;
