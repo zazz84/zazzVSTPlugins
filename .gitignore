@@ -4567,3 +4567,189 @@ NEDDelay/Builds/VisualStudio2017/x64/Release/VST3/NEDDelay_VST3.tlog/rc.read.1.t
 NEDDelay/Builds/VisualStudio2017/x64/Release/VST3/NEDDelay_VST3.tlog/rc.write.1.tlog
 NEDDelay/Builds/VisualStudio2017/x64/Release/VST3/resources.res
 RoomReverb/Builds/VisualStudio2017/x64/Release/Shared Code/RoomReve.0B12F54E.tlog/unsuccessfulbuild
+Filter/Builds/VisualStudio2017/.vs/Filter/v15/.suo
+Filter/Builds/VisualStudio2017/.vs/Filter/v15/Browse.VC.db
+Filter/Builds/VisualStudio2017/.vs/Filter/v15/Browse.VC.opendb
+Filter/Builds/VisualStudio2017/.vs/Filter/v15/Solution.VC.db
+Filter/Builds/VisualStudio2017/.vs/Filter/v15/Solution.VC.db-shm
+Filter/Builds/VisualStudio2017/.vs/Filter/v15/Solution.VC.db-wal
+Filter/Builds/VisualStudio2017/Filter.sln
+Filter/Builds/VisualStudio2017/Filter_SharedCode.vcxproj
+Filter/Builds/VisualStudio2017/Filter_SharedCode.vcxproj.filters
+Filter/Builds/VisualStudio2017/Filter_SharedCode.vcxproj.user
+Filter/Builds/VisualStudio2017/Filter_StandalonePlugin.vcxproj
+Filter/Builds/VisualStudio2017/Filter_StandalonePlugin.vcxproj.filters
+Filter/Builds/VisualStudio2017/Filter_VST3.vcxproj
+Filter/Builds/VisualStudio2017/Filter_VST3.vcxproj.filters
+Filter/Builds/VisualStudio2017/Filter_VST3.vcxproj.user
+Filter/Builds/VisualStudio2017/Filter_VST3ManifestHelper.vcxproj
+Filter/Builds/VisualStudio2017/Filter_VST3ManifestHelper.vcxproj.filters
+Filter/Builds/VisualStudio2017/resources.rc
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter.lib
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter.pdb
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/CL.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/CL.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/CL.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/Filter_SharedCode.lastbuildstate
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/Lib-link.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/Lib-link.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_S.7348A110.tlog/Lib.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/Filter_SharedCode.log
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+Filter/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/CL.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/CL.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/CL.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/Filter_VST3ManifestHelper.lastbuildstate
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/link.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/link.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/link.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/rc.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/rc.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/rc.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Filter_VST3ManifestHelper.log
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Filter/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.dll
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.exp
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.ilk
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.lib
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.pdb
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.vst3/Contents/Resources/moduleinfo.json
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter.vst3/Contents/x86_64-win/Filter.vst3
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.log
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/CL.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/CL.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/CL.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/Filter_VST3.lastbuildstate
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/Filter_VST3.write.1u.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/link.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/link.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/link.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/rc.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/rc.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/Filter_VST3.tlog/rc.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+Filter/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter.lib
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter.pdb
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/CL.12988.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/CL.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/CL.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/Filter_SharedCode.lastbuildstate
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/Lib-link.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/Lib-link.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/Lib.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_SharedCode.log
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+Filter/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/CL.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/CL.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/CL.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/Filter_VST3ManifestHelper.lastbuildstate
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/link.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/link.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/link.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/rc.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/rc.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_V.7C6A7C80.tlog/rc.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Filter_VST3ManifestHelper.log
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+Filter/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter.dll
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter.exp
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter.lib
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter.pdb
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter.vst3/Contents/Resources/moduleinfo.json
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter.vst3/Contents/x86_64-win/Filter.vst3
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.log
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/CL.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/CL.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/CL.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/Filter_VST3.lastbuildstate
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/Filter_VST3.write.1u.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/link.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/link.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/link.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/rc.command.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/rc.read.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/Filter_VST3.tlog/rc.write.1.tlog
+Filter/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+Filter/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+Filter/JuceLibraryCode/include_juce_audio_basics.cpp
+Filter/JuceLibraryCode/include_juce_audio_basics.mm
+Filter/JuceLibraryCode/include_juce_audio_devices.cpp
+Filter/JuceLibraryCode/include_juce_audio_devices.mm
+Filter/JuceLibraryCode/include_juce_audio_formats.cpp
+Filter/JuceLibraryCode/include_juce_audio_formats.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+Filter/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+Filter/JuceLibraryCode/include_juce_audio_processors.cpp
+Filter/JuceLibraryCode/include_juce_audio_processors.mm
+Filter/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+Filter/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+Filter/JuceLibraryCode/include_juce_audio_utils.cpp
+Filter/JuceLibraryCode/include_juce_audio_utils.mm
+Filter/JuceLibraryCode/include_juce_core.cpp
+Filter/JuceLibraryCode/include_juce_core.mm
+Filter/JuceLibraryCode/include_juce_data_structures.cpp
+Filter/JuceLibraryCode/include_juce_data_structures.mm
+Filter/JuceLibraryCode/include_juce_events.cpp
+Filter/JuceLibraryCode/include_juce_events.mm
+Filter/JuceLibraryCode/include_juce_graphics.cpp
+Filter/JuceLibraryCode/include_juce_graphics.mm
+Filter/JuceLibraryCode/include_juce_gui_basics.cpp
+Filter/JuceLibraryCode/include_juce_gui_basics.mm
+Filter/JuceLibraryCode/include_juce_gui_extra.cpp
+Filter/JuceLibraryCode/include_juce_gui_extra.mm
+Filter/JuceLibraryCode/JuceHeader.h
+Filter/JuceLibraryCode/JucePluginDefines.h
+Filter/JuceLibraryCode/ReadMe.txt

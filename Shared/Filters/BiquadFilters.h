@@ -6,7 +6,7 @@ class  BiquadFilter
 public:
 	BiquadFilter() {};
 
-	inline void init(int sampleRate)
+	inline void init(const int sampleRate)
 	{ 
 		m_SampleRate = sampleRate;
 	}
