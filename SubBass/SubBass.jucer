@@ -2,11 +2,14 @@
 
 <JUCERPROJECT id="vGSG0H" name="SubBass" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Generator">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Generator"
+              version="1.0.1">
   <MAINGROUP id="MXQLIA" name="SubBass">
     <GROUP id="{08D99A83-2B6E-AC37-8F3F-6D10F25FB265}" name="Source">
-      <FILE id="BsD8W7" name="CircularBuffers.cpp" compile="1" resource="0"
-            file="../Shared/Utilities/CircularBuffers.cpp"/>
+      <FILE id="XpRx1o" name="ButtonSlider.h" compile="0" resource="0" file="../Shared/GUI/ButtonSlider.h"/>
+      <FILE id="g7MfNZ" name="KarplusStrongDelay.h" compile="0" resource="0"
+            file="../Shared/Delays/KarplusStrongDelay.h"/>
+      <FILE id="p2D50f" name="PeakDetector.h" compile="0" resource="0" file="../Shared/Dynamics/PeakDetector.h"/>
       <FILE id="WF8Bwx" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="amCGbV" name="OnePoleFilters.h" compile="0" resource="0"

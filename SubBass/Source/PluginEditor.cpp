@@ -6,8 +6,8 @@ const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.65f,
 const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.65f, 0.25f, 0.5f, 1.0f);
 const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.65f, 0.25f, 0.4f, 1.0f);
 
-const int SubBassAudioProcessorEditor::SLIDERS[] = { 3, 3 };
-const int SubBassAudioProcessorEditor::COLUMN_OFFSET[] = { 0, 0 };
+const int SubBassAudioProcessorEditor::SLIDERS[] = { 4, 4 };
+const float SubBassAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f, 0.0f };
 
 //==============================================================================
 SubBassAudioProcessorEditor::SubBassAudioProcessorEditor (SubBassAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
@@ -22,8 +22,9 @@ SubBassAudioProcessorEditor::SubBassAudioProcessorEditor (SubBassAudioProcessor&
 	// Lables and sliders
 	for (int i = 0; i < N_SLIDERS; i++)
 	{
+		m_sliders[i] = std::make_unique<ButtonSlider>(audioProcessor.m_buttonState[i]);
 		auto& label = m_labels[i];
-		auto& slider = m_sliders[i];
+		auto& slider = *m_sliders[i];
 		const std::string text = SubBassAudioProcessor::paramsNames[i];
 		const std::string unit = SubBassAudioProcessor::paramsUnitNames[i];
 

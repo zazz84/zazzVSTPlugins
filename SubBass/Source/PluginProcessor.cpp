@@ -11,8 +11,8 @@
 
 //==============================================================================
 
-const std::string SubBassAudioProcessor::paramsNames[] = { "Sidechain", "Threshold", "Lenght", "Frequency", "Amount", "Volume" };
-const std::string SubBassAudioProcessor::paramsUnitNames[] = { " Hz", " dB", "", " Hz", " %", " dB" };
+const std::string SubBassAudioProcessor::paramsNames[] = { "Sidechain", "Threshold", "Lenght", "Glide Leght", "Start Frequency", "End Frequency", "Amount", "Volume" };
+const std::string SubBassAudioProcessor::paramsUnitNames[] = { " Hz", " dB", " ms", " ms", " Hz", "Hz", " %", " dB" };
 const float SubBassAudioProcessor::FREQUENCY_MIN = 20.0f;
 const float SubBassAudioProcessor::FREQUENCY_MAX = 180.0f;
 
@@ -29,12 +29,15 @@ SubBassAudioProcessor::SubBassAudioProcessor()
                        )
 #endif
 {
-	sidechainParameter = apvts.getRawParameterValue(paramsNames[0]);
-	thresholdParameter = apvts.getRawParameterValue(paramsNames[1]);
-	lenghtParameter    = apvts.getRawParameterValue(paramsNames[2]);
-	frequencyParameter = apvts.getRawParameterValue(paramsNames[3]);
-	amountParameter    = apvts.getRawParameterValue(paramsNames[4]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[5]);
+	sidechainParameter      = apvts.getRawParameterValue(paramsNames[0]);
+	thresholdParameter      = apvts.getRawParameterValue(paramsNames[1]);
+	lenghtParameter         = apvts.getRawParameterValue(paramsNames[2]);
+	glideLenghtParameter    = apvts.getRawParameterValue(paramsNames[3]);
+
+	startFrequencyParameter = apvts.getRawParameterValue(paramsNames[4]);
+	endFrequencyParameter   = apvts.getRawParameterValue(paramsNames[5]);
+	amountParameter         = apvts.getRawParameterValue(paramsNames[6]);
+	volumeParameter         = apvts.getRawParameterValue(paramsNames[7]);
 }
 
 SubBassAudioProcessor::~SubBassAudioProcessor()
@@ -117,9 +120,11 @@ void SubBassAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 	m_peakDetector[0].init(sr);
 	m_peakDetector[1].init(sr);
 
-	constexpr float decayTime = 80.0f;
-	m_peakDetector[0].set(decayTime);
-	m_peakDetector[1].set(decayTime);
+	// Set all elements to false
+	for (int i = 0; i < N_SLIDERS; ++i)
+	{
+		m_buttonState[i].store(false, std::memory_order_relaxed);  // Set each to false
+	}
 }
 
 void SubBassAudioProcessor::releaseResources()
@@ -155,11 +160,15 @@ bool SubBassAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void SubBassAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
 	const auto sidechain = sidechainParameter->load();
 	const auto threshold = juce::Decibels::decibelsToGain(thresholdParameter->load());
-	const auto lenght = lenghtParameter->load();
-	const auto frequency = frequencyParameter->load();
+	const auto lenght = 0.001f * lenghtParameter->load();
+	const auto glideLenght = 0.001f * glideLenghtParameter->load();
+	const auto startFrequency = startFrequencyParameter->load();
+	const auto endFrequency = endFrequencyParameter->load();
 	const auto amount = 0.01f * amountParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
@@ -167,10 +176,22 @@ void SubBassAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
 	const auto sampleRate = (float)getSampleRate();
-	const auto lenghtTime = 2.0f * lenght;
-	const auto amountGain = amount * remap(frequency, FREQUENCY_MIN, FREQUENCY_MAX, 24.0f, 4.0f)
-								   * remap(frequency, FREQUENCY_MIN, 3.0f * FREQUENCY_MIN, 8.0f, 1.0f)
+	const auto amountGain = amount * remap(startFrequency, FREQUENCY_MIN, FREQUENCY_MAX, 24.0f, 4.0f)
+								   * remap(startFrequency, FREQUENCY_MIN, 3.0f * FREQUENCY_MIN, 8.0f, 1.0f)
 								   * remap(lenght, 0.0f, 1.0f, 1.0f, 0.25f);
+	
+	const auto lenghtSamples = lenght * sampleRate;
+	const auto glideLenghtSample = glideLenght * sampleRate;
+
+	const auto peakDetectorRelease = remap(lenght, 0.050f, 1000.0f, 40.0f, 100.0f);
+
+	const bool adjustingSideChain = m_buttonState[SubBassParams::Sidechain];
+	const bool adjustingSubbas =	m_buttonState[SubBassParams::Threshold] ||	
+									m_buttonState[SubBassParams::Lenght] ||
+									m_buttonState[SubBassParams::GlideLenght] ||
+									m_buttonState[SubBassParams::StartFrequency] ||
+									m_buttonState[SubBassParams::EndFrequency] ||
+									m_buttonState[SubBassParams::Amount];
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
@@ -182,9 +203,11 @@ void SubBassAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 		auto& triggerFilter = m_triggerFilter[channel];
 		auto& peakDetector = m_peakDetector[channel];
 		auto& samplesOpen = m_samplesOpen[channel];
+		auto& samplesFrequencyInterpolate = m_samplesFrequencyInterpolate[channel];
 
 		//Set filters
-		triggerFilter.setBandPassPeakGain(sidechain, 0.7f);
+		triggerFilter.setBandPassPeakGain(sidechain, 2.0f);
+		peakDetector.set(peakDetectorRelease);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -200,26 +223,49 @@ void SubBassAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			// Generate sub bass
 			float subBass = 0.0f;
 
+			// Peak detection
 			if (peak > threshold)
 			{
+				// Peak detected
+				if (samplesOpen == 0)
+				{
+					samplesFrequencyInterpolate = 0;
+				}
+
 				samplesOpen++;
-				
 				subBass = in;
-								
-				const float frequencyNew = remap((float)samplesOpen, 0.0f, sampleRate * 2.0f * lenghtTime, frequency, FREQUENCY_MIN);
-				delay.set(frequencyNew, lenghtTime);
 			}
 			else
 			{
 				samplesOpen = 0;
 			}
 
+			// Interpolate frequency
+			samplesFrequencyInterpolate++;
+			
+			const float frequency = remap((float)samplesFrequencyInterpolate, 0.0f, glideLenghtSample, startFrequency, endFrequency);
+			delay.set(frequency, lenght);
+
+			// Process subbass
 			subBass = delay.process(subBass);
 
 			//Out
-			channelBuffer[sample] = gain * (in + amountGain * subBass);
+			if (adjustingSideChain)
+			{
+				channelBuffer[sample] = trigger;
+			}
+			else if (adjustingSubbas)
+			{
+				channelBuffer[sample] = amountGain * subBass;
+			}
+			else
+			{
+				channelBuffer[sample] = in + amountGain * subBass;
+			}
 		}
 	}
+
+	buffer.applyGain(gain);
 }
 
 //==============================================================================
@@ -258,11 +304,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubBassAudioProcessor::creat
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 1.0f),  80.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -60.0f,   0.0f,  1.0f, 1.0f), -24.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),   0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( 50.0f, 1000.0f, 1.0f, 0.7f), 300.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( 50.0f, 1000.0f, 1.0f, 0.7f), 300.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 1.0f),  80.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  50.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 1.0f),  80.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 1.0f),  55.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[5], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
 
 	return layout;
 }
