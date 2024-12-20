@@ -7,7 +7,7 @@ const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f,
 const juce::Colour ZazzLookAndFeel::DARK_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
 
 const int CombFilterAudioProcessorEditor::SLIDERS[] = { 6 };
-const int CombFilterAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };
+const float CombFilterAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };
 
 //==============================================================================
 CombFilterAudioProcessorEditor::CombFilterAudioProcessorEditor (CombFilterAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)

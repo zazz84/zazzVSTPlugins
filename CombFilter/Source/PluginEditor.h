@@ -20,7 +20,7 @@ public:
 	// Number of sliders per row
 	static const int SLIDERS[];
 	// Number of slider width offset (from left) per row
-	static const int COLUMN_OFFSET[];
+	static const float COLUMN_OFFSET[];
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;

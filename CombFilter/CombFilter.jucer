@@ -11,8 +11,6 @@
       <FILE id="IQz5U7" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="eHODMd" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="Mq8oVZ" name="CircularBuffers.cpp" compile="1" resource="0"
-            file="../Shared/Utilities/CircularBuffers.cpp"/>
       <FILE id="TxxMoG" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="V6Zest" name="ZazzLookAndFeel.h" compile="0" resource="0"

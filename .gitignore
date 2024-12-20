@@ -4754,3 +4754,6 @@ Filter/JuceLibraryCode/JuceHeader.h
 Filter/JuceLibraryCode/JucePluginDefines.h
 Filter/JuceLibraryCode/ReadMe.txt
 Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/CL.write.1.tlog
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Browse.VC.opendb
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Solution.VC.db-shm
+CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Solution.VC.db-wal

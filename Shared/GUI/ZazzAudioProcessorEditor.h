@@ -153,7 +153,7 @@ public:
 	}
 
 	
-	inline void resize(juce::AudioProcessorEditor& audioProcessorEditor, std::unique_ptr<ButtonSlider> sliders[], juce::Label labels[], const int slidersCount[], const float columnOffset[], int rows, juce::Label& pluginName)
+	inline void resize2(juce::AudioProcessorEditor& audioProcessorEditor, std::unique_ptr<ButtonSlider> sliders[], juce::Label labels[], const int slidersCount[], const float columnOffset[], int rows, juce::Label& pluginName)
 	{
 		int slidersMax = 0;
 		for (int i = 0; i < rows; i++)
