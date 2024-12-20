@@ -178,24 +178,3 @@ public:
 private:
 	float m_rms = 0.0f;
 };
-
-//==============================================================================
-class CombFilter : public CircularBuffer
-{
-public:
-	CombFilter() {};
-
-	inline void set(const int size, const float feedback)
-	{
-		CircularBuffer::set(size);
-		m_feedback = feedback;
-	};
-	inline float process(const float in)
-	{
-		write(in);
-		return m_feedback * (in - read());
-	};
-
-private:
-	float m_feedback = 0.5f;
-};

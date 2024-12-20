@@ -2,35 +2,6 @@
 #include "AllPassFilters.h"
 
 //==============================================================================
-FirstOrderAllPass::FirstOrderAllPass()
-{
-}
-
-void FirstOrderAllPass::init(int sampleRate)
-{
-	m_SampleRate = sampleRate;
-}
-
-void FirstOrderAllPass::setFrequency(float frequency)
-{
-	if (m_SampleRate == 0)
-	{
-		return;
-	}
-
-	const float tmp = tanf(PI * frequency / m_SampleRate);
-	m_a1 = (tmp - 1.0f) / (tmp + 1.0f);
-}
-
-
-float FirstOrderAllPass::process(float in)
-{
-	const float tmp = m_a1 * in + m_d;
-	m_d = in - m_a1 * tmp;
-	return tmp;
-}
-
-//==============================================================================
 SecondOrderAllPass::SecondOrderAllPass()
 {
 }

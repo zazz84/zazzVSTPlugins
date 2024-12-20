@@ -52,7 +52,7 @@ public:
 	inline static float Sin(float in, float drive)
 	{
 		const float driveAdjusted = 1.9f * drive;
-		const float limit = 3.141592 / driveAdjusted;
+		const float limit = 3.141592f / driveAdjusted;
 
 		if (in < -limit)
 		{

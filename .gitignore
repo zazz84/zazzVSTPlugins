@@ -4757,3 +4757,185 @@ Filter/Builds/VisualStudio2017/x64/Release/Shared Code/Filter_S.7348A110.tlog/CL
 CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Browse.VC.opendb
 CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Solution.VC.db-shm
 CombFilter/Builds/VisualStudio2017/.vs/CombFilter/v15/Solution.VC.db-wal
+GuitarAmp/Builds/VisualStudio2017/.vs/GuitarAmp/v15/.suo
+GuitarAmp/Builds/VisualStudio2017/.vs/GuitarAmp/v15/Browse.VC.db
+GuitarAmp/Builds/VisualStudio2017/.vs/GuitarAmp/v15/Solution.VC.db
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp.sln
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_SharedCode.vcxproj
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_SharedCode.vcxproj.filters
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_StandalonePlugin.vcxproj
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_StandalonePlugin.vcxproj.filters
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_VST3.vcxproj
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_VST3.vcxproj.filters
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_VST3.vcxproj.user
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_VST3ManifestHelper.vcxproj
+GuitarAmp/Builds/VisualStudio2017/GuitarAmp_VST3ManifestHelper.vcxproj.filters
+GuitarAmp/Builds/VisualStudio2017/resources.rc
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/CL.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/CL.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/CL.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/GuitarAmp_SharedCode.lastbuildstate
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/Lib-link.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/Lib-link.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAm.C98F5296.tlog/Lib.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAmp.lib
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAmp.pdb
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/GuitarAmp_SharedCode.log
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/CL.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/CL.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/CL.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/GuitarAmp_VST3ManifestHelper.lastbuildstate
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/link.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/link.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/link.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/rc.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/rc.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/rc.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/GuitarAmp_VST3ManifestHelper.log
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.dll
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.exp
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.ilk
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.lib
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.pdb
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.vst3/Contents/Resources/moduleinfo.json
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp.vst3/Contents/x86_64-win/GuitarAmp.vst3
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.log
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/CL.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/CL.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/CL.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/GuitarAmp_VST3.lastbuildstate
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/GuitarAmp_VST3.write.1u.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/link.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/link.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/link.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/rc.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/rc.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/GuitarAmp_VST3.tlog/rc.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/CL.13924.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/CL.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/CL.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/GuitarAmp_SharedCode.lastbuildstate
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/Lib-link.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/Lib-link.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/Lib.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAmp.lib
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAmp.pdb
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAmp_SharedCode.log
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/CL.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/CL.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/CL.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/GuitarAmp_VST3ManifestHelper.lastbuildstate
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/link.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/link.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/link.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/rc.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/rc.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAm.0A4156C5.tlog/rc.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/GuitarAmp_VST3ManifestHelper.log
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp.dll
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp.exp
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp.lib
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp.pdb
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp.vst3/Contents/Resources/moduleinfo.json
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp.vst3/Contents/x86_64-win/GuitarAmp.vst3
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.log
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/CL.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/CL.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/CL.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/GuitarAmp_VST3.lastbuildstate
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/GuitarAmp_VST3.write.1u.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/link.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/link.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/link.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/rc.command.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/rc.read.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/GuitarAmp_VST3.tlog/rc.write.1.tlog
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+GuitarAmp/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+GuitarAmp/JuceLibraryCode/include_juce_audio_basics.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_basics.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_devices.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_devices.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_formats.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_formats.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_processors.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_processors.mm
+GuitarAmp/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_utils.cpp
+GuitarAmp/JuceLibraryCode/include_juce_audio_utils.mm
+GuitarAmp/JuceLibraryCode/include_juce_core.cpp
+GuitarAmp/JuceLibraryCode/include_juce_core.mm
+GuitarAmp/JuceLibraryCode/include_juce_data_structures.cpp
+GuitarAmp/JuceLibraryCode/include_juce_data_structures.mm
+GuitarAmp/JuceLibraryCode/include_juce_events.cpp
+GuitarAmp/JuceLibraryCode/include_juce_events.mm
+GuitarAmp/JuceLibraryCode/include_juce_graphics.cpp
+GuitarAmp/JuceLibraryCode/include_juce_graphics.mm
+GuitarAmp/JuceLibraryCode/include_juce_gui_basics.cpp
+GuitarAmp/JuceLibraryCode/include_juce_gui_basics.mm
+GuitarAmp/JuceLibraryCode/include_juce_gui_extra.cpp
+GuitarAmp/JuceLibraryCode/include_juce_gui_extra.mm
+GuitarAmp/JuceLibraryCode/JuceHeader.h
+GuitarAmp/JuceLibraryCode/JucePluginDefines.h
+GuitarAmp/JuceLibraryCode/ReadMe.txt
