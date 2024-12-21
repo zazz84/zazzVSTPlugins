@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdarg>
 #include <math.h>
 
 
@@ -9,9 +8,15 @@ class CircularBuffer
 {
 public:
 	CircularBuffer() {};
+	~CircularBuffer() { clearBuffer(); }
 
 	inline void init(const int size)
 	{
+		if (m_buffer != nullptr)
+		{
+			clearBuffer();
+		}
+		
 		m_head = 0;
 		const int sizePowerOfTwo = GetPowerOfTwo(size);
 		m_bitMask = sizePowerOfTwo - 1;
@@ -41,11 +46,8 @@ public:
 	inline void release()
 	{
 		m_head = 0;
-
-		std::memset(m_buffer, 0, (m_bitMask + 1) * sizeof(float));
 		
-		//delete[] m_buffer;
-		//m_buffer = nullptr;
+		clearBuffer();
 	}
 	inline float readDelay(const int sample) const
 	{
@@ -154,8 +156,13 @@ private:
 
 		return n;
 	}
+	inline void clearBuffer()
+	{
+		delete[] m_buffer;
+		m_buffer = nullptr;
+	}
 
-	float* m_buffer;
+	float* m_buffer = nullptr;
 	int m_head = 0;
 	int m_bitMask = 0;
 	int m_readOffset = 0;

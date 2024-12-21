@@ -151,7 +151,8 @@ void GuitarAmpAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 void GuitarAmpAudioProcessor::releaseResources()
 {
-	
+	m_combFilter[0].release();
+	m_combFilter[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations

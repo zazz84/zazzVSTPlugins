@@ -22,6 +22,11 @@ public:
 		m_buffer.write(in - m_feedback * delayOut);
 		return delayOut;
 	};
+	inline void release()
+	{
+		m_buffer.release();
+		m_feedback = 0.0f;
+	}
 	inline float getSize() const
 	{ 
 		return m_buffer.getSize();

@@ -13,7 +13,6 @@
             file="../Shared/Filters/SpeakerCabinetSimulation.h"/>
       <FILE id="rPwHm6" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="OPBAL6" name="TrebleBooster.h" compile="0" resource="0" file="../Shared/Filters/TrebleBooster.h"/>
-      <FILE id="IzsLvi" name="MovingAverage.h" compile="0" resource="0" file="../Shared/Utilities/MovingAverage.h"/>
       <FILE id="PqdXWT" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="tVunjw" name="PluginProcessor.h" compile="0" resource="0"
