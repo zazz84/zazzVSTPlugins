@@ -4940,3 +4940,185 @@ GuitarAmp/JuceLibraryCode/JuceHeader.h
 GuitarAmp/JuceLibraryCode/JucePluginDefines.h
 GuitarAmp/JuceLibraryCode/ReadMe.txt
 GuitarAmp/Builds/VisualStudio2017/x64/Release/Shared Code/GuitarAm.C98F5296.tlog/CL.1252.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/.vs/SmallSpeakerSimulator/v15/.suo
+SmallSpeakerSimulator/Builds/VisualStudio2017/.vs/SmallSpeakerSimulator/v15/Browse.VC.db
+SmallSpeakerSimulator/Builds/VisualStudio2017/.vs/SmallSpeakerSimulator/v15/Solution.VC.db
+SmallSpeakerSimulator/Builds/VisualStudio2017/resources.rc
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator.sln
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_SharedCode.vcxproj
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_SharedCode.vcxproj.filters
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_StandalonePlugin.vcxproj
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_StandalonePlugin.vcxproj.filters
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_VST3.vcxproj
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_VST3.vcxproj.filters
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_VST3.vcxproj.user
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_VST3ManifestHelper.vcxproj
+SmallSpeakerSimulator/Builds/VisualStudio2017/SmallSpeakerSimulator_VST3ManifestHelper.vcxproj.filters
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/CL.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/CL.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/CL.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/Lib-link.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/Lib-link.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/Lib.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpe.6E59D4AE.tlog/SmallSpeakerSimulator_SharedCode.lastbuildstate
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpeakerSimulator.lib
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpeakerSimulator.pdb
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/Shared Code/SmallSpeakerSimulator_SharedCode.log
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/CL.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/CL.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/CL.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/link.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/link.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/link.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/rc.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/rc.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/rc.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/SmallSpeakerSimulator_VST3ManifestHelper.lastbuildstate
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SmallSpeakerSimulator_VST3ManifestHelper.log
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/CL.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/CL.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/CL.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/link.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/link.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/link.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/rc.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/rc.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/rc.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/SmallSpeakerSimulator_VST3.lastbuildstate
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpe.44CF2946.tlog/SmallSpeakerSimulator_VST3.write.1u.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.dll
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.exp
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.ilk
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.lib
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.pdb
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.vst3/Contents/Resources/moduleinfo.json
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator.vst3/Contents/x86_64-win/SmallSpeakerSimulator.vst3
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Debug/VST3/SmallSpeakerSimulator_VST3.log
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/CL.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/CL.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/CL.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/Lib-link.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/Lib-link.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/Lib.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpe.6E59D4AE.tlog/SmallSpeakerSimulator_SharedCode.lastbuildstate
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpeakerSimulator.lib
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpeakerSimulator.pdb
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/Shared Code/SmallSpeakerSimulator_SharedCode.log
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/CL.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/CL.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/CL.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/link.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/link.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/link.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/rc.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/rc.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/rc.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpe.7E9E9899.tlog/SmallSpeakerSimulator_VST3ManifestHelper.lastbuildstate
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SmallSpeakerSimulator_VST3ManifestHelper.log
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/CL.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/CL.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/CL.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/link.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/link.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/link.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/rc.command.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/rc.read.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/rc.write.1.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/SmallSpeakerSimulator_VST3.lastbuildstate
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpe.44CF2946.tlog/SmallSpeakerSimulator_VST3.write.1u.tlog
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator.dll
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator.exp
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator.lib
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator.pdb
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator.vst3/Contents/Resources/moduleinfo.json
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator.vst3/Contents/x86_64-win/SmallSpeakerSimulator.vst3
+SmallSpeakerSimulator/Builds/VisualStudio2017/x64/Release/VST3/SmallSpeakerSimulator_VST3.log
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_basics.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_basics.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_devices.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_devices.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_formats.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_formats.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_processors.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_processors.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_utils.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_audio_utils.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_core.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_core.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_data_structures.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_data_structures.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_events.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_events.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_graphics.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_graphics.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_gui_basics.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_gui_basics.mm
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_gui_extra.cpp
+SmallSpeakerSimulator/JuceLibraryCode/include_juce_gui_extra.mm
+SmallSpeakerSimulator/JuceLibraryCode/JuceHeader.h
+SmallSpeakerSimulator/JuceLibraryCode/JucePluginDefines.h
+SmallSpeakerSimulator/JuceLibraryCode/ReadMe.txt

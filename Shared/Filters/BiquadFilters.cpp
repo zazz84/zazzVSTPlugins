@@ -165,18 +165,6 @@ void BiquadFilter::normalize()
    a2 = a2 / a0;
 }
 
-float BiquadFilter::processDF1(float in)
-{
-    float out = b0 * in + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
-
-    x2 = x1;
-    x1 = in;
-
-    y2 = y1;
-    y1 = out;
-
-    return out;
-}
 
 float BiquadFilter::processDF2(float in)
 {
@@ -198,19 +186,6 @@ float BiquadFilter::processDF1T(float in)
 	y2 = -a1 * v + y1;
 	x1 = b2 * v;
 	y1 = -a2 * v;
-
-	return out;
-}
-
-float BiquadFilter::processDF2T(float in)
-{
-	float out = b0 * in + x2;
-	
-	/*x2 = b1 * in + x1 + a1 * out;
-	x1 = b2 * in + a2 * out;*/
-
-	x2 = b1 * in + x1 - a1 * out;
-	x1 = b2 * in - a2 * out;
 
 	return out;
 }

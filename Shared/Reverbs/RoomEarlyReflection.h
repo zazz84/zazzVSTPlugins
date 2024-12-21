@@ -87,7 +87,6 @@ public:
 	{
 		write(in);
 
-		const auto size = getSize();
 		float out = 0.0f;
 
 		for (int i = 0; i < N_DELAY_LINES; i++)
@@ -98,6 +97,22 @@ public:
 
 		return out;
 	};
+	inline void release()
+	{
+		__super::release();
+
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			m_filter[i].release();
+			m_delaySize[i] = 0;
+			m_delayGain[i] = 0.0f;
+		}
+
+		m_damping = 0.0f;
+		m_maximumFilterFrequency = 18000.0f;
+		m_channel = 0;
+
+	}
 
 private:
 	OnePoleLowPassFilter m_filter[N_DELAY_LINES];

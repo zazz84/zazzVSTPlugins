@@ -9,6 +9,14 @@ class OnePoleFilter
 public:
 	OnePoleFilter() {};
 
+	inline void release()
+	{
+		m_samplePeriod = 0.00002f;
+		m_sampleLast = 0.0f;
+		m_a0 = 1.0f;
+		m_b1 = 0.0f;
+	}
+
 protected:
 	float m_samplePeriod = 0.00002f;
 	float m_sampleLast = 0.0f;
@@ -17,7 +25,7 @@ protected:
 };
 
 //==============================================================================
-class OnePoleLowPassFilter : OnePoleFilter
+class OnePoleLowPassFilter : public OnePoleFilter
 {
 public:
 	OnePoleLowPassFilter() {};
