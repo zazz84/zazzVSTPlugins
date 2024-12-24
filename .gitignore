@@ -5422,3 +5422,244 @@ PeakMute/JuceLibraryCode/include_juce_gui_extra.mm
 PeakMute/JuceLibraryCode/JuceHeader.h
 PeakMute/JuceLibraryCode/JucePluginDefines.h
 PeakMute/JuceLibraryCode/ReadMe.txt
+AMReceiverEmulation/Builds/VisualStudio2017/.vs/AMReceiverEmulation/v15/.suo
+AMReceiverEmulation/Builds/VisualStudio2017/.vs/AMReceiverEmulation/v15/Browse.VC.db
+AMReceiverEmulation/Builds/VisualStudio2017/.vs/AMReceiverEmulation/v15/Solution.VC.db
+AMReceiverEmulation/Builds/VisualStudio2017/.vs/AMReceiverEmulation/v15/Solution.VC.db-shm
+AMReceiverEmulation/Builds/VisualStudio2017/.vs/AMReceiverEmulation/v15/Solution.VC.db-wal
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation.sln
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_SharedCode.vcxproj
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_SharedCode.vcxproj.filters
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_StandalonePlugin.vcxproj
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_StandalonePlugin.vcxproj.filters
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_VST3.vcxproj
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_VST3.vcxproj.filters
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_VST3ManifestHelper.vcxproj
+AMReceiverEmulation/Builds/VisualStudio2017/AMReceiverEmulation_VST3ManifestHelper.vcxproj.filters
+AMReceiverEmulation/Builds/VisualStudio2017/resources.rc
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/AMReceiverEmulation_SharedCode.lastbuildstate
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/CL.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/CL.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/CL.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/Lib-link.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/Lib-link.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiv.D6D0CA0A.tlog/Lib.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiverEmulation.lib
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiverEmulation.pdb
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMReceiverEmulation_SharedCode.log
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/AMReceiverEmulation_VST3ManifestHelper.lastbuildstate
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/CL.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/CL.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/CL.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/link.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/link.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/link.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/rc.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/rc.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiv.27ACF46B.tlog/rc.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMReceiverEmulation_VST3ManifestHelper.log
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/AMReceiverEmulation_VST3.lastbuildstate
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/AMReceiverEmulation_VST3.write.1u.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/CL.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/CL.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/CL.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/link.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/link.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/link.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/rc.command.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/rc.read.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiv.1866B7A3.tlog/rc.write.1.tlog
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.dll
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.exp
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.ilk
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.lib
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.pdb
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.vst3/Contents/Resources/moduleinfo.json
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation.vst3/Contents/x86_64-win/AMReceiverEmulation.vst3
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMReceiverEmulation_VST3.log
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+AMReceiverEmulation/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_basics.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_basics.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_devices.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_devices.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_formats.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_formats.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_processors.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_processors.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_utils.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_audio_utils.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_core.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_core.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_data_structures.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_data_structures.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_events.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_events.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_graphics.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_graphics.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_gui_basics.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_gui_basics.mm
+AMReceiverEmulation/JuceLibraryCode/include_juce_gui_extra.cpp
+AMReceiverEmulation/JuceLibraryCode/include_juce_gui_extra.mm
+AMReceiverEmulation/JuceLibraryCode/JuceHeader.h
+AMReceiverEmulation/JuceLibraryCode/JucePluginDefines.h
+AMReceiverEmulation/JuceLibraryCode/ReadMe.txt
+AMTransmitterEmulation/Builds/VisualStudio2017/.vs/AMTransmitterEmulation/v15/.suo
+AMTransmitterEmulation/Builds/VisualStudio2017/.vs/AMTransmitterEmulation/v15/Browse.VC.db
+AMTransmitterEmulation/Builds/VisualStudio2017/.vs/AMTransmitterEmulation/v15/Solution.VC.db
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation.sln
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_SharedCode.vcxproj
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_SharedCode.vcxproj.filters
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_StandalonePlugin.vcxproj
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_StandalonePlugin.vcxproj.filters
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_VST3.vcxproj
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_VST3.vcxproj.filters
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_VST3ManifestHelper.vcxproj
+AMTransmitterEmulation/Builds/VisualStudio2017/AMTransmitterEmulation_VST3ManifestHelper.vcxproj.filters
+AMTransmitterEmulation/Builds/VisualStudio2017/resources.rc
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/AMTransmitterEmulation_SharedCode.lastbuildstate
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/CL.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/CL.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/CL.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/Lib-link.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/Lib-link.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.6AEF3984.tlog/Lib.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransmitterEmulation.lib
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransmitterEmulation.pdb
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransmitterEmulation_SharedCode.log
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/AMTransmitterEmulation_VST3ManifestHelper.lastbuildstate
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/CL.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/CL.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/CL.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/link.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/link.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/link.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/rc.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/rc.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.0DA39DF1.tlog/rc.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransmitterEmulation_VST3ManifestHelper.log
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/AMTransmitterEmulation_VST3.lastbuildstate
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/AMTransmitterEmulation_VST3.write.1u.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/CL.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/CL.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/CL.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/link.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/link.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/link.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/rc.command.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/rc.read.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.44E4B95D.tlog/rc.write.1.tlog
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.dll
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.exp
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.ilk
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.lib
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.pdb
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.vst3/Contents/Resources/moduleinfo.json
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation.vst3/Contents/x86_64-win/AMTransmitterEmulation.vst3
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmitterEmulation_VST3.log
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+AMTransmitterEmulation/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_basics.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_basics.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_devices.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_devices.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_formats.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_formats.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_processors.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_processors.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_utils.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_audio_utils.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_core.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_core.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_data_structures.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_data_structures.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_events.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_events.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_graphics.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_graphics.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_gui_basics.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_gui_basics.mm
+AMTransmitterEmulation/JuceLibraryCode/include_juce_gui_extra.cpp
+AMTransmitterEmulation/JuceLibraryCode/include_juce_gui_extra.mm
+AMTransmitterEmulation/JuceLibraryCode/JuceHeader.h
+AMTransmitterEmulation/JuceLibraryCode/JucePluginDefines.h
+AMTransmitterEmulation/JuceLibraryCode/ReadMe.txt
