@@ -64,7 +64,10 @@ public:
 		const int iPrev = readIdx & m_bitMask;
 		const int iNext = (readIdx + 1) & m_bitMask;
 
-		return m_buffer[iNext] + weight * (m_buffer[iPrev] - m_buffer[iNext]);
+		const float prev = m_buffer[iPrev];
+		const float next = m_buffer[iNext];
+
+		return next + weight * (prev - next);
 	}
 	float readDelayTriLinearInterpolation(const float sample)
 	{

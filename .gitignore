@@ -5122,3 +5122,303 @@ SmallSpeakerSimulator/JuceLibraryCode/include_juce_gui_extra.mm
 SmallSpeakerSimulator/JuceLibraryCode/JuceHeader.h
 SmallSpeakerSimulator/JuceLibraryCode/JucePluginDefines.h
 SmallSpeakerSimulator/JuceLibraryCode/ReadMe.txt
+AMTransmissionEmulation/Builds/VisualStudio2017/.vs/AMTransmissionEmulation/v15/.suo
+AMTransmissionEmulation/Builds/VisualStudio2017/.vs/AMTransmissionEmulation/v15/Browse.VC.db
+AMTransmissionEmulation/Builds/VisualStudio2017/.vs/AMTransmissionEmulation/v15/Solution.VC.db
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation.sln
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_SharedCode.vcxproj
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_SharedCode.vcxproj.filters
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_StandalonePlugin.vcxproj
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_StandalonePlugin.vcxproj.filters
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_VST3.vcxproj
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_VST3.vcxproj.filters
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_VST3.vcxproj.user
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_VST3ManifestHelper.vcxproj
+AMTransmissionEmulation/Builds/VisualStudio2017/AMTransmissionEmulation_VST3ManifestHelper.vcxproj.filters
+AMTransmissionEmulation/Builds/VisualStudio2017/resources.rc
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/AMTransmissionEmulation_SharedCode.lastbuildstate
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/CL.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/CL.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/CL.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/Lib-link.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/Lib-link.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransm.B7929417.tlog/Lib.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransmissionEmulation.lib
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransmissionEmulation.pdb
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/AMTransmissionEmulation_SharedCode.log
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/AMTransmissionEmulation_VST3ManifestHelper.lastbuildstate
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/CL.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/CL.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/CL.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/link.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/link.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/link.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/rc.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/rc.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransm.9C104A5B.tlog/rc.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AMTransmissionEmulation_VST3ManifestHelper.log
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/AMTransmissionEmulation_VST3.lastbuildstate
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/AMTransmissionEmulation_VST3.write.1u.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/CL.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/CL.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/CL.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/link.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/link.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/link.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/rc.command.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/rc.read.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransm.BEF67D97.tlog/rc.write.1.tlog
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.dll
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.exp
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.ilk
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.lib
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.pdb
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.vst3/Contents/Resources/moduleinfo.json
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation.vst3/Contents/x86_64-win/AMTransmissionEmulation.vst3
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/AMTransmissionEmulation_VST3.log
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+AMTransmissionEmulation/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_basics.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_basics.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_devices.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_devices.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_formats.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_formats.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_processors.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_processors.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_utils.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_audio_utils.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_core.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_core.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_data_structures.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_data_structures.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_events.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_events.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_graphics.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_graphics.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_gui_basics.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_gui_basics.mm
+AMTransmissionEmulation/JuceLibraryCode/include_juce_gui_extra.cpp
+AMTransmissionEmulation/JuceLibraryCode/include_juce_gui_extra.mm
+AMTransmissionEmulation/JuceLibraryCode/JuceHeader.h
+AMTransmissionEmulation/JuceLibraryCode/JucePluginDefines.h
+AMTransmissionEmulation/JuceLibraryCode/ReadMe.txt
+PeakMute/Builds/VisualStudio2017/.vs/PeakMute/v15/.suo
+PeakMute/Builds/VisualStudio2017/.vs/PeakMute/v15/Browse.VC.db
+PeakMute/Builds/VisualStudio2017/.vs/PeakMute/v15/Solution.VC.db
+PeakMute/Builds/VisualStudio2017/PeakMute.sln
+PeakMute/Builds/VisualStudio2017/PeakMute_SharedCode.vcxproj
+PeakMute/Builds/VisualStudio2017/PeakMute_SharedCode.vcxproj.filters
+PeakMute/Builds/VisualStudio2017/PeakMute_StandalonePlugin.vcxproj
+PeakMute/Builds/VisualStudio2017/PeakMute_StandalonePlugin.vcxproj.filters
+PeakMute/Builds/VisualStudio2017/PeakMute_VST3.vcxproj
+PeakMute/Builds/VisualStudio2017/PeakMute_VST3.vcxproj.filters
+PeakMute/Builds/VisualStudio2017/PeakMute_VST3ManifestHelper.vcxproj
+PeakMute/Builds/VisualStudio2017/PeakMute_VST3ManifestHelper.vcxproj.filters
+PeakMute/Builds/VisualStudio2017/resources.rc
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/CL.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/CL.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/CL.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/Lib-link.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/Lib-link.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/Lib.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.591A7489.tlog/PeakMute_SharedCode.lastbuildstate
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.lib
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute.pdb
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PeakMute_SharedCode.log
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/CL.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/CL.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/CL.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/link.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/link.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/link.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/PeakMute_VST3ManifestHelper.lastbuildstate
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/rc.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/rc.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/rc.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/PeakMute_VST3ManifestHelper.log
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.dll
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.exp
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.ilk
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.lib
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.pdb
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.vst3/Contents/Resources/moduleinfo.json
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute.vst3/Contents/x86_64-win/PeakMute.vst3
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.log
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/CL.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/CL.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/CL.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/link.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/link.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/link.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/PeakMute_VST3.lastbuildstate
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/PeakMute_VST3.write.1u.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/rc.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/rc.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/PeakMute_VST3.tlog/rc.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/CL.10340.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/CL.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/CL.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/Lib-link.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/Lib-link.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/Lib.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/PeakMute_SharedCode.lastbuildstate
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.lib
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.pdb
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute_SharedCode.log
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/CL.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/CL.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/CL.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/link.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/link.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/link.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/PeakMute_VST3ManifestHelper.lastbuildstate
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/rc.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/rc.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute.9B3DDC9D.tlog/rc.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/PeakMute_VST3ManifestHelper.log
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.dll
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.exp
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.lib
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.pdb
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.vst3/Contents/Resources/moduleinfo.json
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.vst3/Contents/x86_64-win/PeakMute.vst3
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.log
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/CL.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/CL.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/CL.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/link.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/link.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/link.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/PeakMute_VST3.lastbuildstate
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/PeakMute_VST3.write.1u.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/rc.command.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/rc.read.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute_VST3.tlog/rc.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+PeakMute/JuceLibraryCode/include_juce_audio_basics.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_basics.mm
+PeakMute/JuceLibraryCode/include_juce_audio_devices.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_devices.mm
+PeakMute/JuceLibraryCode/include_juce_audio_formats.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_formats.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+PeakMute/JuceLibraryCode/include_juce_audio_processors.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_processors.mm
+PeakMute/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_utils.cpp
+PeakMute/JuceLibraryCode/include_juce_audio_utils.mm
+PeakMute/JuceLibraryCode/include_juce_core.cpp
+PeakMute/JuceLibraryCode/include_juce_core.mm
+PeakMute/JuceLibraryCode/include_juce_data_structures.cpp
+PeakMute/JuceLibraryCode/include_juce_data_structures.mm
+PeakMute/JuceLibraryCode/include_juce_events.cpp
+PeakMute/JuceLibraryCode/include_juce_events.mm
+PeakMute/JuceLibraryCode/include_juce_graphics.cpp
+PeakMute/JuceLibraryCode/include_juce_graphics.mm
+PeakMute/JuceLibraryCode/include_juce_gui_basics.cpp
+PeakMute/JuceLibraryCode/include_juce_gui_basics.mm
+PeakMute/JuceLibraryCode/include_juce_gui_extra.cpp
+PeakMute/JuceLibraryCode/include_juce_gui_extra.mm
+PeakMute/JuceLibraryCode/JuceHeader.h
+PeakMute/JuceLibraryCode/JucePluginDefines.h
+PeakMute/JuceLibraryCode/ReadMe.txt

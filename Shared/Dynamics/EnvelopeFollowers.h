@@ -50,10 +50,10 @@ public:
 	{
 		m_SampleRate = sampleRate;
 	}
-	void setCoef(T attackTimeMs, T releaseTimeMs)
+	void set(T attackTimeMs, T releaseTimeMs)
 	{
-		m_AttackCoef = exp(-1000.0 / (attackTimeMs * (T)m_SampleRate));
-		m_ReleaseCoef = exp(-1000.0 / (releaseTimeMs * (T)m_SampleRate));
+		m_AttackCoef = (T)exp((T)-1000.0 / (attackTimeMs * (T)m_SampleRate));
+		m_ReleaseCoef = (T)exp((T)-1000.0 / (releaseTimeMs * (T)m_SampleRate));
 	};
 
 protected:

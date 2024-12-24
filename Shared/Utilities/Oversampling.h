@@ -1,49 +1,89 @@
 #pragma once
 
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/HighOrderBiquadFilter.h"
 
 class Oversampling
 {
 public:
 	Oversampling() {};
 
-	void init(int sampleRate, int oversample, int samples)
+	inline void init(const int sampleRate, const int oversamplingRation, const int samples)
 	{
+		// Set oversample buffer
+		if (m_oversampleBuffer != nullptr)
+		{
+			clearBuffer();
+		}
+		
+		m_oversampleSamples = oversamplingRation * samples;
+		m_oversampleBuffer = new float[m_oversampleSamples];
+		memset(m_oversampleBuffer, 0, m_oversampleSamples * sizeof(float));
+
 		// Set oversample filter
-		const int oversampleSampleRate = oversample * sampleRate;
-		m_oversampleFilter.init(oversampleSampleRate);
-		m_oversampleFilter.setLowPass((0.9f * 0.5f) * (float)sampleRate, 0.7f);
+		m_oversampleSampleRate = oversamplingRation * sampleRate;
+		m_oversampleFilter.init(m_oversampleSampleRate);
+		m_oversampleFilter.set((0.8f * 0.5f) * (float)sampleRate);
 
 		// Set downsample filter
-		m_downsampleFilter.init(oversampleSampleRate);
-		m_downsampleFilter.setLowPass((0.9f * 0.5f) * (float)oversampleSampleRate, 0.7f);
+		m_downsampleFilter.init(m_oversampleSampleRate);
+		m_downsampleFilter.set((0.8f * 0.5f) * (float)sampleRate);
 		
-		m_oversample = oversample;
+		m_oversamplingRatio = oversamplingRation;
 		m_samples = samples;
 	}
-
-	void Oversample(float* inputBuffer, float* oversampeledBuffer)
+	// oversampeledBuffer has to be filled with zeros
+	inline void oversample(float* inputBuffer)
 	{
-		for (int i = 0; i < m_samples; i++)
+		/*int sampleOversample = 0;
+		for (int sample = 0; sample < m_samples; sample++)
 		{
-			const int index = 2 * i;
-			oversampeledBuffer[index] = m_oversampleFilter.processDF1(2.0f * inputBuffer[i]);
-			oversampeledBuffer[index + 1] = m_oversampleFilter.processDF1(0.0f);
+			m_oversampleBuffer[sampleOversample] = inputBuffer[sample];
+			sampleOversample += m_oversamplingRatio;
+		}*/
+
+		for (int sample = 0; sample < m_oversampleSamples; sample++)
+		{
+			const float in = (sample % m_oversamplingRatio == 0) ? inputBuffer[sample / m_oversamplingRatio] : 0.0f;
+
+			//m_oversampleBuffer[sample] = m_oversampleFilter.process(m_oversampleBuffer[sample]);
+			m_oversampleBuffer[sample] = m_oversampleFilter.process(in);
 		}
 	};
-	void Downsample(float* oversampeledBuffer, float* downsampeledBuffer)
+	inline void downsample(float* outputBuffer)
 	{
-		for (int i = 0; i < m_samples; i++)
+		for (int sample = 0; sample < m_oversampleSamples; sample++)
 		{
-			const int index = 2 * i;
-			downsampeledBuffer[i] = m_downsampleFilter.processDF1(oversampeledBuffer[index]);
-			m_downsampleFilter.processDF1(oversampeledBuffer[index + 1]);
+			m_oversampleBuffer[sample] = m_downsampleFilter.process(m_oversampleBuffer[sample]);
+		}
+
+		int sampleOversample = 0;
+		for (int sample = 0; sample < m_samples; sample++)
+		{
+			outputBuffer[sample] = m_oversamplingRatio * m_oversampleBuffer[sampleOversample];
+			sampleOversample += m_oversamplingRatio;
 		}
 	};
+	inline void release()
+	{
+		clearBuffer();
+	}
+	inline float* getOversampeBuffer()
+	{
+		return m_oversampleBuffer;
+	}
 
-protected:
-	BiquadFilter m_oversampleFilter;
-	BiquadFilter m_downsampleFilter;
-	int m_oversample = 2;
+private:
+	inline void clearBuffer()
+	{
+		delete[] m_oversampleBuffer;
+		m_oversampleBuffer = nullptr;
+	};
+
+	EighthOrderLowPassFilter m_oversampleFilter;
+	EighthOrderLowPassFilter m_downsampleFilter;
+	float* m_oversampleBuffer = nullptr	;
+	int m_oversamplingRatio = 2;
+	int m_oversampleSampleRate = 48000;
 	int m_samples = 0;
+	int m_oversampleSamples = 0;
 };
