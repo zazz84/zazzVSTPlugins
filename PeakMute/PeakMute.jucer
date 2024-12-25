@@ -5,7 +5,8 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Tools">
   <MAINGROUP id="zE1MJv" name="PeakMute">
     <GROUP id="{82216900-F896-CA7C-4E15-C2271BEFE662}" name="Source">
-      <FILE id="Kxng7l" name="PeakDetector.h" compile="0" resource="0" file="../Shared/Dynamics/PeakDetector.h"/>
+      <FILE id="bgUrXh" name="SinOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SinOscillator.h"/>
+      <FILE id="sB8QWo" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
       <FILE id="jeATRP" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="NFAwmO" name="ZazzLookAndFeel.h" compile="0" resource="0"

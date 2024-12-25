@@ -13,8 +13,8 @@
 
 //==============================================================================
 
-const std::string PeakMuteAudioProcessor::paramsNames[] = { "Threshold", "Attenuate", "Recovery", "Volume" };
-const std::string PeakMuteAudioProcessor::paramsUnitNames[] = { " dB", " dB", " ms", " dB" };
+const std::string PeakMuteAudioProcessor::paramsNames[] = { "Threshold", "Attenuate", "Recovery", "Warning", "Volume" };
+const std::string PeakMuteAudioProcessor::paramsUnitNames[] = { " dB", " dB", " ms", " dB", " dB" };
 
 //==============================================================================
 PeakMuteAudioProcessor::PeakMuteAudioProcessor()
@@ -32,7 +32,8 @@ PeakMuteAudioProcessor::PeakMuteAudioProcessor()
 	thresholdParameter = apvts.getRawParameterValue(paramsNames[0]);
 	attenuateParameter = apvts.getRawParameterValue(paramsNames[1]);
 	recoveryParameter  = apvts.getRawParameterValue(paramsNames[2]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[3]);
+	warningParameter   = apvts.getRawParameterValue(paramsNames[3]);
+	volumeParameter    = apvts.getRawParameterValue(paramsNames[4]);
 }
 
 PeakMuteAudioProcessor::~PeakMuteAudioProcessor()
@@ -106,8 +107,14 @@ void PeakMuteAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
 {
 	const int sr = (int)sampleRate;
 
-	m_peakDetector[0].init(sr);
-	m_peakDetector[1].init(sr);
+	m_envelope[0].init(sr);
+	m_envelope[1].init(sr);
+
+	m_oscillator[0].init(sr);
+	m_oscillator[1].init(sr);
+
+	m_oscillator[0].set(1000.0f);
+	m_oscillator[1].set(1000.0f);
 }
 
 void PeakMuteAudioProcessor::releaseResources()
@@ -149,6 +156,7 @@ void PeakMuteAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 		const auto threshold = juce::Decibels::decibelsToGain(thresholdParameter->load());
 		const auto attenuate = (attenuateParameter->load() == -60.0) ? 0.0f : juce::Decibels::decibelsToGain(attenuateParameter->load());
 		const auto recovery = recoveryParameter->load();
+		const auto warningGain = (warningParameter->load() == -60.0) ? 0.0f : juce::Decibels::decibelsToGain(warningParameter->load());
 		const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 		// Mics constants
@@ -160,25 +168,45 @@ void PeakMuteAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 			// Channel pointer
 			auto* channelBuffer = buffer.getWritePointer(channel);
 
-			//Filters references
-			auto& peakDetector = m_peakDetector[channel];
-			peakDetector.set(recovery);
+			//Setup
+			auto& envelope = m_envelope[channel];
+			auto& oscillator = m_oscillator[channel];
+			envelope.set(0.05f * recovery, 0.9 * recovery, 0.05f * recovery);
 
 			for (int sample = 0; sample < samples; sample++)
 			{
 				// Read
 				const float in = channelBuffer[sample];
 
-				float inPeakDetector = 0.0f;
-				if (in > threshold || in < -threshold)
+				if (envelope.finnished())
 				{
-					inPeakDetector = 1.0f;
+					if (in > threshold || in < -threshold)
+					{
+						envelope.reset();
+
+						// Limit output
+						const float envelopeGain = envelope.process();
+						const float limiterThreshold = std::fmaxf(attenuate, threshold * (1.0f - envelopeGain));
+						const float oscillatorGain = envelopeGain * warningGain;
+						channelBuffer[sample] = Clippers::HardClip(in, limiterThreshold) + oscillatorGain * oscillator.process();
+					}
 				}
+				else
+				{
+					if (in > threshold || in < -threshold)
+					{
+						if (envelope.attackFinnished())
+						{
+							envelope.resetSustain();
+						}
+					}
 
-				const float outPeakDetector = peakDetector.process(inPeakDetector);
-
-				//Out
-				channelBuffer[sample] = in * (attenuate + (1.0f - attenuate) * (1.0f - outPeakDetector));
+					// Limit output
+					const float envelopeGain = envelope.process();
+					const float limiterThreshold = std::fmaxf(attenuate, threshold * (1.0f - envelopeGain));
+					const float oscillatorGain = envelopeGain * warningGain;
+					channelBuffer[sample] = Clippers::HardClip(in, limiterThreshold) + oscillatorGain * oscillator.process();
+				}
 			}
 		}
 
@@ -223,7 +251,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout PeakMuteAudioProcessor::crea
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -24.0f, 24.0f, 1.0f, 1.0f), 0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -60.0f, 0.0f, 1.0f, 1.0f), -60.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(  10.0f, 1000.0f, 1.0f, 0.6f), 300.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -60.0f, 0.0f, 1.0f, 1.0f), -60.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f, 18.0f, 1.0f, 1.0f), 0.0f));
 
 	return layout;
 }

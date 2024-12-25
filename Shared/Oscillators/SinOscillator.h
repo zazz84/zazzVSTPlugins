@@ -1,5 +1,7 @@
 #pragma once
 
+#define M_PI 3.14159265358979f
+
 class SinOscillator
 {
 public:
@@ -11,17 +13,18 @@ public:
 	}
 	inline void set(float frequency)
 	{
-		m_step = (2.0f * 3.141592f) * frequency / (float)m_sampleRate;
+		m_step =  (2.0f * M_PI) * frequency / (float)m_sampleRate;
 	}
 	inline float process()
 	{
 		m_phase += m_step;
-		if (m_phase >= 6.283185f)
+		
+		if (m_phase >= (2.0f * M_PI))
 		{
-			m_phase -= 6.283185f;
+			m_phase -= (2.0f * M_PI);
 		}
 
-		return 2.0f * sinf(m_phase) - 1.0f;
+		return std::sinf(m_phase);
 	}
 	inline void release()
 	{

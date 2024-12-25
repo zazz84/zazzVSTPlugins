@@ -5663,3 +5663,9 @@ AMTransmitterEmulation/JuceLibraryCode/include_juce_gui_extra.mm
 AMTransmitterEmulation/JuceLibraryCode/JuceHeader.h
 AMTransmitterEmulation/JuceLibraryCode/JucePluginDefines.h
 AMTransmitterEmulation/JuceLibraryCode/ReadMe.txt
+PeakMute/Builds/VisualStudio2017/PeakMute_SharedCode.vcxproj.user
+PeakMute/Builds/VisualStudio2017/PeakMute_VST3.vcxproj.user
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/CL.write.1.tlog
+PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.Build.CppClean.log
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.Build.CppClean.log
+PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.Build.CppClean.log
