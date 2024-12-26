@@ -5669,3 +5669,184 @@ PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.591A7489.tlog/
 PeakMute/Builds/VisualStudio2017/x64/Release/Shared Code/PeakMute.Build.CppClean.log
 PeakMute/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.Build.CppClean.log
 PeakMute/Builds/VisualStudio2017/x64/Release/VST3/PeakMute.Build.CppClean.log
+De-harsh/Builds/VisualStudio2017/.vs/De-harsh/v15/.suo
+De-harsh/Builds/VisualStudio2017/.vs/De-harsh/v15/Browse.VC.db
+De-harsh/Builds/VisualStudio2017/.vs/De-harsh/v15/Solution.VC.db
+De-harsh/Builds/VisualStudio2017/De-harsh.sln
+De-harsh/Builds/VisualStudio2017/De-harsh_SharedCode.vcxproj
+De-harsh/Builds/VisualStudio2017/De-harsh_SharedCode.vcxproj.filters
+De-harsh/Builds/VisualStudio2017/De-harsh_StandalonePlugin.vcxproj
+De-harsh/Builds/VisualStudio2017/De-harsh_StandalonePlugin.vcxproj.filters
+De-harsh/Builds/VisualStudio2017/De-harsh_VST3.vcxproj
+De-harsh/Builds/VisualStudio2017/De-harsh_VST3.vcxproj.filters
+De-harsh/Builds/VisualStudio2017/De-harsh_VST3ManifestHelper.vcxproj
+De-harsh/Builds/VisualStudio2017/De-harsh_VST3ManifestHelper.vcxproj.filters
+De-harsh/Builds/VisualStudio2017/resources.rc
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/CL.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/CL.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/CL.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/De-harsh_SharedCode.lastbuildstate
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/Lib-link.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/Lib-link.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.4E607F99.tlog/Lib.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.lib
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh.pdb
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/De-harsh_SharedCode.log
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/CL.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/CL.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/CL.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/De-harsh_VST3ManifestHelper.lastbuildstate
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/link.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/link.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/link.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/rc.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/rc.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/rc.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/De-harsh_VST3ManifestHelper.log
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.dll
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.exp
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.ilk
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.lib
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.pdb
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.vst3/Contents/Resources/moduleinfo.json
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh.vst3/Contents/x86_64-win/De-harsh.vst3
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.log
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/CL.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/CL.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/CL.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/De-harsh_VST3.lastbuildstate
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/De-harsh_VST3.write.1u.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/link.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/link.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/link.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/rc.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/rc.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/De-harsh_VST3.tlog/rc.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+De-harsh/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/CL.11336.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/CL.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/CL.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/De-harsh_SharedCode.lastbuildstate
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/Lib-link.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/Lib-link.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.4E607F99.tlog/Lib.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.lib
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh.pdb
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/De-harsh_SharedCode.log
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/CL.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/CL.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/CL.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/De-harsh_VST3ManifestHelper.lastbuildstate
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/link.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/link.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/link.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/rc.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/rc.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh.8485FDFD.tlog/rc.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/De-harsh_VST3ManifestHelper.log
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh.dll
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh.exp
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh.lib
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh.pdb
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh.vst3/Contents/Resources/moduleinfo.json
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh.vst3/Contents/x86_64-win/De-harsh.vst3
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.log
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/CL.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/CL.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/CL.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/De-harsh_VST3.lastbuildstate
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/De-harsh_VST3.write.1u.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/link.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/link.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/link.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/rc.command.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/rc.read.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/De-harsh_VST3.tlog/rc.write.1.tlog
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+De-harsh/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+De-harsh/JuceLibraryCode/include_juce_audio_basics.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_basics.mm
+De-harsh/JuceLibraryCode/include_juce_audio_devices.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_devices.mm
+De-harsh/JuceLibraryCode/include_juce_audio_formats.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_formats.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+De-harsh/JuceLibraryCode/include_juce_audio_processors.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_processors.mm
+De-harsh/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_utils.cpp
+De-harsh/JuceLibraryCode/include_juce_audio_utils.mm
+De-harsh/JuceLibraryCode/include_juce_core.cpp
+De-harsh/JuceLibraryCode/include_juce_core.mm
+De-harsh/JuceLibraryCode/include_juce_data_structures.cpp
+De-harsh/JuceLibraryCode/include_juce_data_structures.mm
+De-harsh/JuceLibraryCode/include_juce_events.cpp
+De-harsh/JuceLibraryCode/include_juce_events.mm
+De-harsh/JuceLibraryCode/include_juce_graphics.cpp
+De-harsh/JuceLibraryCode/include_juce_graphics.mm
+De-harsh/JuceLibraryCode/include_juce_gui_basics.cpp
+De-harsh/JuceLibraryCode/include_juce_gui_basics.mm
+De-harsh/JuceLibraryCode/include_juce_gui_extra.cpp
+De-harsh/JuceLibraryCode/include_juce_gui_extra.mm
+De-harsh/JuceLibraryCode/JuceHeader.h
+De-harsh/JuceLibraryCode/JucePluginDefines.h
+De-harsh/JuceLibraryCode/ReadMe.txt
