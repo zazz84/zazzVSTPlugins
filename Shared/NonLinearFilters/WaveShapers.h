@@ -45,7 +45,7 @@ public:
 
 	inline static float Atan(float in, float drive)
 	{
-		constexpr float factor = 1.0f / (0.5f * 3.141592);
+		constexpr float factor = 1.0f / (0.5f * 3.141592f);
 		return factor * std::atanf(1.7f * drive * in);
 	}
 
@@ -185,7 +185,7 @@ public:
 	};
 
 private:
-	EnvelopeFollower m_envelopeShaper;
+	DecoupeledEnvelopeFollower<float> m_envelopeShaper;
 	BiquadFilter m_hightPassFilter;
 	float m_driveExponent = 1.0f;
 	float m_asymetry = 0.0f;
@@ -223,7 +223,7 @@ public:
 	};
 
 private:
-	EnvelopeFollower m_envelopeShaper;
+	DecoupeledEnvelopeFollower<float> m_envelopeShaper;
 	BiquadFilter m_hightPassFilter;
 	float m_drive = 0.0f;
 	float m_asymetry = 0.0f;
@@ -394,12 +394,12 @@ public:
 	void set(float shape)
 	{
 		// Input range
-		const float inputMin = -1.0;
-		const float  inputMax = 1.0;
+		const float inputMin = -1.0f;
+		const float  inputMax = 1.0f;
 
 		// Output range
-		const float  outputMin = 1.8;
-		const float  outputMax = 0.8;
+		const float  outputMin = 1.8f;
+		const float  outputMax = 0.8f;
 
 		// Interpolation formula
 		m_shape = outputMin + (shape - inputMin) * (outputMax - outputMin) / (inputMax - inputMin);
@@ -445,7 +445,7 @@ public:
 		m_A = shape + 1.5f;
 		m_B = -(shape + shape);
 		m_C = shape - 0.5f;
-		m_D = 0.0625f - shape * 0.25 + shape * shape * 0.0025f;
+		m_D = 0.0625f - shape * 0.25f + shape * shape * 0.0025f;
 	}
 
 	float process(float in)

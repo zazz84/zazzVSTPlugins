@@ -6039,3 +6039,6 @@ EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.v
 EnvelopeDistortion/JuceLibraryCode/JuceHeader.h
 EnvelopeDistortion/JuceLibraryCode/JucePluginDefines.h
 EnvelopeDistortion/JuceLibraryCode/ReadMe.txt
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Browse.VC.opendb
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Solution.VC.db-shm
+Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Solution.VC.db-wal

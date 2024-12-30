@@ -344,8 +344,8 @@ void SlewCompressor::set(float thresholddB, float ratio, float kneeWidth, float 
 	m_W2_inv = 1.0f / (kneeWidth * 2.0f);
 
 	// Set envelope followers
-	m_envelopeFollowerLinear.setCoef(2.2f * attackTimeMS, 3.5f * releaseTimeMS);
-	m_envelopeFollowerLog.setCoef(0.1f * attackTimeMS, 0.2f * releaseTimeMS);
+	m_envelopeFollowerLinear.set(2.2f * attackTimeMS, 3.5f * releaseTimeMS);
+	m_envelopeFollowerLog.set(0.1f * attackTimeMS, 0.2f * releaseTimeMS);
 }
 
 float SlewCompressor::processHardKneeLinPeak(float in)
@@ -478,8 +478,8 @@ void OptoCompressor::set(float thresholddB, float ratio, float kneeWidth, float 
 	m_W2_inv = 1.0f / (kneeWidth * 2.0f);
 
 	// Set envelope followers
-	m_envelopeFollowerLinear.setCoef(attackTimeMS, releaseTimeMS);
-	m_envelopeFollowerLog.setCoef(attackTimeMS, releaseTimeMS);
+	m_envelopeFollowerLinear.set(attackTimeMS, releaseTimeMS);
+	m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
 }
 
 float OptoCompressor::processHardKneeLinPeak(float in)

@@ -1,6 +1,9 @@
 #pragma once
 
+#include <array>
+
 #include <JuceHeader.h>
+
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Compressors.h"
 
 //==============================================================================
@@ -16,6 +19,7 @@ public:
     ~CompressorAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const int N_CHANNELS = 2;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -57,6 +61,10 @@ public:
 
 private:	
 	//==============================================================================
+	std::array<Compressor, N_CHANNELS> m_compressor;
+	std::array<SlewCompressor, N_CHANNELS> m_slewCompressor;
+	std::array<OptoCompressor, N_CHANNELS> m_optoCompressor;
+	std::array<DualCompressor, N_CHANNELS> m_dualCompressor;
 
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
@@ -73,11 +81,6 @@ private:
 	juce::AudioParameterBool* button6Parameter = nullptr;
 	juce::AudioParameterBool* button7Parameter = nullptr;
 	juce::AudioParameterBool* button8Parameter = nullptr;
-
-	Compressor m_compressor[2] = {};
-	SlewCompressor m_slewCompressor[2] = {};
-	OptoCompressor m_optoCompressor[2] = {};
-	DualCompressor m_dualCompressor[2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CompressorAudioProcessor)
 };

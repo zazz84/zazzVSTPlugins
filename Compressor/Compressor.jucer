@@ -2,22 +2,19 @@
 
 <JUCERPROJECT id="F9vseH" name="Compressor" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
+              version="1.1.1">
   <MAINGROUP id="CmjmdB" name="Compressor">
     <GROUP id="{D20D41EA-EDA5-188B-BC6B-62FA9976F1CD}" name="Source">
       <FILE id="TYm242" name="ZazzAudioProcessorEditor_OLD.h" compile="0"
             resource="0" file="../Shared/GUI/ZazzAudioProcessorEditor_OLD.h"/>
       <FILE id="TZfceU" name="ZazzLookAndFeel_OLD.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzLookAndFeel_OLD.h"/>
-      <FILE id="KQD6Ax" name="CircularBuffers.cpp" compile="1" resource="0"
-            file="../Shared/Utilities/CircularBuffers.cpp"/>
       <FILE id="Du5GWu" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="n4xDJ2" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="iWfQ7j" name="Compressors.cpp" compile="1" resource="0" file="../Shared/Dynamics/Compressors.cpp"/>
       <FILE id="ymMLBi" name="Compressors.h" compile="0" resource="0" file="../Shared/Dynamics/Compressors.h"/>
-      <FILE id="jSM7Gf" name="EnvelopeFollowers.cpp" compile="1" resource="0"
-            file="../Shared/Dynamics/EnvelopeFollowers.cpp"/>
       <FILE id="Fts7wm" name="EnvelopeFollowers.h" compile="0" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
       <FILE id="YMEtaK" name="PluginProcessor.cpp" compile="1" resource="0"

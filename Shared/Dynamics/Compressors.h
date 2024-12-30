@@ -27,7 +27,7 @@ public:
 	float processSoftKneeLinPeak(float in);
 
 protected:
-	EnvelopeFollower m_envelopeFollower;
+	DecoupeledEnvelopeFollower<float> m_envelopeFollower;
 	RMSBuffer m_circularBuffer;
 	float m_thresholddB = 0.0f;
 	float m_threshold = 1.0f;
@@ -99,7 +99,7 @@ public:
 	float processHardKnee(float in);
 
 protected:
-	EnvelopeFollower m_envelopeFollower;
+	DecoupeledEnvelopeFollower<float> m_envelopeFollower;
 	BiquadFilter m_lowPassFilter;
 	BiquadFilter m_highPassFilter;
 	float m_thresholddB = 0.0f;
@@ -168,8 +168,8 @@ public:
 	float processSoftKnee(float in);
 
 protected:
-	SlewEnvelopeFollower m_envelopeFollowerLog;
-	SlewEnvelopeFollower m_envelopeFollowerLinear;
+	SlewEnvelopeFollower<float> m_envelopeFollowerLog;
+	SlewEnvelopeFollower<float> m_envelopeFollowerLinear;
 	RMSBuffer m_circularBuffer;
 	float m_thresholddB = 0.0f;
 	float m_threshold = 1.0f;
@@ -209,8 +209,8 @@ public:
 	float processSoftKnee(float in);
 
 protected:
-	OptoEnvelopeFollower m_envelopeFollowerLog;
-	OptoEnvelopeFollower m_envelopeFollowerLinear;
+	OptoEnvelopeFollower<float> m_envelopeFollowerLog;
+	OptoEnvelopeFollower<float> m_envelopeFollowerLinear;
 	RMSBuffer m_RMSBuffer;
 	float m_thresholddB = 0.0f;
 	float m_threshold = 1.0f;
@@ -250,8 +250,8 @@ public:
 	float processSoftKnee(float in);
 
 protected:
-	DualEnvelopeFollower m_envelopeFollowerLog;
-	DualEnvelopeFollower m_envelopeFollowerLinear;
+	DualEnvelopeFollower<float> m_envelopeFollowerLog;
+	DualEnvelopeFollower<float> m_envelopeFollowerLinear;
 	RMSBuffer m_RMSBuffer;
 	float m_thresholddB = 0.0f;
 	float m_threshold = 1.0f;
