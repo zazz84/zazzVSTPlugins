@@ -14,19 +14,19 @@ public:
 
 	inline void init(const int sampleRate)
 	{
-		m_SampleRate = sampleRate;
+		m_sampleRate = sampleRate;
 	}
-	void set(T attackTimeMs, T releaseTimeMs)
+	inline void set(const T attackTimeMs, const T releaseTimeMs)
 	{
-		m_AttackCoef = exp(T(-1000.0) / (attackTimeMs * static_cast<T>(m_SampleRate)));
-		m_ReleaseCoef = exp(T(-1000.0) / (releaseTimeMs * static_cast<T>(m_SampleRate)));
+		m_attackCoef = exp(T(-1000.0) / (attackTimeMs * static_cast<T>(m_sampleRate)));
+		m_releaseCoef = exp(T(-1000.0) / (releaseTimeMs * static_cast<T>(m_sampleRate)));
 	};
 
 protected:
-	int  m_SampleRate = 48000;
-	T m_AttackCoef = T(0.0);
-	T m_ReleaseCoef = T(0.0);
-	T m_OutLast = T(0.0);
+	T m_attackCoef = T(0.0);
+	T m_releaseCoef = T(0.0);
+	T m_outLast = T(0.0);
+	int m_sampleRate = 48000;
 };
 
 //==============================================================================
@@ -40,9 +40,9 @@ public:
 	T process(T in)
 	{
 		const auto inAbs = std::abs(in);
-		const auto coef = (inAbs > m_OutLast) ? m_AttackCoef : m_ReleaseCoef;
+		const auto coef = (inAbs > m_outLast) ? m_attackCoef : m_releaseCoef;
 
-		return m_OutLast = inAbs + coef * (m_OutLast - inAbs);
+		return m_outLast = inAbs + coef * (m_outLast - inAbs);
 	};
 };
 
@@ -57,13 +57,76 @@ public:
 	T process(T in)
 	{
 		const T inAbs = std::abs(in);
-		m_OutReleaseLast = std::max(inAbs, inAbs + m_ReleaseCoef * (m_OutReleaseLast - inAbs));
+		m_OutReleaseLast = std::max(inAbs, inAbs + m_releaseCoef * (m_OutReleaseLast - inAbs));
 		
-		return m_OutLast = m_OutReleaseLast + m_AttackCoef * (m_OutLast - m_OutReleaseLast);
+		return m_outLast = m_OutReleaseLast + m_attackCoef * (m_outLast - m_OutReleaseLast);
 	};
 
 private:
 	T m_OutReleaseLast = T(0.0);
+};
+
+//==============================================================================
+template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+class HoldEnvelopeFollower
+{
+public:
+	HoldEnvelopeFollower() = default;
+	~HoldEnvelopeFollower() = default;
+
+	inline void init(const int sampleRate)
+	{
+		m_sampleRate = sampleRate;
+	}
+	inline void set(const T attackTimeMS, const T releaseTimeMS, const T holdTimeMS)
+	{
+		m_attackCoef = exp(T(-1000.0) / (attackTimeMS * static_cast<T>(m_sampleRate)));
+		m_releaseCoef = exp(T(-1000.0) / (releaseTimeMS * static_cast<T>(m_sampleRate)));
+
+		m_holdTimeSamples = static_cast<int>(T(0.001) * holdTimeMS * static_cast<T>(m_sampleRate));
+	};
+	inline void setHoldTime(const T holdTimeMS)
+	{
+		m_holdTimeSamples = static_cast<int>(T(0.001) * holdTimeMS * static_cast<T>(m_sampleRate));
+	}
+	inline void setHoldTimeSamples(const int holdTimeSamples)
+	{
+		m_holdTimeSamples = holdTimeSamples;
+	}
+
+	T process(T in)
+	{
+		const T inRectified = std::abs(in);
+
+		// Branching logic
+		if (inRectified > m_outLast)
+		{
+			m_outLast = m_attackCoef * (m_outLast - inRectified) + inRectified;
+			m_holdCounter = m_holdTimeSamples; // Reset hold counter
+		}
+		else
+		{
+			if (m_holdCounter > 0)
+			{
+				m_holdCounter--; // Hold the envelope
+			}
+			else
+			{
+				m_outLast = m_releaseCoef * (m_outLast - inRectified) + inRectified;
+			}
+		}
+
+		return m_outLast;
+
+	};
+
+protected:
+	T m_attackCoef = T(0.0);
+	T m_releaseCoef = T(0.0);
+	T m_outLast = T(0.0);
+	int m_sampleRate = 48000;
+	int m_holdTimeSamples = 0;
+	int m_holdCounter = 0;
 };
 
 //==============================================================================
@@ -76,12 +139,12 @@ public:
 
 	inline void init(const int sampleRate)
 	{
-		m_SampleRate = sampleRate;
+		m_sampleRate = sampleRate;
 	}
 	inline void set(T attackTimeMs, T releaseTimeMs, T range = T(1.0))
 	{
-		m_AttackCoef = T(1000.0) / (attackTimeMs * static_cast<T>(m_SampleRate) * m_Range);
-		m_ReleaseCoef = T(1000.0) / (releaseTimeMs * static_cast<T>(m_SampleRate) * m_Range);
+		m_attackCoef = T(1000.0) / (attackTimeMs * static_cast<T>(m_sampleRate) * m_Range);
+		m_releaseCoef = T(1000.0) / (releaseTimeMs * static_cast<T>(m_sampleRate) * m_Range);
 
 		m_Range = range;
 	}
@@ -89,24 +152,24 @@ public:
 	{
 		const T inAbs = std::abs(in);
 
-		if (inAbs > m_OutLast)
+		if (inAbs > m_outLast)
 		{
-			const T step = std::min(inAbs - m_OutLast, m_AttackCoef);
-			return m_OutLast += step;
+			const T step = std::min(inAbs - m_outLast, m_attackCoef);
+			return m_outLast += step;
 		}
 		else
 		{
-			const T step = std::min(m_OutLast - inAbs, m_ReleaseCoef);
-			return m_OutLast -= step;
+			const T step = std::min(m_outLast - inAbs, m_releaseCoef);
+			return m_outLast -= step;
 		}
 	}
 
 protected:
-	int  m_SampleRate = 48000;
-	T m_AttackCoef = T(0.0);
-	T m_ReleaseCoef = T(0.0);
-	T m_OutLast = T(0.0);
+	T m_attackCoef = T(0.0);
+	T m_releaseCoef = T(0.0);
+	T m_outLast = T(0.0);
 	T m_Range = T(1.0);
+	int m_sampleRate = 48000;
 };
 
 //==============================================================================
@@ -119,42 +182,41 @@ public:
 
 	inline void init(const int sampleRate)
 	{
-		m_SampleRate = sampleRate;
+		m_sampleRate = sampleRate;
 	}
 	inline void set(T attackTimeMs, T releaseTimeMs)
 	{
-		m_AttackTime = attackTimeMs;
-		m_ReleaseTime = releaseTimeMs;
+		m_attackTime = attackTimeMs;
+		m_releaseTime = releaseTimeMs;
 	};
 	inline T process(T in)
 	{
 		updateCoef();
 
 		const T inAbs = std::abs(in);
-		m_Out1Last = std::max(inAbs, m_ReleaseCoef * m_Out1Last + (static_cast<T>(1.0) - m_ReleaseCoef) * inAbs);
+		m_out1Last = std::max(inAbs, m_releaseCoef * m_out1Last + (static_cast<T>(1.0) - m_releaseCoef) * inAbs);
 		
-		return m_OutLast = m_AttackCoef * (m_OutLast - m_Out1Last) + m_Out1Last;
+		return m_outLast = m_attackCoef * (m_outLast - m_out1Last) + m_out1Last;
 	};
 
 protected:
 	void updateCoef()
 	{
 		// Attack and release time gets shorter with increasing gain reduction
-		const T attackTimeMs = m_AttackTime * (T(3.0) / (m_OutLast + T(3.0)));
-		const T releaseTimeMs = m_ReleaseTime * (T(2.5) / (m_OutLast + T(2.5)));
+		const T attackTimeMs = m_attackTime * (T(3.0) / (m_outLast + T(3.0)));
+		const T releaseTimeMs = m_releaseTime * (T(2.5) / (m_outLast + T(2.5)));
 
-		m_AttackCoef = exp(T(-1000.0) / (attackTimeMs * static_cast<T>(m_SampleRate)));
-		m_ReleaseCoef = exp(T(-1000.0) / (releaseTimeMs * static_cast<T>(m_SampleRate)));
+		m_attackCoef = exp(T(-1000.0) / (attackTimeMs * static_cast<T>(m_sampleRate)));
+		m_releaseCoef = exp(T(-1000.0) / (releaseTimeMs * static_cast<T>(m_sampleRate)));
 	};
 
-	int  m_SampleRate = 48000;
-	T m_AttackCoef = T(0.0);
-	T m_ReleaseCoef = T(0.0);
-	T m_AttackTime = T(0.0);
-	T m_ReleaseTime = T(0.0);
-
-	T m_OutLast = T(0.0);
-	T m_Out1Last = T(0.0);
+	T m_attackCoef = T(0.0);
+	T m_releaseCoef = T(0.0);
+	T m_attackTime = T(0.0);
+	T m_releaseTime = T(0.0);
+	T m_outLast = T(0.0);
+	T m_out1Last = T(0.0);
+	int  m_sampleRate = 48000;
 };
 
 //==============================================================================
@@ -167,16 +229,16 @@ public:
 
 	inline void init(const int sampleRate)
 	{
-		m_FilterFast.init(sampleRate);
-		m_FilterSlow.init(sampleRate);
+		m_filterFast.init(sampleRate);
+		m_filterSlow.init(sampleRate);
 	};
-	inline void setCoef(const T attackTimeMs, const T releaseTimeMs)
+	inline void set(const T attackTimeMs, const T releaseTimeMs)
 	{
-		m_AttackTime = attackTimeMs;
-		m_ReleaseTime = releaseTimeMs;
+		m_attackTime = attackTimeMs;
+		m_releaseTime = releaseTimeMs;
 		
-		m_FilterFast.set(attackTimeMs, releaseTimeMs);
-		m_FilterSlow.set(static_cast<T>(150.0), static_cast<T>(600.0));
+		m_filterFast.set(attackTimeMs, releaseTimeMs);
+		m_filterSlow.set(static_cast<T>(150.0), static_cast<T>(600.0));
 	};
 	inline void setThreshold(const T threshold)
 	{ 
@@ -201,22 +263,20 @@ public:
 		}
 
 		// Adjust attacka and release time
-		const T diff = std::abs(in - m_OutLast);
+		const T diff = std::abs(in - m_outLast);
 		const T timeFactor = T(1.0) + T(0.15) * (diff - T(4.0));
-		m_FilterFast.set(timeFactor * m_AttackTime, timeFactor * m_ReleaseTime);
+		m_filterFast.set(timeFactor * m_attackTime, timeFactor * m_releaseTime);
 
-		return m_OutLast = m_FilterFast.process(inAbsFilterFast) + m_FilterSlow.process(inAbsFilterSlow);
+		return m_outLast = m_filterFast.process(inAbsFilterFast) + m_filterSlow.process(inAbsFilterSlow);
 	};
 
 protected:
-	BranchingEnvelopeFollower<T> m_FilterFast;
-	BranchingEnvelopeFollower<T> m_FilterSlow;
+	BranchingEnvelopeFollower<T> m_filterFast;
+	BranchingEnvelopeFollower<T> m_filterSlow;
 	T m_Threshold = T(6.0);
-
-	T m_AttackTime = T(0.0f);
-	T m_ReleaseTime = T(0.0);
-
-	T m_OutLast = T(0.0);
+	T m_attackTime = T(0.0f);
+	T m_releaseTime = T(0.0);
+	T m_outLast = T(0.0);
 };
 
 //==============================================================================
@@ -266,6 +326,5 @@ public:
 private:
 	BranchingEnvelopeFollower<T> m_inputEnvelopeFollower;
 	BranchingEnvelopeFollower<T> m_outputEnvelopeFollower;
-
 	T m_dynamics = T(0.0);
 };

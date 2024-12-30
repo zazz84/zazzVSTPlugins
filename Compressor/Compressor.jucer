@@ -12,7 +12,6 @@
             file="../Shared/GUI/ZazzLookAndFeel_OLD.h"/>
       <FILE id="Du5GWu" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
-      <FILE id="n4xDJ2" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="iWfQ7j" name="Compressors.cpp" compile="1" resource="0" file="../Shared/Dynamics/Compressors.cpp"/>
       <FILE id="ymMLBi" name="Compressors.h" compile="0" resource="0" file="../Shared/Dynamics/Compressors.h"/>
       <FILE id="Fts7wm" name="EnvelopeFollowers.h" compile="0" resource="0"

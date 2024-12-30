@@ -1,22 +1,63 @@
 #pragma once
 
+#include <type_traits>
+
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+
 #include <JuceHeader.h>
+
+//==============================================================================
+template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+struct CompressorParams
+{
+public:
+	CompressorParams() = default;
+	~CompressorParams() = default;
+
+	inline void set(T thresholddB, T ratio, T kneeWidth)
+	{
+		// Hard knee + shared params
+		m_thresholddB = thresholddB;
+		m_threshold = juce::Decibels::decibelsToGain(thresholddB);
+		m_ratio = ratio;
+		m_kneeWidth = kneeWidth;
+		m_R_Inv_minus_One = (T(1.0) / ratio) - T(1.0);
+
+		// Soft knee params
+		const T W_Half = T(0.5) * kneeWidth;
+		m_T_minus_WHalfdB = thresholddB - W_Half;
+		m_T_minus_WHalf = juce::Decibels::decibelsToGain(m_T_minus_WHalfdB);
+		m_T_plus_WHalfdB = thresholddB + W_Half;
+		m_minus_T_plus_WHalf = T(-1.0) * thresholddB + W_Half;
+		m_W2_inv = T(1.0) / (T(2.0) * kneeWidth);
+	}
+
+	T m_thresholddB = T(0.0);
+	T m_threshold = T(1.0);
+	T m_ratio = T(2.0);
+	T m_kneeWidth = T(0.0);
+
+	T m_R_Inv_minus_One = T(0.0);
+	T m_T_minus_WHalfdB = T(0.0);
+	T m_T_minus_WHalf = T(1.0);
+	T m_T_plus_WHalfdB = T(0.0);
+	T m_minus_T_plus_WHalf = T(0.0);
+	T m_W2_inv = T(0.0);
+};
 
 //==============================================================================
 class Compressor
 {
 public:
-	Compressor();
+	Compressor() = default;
+	~Compressor() = default;
 
 	void init(int sampleRate)
 	{ 
 		m_envelopeFollower.init(sampleRate);
 		m_circularBuffer.init(sampleRate);
-		const int size = (int)(0.01f * (float)sampleRate);
+		const int size = static_cast<int>(0.01f * (float)sampleRate);
 		m_circularBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
@@ -29,127 +70,15 @@ public:
 protected:
 	DecoupeledEnvelopeFollower<float> m_envelopeFollower;
 	RMSBuffer m_circularBuffer;
-	float m_thresholddB = 0.0f;
-	float m_threshold = 1.0f;
-	float m_ratio = 2.0f;
-	float m_kneeWidth = 0.0f;
-	float m_attackTime = 0.0f;
-	float m_releaseTime = 0.0f;
-
-	float m_R_Inv_minus_One = 0.0f;
-	float m_T_minus_WHalfdB = 0.0f;
-	float m_T_minus_WHalf = 1.0f;
-	float m_T_plus_WHalfdB = 0.0f;
-	float m_minus_T_plus_WHalf = 0.0f;
-	float m_W2_inv = 0.0f;
-};
-
-//==============================================================================
-/*template <class EnvelopeFollower, class T>
-class Compressor1
-{
-public:
-	Compressor1() {};
-
-	void init(int sampleRate)
-	{
-		m_envelopeFollower.init(sampleRate);
-		m_circularBuffer.init(sampleRate);
-		const int size = (int)(0.01f * sampleRate);
-		m_circularBuffer.setSize(size);
-	};
-	void set(T thresholddB, T ratio, T kneeWidth, T attackTimeMS, T releaseTimeMS);
-	T processHardKneeLinPeak(T in);
-	T processHardKneeLogPeak(T in);
-	T processHardKneeLinRMS(T in);
-	T processHardKneeLogRMS(T in);
-	T processSoftKneeLinPeak(T in);
-
-protected:
-	EnvelopeFollower<T> m_envelopeFollower;
-	RMSBuffer m_circularBuffer;
-	T m_thresholddB = 0.0;
-	T m_threshold = 1.0;
-	T m_ratio = 2.0;
-	T m_kneeWidth = 0.0;
-	T m_attackTime = 0.0;
-	T m_releaseTime = 0.0;
-
-	T m_R_Inv_minus_One = 0.0;
-	T m_T_minus_WHalfdB = 0.0;
-	T m_T_minus_WHalf = 1.0;
-	T m_T_plus_WHalfdB = 0.0;
-	T m_minus_T_plus_WHalf = 0.0;
-	T m_W2_inv = 0.0;
-};*/
-
-//==============================================================================
-class SideChainCompressor
-{
-public:
-	SideChainCompressor();
-
-	void init(int sampleRate)
-	{
-		m_envelopeFollower.init(sampleRate);
-		m_lowPassFilter.init(sampleRate);
-		m_highPassFilter.init(sampleRate);
-	};
-	void set(float thresholddB, float ratio, float attackTimeMS, float releaseTimeMS, float lowPassFrequency, float highPassFrequency);
-	float processHardKnee(float in);
-
-protected:
-	DecoupeledEnvelopeFollower<float> m_envelopeFollower;
-	BiquadFilter m_lowPassFilter;
-	BiquadFilter m_highPassFilter;
-	float m_thresholddB = 0.0f;
-	float m_threshold = 1.0f;
-	float m_ratio = 2.0f;
-	float m_R_Inv_minus_One = 0.0f;
-	float m_attackTime = 0.0f;
-	float m_releaseTime = 0.0f;
-};
-
-//==============================================================================
-class VocalCompressor
-{
-public:
-	VocalCompressor();
-
-	void init(int sampleRate)
-	{
-		m_leveler.init(sampleRate);
-		m_compressor.init(sampleRate);
-		m_tubeEmulation.init(sampleRate);
-		set();
-	};
-	void set()
-	{
-		// Leveler compresor setup
-		m_leveler.set(-17.0f, 1.5f, 0.0f, 2000.0f, 3000.0f, 660.0f);
-
-		// Compressor setup
-		m_compressor.set(-23.0f, 50.0f, 60.0f, 3.0f, 75.0f);
-
-		// Set tube emilation
-		m_tubeEmulation.set(-0.5f);
-
-		m_gainCompensation = juce::Decibels::decibelsToGain(14.0f);
-	};
-	float process(float in);
-
-protected:
-	SideChainCompressor m_leveler;
-	Compressor m_compressor;
-	TubeEmulation m_tubeEmulation;
-	float m_gainCompensation = 1.0f;
+	CompressorParams<float> m_params;
 };
 
 //==============================================================================
 class SlewCompressor
 {
 public:
-	SlewCompressor();
+	SlewCompressor() = default;
+	~SlewCompressor() = default;
 
 	void init(int sampleRate)
 	{
@@ -157,7 +86,7 @@ public:
 		m_envelopeFollowerLinear.init(sampleRate);
 
 		m_circularBuffer.init(sampleRate);
-		const int size = (int)(0.01f * sampleRate);
+		const int size = static_cast<int>(0.01f * sampleRate);
 		m_circularBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
@@ -171,26 +100,15 @@ protected:
 	SlewEnvelopeFollower<float> m_envelopeFollowerLog;
 	SlewEnvelopeFollower<float> m_envelopeFollowerLinear;
 	RMSBuffer m_circularBuffer;
-	float m_thresholddB = 0.0f;
-	float m_threshold = 1.0f;
-	float m_ratio = 2.0f;
-	float m_kneeWidth = 0.0f;
-	float m_attackTime = 0.0f;
-	float m_releaseTime = 0.0f;
-
-	float m_R_Inv_minus_One = 0.0f;
-	float m_T_minus_WHalfdB = 0.0f;
-	float m_T_minus_WHalf = 1.0f;
-	float m_T_plus_WHalfdB = 0.0f;
-	float m_minus_T_plus_WHalf = 0.0f;
-	float m_W2_inv = 0.0f;
+	CompressorParams<float> m_params;
 };
 
 //==============================================================================
 class OptoCompressor
 {
 public:
-	OptoCompressor();
+	OptoCompressor() = default;
+	~OptoCompressor() = default;
 
 	void init(int sampleRate)
 	{
@@ -198,7 +116,7 @@ public:
 		m_envelopeFollowerLinear.init(sampleRate);
 
 		m_RMSBuffer.init(sampleRate);
-		const int size = (int)(0.01f * sampleRate);
+		const int size = static_cast<int>(0.01f * sampleRate);
 		m_RMSBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
@@ -212,26 +130,15 @@ protected:
 	OptoEnvelopeFollower<float> m_envelopeFollowerLog;
 	OptoEnvelopeFollower<float> m_envelopeFollowerLinear;
 	RMSBuffer m_RMSBuffer;
-	float m_thresholddB = 0.0f;
-	float m_threshold = 1.0f;
-	float m_ratio = 2.0f;
-	float m_kneeWidth = 0.0f;
-	float m_attackTime = 0.0f;
-	float m_releaseTime = 0.0f;
-
-	float m_R_Inv_minus_One = 0.0f;
-	float m_T_minus_WHalfdB = 0.0f;
-	float m_T_minus_WHalf = 1.0f;
-	float m_T_plus_WHalfdB = 0.0f;
-	float m_minus_T_plus_WHalf = 0.0f;
-	float m_W2_inv = 0.0f;
+	CompressorParams<float> m_params;
 };
 
 //==============================================================================
 class DualCompressor
 {
 public:
-	DualCompressor();
+	DualCompressor() = default;
+	~DualCompressor() = default;
 
 	void init(int sampleRate)
 	{
@@ -239,7 +146,7 @@ public:
 		m_envelopeFollowerLinear.init(sampleRate);
 
 		m_RMSBuffer.init(sampleRate);
-		const int size = (int)(0.01f * sampleRate);
+		const int size = static_cast<int>(0.01f * sampleRate);
 		m_RMSBuffer.set(size);
 	};
 	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
@@ -253,17 +160,137 @@ protected:
 	DualEnvelopeFollower<float> m_envelopeFollowerLog;
 	DualEnvelopeFollower<float> m_envelopeFollowerLinear;
 	RMSBuffer m_RMSBuffer;
-	float m_thresholddB = 0.0f;
-	float m_threshold = 1.0f;
-	float m_ratio = 2.0f;
-	float m_kneeWidth = 0.0f;
-	float m_attackTime = 0.0f;
-	float m_releaseTime = 0.0f;
+	CompressorParams<float> m_params;
+};
 
-	float m_R_Inv_minus_One = 0.0f;
-	float m_T_minus_WHalfdB = 0.0f;
-	float m_T_minus_WHalf = 1.0f;
-	float m_T_plus_WHalfdB = 0.0f;
-	float m_minus_T_plus_WHalf = 0.0f;
-	float m_W2_inv = 0.0f;
+//==============================================================================
+class AdaptiveCompressor
+{
+public:
+	AdaptiveCompressor() = default;
+	~AdaptiveCompressor() = default;
+
+	inline void init(const int sampleRate)
+	{
+		m_envelopeFollowerLog.init(sampleRate);
+		m_envelopeFollowerLinear.init(sampleRate);
+
+		m_RMSBuffer.init(sampleRate);
+		const int size = static_cast<int>(0.01f * sampleRate);
+		m_RMSBuffer.set(size);
+	};
+	inline void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS, float holdTimeMS)
+	{
+		m_params.set(thresholddB, ratio, kneeWidth);
+
+		// Set envelope followers
+		m_envelopeFollowerLinear.set(attackTimeMS, releaseTimeMS, holdTimeMS);
+		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS, holdTimeMS);
+	};
+	float processHardKneeLinPeak(float in)
+	{
+		// Smooth
+		const float smooth = m_envelopeFollowerLinear.process(24.0f * in) / 24.0f;
+
+		//Do nothing if below threshold
+		if (smooth < m_params.m_threshold)
+		{
+			return in;
+		}
+
+		//Get gain reduction, positive values
+		const float attenuatedB = (juce::Decibels::gainToDecibels(smooth) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One;
+
+		// Apply gain reduction
+		return in * juce::Decibels::decibelsToGain(attenuatedB);
+	};
+	float processHardKneeLogPeak(float in)
+	{
+		// Convert input from gain to dB
+		const float indB = juce::Decibels::gainToDecibels(fabsf(in));
+
+		//Get gain reduction, positive values
+		const float attenuatedB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Smooth
+		const float attenuateSmoothdB = -m_envelopeFollowerLog.process(attenuatedB);
+
+		// Apply gain reduction
+		return in * juce::Decibels::decibelsToGain(attenuateSmoothdB);
+	}
+	float processHardKneeLinRMS(float in)
+	{
+		// Get RMS
+		m_RMSBuffer.write(in);
+		const float rms = m_RMSBuffer.getRMS();
+
+		// Smooth
+		const float smooth = m_envelopeFollowerLinear.process(24.0f * rms) / 24.0f;
+
+		//Do nothing if below threshold
+		if (smooth < m_params.m_threshold)
+		{
+			return in;
+		}
+
+		//Get gain reduction, positive values
+		const float attenuatedB = (juce::Decibels::gainToDecibels(smooth) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One;
+
+		// Apply gain reduction
+		return in * juce::Decibels::decibelsToGain(attenuatedB);
+	}
+	float processHardKneeLogRMS(float in)
+	{
+		// Get RMS
+		m_RMSBuffer.write(in);
+		const float rms = m_RMSBuffer.getRMS();
+
+		// Convert input from gain to dB
+		const float indB = juce::Decibels::gainToDecibels(rms);
+
+		//Get gain reduction, positive values
+		const float attenuatedB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Smooth
+		const float attenuateSmoothdB = -m_envelopeFollowerLog.process(attenuatedB);
+
+		// Apply gain reduction
+		return in * juce::Decibels::decibelsToGain(attenuateSmoothdB);
+	}
+	float processSoftKnee(float in)
+	{
+		// Smooth
+		const float smooth = m_envelopeFollowerLinear.process(in);
+
+		//Do nothing if below threshold
+		if (smooth < m_params.m_T_minus_WHalf)
+		{
+			return in;
+		}
+
+		// Convert input from gain to dB
+		const float smoothdB = juce::Decibels::gainToDecibels(smooth);
+
+		//Get gain reduction, positive values
+		float attenuatedB = 0.0f;
+
+		if (smoothdB > m_params.m_T_plus_WHalfdB)
+		{
+			attenuatedB = (smoothdB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One;
+		}
+		else
+		{
+			const auto tmp = smoothdB + m_params.m_minus_T_plus_WHalf;
+			attenuatedB = m_params.m_R_Inv_minus_One * (tmp * tmp) * m_params.m_W2_inv;
+		}
+
+		// Apply gain reduction
+		return in * juce::Decibels::decibelsToGain(attenuatedB);
+	}
+
+protected:
+	HoldEnvelopeFollower<float> m_envelopeFollowerLog;
+	HoldEnvelopeFollower<float> m_envelopeFollowerLinear;
+	RMSBuffer m_RMSBuffer;
+	CompressorParams<float> m_params;
 };
