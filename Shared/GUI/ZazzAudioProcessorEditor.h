@@ -86,30 +86,30 @@ public:
 		const int canvasHeightUnscaledOneRow = ZazzLookAndFeel::TOP_HEIGHT + ZazzLookAndFeel::NAME_HEIGHT + ZazzLookAndFeel::ELEMENT_HEIGHT;
 		
 		const int elementWidth = canvasWidth / slidersMax;
-		const float elementHeightRatio = (float)ZazzLookAndFeel::ELEMENT_HEIGHT / (float)canvasHeightUnscaled;
-		const int elemenHeight = (int)((float)canvasHeight * elementHeightRatio);
+		const float elementHeightRatio = static_cast<float>(ZazzLookAndFeel::ELEMENT_HEIGHT) / static_cast<float>(canvasHeightUnscaled);
+		const int elemenHeight = static_cast<int>((float)canvasHeight * elementHeightRatio);
 		
-		const float topHeightRatio = (float)ZazzLookAndFeel::TOP_HEIGHT / (float)canvasHeightUnscaled;
-		const int topHeight = (int)((float)canvasHeight * topHeightRatio);
+		const float topHeightRatio = static_cast<float>(ZazzLookAndFeel::TOP_HEIGHT) / static_cast<float>(canvasHeightUnscaled);
+		const int topHeight = static_cast<int>(static_cast<float>(canvasHeight) * topHeightRatio);
 
-		const float nameHeightRatio = (float)ZazzLookAndFeel::NAME_HEIGHT / (float)canvasHeightUnscaled;
-		const int nameHeight = (int)((float)canvasHeight * nameHeightRatio);
+		const float nameHeightRatio = static_cast<float>(ZazzLookAndFeel::NAME_HEIGHT) / static_cast<float>(canvasHeightUnscaled);
+		const int nameHeight = static_cast<int>(static_cast<float>(canvasHeight) * nameHeightRatio);
 		
-		const float headerHeightRatio = (float)ZazzLookAndFeel::NAME_HEIGHT / (float)ZazzLookAndFeel::ELEMENT_HEIGHT;
-		const float sliderHeightRatio = (float)ZazzLookAndFeel::SLIDER_HEIGHT / (float)ZazzLookAndFeel::ELEMENT_HEIGHT;
-		const float footerHeightRatio = (float)ZazzLookAndFeel::FOOTER_HEIGHT / (float)ZazzLookAndFeel::ELEMENT_HEIGHT;
-		const int headerHeight = (int)((float)elemenHeight * headerHeightRatio);
-		const int sliderHeight = (int)((float)elemenHeight * sliderHeightRatio);
-		const int footerHeight = (int)((float)elemenHeight * footerHeightRatio);
+		const float headerHeightRatio = static_cast<float>(ZazzLookAndFeel::NAME_HEIGHT) / static_cast<float>(ZazzLookAndFeel::ELEMENT_HEIGHT);
+		const float sliderHeightRatio = static_cast<float>(ZazzLookAndFeel::SLIDER_HEIGHT) / static_cast<float>(ZazzLookAndFeel::ELEMENT_HEIGHT);
+		const float footerHeightRatio = static_cast<float>(ZazzLookAndFeel::FOOTER_HEIGHT) / static_cast<float>(ZazzLookAndFeel::ELEMENT_HEIGHT);
+		const int headerHeight = static_cast<int>(static_cast<float>(elemenHeight) * headerHeightRatio);
+		const int sliderHeight = static_cast<int>(static_cast<float>(elemenHeight) * sliderHeightRatio);
+		const int footerHeight = static_cast<int>(static_cast<float>(elemenHeight) * footerHeightRatio);
 		
-		const float nameFontRatio = ZazzLookAndFeel::NAME_FONT_SIZE / (float)canvasHeightUnscaledOneRow;
-		const float nameFontSize = (float)elemenHeight * nameFontRatio;		
+		const float nameFontRatio = ZazzLookAndFeel::NAME_FONT_SIZE / static_cast<float>(canvasHeightUnscaledOneRow);
+		const float nameFontSize = static_cast<float>(elemenHeight) * nameFontRatio;
 		
-		const float labelFontRatio = ZazzLookAndFeel::LABEL_FONT_SIZE / (float)canvasHeightUnscaledOneRow;
-		const float labelFontSize = (float)elemenHeight * labelFontRatio;
+		const float labelFontRatio = ZazzLookAndFeel::LABEL_FONT_SIZE / static_cast<float>(canvasHeightUnscaledOneRow);
+		const float labelFontSize = static_cast<float>(elemenHeight) * labelFontRatio;
 		
-		const float valueFontRatio = ZazzLookAndFeel::VALUE_FONT_SIZE / (float)canvasHeightUnscaledOneRow;
-		const float valueFontSize = (float)elemenHeight * valueFontRatio;
+		const float valueFontRatio = ZazzLookAndFeel::VALUE_FONT_SIZE / static_cast<float>(canvasHeightUnscaledOneRow);
+		const float valueFontSize = static_cast<float>(elemenHeight) * valueFontRatio;
 		zazzLookAndFeel.setSliderTextSize(valueFontSize);
 
 		juce::Rectangle<int> pluginNameRectangle;
@@ -129,7 +129,7 @@ public:
 			{
 				juce::Rectangle<int> rectangle;
 
-				const int xPos = (int)((columnOffset[row] + (float)column) * (float)elementWidth);
+				const int xPos = static_cast<int>((columnOffset[row] + static_cast<float>(column)) * static_cast<float>(elementWidth));
 				const int yPos = topHeight + nameHeight + row * elemenHeight;
 
 				// Label
@@ -145,7 +145,7 @@ public:
 				sliders[i].setBounds(rectangle);
 
 				// Resize text box
-				sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, (int)(labelFontSize));
+				sliders[i].setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, static_cast<int>(labelFontSize));
 
 				i++;
 			}

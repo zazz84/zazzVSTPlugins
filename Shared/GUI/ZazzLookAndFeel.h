@@ -7,20 +7,20 @@ public:
 	static const juce::Colour MEDIUM_COLOUR;
 	static const juce::Colour DARK_COLOUR;
 
-	static const int NAME_FONT_SIZE = 30;
-	static const int LABEL_FONT_SIZE = 20;
-	static const int VALUE_FONT_SIZE = 15;
+	static const int NAME_FONT_SIZE = 33;
+	static const int LABEL_FONT_SIZE = 22;
+	static const int VALUE_FONT_SIZE = 17;
 
-	static const int ELEMENT_WIDTH = 80;
-	static const int TOP_HEIGHT = 5;
-	static const int NAME_HEIGHT = 25;
-	static const int ELEMENT_HEIGHT = 120;
+	static const int ELEMENT_WIDTH = 88;
+	static const int TOP_HEIGHT = 1;
+	static const int NAME_HEIGHT = 27;
+	static const int ELEMENT_HEIGHT = 132;
 	
-	static const int HEADER_HEIGHT = 30;
-	static const int SLIDER_HEIGHT = 90;
+	static const int HEADER_HEIGHT = 33;
+	static const int SLIDER_HEIGHT = 99;
 	static const int FOOTER_HEIGHT = 0;
 
-	float m_sliderTextSize = 16.0f;
+	float m_sliderTextSize = 18.0f;
 
 	void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider&) override
 	{
@@ -51,7 +51,7 @@ public:
 		imageGraphics.fillPath(shadow);
 
 		// Create a convolution kernel for Gaussian blur
-		constexpr int kernelSize = 5;
+		constexpr int kernelSize = 3;
 		juce::ImageConvolutionKernel kernel(kernelSize);
 		kernel.createGaussianBlur(kernelSize);
 
@@ -64,7 +64,7 @@ public:
 
 		// Outline
 		g.setOpacity(1.0f);
-		const float lineThickness = height / 28.0f;
+		const float lineThickness = height / 35.0f;
 		g.setColour(DARK_COLOUR);
 		g.drawEllipse(rx, ry, rw, rw, lineThickness);
 

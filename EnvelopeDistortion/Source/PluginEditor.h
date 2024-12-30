@@ -6,14 +6,14 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
 //==============================================================================
-class ClipperAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class EnvelopeDistortionAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
 {
 public:
-    ClipperAudioProcessorEditor (ClipperAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~ClipperAudioProcessorEditor() override;
+    EnvelopeDistortionAudioProcessorEditor (EnvelopeDistortionAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~EnvelopeDistortionAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 4;
+	static const int N_SLIDERS = 6;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 1;
@@ -26,7 +26,7 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    ClipperAudioProcessor& audioProcessor;
+    EnvelopeDistortionAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
@@ -35,5 +35,5 @@ protected:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipperAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EnvelopeDistortionAudioProcessorEditor)
 };

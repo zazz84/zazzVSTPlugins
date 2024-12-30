@@ -5850,3 +5850,192 @@ De-harsh/JuceLibraryCode/include_juce_gui_extra.mm
 De-harsh/JuceLibraryCode/JuceHeader.h
 De-harsh/JuceLibraryCode/JucePluginDefines.h
 De-harsh/JuceLibraryCode/ReadMe.txt
+Clipper/Builds/VisualStudio2017/x64/Release/Shared Code/Clipper_.968CC69E.tlog/CL.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/.vs/EnvelopeDistortion/v15/.suo
+EnvelopeDistortion/Builds/VisualStudio2017/.vs/EnvelopeDistortion/v15/Browse.VC.db
+EnvelopeDistortion/Builds/VisualStudio2017/.vs/EnvelopeDistortion/v15/Browse.VC.opendb
+EnvelopeDistortion/Builds/VisualStudio2017/.vs/EnvelopeDistortion/v15/Solution.VC.db
+EnvelopeDistortion/Builds/VisualStudio2017/.vs/EnvelopeDistortion/v15/Solution.VC.db-shm
+EnvelopeDistortion/Builds/VisualStudio2017/.vs/EnvelopeDistortion/v15/Solution.VC.db-wal
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion.sln
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_SharedCode.vcxproj
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_SharedCode.vcxproj.filters
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_StandalonePlugin.vcxproj
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_StandalonePlugin.vcxproj.filters
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_VST3.vcxproj
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_VST3.vcxproj.filters
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_VST3.vcxproj.user
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_VST3ManifestHelper.vcxproj
+EnvelopeDistortion/Builds/VisualStudio2017/EnvelopeDistortion_VST3ManifestHelper.vcxproj.filters
+EnvelopeDistortion/Builds/VisualStudio2017/resources.rc
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/CL.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/CL.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/CL.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/EnvelopeDistortion_SharedCode.lastbuildstate
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/Lib-link.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/Lib-link.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/Envelope.2163C29D.tlog/Lib.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeDistortion.lib
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeDistortion.pdb
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeDistortion_SharedCode.log
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/EnvelopeFollowers.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/CL.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/CL.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/CL.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/EnvelopeDistortion_VST3ManifestHelper.lastbuildstate
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/link.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/link.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/link.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/rc.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/rc.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/rc.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/EnvelopeDistortion_VST3ManifestHelper.log
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/CL.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/CL.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/CL.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/EnvelopeDistortion_VST3.lastbuildstate
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/EnvelopeDistortion_VST3.write.1u.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/link.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/link.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/link.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/rc.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/rc.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/Envelope.CFC62114.tlog/rc.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.dll
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.exp
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.ilk
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.lib
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.pdb
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.vst3/Contents/Resources/moduleinfo.json
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion.vst3/Contents/x86_64-win/EnvelopeDistortion.vst3
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/EnvelopeDistortion_VST3.log
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/CL.10124.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/CL.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/CL.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/EnvelopeDistortion_SharedCode.lastbuildstate
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/Lib-link.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/Lib-link.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/Envelope.2163C29D.tlog/Lib.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeDistortion.lib
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeDistortion.pdb
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeDistortion_SharedCode.log
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/EnvelopeFollowers.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/CL.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/CL.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/CL.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/EnvelopeDistortion_VST3ManifestHelper.lastbuildstate
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/link.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/link.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/link.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/rc.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/rc.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Envelope.5C6E04B2.tlog/rc.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/EnvelopeDistortion_VST3ManifestHelper.log
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/CL.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/CL.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/CL.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/EnvelopeDistortion_VST3.lastbuildstate
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/rc.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/rc.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/rc.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/unsuccessfulbuild
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.dll
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.exp
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.lib
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.pdb
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion_VST3.log
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_basics.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_basics.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_devices.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_devices.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_formats.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_formats.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_processors.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_processors.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_utils.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_audio_utils.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_core.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_core.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_data_structures.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_data_structures.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_events.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_events.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_graphics.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_graphics.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_gui_basics.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_gui_basics.mm
+EnvelopeDistortion/JuceLibraryCode/include_juce_gui_extra.cpp
+EnvelopeDistortion/JuceLibraryCode/include_juce_gui_extra.mm
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/EnvelopeDistortion_VST3.write.1u.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/link.command.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/link.read.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/Envelope.CFC62114.tlog/link.write.1.tlog
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.vst3/Contents/Resources/moduleinfo.json
+EnvelopeDistortion/Builds/VisualStudio2017/x64/Release/VST3/EnvelopeDistortion.vst3/Contents/x86_64-win/EnvelopeDistortion.vst3
+EnvelopeDistortion/JuceLibraryCode/JuceHeader.h
+EnvelopeDistortion/JuceLibraryCode/JucePluginDefines.h
+EnvelopeDistortion/JuceLibraryCode/ReadMe.txt
