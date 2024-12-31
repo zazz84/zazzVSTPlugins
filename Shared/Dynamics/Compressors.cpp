@@ -89,7 +89,7 @@ float Compressor::processSoftKneeLinPeak(float in)
 	}
 
 	// Convert input from gain to dB
-	const float smoothdB = juce::Decibels::gainToDecibels(smooth);
+	const float smoothdB = Math::gainTodB(smooth);
 
 	//Get gain reduction, positive values
 	float attenuatedB = 0.0f;
@@ -105,7 +105,7 @@ float Compressor::processSoftKneeLinPeak(float in)
 	}
 
 	// Apply gain reduction
-	return in * juce::Decibels::decibelsToGain(attenuatedB);
+	return in * Math::dBToGain(attenuatedB);
 }
 
 //==============================================================================

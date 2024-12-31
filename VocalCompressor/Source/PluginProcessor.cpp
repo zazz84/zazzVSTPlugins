@@ -12,6 +12,7 @@
 //==============================================================================
 
 const std::string VocalCompressorAudioProcessor::paramsNames[] = { "Gain", "Mix", "Volume" };
+const std::string VocalCompressorAudioProcessor::paramsUnitNames[] = { " dB", "", " dB" };
 
 //==============================================================================
 VocalCompressorAudioProcessor::VocalCompressorAudioProcessor()
@@ -70,7 +71,7 @@ bool VocalCompressorAudioProcessor::isMidiEffect() const
 
 double VocalCompressorAudioProcessor::getTailLengthSeconds() const
 {
-    return 0.0;
+    return 1.0;
 }
 
 int VocalCompressorAudioProcessor::getNumPrograms()
@@ -148,6 +149,8 @@ void VocalCompressorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto mixInverse = 1.0f - mix;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto wet = volume * mix;
+	const auto dry = volume * (1.0f - mix);
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
@@ -159,10 +162,8 @@ void VocalCompressorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		for (int sample = 0; sample < samples; sample++)
 		{
 			const float in = channelBuffer[sample];
-			
-			float out = vocalCompressor.process(gain * in);
-			
-			channelBuffer[sample] = volume * (mixInverse * in + mix * out);
+			const float out = vocalCompressor.process(gain * in);
+			channelBuffer[sample] = dry * in + wet * out;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Compressors.h"
@@ -36,15 +37,15 @@ public:
 		}
 
 		//Get gain reduction, positive values
-		const float attenuatedB = (juce::Decibels::gainToDecibels(smooth) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One;
+		const float attenuatedB = (Math::gainTodB(smooth) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One;
 
 		// Apply gain reduction
-		return in * juce::Decibels::decibelsToGain(attenuatedB);
+		return in * Math::dBToGain(attenuatedB);
 	};
 
 protected:
-	DecoupeledEnvelopeFollower<float> m_envelopeFollower;
+	CompressorParams<float> m_params;
 	BiquadFilter m_lowPassFilter;
 	BiquadFilter m_highPassFilter;
-	CompressorParams<float> m_params;
+	BranchingEnvelopeFollower<float> m_envelopeFollower;
 };

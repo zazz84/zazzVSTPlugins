@@ -1,9 +1,10 @@
 #pragma once
 
-
 #include <math.h>
 //#include <algorithm>
 //#include <mmintrin.h>
+
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 class Clippers
 {
@@ -123,18 +124,20 @@ public:
 	}
 };
 
+//==============================================================================
+
 class SlopeClipper
 {
 public:
-	SlopeClipper() {};
+	SlopeClipper() = default;
+	~SlopeClipper() = default;
 
-	inline void init(int sampleRate)
+	inline void init(const int sampleRate)
 	{
 		constexpr float ratioDefault = 0.15f * 48000.0f;
 		m_ratio = ratioDefault / (float)sampleRate;
 	}
-
-	inline float process(float in, float threshold)
+	inline float process(const float in, const float threshold)
 	{
 		const float out = m_inLast;
 
@@ -167,4 +170,44 @@ public:
 private:
 	float m_ratio = 0.1f;
 	float m_inLast = 0.0f;
+};
+
+//==============================================================================
+constexpr auto SoftClipperThresholdPositive = 0.9f;
+constexpr auto SoftClipperThresholdNegative = -0.9f;
+constexpr auto SoftClipperThresholdRatio = 0.3f;
+
+class SoftClipper
+{
+public:
+	SoftClipper() = default;
+	~SoftClipper() = default;
+
+	inline void init(const int sampleRate)
+	{
+		m_softClipperThresholdRatio = SoftClipperThresholdRatio * 48000.0f / static_cast<float>(sampleRate);
+	};
+
+	inline float process(const float in)
+	{
+		float out = 0.0f;
+
+		if (in > SoftClipperThresholdPositive)
+		{
+			out = SoftClipperThresholdPositive + (in - SoftClipperThresholdPositive) * m_softClipperThresholdRatio;
+		}
+		else if (in < SoftClipperThresholdNegative)
+		{
+			out = SoftClipperThresholdNegative + (in - SoftClipperThresholdNegative) * m_softClipperThresholdRatio;
+		}
+		else
+		{
+			out = in;
+		}
+
+		return Math::clamp(out, -1.0f, 1.0f);
+	};
+
+private:
+	float m_softClipperThresholdRatio = 0.0f;
 };

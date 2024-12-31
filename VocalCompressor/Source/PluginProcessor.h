@@ -1,7 +1,9 @@
 #pragma once
 
+#include <array>
+
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/Dynamics/Compressors.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/VocalCompressor.h"
 
 //==============================================================================
 class VocalCompressorAudioProcessor  : public juce::AudioProcessor
@@ -16,6 +18,8 @@ public:
     ~VocalCompressorAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string paramsUnitNames[];
+	static const int N_CHANNELS = 2;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -57,12 +61,12 @@ public:
 
 private:	
 	//==============================================================================
+	std::array<VocalCompressor, N_CHANNELS> m_vocalCompressor;
 
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	VocalCompressor m_vocalCompressor[2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalCompressorAudioProcessor)
 };

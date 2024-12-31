@@ -1,7 +1,9 @@
 #pragma once
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Compressors.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/SideChainCompressor.h"
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/TubeEmulation.h"
 
 class VocalCompressor
 {
@@ -14,24 +16,28 @@ public:
 		m_leveler.init(sampleRate);
 		m_compressor.init(sampleRate);
 		m_tubeEmulation.init(sampleRate);
-		set();
-	};
-	inline void set()
-	{
+		
 		// Leveler compresor setup
-		m_leveler.set(-17.0f, 1.5f, 0.0f, 2000.0f, 3000.0f, 660.0f);
+		m_leveler.set(-18.0f, 1.5f, 0.0f, 2000.0f, 3000.0f, 660.0f);
+
+		// Set tube emulation
+		m_tubeEmulation.set(-8.0f);
 
 		// Compressor setup
-		m_compressor.set(-23.0f, 50.0f, 60.0f, 3.0f, 75.0f);
+		m_compressor.set(-23.0f, 50.0f, 60.0f, 3.0f, 150.0f);
 
-		// Set tube emilation
-		m_tubeEmulation.set(-0.5f);
-
-		m_gainCompensation = juce::Decibels::decibelsToGain(14.0f);
+		// Output gain compensation
+		m_gainCompensation = Math::dBToGain(16.0f);
 	};
 	inline float process(float in)
 	{
-		return m_gainCompensation * m_compressor.processSoftKneeLinPeak(m_tubeEmulation.process(m_leveler.processHardKnee(in)));
+		float out = m_leveler.processHardKnee(in);
+		
+		out = m_tubeEmulation.process(out);
+		
+		out = m_compressor.processSoftKneeLinPeak(out);
+		
+		return m_gainCompensation * out;
 	}
 
 protected:

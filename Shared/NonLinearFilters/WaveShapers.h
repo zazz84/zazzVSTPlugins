@@ -5,11 +5,6 @@
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
-constexpr auto SoftClipperThresholdPositive = 0.9f;
-constexpr auto SoftClipperThresholdNegative = -0.9f;
-constexpr auto SoftClipperThresholdRatio = 0.3f;		// for 48kHz
-
-
 // Waveshapers are gain compensated, so all methods produce more or less the same amount of distortion for the same input
 // Note: Tanh, Atan, Sin, SinAproximation, ARRY and ReciprocalQuadratic sound very similar
 class Waveshapers
@@ -109,9 +104,14 @@ public:
 		}
 		else
 		{
-			return 1.5f * driveAdjustedIn * (1 - (driveAdjustedIn * driveAdjustedIn) / 3.0f);
+			return 1.5f * driveAdjustedIn * (1.0f - (driveAdjustedIn * driveAdjustedIn) / 3.0f);
 		}
 	}
+
+	inline static float ARRY(float in)
+	{
+		return 1.5f * in * (1.0f - (1.0f / 3.0f) * (in * in));
+	};
 
 	inline static float ReciprocalQuadratic(float in, float drive)
 	{
@@ -254,90 +254,6 @@ public:
 
 private:
 	float m_threshold = 1.0f;
-};
-
-class SoftClipper
-{
-public:
-	SoftClipper() {};
-
-	inline void init(int sampleRate)
-	{
-		m_softClipperThresholdRatio = SoftClipperThresholdRatio * 48000.0f / (float)sampleRate;
-	};
-
-	inline float process(float in)
-	{
-		float out = 0.0f;
-
-		if (in > SoftClipperThresholdPositive)
-		{
-			out = SoftClipperThresholdPositive + (in - SoftClipperThresholdPositive) * m_softClipperThresholdRatio;
-		}
-		else if (in < SoftClipperThresholdNegative)
-		{
-			out = SoftClipperThresholdNegative + (in - SoftClipperThresholdNegative) * m_softClipperThresholdRatio;
-		}
-		else
-		{
-			out = in;
-		}
-
-		return fmaxf(-1.0f, fminf(1.0f, out));
-	};
-
-private:
-	float m_softClipperThresholdRatio = SoftClipperThresholdRatio;
-};
-
-class HardClipper
-{
-public:
-	HardClipper() {};
-
-	inline float process(float in)
-	{
-		if (in > 1.0f)
-		{
-			return 1.0f;
-		}
-		else if (in < -1.0f)
-		{
-			return -1.0f;
-		}
-		else
-		{
-			return in;
-		}
-	}
-};
-
-class TubeEmulation
-{
-public:
-	TubeEmulation() {};
-
-	inline void init(int sampleRate)
-	{ 
-		m_softClipper.init(sampleRate);
-	};
-
-	inline void set(float gain)
-	{
-		m_gain = juce::Decibels::decibelsToGain(gain);
-	};
-
-	inline float process(float in)
-	{
-		float out = m_softClipper.process(in * m_gain);
-		out = 0.675f * m_waveShaper.process(out);
-		return out;
-	};
-
-private:
-	float m_gain = 1.0f;
-	ARRYWaveShaper m_waveShaper;
-	SoftClipper m_softClipper;
 };
 
 class OddHarmonicsWaveShaper

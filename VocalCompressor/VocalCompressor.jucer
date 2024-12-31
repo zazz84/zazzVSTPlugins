@@ -2,26 +2,36 @@
 
 <JUCERPROJECT id="yQS6t9" name="VocalCompressor" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
+              version="1.0.1">
   <MAINGROUP id="DfrvpD" name="VocalCompressor">
     <GROUP id="{D0BF00D3-53C2-5BA6-9D09-0D9A313DE127}" name="Source">
-      <FILE id="zaZHWq" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
-      <FILE id="v7BPTN" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="bWl5uV" name="Compressors.cpp" compile="1" resource="0" file="../Shared/Dynamics/Compressors.cpp"/>
-      <FILE id="qmjo6P" name="Compressors.h" compile="0" resource="0" file="../Shared/Dynamics/Compressors.h"/>
-      <FILE id="V5cyEC" name="EnvelopeFollowers.cpp" compile="1" resource="0"
-            file="../Shared/Dynamics/EnvelopeFollowers.cpp"/>
+      <FILE id="biAbPg" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="HGxGkg" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
+      <FILE id="CHqXG8" name="TubeEmulation.h" compile="0" resource="0" file="../Shared/NonLinearFilters/TubeEmulation.h"/>
+      <FILE id="WdToGj" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
+      <FILE id="QTzMxs" name="Compressors.cpp" compile="1" resource="0" file="../Shared/Dynamics/Compressors.cpp"/>
+      <FILE id="h42Fft" name="Compressors.h" compile="0" resource="0" file="../Shared/Dynamics/Compressors.h"/>
+      <FILE id="h42hmq" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
+      <FILE id="fBujJv" name="ZazzLookAndFeel.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzLookAndFeel.h"/>
+      <FILE id="RSschA" name="SideChainCompressor.h" compile="0" resource="0"
+            file="../Shared/Dynamics/SideChainCompressor.h"/>
+      <FILE id="MVVLJL" name="VocalCompressor.h" compile="0" resource="0"
+            file="../Shared/Dynamics/VocalCompressor.h"/>
       <FILE id="UtnnNg" name="EnvelopeFollowers.h" compile="0" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
+      <FILE id="bgnAN0" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="fUN7mb" name="BiquadFilters.cpp" compile="1" resource="0"
             file="../Shared/Filters/BiquadFilters.cpp"/>
-      <FILE id="bgnAN0" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="o3lCoV" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="v7BPTN" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="v0cxt9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="yiReD0" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="v0cxt9" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
