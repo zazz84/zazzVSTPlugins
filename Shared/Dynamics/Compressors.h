@@ -5,6 +5,7 @@
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/RMS.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRate.h"
 
 #include <JuceHeader.h>
 
@@ -217,7 +218,7 @@ public:
 		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
 
 		// Get lin attenuation
-		const float smoothLin = m_envelopeFollowerLin.process(24.0f * inCombined) / 24.0f;
+		const float smoothLin = (1.0f / 24.0f) * m_envelopeFollowerLin.process(24.0f * inCombined);
 		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
 
 		// Get combined lin/log attenuation
@@ -280,7 +281,7 @@ public:
 		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
 
 		// Get lin attenuation
-		const float smoothLin = m_envelopeFollowerLin.process(24.0f * inCombined) / 24.0f;
+		const float smoothLin = (1.0f / 24.0f) * m_envelopeFollowerLin.process(24.0f * inCombined);
 		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
 
 		// Get combined lin/log attenuation
@@ -314,24 +315,56 @@ public:
 
 	inline void init(const int sampleRate)
 	{
+		m_zeroCrossingRate.init(sampleRate);
+		
 		m_envelopeFollowerLog.init(sampleRate);
 		m_envelopeFollowerLin.init(sampleRate);
 
 		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
 		m_RMS.init(size);
 	};
-	inline void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS, float holdTimeMS)
+	inline void set(const float thresholddB, const float ratio, const float kneeWidth, const float attackTimeMS, const float releaseTimeMS, const float peakRatio = 1.0f, const float logRatio = 1.0f)
 	{
 		m_params.set(thresholddB, ratio, kneeWidth);
 
-		// Set envelope followers
-		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS, holdTimeMS);
-		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS, holdTimeMS);
+		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS, 0.0f);
+		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS, 0.0f);
+
+		m_peakRatio = peakRatio;
+		m_logRatio = logRatio;
+	};
+	inline float processHardKnee(const float in)
+	{
+		// Handle hold time
+		const int holdTimeSamples = 2 * m_zeroCrossingRate.process(in);
+		m_envelopeFollowerLin.setHoldTimeSamples(holdTimeSamples);
+		m_envelopeFollowerLog.setHoldTimeSamples(holdTimeSamples);
+		
+		// Get combined peak/rms input
+		const float rms = RMS_FACTOR * m_RMS.process(in);
+		const float peak = std::fabsf(in);
+		const float inCombined = m_peakRatio * (peak - rms) + rms;
+
+		// Get log attenuation
+		const float indB = juce::Decibels::gainToDecibels(inCombined);
+		const float envelopeIndB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
+
+		// Get lin attenuation
+		const float smoothLin = (1.0f / 24.0f) * m_envelopeFollowerLin.process(24.0f * inCombined);
+		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Get combined lin/log attenuation
+		const float attenuatedB = m_logRatio * (attenuateLogdB - attenuateLindB) + attenuateLindB;
+		const float attenuateGain = juce::Decibels::decibelsToGain(attenuatedB);
+
+		// Apply gain reduction
+		return attenuateGain * in;
 	};
 	float processHardKneeLinPeak(float in)
 	{
 		// Smooth
-		const float smooth = m_envelopeFollowerLin.process(24.0f * in) / 24.0f;
+		const float smooth = (1.0f / 24.0f) * m_envelopeFollowerLin.process(24.0f * in);
 
 		//Do nothing if below threshold
 		if (smooth < m_params.m_threshold)
@@ -428,8 +461,11 @@ public:
 	}
 
 protected:
-	HoldEnvelopeFollower<float> m_envelopeFollowerLog;
-	HoldEnvelopeFollower<float> m_envelopeFollowerLin;
 	RMS m_RMS;
 	CompressorParams<float> m_params;
+	ZeroCrossingRate m_zeroCrossingRate;
+	HoldEnvelopeFollower<float> m_envelopeFollowerLog;
+	HoldEnvelopeFollower<float> m_envelopeFollowerLin;
+	float m_peakRatio = 1.0f;
+	float m_logRatio = 1.0f;
 };

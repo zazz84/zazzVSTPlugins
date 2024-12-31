@@ -66,6 +66,7 @@ private:
 	std::array<SlewCompressor, N_CHANNELS> m_slewCompressor;
 	std::array<OptoCompressor, N_CHANNELS> m_optoCompressor;
 	std::array<DualCompressor, N_CHANNELS> m_dualCompressor;
+	std::array<AdaptiveCompressor, N_CHANNELS> m_adaptiveCompressor;
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;

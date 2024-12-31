@@ -128,6 +128,8 @@ void CompressorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 	m_optoCompressor[1].init(sr);
 	m_dualCompressor[0].init(sr);
 	m_dualCompressor[1].init(sr);
+	m_adaptiveCompressor[0].init(sr);
+	m_adaptiveCompressor[1].init(sr);
 }
 
 void CompressorAudioProcessor::releaseResources()
@@ -197,9 +199,13 @@ void CompressorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 		{
 			PROCESS_COMPRESSOR(m_slewCompressor)
 		}
-		else
+		else if (type == 4)
 		{
 			PROCESS_COMPRESSOR(m_dualCompressor)
+		}
+		else
+		{
+			PROCESS_COMPRESSOR(m_adaptiveCompressor)
 		}
 	}
 }
@@ -238,7 +244,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout CompressorAudioProcessor::cr
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  1.0f,    4.0f, 1.0f,  1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  1.0f,    5.0f, 1.0f,  1.0f),   1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.1f, 200.0f, 0.1f,  0.4f),   10.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   5.0f, 600.0f, 0.1f,  0.4f), 100.0f));

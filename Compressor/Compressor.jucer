@@ -6,6 +6,11 @@
               version="1.1.1">
   <MAINGROUP id="CmjmdB" name="Compressor">
     <GROUP id="{D20D41EA-EDA5-188B-BC6B-62FA9976F1CD}" name="Source">
+      <FILE id="JMrRZ7" name="BiquadFilters.cpp" compile="1" resource="0"
+            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="vhKHxl" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
+      <FILE id="HMxjbh" name="ZeroCrossingRate.h" compile="0" resource="0"
+            file="../Shared/Utilities/ZeroCrossingRate.h"/>
       <FILE id="Owsgaf" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="WoG0AB" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
