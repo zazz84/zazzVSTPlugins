@@ -3,9 +3,13 @@
 #include <type_traits>
 
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
-#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/RMS.h"
 
 #include <JuceHeader.h>
+
+// Used to match ammount of compression when using RMS compared to peak detection
+#define RMS_FACTOR 1.5f
 
 //==============================================================================
 template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
@@ -15,7 +19,7 @@ public:
 	CompressorParams() = default;
 	~CompressorParams() = default;
 
-	inline void set(T thresholddB, T ratio, T kneeWidth)
+	inline void set(const T thresholddB, const T ratio, const T kneeWidth)
 	{
 		// Hard knee + shared params
 		m_thresholddB = thresholddB;
@@ -51,16 +55,52 @@ class Compressor
 {
 public:
 	Compressor() = default;
-	~Compressor() = default;
-
-	void init(int sampleRate)
-	{ 
-		m_envelopeFollower.init(sampleRate);
-		m_circularBuffer.init(sampleRate);
-		const int size = static_cast<int>(0.01f * (float)sampleRate);
-		m_circularBuffer.set(size);
+	~Compressor()
+	{
+		m_RMS.release();
 	};
-	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
+
+	inline void init(const int sampleRate)
+	{ 
+		m_envelopeFollowerLog.init(sampleRate);
+		m_envelopeFollowerLin.init(sampleRate);
+
+		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
+		m_RMS.init(size);
+	};
+	inline void set(const float thresholddB, const float ratio, const float kneeWidth, const float attackTimeMS, const float releaseTimeMS, const float peakRatio = 1.0f, const float logRatio = 1.0f)
+	{
+		m_params.set(thresholddB, ratio, kneeWidth);
+		
+		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
+		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS);
+		
+		m_peakRatio = peakRatio;
+		m_logRatio = logRatio;
+	}
+	inline float processHardKnee(const float in)
+	{
+		// Get combined peak/rms input
+		const float rms = RMS_FACTOR * m_RMS.process(in);
+		const float peak = Math::fabsf(in);
+		const float inCombined = m_peakRatio * (peak - rms) + rms;
+
+		// Get log attenuation
+		const float indB = juce::Decibels::gainToDecibels(inCombined);
+		const float envelopeIndB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
+
+		// Get lin attenuation
+		const float smoothLin = m_envelopeFollowerLin.process(inCombined);
+		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Get combined lin/log attenuation
+		const float attenuatedB = m_logRatio * (attenuateLogdB - attenuateLindB) + attenuateLindB;
+		const float attenuateGain = juce::Decibels::decibelsToGain(attenuatedB);
+		
+		// Apply gain reduction
+		return attenuateGain * in;
+	};
 	float processHardKneeLinPeak(float in);
 	float processHardKneeLogPeak(float in);
 	float processHardKneeLinRMS(float in);
@@ -68,9 +108,12 @@ public:
 	float processSoftKneeLinPeak(float in);
 
 protected:
-	DecoupeledEnvelopeFollower<float> m_envelopeFollower;
-	RMSBuffer m_circularBuffer;
+	RMS m_RMS;
 	CompressorParams<float> m_params;
+	DecoupeledEnvelopeFollower<float> m_envelopeFollowerLog;
+	DecoupeledEnvelopeFollower<float> m_envelopeFollowerLin;
+	float m_peakRatio = 1.0f;
+	float m_logRatio = 1.0f;
 };
 
 //==============================================================================
@@ -80,27 +123,60 @@ public:
 	SlewCompressor() = default;
 	~SlewCompressor() = default;
 
-	void init(int sampleRate)
+	inline void init(const int sampleRate)
 	{
 		m_envelopeFollowerLog.init(sampleRate);
-		m_envelopeFollowerLinear.init(sampleRate);
+		m_envelopeFollowerLin.init(sampleRate);
 
-		m_circularBuffer.init(sampleRate);
-		const int size = static_cast<int>(0.01f * sampleRate);
-		m_circularBuffer.set(size);
+		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
+		m_RMS.init(size);;
 	};
-	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
-	float processHardKneeLinPeak(float in);
-	float processHardKneeLogPeak(float in);
-	float processHardKneeLinRMS(float in);
-	float processHardKneeLogRMS(float in);
-	float processSoftKnee(float in);
+	inline void set(const float thresholddB, const float ratio, const float kneeWidth, const float attackTimeMS, const float releaseTimeMS, const float peakRatio = 1.0f, const float logRatio = 1.0f)
+	{
+		m_params.set(thresholddB, ratio, kneeWidth);
+
+		m_envelopeFollowerLin.set(2.2f * attackTimeMS, 3.5f * releaseTimeMS);
+		m_envelopeFollowerLog.set(0.1f * attackTimeMS, 0.2f * releaseTimeMS);
+
+		m_peakRatio = peakRatio;
+		m_logRatio = logRatio;
+	}
+	inline float processHardKnee(const float in)
+	{
+		// Get combined peak/rms input
+		const float rms = RMS_FACTOR * m_RMS.process(in);
+		const float peak = std::fabsf(in);
+		const float inCombined = m_peakRatio * (peak - rms) + rms;
+
+		// Get log attenuation
+		const float indB = juce::Decibels::gainToDecibels(inCombined);
+		const float envelopeIndB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
+
+		// Get lin attenuation
+		const float smoothLin = m_envelopeFollowerLin.process(inCombined);
+		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Get combined lin/log attenuation
+		const float attenuatedB = m_logRatio * (attenuateLogdB - attenuateLindB) + attenuateLindB;
+		const float attenuateGain = juce::Decibels::decibelsToGain(attenuatedB);
+
+		// Apply gain reduction
+		return attenuateGain * in;
+	};
+	inline float processHardKneeLinPeak(const float in);
+	inline float processHardKneeLogPeak(const float in);
+	inline float processHardKneeLinRMS(const float in);
+	inline float processHardKneeLogRMS(const float in);
+	inline float processSoftKnee(const float in);
 
 protected:
 	SlewEnvelopeFollower<float> m_envelopeFollowerLog;
-	SlewEnvelopeFollower<float> m_envelopeFollowerLinear;
-	RMSBuffer m_circularBuffer;
+	SlewEnvelopeFollower<float> m_envelopeFollowerLin;
+	RMS m_RMS;
 	CompressorParams<float> m_params;
+	float m_peakRatio = 1.0f;
+	float m_logRatio = 1.0f;;
 };
 
 //==============================================================================
@@ -110,16 +186,47 @@ public:
 	OptoCompressor() = default;
 	~OptoCompressor() = default;
 
-	void init(int sampleRate)
+	inline void init(const int sampleRate)
 	{
 		m_envelopeFollowerLog.init(sampleRate);
-		m_envelopeFollowerLinear.init(sampleRate);
+		m_envelopeFollowerLin.init(sampleRate);
 
-		m_RMSBuffer.init(sampleRate);
-		const int size = static_cast<int>(0.01f * sampleRate);
-		m_RMSBuffer.set(size);
+		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
+		m_RMS.init(size);
 	};
-	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
+	inline void set(const float thresholddB, const float ratio, const float kneeWidth, const float attackTimeMS, const float releaseTimeMS, const float peakRatio = 1.0f, const float logRatio = 1.0f)
+	{
+		m_params.set(thresholddB, ratio, kneeWidth);
+
+		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS);
+		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
+
+		m_peakRatio = peakRatio;
+		m_logRatio = logRatio;
+	};
+	inline float processHardKnee(const float in)
+	{
+		// Get combined peak/rms input
+		const float rms = RMS_FACTOR * m_RMS.process(in);
+		const float peak = std::fabsf(in);
+		const float inCombined = m_peakRatio * (peak - rms) + rms;
+
+		// Get log attenuation
+		const float indB = juce::Decibels::gainToDecibels(inCombined);
+		const float envelopeIndB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
+
+		// Get lin attenuation
+		const float smoothLin = m_envelopeFollowerLin.process(24.0f * inCombined) / 24.0f;
+		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Get combined lin/log attenuation
+		const float attenuatedB = m_logRatio * (attenuateLogdB - attenuateLindB) + attenuateLindB;
+		const float attenuateGain = juce::Decibels::decibelsToGain(attenuatedB);
+
+		// Apply gain reduction
+		return attenuateGain * in;
+	};
 	float processHardKneeLinPeak(float in);
 	float processHardKneeLogPeak(float in);
 	float processHardKneeLinRMS(float in);
@@ -128,9 +235,11 @@ public:
 
 protected:
 	OptoEnvelopeFollower<float> m_envelopeFollowerLog;
-	OptoEnvelopeFollower<float> m_envelopeFollowerLinear;
-	RMSBuffer m_RMSBuffer;
+	OptoEnvelopeFollower<float> m_envelopeFollowerLin;
+	RMS m_RMS;
 	CompressorParams<float> m_params;
+	float m_peakRatio = 1.0f;
+	float m_logRatio = 1.0f;
 };
 
 //==============================================================================
@@ -140,16 +249,47 @@ public:
 	DualCompressor() = default;
 	~DualCompressor() = default;
 
-	void init(int sampleRate)
+	inline void init(const int sampleRate)
 	{
 		m_envelopeFollowerLog.init(sampleRate);
-		m_envelopeFollowerLinear.init(sampleRate);
+		m_envelopeFollowerLin.init(sampleRate);
 
-		m_RMSBuffer.init(sampleRate);
-		const int size = static_cast<int>(0.01f * sampleRate);
-		m_RMSBuffer.set(size);
+		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
+		m_RMS.init(size);
 	};
-	void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS);
+	inline void set(const float thresholddB, const float ratio, const float kneeWidth, const float attackTimeMS, const float releaseTimeMS, const float peakRatio = 1.0f, const float logRatio = 1.0f)
+	{
+		m_params.set(thresholddB, ratio, kneeWidth);
+
+		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS);
+		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
+
+		m_peakRatio = peakRatio;
+		m_logRatio = logRatio;
+	};
+	inline float processHardKnee(const float in)
+	{
+		// Get combined peak/rms input
+		const float rms = RMS_FACTOR * m_RMS.process(in);
+		const float peak = std::fabsf(in);
+		const float inCombined = m_peakRatio * (peak - rms) + rms;
+
+		// Get log attenuation
+		const float indB = juce::Decibels::gainToDecibels(inCombined);
+		const float envelopeIndB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
+
+		// Get lin attenuation
+		const float smoothLin = m_envelopeFollowerLin.process(24.0f * inCombined) / 24.0f;
+		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Get combined lin/log attenuation
+		const float attenuatedB = m_logRatio * (attenuateLogdB - attenuateLindB) + attenuateLindB;
+		const float attenuateGain = juce::Decibels::decibelsToGain(attenuatedB);
+
+		// Apply gain reduction
+		return attenuateGain * in;
+	};
 	float processHardKneeLinPeak(float in);
 	float processHardKneeLogPeak(float in);
 	float processHardKneeLinRMS(float in);
@@ -158,9 +298,11 @@ public:
 
 protected:
 	DualEnvelopeFollower<float> m_envelopeFollowerLog;
-	DualEnvelopeFollower<float> m_envelopeFollowerLinear;
-	RMSBuffer m_RMSBuffer;
+	DualEnvelopeFollower<float> m_envelopeFollowerLin;
+	RMS m_RMS;
 	CompressorParams<float> m_params;
+	float m_peakRatio = 1.0f;
+	float m_logRatio = 1.0f;
 };
 
 //==============================================================================
@@ -173,24 +315,23 @@ public:
 	inline void init(const int sampleRate)
 	{
 		m_envelopeFollowerLog.init(sampleRate);
-		m_envelopeFollowerLinear.init(sampleRate);
+		m_envelopeFollowerLin.init(sampleRate);
 
-		m_RMSBuffer.init(sampleRate);
-		const int size = static_cast<int>(0.01f * sampleRate);
-		m_RMSBuffer.set(size);
+		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
+		m_RMS.init(size);
 	};
 	inline void set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS, float holdTimeMS)
 	{
 		m_params.set(thresholddB, ratio, kneeWidth);
 
 		// Set envelope followers
-		m_envelopeFollowerLinear.set(attackTimeMS, releaseTimeMS, holdTimeMS);
+		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS, holdTimeMS);
 		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS, holdTimeMS);
 	};
 	float processHardKneeLinPeak(float in)
 	{
 		// Smooth
-		const float smooth = m_envelopeFollowerLinear.process(24.0f * in) / 24.0f;
+		const float smooth = m_envelopeFollowerLin.process(24.0f * in) / 24.0f;
 
 		//Do nothing if below threshold
 		if (smooth < m_params.m_threshold)
@@ -221,11 +362,10 @@ public:
 	float processHardKneeLinRMS(float in)
 	{
 		// Get RMS
-		m_RMSBuffer.write(in);
-		const float rms = m_RMSBuffer.getRMS();
+		const float rms = RMS_FACTOR * m_RMS.process(in);
 
 		// Smooth
-		const float smooth = m_envelopeFollowerLinear.process(24.0f * rms) / 24.0f;
+		const float smooth = m_envelopeFollowerLin.process(24.0f * rms) / 24.0f;
 
 		//Do nothing if below threshold
 		if (smooth < m_params.m_threshold)
@@ -242,8 +382,7 @@ public:
 	float processHardKneeLogRMS(float in)
 	{
 		// Get RMS
-		m_RMSBuffer.write(in);
-		const float rms = m_RMSBuffer.getRMS();
+		const float rms = RMS_FACTOR * m_RMS.process(in);
 
 		// Convert input from gain to dB
 		const float indB = juce::Decibels::gainToDecibels(rms);
@@ -260,7 +399,7 @@ public:
 	float processSoftKnee(float in)
 	{
 		// Smooth
-		const float smooth = m_envelopeFollowerLinear.process(in);
+		const float smooth = m_envelopeFollowerLin.process(in);
 
 		//Do nothing if below threshold
 		if (smooth < m_params.m_T_minus_WHalf)
@@ -290,7 +429,7 @@ public:
 
 protected:
 	HoldEnvelopeFollower<float> m_envelopeFollowerLog;
-	HoldEnvelopeFollower<float> m_envelopeFollowerLinear;
-	RMSBuffer m_RMSBuffer;
+	HoldEnvelopeFollower<float> m_envelopeFollowerLin;
+	RMS m_RMS;
 	CompressorParams<float> m_params;
 };

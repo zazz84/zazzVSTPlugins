@@ -3,11 +3,10 @@
 #include <math.h>
 
 
-//==============================================================================
 class CircularBuffer
 {
 public:
-	CircularBuffer() {};
+	CircularBuffer() = default;
 	~CircularBuffer() { clearBuffer(); }
 
 	inline void init(const int size)
@@ -169,22 +168,4 @@ private:
 	int m_head = 0;
 	int m_bitMask = 0;
 	int m_readOffset = 0;
-};
-
-//==============================================================================
-class RMSBuffer : public CircularBuffer
-{
-public:
-	float getRMS()
-	{
-		const int size = getSize();
-
-		m_rms = m_rms + ((std::fabsf(readDelay(1)) - std::fabsf(readDelay(size - 1))) / (float)size);
-
-		// 1.5 is magic number
-		return 1.5f * m_rms;
-	};
-
-private:
-	float m_rms = 0.0f;
 };

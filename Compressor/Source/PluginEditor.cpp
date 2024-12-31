@@ -2,61 +2,39 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.65f, 0.5f, 0.6f, 1.0f);
-const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.65f, 0.5f, 0.5f, 1.0f);
-const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.65f, 0.5f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
+const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
+const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
+
+const int CompressorAudioProcessorEditor::SLIDERS[] = { 9 };
+const float CompressorAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
 
 //==============================================================================
 CompressorAudioProcessorEditor::CompressorAudioProcessorEditor (CompressorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {	
+	// Plugin name
+	m_pluginName.setText("Compressor", juce::dontSendNotification);
+	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
+	m_pluginName.setJustificationType(juce::Justification::centred);
+	addAndMakeVisible(m_pluginName);
+	
 	// Lables and sliders
 	for (int i = 0; i < N_SLIDERS; i++)
 	{
 		auto& label = m_labels[i];
 		auto& slider = m_sliders[i];
-		std::string text = CompressorAudioProcessor::paramsNames[i];
+		const std::string text = CompressorAudioProcessor::paramsNames[i];
+		const std::string unit = CompressorAudioProcessor::paramsUnitNames[i];
 
-		//Lable
-		createLabel(label, text);
+		createSliderWithLabel(slider, label, text, unit);
 		addAndMakeVisible(label);
-
-		//Slider
-		createSlider(slider);
 		addAndMakeVisible(slider);
+
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
-	// Buttons
-	createButton(button1, TYPE_BUTTON_GROUP);
-	createButton(button2, TYPE_BUTTON_GROUP);
-	createButton(button3, STYLE_BUTTON_GROUP);
-	createButton(button4, STYLE_BUTTON_GROUP);
-	createButton(button5, DETECTION_BUTTON_GROUP);
-	createButton(button6, DETECTION_BUTTON_GROUP);
-	createButton(button7, STYLE_BUTTON_GROUP);
-	createButton(button8, STYLE_BUTTON_GROUP);
-
-	addAndMakeVisible(button1);
-	addAndMakeVisible(button2);
-	addAndMakeVisible(button3);
-	addAndMakeVisible(button4);
-	addAndMakeVisible(button5);
-	addAndMakeVisible(button6);
-	addAndMakeVisible(button7);
-	addAndMakeVisible(button8);
-
-	button1Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "LOG", button1));
-	button2Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "LIN", button2));
-	button3Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "VCA", button3));
-	button4Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "Opto", button4));
-	button5Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "Peak", button5));
-	button6Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "RMS", button6));
-	button7Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "Slew", button7));
-	button8Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "Dual", button8));
-
-	// Canvas
-	createCanvas(*this, N_SLIDERS);
+	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
 CompressorAudioProcessorEditor::~CompressorAudioProcessorEditor()
@@ -71,25 +49,5 @@ void CompressorAudioProcessorEditor::paint (juce::Graphics& g)
 
 void CompressorAudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, N_SLIDERS);
-
-	// Buttons
-	const int height = getHeight();
-	const float fonthHeight = (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
-	const float buttonWidth = 1.8f * (float)height / (float)ZazzLookAndFeel::FONT_DIVISOR;
-	int posY = height - (int)(1.2f * fonthHeight);
-
-	const float width = (float)getWidth() / (float)N_SLIDERS;
-
-	button1.setBounds((int)(3.0f * width - 1.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
-	button2.setBounds((int)(3.0f * width + 0.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
-
-	button3.setBounds((int)(2.0f * width - 1.0f * buttonWidth), posY - (int)fonthHeight, (int)buttonWidth, (int)fonthHeight);
-	button4.setBounds((int)(2.0f * width + 0.0f * buttonWidth), posY - (int)fonthHeight, (int)buttonWidth, (int)fonthHeight);
-
-	button7.setBounds((int)(2.0f * width - 1.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
-	button8.setBounds((int)(2.0f * width + 0.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
-
-	button5.setBounds((int)(4.0f * width - 1.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
-	button6.setBounds((int)(4.0f * width + 0.0f * buttonWidth), posY, (int)buttonWidth, (int)fonthHeight);
+	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
 }

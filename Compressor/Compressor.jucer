@@ -6,10 +6,12 @@
               version="1.1.1">
   <MAINGROUP id="CmjmdB" name="Compressor">
     <GROUP id="{D20D41EA-EDA5-188B-BC6B-62FA9976F1CD}" name="Source">
-      <FILE id="TYm242" name="ZazzAudioProcessorEditor_OLD.h" compile="0"
-            resource="0" file="../Shared/GUI/ZazzAudioProcessorEditor_OLD.h"/>
-      <FILE id="TZfceU" name="ZazzLookAndFeel_OLD.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel_OLD.h"/>
+      <FILE id="Owsgaf" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="WoG0AB" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
+      <FILE id="bKbM4Z" name="ZazzLookAndFeel.h" compile="0" resource="0"
+            file="../Shared/GUI/ZazzLookAndFeel.h"/>
+      <FILE id="RfqfNJ" name="RMS.h" compile="0" resource="0" file="../Shared/Dynamics/RMS.h"/>
       <FILE id="Du5GWu" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="iWfQ7j" name="Compressors.cpp" compile="1" resource="0" file="../Shared/Dynamics/Compressors.cpp"/>
@@ -18,9 +20,6 @@
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
       <FILE id="YMEtaK" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="TMbrz4" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
-      <FILE id="RntX3B" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="kHftKT" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
       <FILE id="McIQew" name="PluginEditor.cpp" compile="1" resource="0"

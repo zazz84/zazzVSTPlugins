@@ -5,16 +5,10 @@
 #include <JuceHeader.h>
 
 //==============================================================================
-void Compressor::set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS)
-{
-	m_params.set(thresholddB, ratio, kneeWidth);
-	m_envelopeFollower.set(attackTimeMS, releaseTimeMS);
-}
-
 float Compressor::processHardKneeLinPeak(float in)
 {	
 	// Smooth
-	const float smooth = m_envelopeFollower.process(in);
+	const float smooth = m_envelopeFollowerLin.process(in);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -30,13 +24,12 @@ float Compressor::processHardKneeLinPeak(float in)
 }
 
 float Compressor::processHardKneeLinRMS(float in)
-{
+{	
 	// Get RMS
-	m_circularBuffer.write(in);
-	const float rms = m_circularBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Smooth
-	const float smooth = m_envelopeFollower.process(rms);
+	const float smooth = m_envelopeFollowerLin.process(rms);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -60,7 +53,7 @@ float Compressor::processHardKneeLogPeak(float in)
 	const float attenuatedB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
 
 	// Smooth
-	const float attenuateSmoothdB = -m_envelopeFollower.process(attenuatedB);
+	const float attenuateSmoothdB = -m_envelopeFollowerLog.process(attenuatedB);
 
 	// Apply gain reduction
 	return in * juce::Decibels::decibelsToGain(attenuateSmoothdB);
@@ -69,8 +62,7 @@ float Compressor::processHardKneeLogPeak(float in)
 float Compressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.write(in);
-	const float rms = m_circularBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Convert input from gain to dB
 	const float indB = juce::Decibels::gainToDecibels(rms);
@@ -79,7 +71,7 @@ float Compressor::processHardKneeLogRMS(float in)
 	const float attenuatedB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
 
 	// Smooth
-	const float attenuateSmoothdB = -m_envelopeFollower.process(attenuatedB);
+	const float attenuateSmoothdB = -m_envelopeFollowerLog.process(attenuatedB);
 
 	// Apply gain reduction
 	return in * juce::Decibels::decibelsToGain(attenuateSmoothdB);
@@ -88,7 +80,7 @@ float Compressor::processHardKneeLogRMS(float in)
 float Compressor::processSoftKneeLinPeak(float in)
 {
 	// Smooth
-	const float smooth = m_envelopeFollower.process(in);
+	const float smooth = m_envelopeFollowerLin.process(in);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_T_minus_WHalf)
@@ -117,19 +109,10 @@ float Compressor::processSoftKneeLinPeak(float in)
 }
 
 //==============================================================================
-void SlewCompressor::set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS)
-{
-	m_params.set(thresholddB, ratio, kneeWidth);
-
-	// Set envelope followers
-	m_envelopeFollowerLinear.set(2.2f * attackTimeMS, 3.5f * releaseTimeMS);
-	m_envelopeFollowerLog.set(0.1f * attackTimeMS, 0.2f * releaseTimeMS);
-}
-
 float SlewCompressor::processHardKneeLinPeak(float in)
 {	
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(in);
+	const float smooth = m_envelopeFollowerLin.process(in);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -147,11 +130,10 @@ float SlewCompressor::processHardKneeLinPeak(float in)
 float SlewCompressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.write(in);
-	const float rms = m_circularBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(rms);
+	const float smooth = m_envelopeFollowerLin.process(rms);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -184,8 +166,7 @@ float SlewCompressor::processHardKneeLogPeak(float in)
 float SlewCompressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_circularBuffer.write(in);
-	const float rms = m_circularBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Convert input from gain to dB
 	const float indB = juce::Decibels::gainToDecibels(rms);
@@ -203,7 +184,7 @@ float SlewCompressor::processHardKneeLogRMS(float in)
 float SlewCompressor::processSoftKnee(float in)
 {
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(in);
+	const float smooth = m_envelopeFollowerLin.process(in);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_T_minus_WHalf)
@@ -232,19 +213,10 @@ float SlewCompressor::processSoftKnee(float in)
 }
 
 //==============================================================================
-void OptoCompressor::set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS)
-{
-	m_params.set(thresholddB, ratio, kneeWidth);
-
-	// Set envelope followers
-	m_envelopeFollowerLinear.set(attackTimeMS, releaseTimeMS);
-	m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
-}
-
 float OptoCompressor::processHardKneeLinPeak(float in)
 {
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(24.0f * in) / 24.0f;
+	const float smooth = m_envelopeFollowerLin.process(24.0f * in) / 24.0f;
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -262,11 +234,10 @@ float OptoCompressor::processHardKneeLinPeak(float in)
 float OptoCompressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.write(in);
-	const float rms = m_RMSBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(24.0f * rms) / 24.0f;
+	const float smooth = m_envelopeFollowerLin.process(24.0f * rms) / 24.0f;
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -299,8 +270,7 @@ float OptoCompressor::processHardKneeLogPeak(float in)
 float OptoCompressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.write(in);
-	const float rms = m_RMSBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Convert input from gain to dB
 	const float indB = juce::Decibels::gainToDecibels(rms);
@@ -318,7 +288,7 @@ float OptoCompressor::processHardKneeLogRMS(float in)
 float OptoCompressor::processSoftKnee(float in)
 {
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(in);
+	const float smooth = m_envelopeFollowerLin.process(in);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_T_minus_WHalf)
@@ -347,19 +317,10 @@ float OptoCompressor::processSoftKnee(float in)
 }
 
 //==============================================================================
-void DualCompressor::set(float thresholddB, float ratio, float kneeWidth, float attackTimeMS, float releaseTimeMS)
-{
-	m_params.set(thresholddB, ratio, kneeWidth);;
-
-	// Set envelope followers
-	m_envelopeFollowerLinear.set(attackTimeMS, releaseTimeMS);
-	m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
-}
-
 float DualCompressor::processHardKneeLinPeak(float in)
 {
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(24.0f * in) / 24.0f;
+	const float smooth = m_envelopeFollowerLin.process(24.0f * in) / 24.0f;
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -377,11 +338,10 @@ float DualCompressor::processHardKneeLinPeak(float in)
 float DualCompressor::processHardKneeLinRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.write(in);
-	const float rms = m_RMSBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(24.0f * rms) / 24.0f;
+	const float smooth = m_envelopeFollowerLin.process(24.0f * rms) / 24.0f;
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_threshold)
@@ -414,8 +374,7 @@ float DualCompressor::processHardKneeLogPeak(float in)
 float DualCompressor::processHardKneeLogRMS(float in)
 {
 	// Get RMS
-	m_RMSBuffer.write(in);
-	const float rms = m_RMSBuffer.getRMS();
+	const float rms = RMS_FACTOR * m_RMS.process(in);
 
 	// Convert input from gain to dB
 	const float indB = juce::Decibels::gainToDecibels(rms);
@@ -433,7 +392,7 @@ float DualCompressor::processHardKneeLogRMS(float in)
 float DualCompressor::processSoftKnee(float in)
 {
 	// Smooth
-	const float smooth = m_envelopeFollowerLinear.process(in);
+	const float smooth = m_envelopeFollowerLin.process(in);
 
 	//Do nothing if below threshold
 	if (smooth < m_params.m_T_minus_WHalf)

@@ -10,8 +10,20 @@
 #include "PluginEditor.h"
 
 //==============================================================================
+#define PROCESS_COMPRESSOR(COMPRESSOR) \
+		auto& compressor = COMPRESSOR[channel]; \
+		compressor.set(-20.0f, ratio, 0.0f, attack, release, peakRatio, logRatio); \
+		for (int sample = 0; sample < samples; sample++) \
+		{ \
+			const float in = channelBuffer[sample]; \
+			const float	out = compressor.processHardKnee(in * gain); \
+			channelBuffer[sample] = dry * in + wet * out; \
+		} \
 
-const std::string CompressorAudioProcessor::paramsNames[] = { "Gain", "Attack", "Release", "Ratio", "Mix", "Volume" };
+//==============================================================================
+
+const std::string CompressorAudioProcessor::paramsNames[] = { "Type", "Gain", "Attack", "Release", "Ratio", "Peak/RMS", "Log/Lin", "Mix", "Volume" };
+const std::string CompressorAudioProcessor::paramsUnitNames[] = { "", " dB", " ms", " ms", "", " %", " %", " %", " dB" };
 
 //==============================================================================
 CompressorAudioProcessor::CompressorAudioProcessor()
@@ -26,21 +38,15 @@ CompressorAudioProcessor::CompressorAudioProcessor()
                        )
 #endif
 {
-	gainParameter    = apvts.getRawParameterValue(paramsNames[0]);
-	attackParameter  = apvts.getRawParameterValue(paramsNames[1]);
-	releaseParameter = apvts.getRawParameterValue(paramsNames[2]);
-	ratioParameter   = apvts.getRawParameterValue(paramsNames[3]);
-	mixParameter     = apvts.getRawParameterValue(paramsNames[4]);
-	volumeParameter  = apvts.getRawParameterValue(paramsNames[5]);
-
-	button1Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LOG"));
-	button2Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LIN"));
-	button3Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("VCA"));
-	button4Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Opto"));
-	button5Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Peak"));
-	button6Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("RMS"));
-	button7Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Slew"));
-	button8Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Dual"));
+	typeParameter    = apvts.getRawParameterValue(paramsNames[0]);
+	gainParameter    = apvts.getRawParameterValue(paramsNames[1]);
+	attackParameter  = apvts.getRawParameterValue(paramsNames[2]);
+	releaseParameter = apvts.getRawParameterValue(paramsNames[3]);
+	ratioParameter   = apvts.getRawParameterValue(paramsNames[4]);
+	rmsParameter     = apvts.getRawParameterValue(paramsNames[5]);
+	linParameter     = apvts.getRawParameterValue(paramsNames[6]);
+	mixParameter     = apvts.getRawParameterValue(paramsNames[7]);
+	volumeParameter  = apvts.getRawParameterValue(paramsNames[8]);
 }
 
 CompressorAudioProcessor::~CompressorAudioProcessor()
@@ -158,266 +164,42 @@ bool CompressorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 void CompressorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
+	const auto type = static_cast<int>(typeParameter->load());
 	const auto gain = juce::Decibels::decibelsToGain(gainParameter->load());
 	const auto attack = attackParameter->load();
 	const auto release = releaseParameter->load();
 	const auto ratio = ratioParameter->load();
-	const auto mix = mixParameter->load();
+	const auto peakRatio = 1.0f - (0.01f * rmsParameter->load());
+	const auto logRatio = 1.0f - (0.01f * linParameter->load());
+	const auto mix = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
-	const auto button1 = button1Parameter->get();
-	const auto button2 = button2Parameter->get();
-	const auto button3 = button3Parameter->get();
-	const auto button4 = button4Parameter->get();
-	const auto button5 = button5Parameter->get();
-	const auto button6 = button6Parameter->get();
-	const auto button7 = button7Parameter->get();
-	const auto button8 = button8Parameter->get();
 
 	// Mics constants
-	const auto mixInverse = 1.0f - mix;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto wet = volume * mix;
+	const auto dry = volume * (1.0f - mix);
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		// VCA
-		if (button3)
+		if (type == 1)
 		{
-			auto& compressor = m_compressor[channel];
-			compressor.set(-20.0f, ratio, 0.0f, attack, release);
-
-			// LOG
-			if (button1)
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
-			// LIN
-			else
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
+			PROCESS_COMPRESSOR(m_compressor)
 		}
-		// Opto
-		else if (button4)
+		else if (type == 2)
 		{
-			auto& compressor = m_optoCompressor[channel];
-			compressor.set(-20.0f, ratio, 0.0f, attack, release);
-
-			// LOG
-			if (button1)
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
-			// LIN
-			else
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
+			PROCESS_COMPRESSOR(m_optoCompressor)
 		}
-		// Slew
-		else if (button7)
+		else if (type == 3)
 		{
-			auto& compressor = m_slewCompressor[channel];
-			compressor.set(-20.0f, ratio, 0.0f, attack, release);
-
-			// LOG
-			if (button1)
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
-			// LIN
-			else
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
+			PROCESS_COMPRESSOR(m_slewCompressor)
 		}
-		// Dual
 		else
 		{
-			auto& compressor = m_dualCompressor[channel];
-			compressor.set(-20.0f, ratio, 0.0f, attack, release);
-
-			// LOG
-			if (button1)
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLogRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
-			// LIN
-			else
-			{
-				// Peak
-				if (button5)
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinPeak(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-				// RMS
-				else
-				{
-					for (int sample = 0; sample < samples; sample++)
-					{
-						const float in = channelBuffer[sample];
-						const float	out = compressor.processHardKneeLinRMS(in * gain);
-
-						channelBuffer[sample] = volume * (mixInverse * in + mix * out);
-					}
-				}
-			}
+			PROCESS_COMPRESSOR(m_dualCompressor)
 		}
 	}
 }
@@ -456,21 +238,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout CompressorAudioProcessor::cr
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.1f, 200.0f, 0.1f,  0.4f),   10.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   5.0f, 600.0f, 0.1f,  0.4f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   1.5f,   8.0f, 0.5f,  1.0f),   4.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),   1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
-
-	layout.add(std::make_unique<juce::AudioParameterBool>("LOG", "LOG", true));
-	layout.add(std::make_unique<juce::AudioParameterBool>("LIN", "LIN", false));
-	layout.add(std::make_unique<juce::AudioParameterBool>("VCA", "VCA", true));
-	layout.add(std::make_unique<juce::AudioParameterBool>("Opto", "Opto", false));
-	layout.add(std::make_unique<juce::AudioParameterBool>("Peak", "Peak", true));
-	layout.add(std::make_unique<juce::AudioParameterBool>("RMS", "RMS", false));
-	layout.add(std::make_unique<juce::AudioParameterBool>("Slew", "Slew", true));
-	layout.add(std::make_unique<juce::AudioParameterBool>("Dual", "Dual", false));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  1.0f,    4.0f, 1.0f,  1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.1f, 200.0f, 0.1f,  0.4f),   10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   5.0f, 600.0f, 0.1f,  0.4f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   1.5f,   8.0f, 0.5f,  1.0f),   4.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f, 100.0f, 1.0f,  1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f, 100.0f, 1.0f,  1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f, 100.0f, 1.0f,  1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
 
 	return layout;
 }

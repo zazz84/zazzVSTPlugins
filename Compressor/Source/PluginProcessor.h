@@ -19,6 +19,7 @@ public:
     ~CompressorAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string paramsUnitNames[];
 	static const int N_CHANNELS = 2;
 
     //==============================================================================
@@ -66,21 +67,15 @@ private:
 	std::array<OptoCompressor, N_CHANNELS> m_optoCompressor;
 	std::array<DualCompressor, N_CHANNELS> m_dualCompressor;
 
+	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
 	std::atomic<float>* releaseParameter = nullptr;
 	std::atomic<float>* ratioParameter = nullptr;
+	std::atomic<float>* rmsParameter = nullptr;
+	std::atomic<float>* linParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
-
-	juce::AudioParameterBool* button1Parameter = nullptr;
-	juce::AudioParameterBool* button2Parameter = nullptr;
-	juce::AudioParameterBool* button3Parameter = nullptr;
-	juce::AudioParameterBool* button4Parameter = nullptr;
-	juce::AudioParameterBool* button5Parameter = nullptr;
-	juce::AudioParameterBool* button6Parameter = nullptr;
-	juce::AudioParameterBool* button7Parameter = nullptr;
-	juce::AudioParameterBool* button8Parameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CompressorAudioProcessor)
 };
