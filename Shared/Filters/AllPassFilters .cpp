@@ -2,10 +2,6 @@
 #include "AllPassFilters.h"
 
 //==============================================================================
-SecondOrderAllPass::SecondOrderAllPass()
-{
-}
-
 void SecondOrderAllPass::init(int sampleRate)
 {
 	m_SampleRate = sampleRate;

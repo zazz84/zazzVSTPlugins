@@ -2,13 +2,14 @@
 
 <JUCERPROJECT id="j9hffh" name="BassEnhancer" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
+              version="1.1.0">
   <MAINGROUP id="R1AzZN" name="BassEnhancer">
     <GROUP id="{D8352F7E-3FED-F62A-1F0E-9C5A87CF0AEB}" name="Source">
-      <FILE id="MOHC3f" name="AllPassFilters .cpp" compile="1" resource="0"
-            file="../Shared/Filters/AllPassFilters .cpp"/>
-      <FILE id="rZDHef" name="AllPassFilters.h" compile="0" resource="0"
-            file="../Shared/Filters/AllPassFilters.h"/>
+      <FILE id="wOhs6n" name="LinkwitzRileyFilter.h" compile="0" resource="0"
+            file="../Shared/Filters/LinkwitzRileyFilter.h"/>
+      <FILE id="N51VUe" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
+      <FILE id="neAofy" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="TqJU8P" name="BiquadFilters.cpp" compile="1" resource="0"
             file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="FdO0QH" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
