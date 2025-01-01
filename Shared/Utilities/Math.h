@@ -68,10 +68,10 @@ namespace Math
 
 	//==============================================================================
 	//powf(10.f,x) is exactly exp(log(10.0f)*x)
-	/*inline float pow10(const float x)
+	inline float pow10(const float x)
 	{
 		return std::expf(2.302585092994046f * x);
-	}*/
+	}
 
 	// Fast power-of-10 approximation, with RMS error of 1.77%. 
 	// This approximation developed by Nicol Schraudolph (Neural Computation vol 11, 1999).  
@@ -81,11 +81,11 @@ namespace Math
 	//   (int)f = f*0x00800000*log(b)/log(2) + 0x3F800000-60801*8
 	// f=10^f is approximated by
 	//   (int)f = f*27866352.6 + 1064866808.0
-	inline float pow10(float f)
+	/*inline float pow10(float f)
 	{
 		*(int *)&f = f * 27866352.6f + 1064866808.0f;
 		return f;
-	}
+	}*/
 
 	//==============================================================================
 	inline float dBToGain(float dB)

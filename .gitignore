@@ -6044,3 +6044,125 @@ Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Solution.VC.db-shm
 Compressor/Builds/VisualStudio2017/.vs/Compressor/v15/Solution.VC.db-wal
 Compressor/Builds/VisualStudio2017/x64/Debug/Shared Code/Compress.574C289A.tlog/unsuccessfulbuild
 Compressor/Builds/VisualStudio2017/x64/Release/Shared Code/Compress.574C289A.tlog/unsuccessfulbuild
+MonoToStereo/Builds/VisualStudio2017/.vs/MonoToStereo/v15/.suo
+MonoToStereo/Builds/VisualStudio2017/.vs/MonoToStereo/v15/Browse.VC.db
+MonoToStereo/Builds/VisualStudio2017/.vs/MonoToStereo/v15/Browse.VC.opendb
+MonoToStereo/Builds/VisualStudio2017/.vs/MonoToStereo/v15/Solution.VC.db
+MonoToStereo/Builds/VisualStudio2017/.vs/MonoToStereo/v15/Solution.VC.db-shm
+MonoToStereo/Builds/VisualStudio2017/.vs/MonoToStereo/v15/Solution.VC.db-wal
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo.sln
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_SharedCode.vcxproj
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_SharedCode.vcxproj.filters
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_StandalonePlugin.vcxproj
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_StandalonePlugin.vcxproj.filters
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_VST3.vcxproj
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_VST3.vcxproj.filters
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_VST3ManifestHelper.vcxproj
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_VST3ManifestHelper.vcxproj.filters
+MonoToStereo/Builds/VisualStudio2017/resources.rc
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/CL.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/CL.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/CL.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/Lib-link.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/Lib-link.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/Lib.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToSt.48AC5848.tlog/MonoToStereo_SharedCode.lastbuildstate
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToStereo.lib
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToStereo.pdb
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/MonoToStereo_SharedCode.log
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/CL.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/CL.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/CL.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/link.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/link.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/link.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/MonoToStereo_VST3ManifestHelper.lastbuildstate
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/rc.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/rc.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToSt.676BC076.tlog/rc.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MonoToStereo_VST3ManifestHelper.log
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/CL.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/CL.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/CL.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/link.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/link.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/link.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/MonoToStereo_VST3.lastbuildstate
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/MonoToStereo_VST3.write.1u.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/rc.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/rc.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToSt.532D5EFA.tlog/rc.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.dll
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.exp
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.ilk
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.lib
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.pdb
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.vst3/Contents/Resources/moduleinfo.json
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo.vst3/Contents/x86_64-win/MonoToStereo.vst3
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/MonoToStereo_VST3.log
+MonoToStereo/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+MonoToStereo/JuceLibraryCode/include_juce_audio_basics.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_basics.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_devices.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_devices.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_formats.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_formats.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_processors.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_processors.mm
+MonoToStereo/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_utils.cpp
+MonoToStereo/JuceLibraryCode/include_juce_audio_utils.mm
+MonoToStereo/JuceLibraryCode/include_juce_core.cpp
+MonoToStereo/JuceLibraryCode/include_juce_core.mm
+MonoToStereo/JuceLibraryCode/include_juce_data_structures.cpp
+MonoToStereo/JuceLibraryCode/include_juce_data_structures.mm
+MonoToStereo/JuceLibraryCode/include_juce_events.cpp
+MonoToStereo/JuceLibraryCode/include_juce_events.mm
+MonoToStereo/JuceLibraryCode/include_juce_graphics.cpp
+MonoToStereo/JuceLibraryCode/include_juce_graphics.mm
+MonoToStereo/JuceLibraryCode/include_juce_gui_basics.cpp
+MonoToStereo/JuceLibraryCode/include_juce_gui_basics.mm
+MonoToStereo/JuceLibraryCode/include_juce_gui_extra.cpp
+MonoToStereo/JuceLibraryCode/include_juce_gui_extra.mm
+MonoToStereo/JuceLibraryCode/JuceHeader.h
+MonoToStereo/JuceLibraryCode/JucePluginDefines.h
+MonoToStereo/JuceLibraryCode/ReadMe.txt
