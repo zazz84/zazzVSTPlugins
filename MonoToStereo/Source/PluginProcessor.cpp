@@ -160,6 +160,8 @@ bool MonoToStereoAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 
 void MonoToStereoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Process only stereo input
 	if (buffer.getNumChannels() != 2)
 	{
