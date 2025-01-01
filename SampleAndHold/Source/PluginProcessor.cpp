@@ -18,13 +18,15 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
-
-const std::string MyPluginNameAudioProcessor::paramsNames[] = { "Volume" };
-const std::string MyPluginNameAudioProcessor::paramsUnitNames[] = { " dB" };
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 //==============================================================================
-MyPluginNameAudioProcessor::MyPluginNameAudioProcessor()
+
+const std::string SampleAndHoldAudioProcessor::paramsNames[] = { "Threshold", "Frequency", "Mix", "Volume" };
+const std::string SampleAndHoldAudioProcessor::paramsUnitNames[] = { " dB", " Hz", " %", " dB" };
+
+//==============================================================================
+SampleAndHoldAudioProcessor::SampleAndHoldAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -35,21 +37,24 @@ MyPluginNameAudioProcessor::MyPluginNameAudioProcessor()
                      #endif
                        )
 #endif
-{
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[0]);
+{	
+	thresholdParameter = apvts.getRawParameterValue(paramsNames[0]);
+	frequencyParameter = apvts.getRawParameterValue(paramsNames[1]);
+	mixParameter = apvts.getRawParameterValue(paramsNames[2]);
+	volumeParameter    = apvts.getRawParameterValue(paramsNames[3]);
 }
 
-MyPluginNameAudioProcessor::~MyPluginNameAudioProcessor()
+SampleAndHoldAudioProcessor::~SampleAndHoldAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String MyPluginNameAudioProcessor::getName() const
+const juce::String SampleAndHoldAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool MyPluginNameAudioProcessor::acceptsMidi() const
+bool SampleAndHoldAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -58,7 +63,7 @@ bool MyPluginNameAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool MyPluginNameAudioProcessor::producesMidi() const
+bool SampleAndHoldAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -67,7 +72,7 @@ bool MyPluginNameAudioProcessor::producesMidi() const
    #endif
 }
 
-bool MyPluginNameAudioProcessor::isMidiEffect() const
+bool SampleAndHoldAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -76,48 +81,56 @@ bool MyPluginNameAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double MyPluginNameAudioProcessor::getTailLengthSeconds() const
+double SampleAndHoldAudioProcessor::getTailLengthSeconds() const
 {
-    return 0.0;
+	// One sample to process one-pole filters
+	return 1.0 / getSampleRate();
 }
 
-int MyPluginNameAudioProcessor::getNumPrograms()
+int SampleAndHoldAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int MyPluginNameAudioProcessor::getCurrentProgram()
+int SampleAndHoldAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void MyPluginNameAudioProcessor::setCurrentProgram (int index)
+void SampleAndHoldAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String MyPluginNameAudioProcessor::getProgramName (int index)
+const juce::String SampleAndHoldAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void MyPluginNameAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void SampleAndHoldAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void MyPluginNameAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void SampleAndHoldAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
+
+	m_frequencySmoother[0].init(sr);
+	m_frequencySmoother[1].init(sr);
+	
+	m_frequencySmoother[0].set(4.0);
+	m_frequencySmoother[1].set(4.0);
 }
 
-void MyPluginNameAudioProcessor::releaseResources()
+void SampleAndHoldAudioProcessor::releaseResources()
 {
-	
+	m_frequencySmoother[0].release();
+	m_frequencySmoother[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool MyPluginNameAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool SampleAndHoldAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -142,53 +155,83 @@ bool MyPluginNameAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void MyPluginNameAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void SampleAndHoldAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto thresholdGain = Math::dBToGain(thresholdParameter->load());
+	const auto frequency = frequencyParameter->load();
+	const auto mix = 0.01f * mixParameter->load();
+	const auto gain = Math::dBToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto sampleRate = static_cast<float>(getSampleRate());
+	const auto wet = gain * mix;
+	const auto dry = gain * (1.0f - mix);
 
 	for (int channel = 0; channel < channels; channel++)
 	{
-		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
+		auto& holdValue = m_holdValue[channel];
+		auto& samplesToHold = m_samplesToHold[channel];
+		auto& frequencySmoother = m_frequencySmoother[channel];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
-			// Read
+			// Smoothed frequency
+			const float frequencySmooth = frequencySmoother.process(frequency);
+			
+			// Get input
 			const float in = channelBuffer[sample];
-		
-			//Out
-			channelBuffer[sample] = in;
+
+			float out = 0.0f;
+
+			if (samplesToHold <= 0)
+			{
+				if (in > thresholdGain || in < -thresholdGain)
+				{
+					out = holdValue = in;
+					samplesToHold = static_cast<int>(sampleRate / frequencySmooth);
+				}
+				else
+				{
+					out = in;
+				}
+			}
+			else
+			{
+				out = holdValue;
+			}
+
+			samplesToHold--;
+
+			// Set output
+			channelBuffer[sample] = dry * in + wet * out;
 		}
 	}
-
-	buffer.applyGain(gain);
 }
 
 //==============================================================================
-bool MyPluginNameAudioProcessor::hasEditor() const
+bool SampleAndHoldAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* MyPluginNameAudioProcessor::createEditor()
+juce::AudioProcessorEditor* SampleAndHoldAudioProcessor::createEditor()
 {
-    return new MyPluginNameAudioProcessorEditor (*this, apvts);
+    return new SampleAndHoldAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void MyPluginNameAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void SampleAndHoldAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void MyPluginNameAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void SampleAndHoldAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -197,13 +240,16 @@ void MyPluginNameAudioProcessor::setStateInformation (const void* data, int size
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout MyPluginNameAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout SampleAndHoldAudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -60.0f,     0.0f, 1.0f, 1.0f),	   -12.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  10.0f, 20000.0f, 1.0f, 0.4f), 20000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   100.0f, 1.0f, 1.0f),    100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,    18.0f, 1.0f, 1.0f),      0.0f));
 
 	return layout;
 }
@@ -212,5 +258,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyPluginNameAudioProcessor::
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new MyPluginNameAudioProcessor();
+    return new SampleAndHoldAudioProcessor();
 }

@@ -23,14 +23,14 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
 //==============================================================================
-class MyPluginNameAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class SampleAndHoldAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
 {
 public:
-    MyPluginNameAudioProcessorEditor (MyPluginNameAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~MyPluginNameAudioProcessorEditor() override;
+    SampleAndHoldAudioProcessorEditor (SampleAndHoldAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~SampleAndHoldAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 1;
+	static const int N_SLIDERS = 4;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 1;
@@ -43,7 +43,7 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    MyPluginNameAudioProcessor& audioProcessor;
+    SampleAndHoldAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
@@ -52,5 +52,5 @@ protected:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleAndHoldAudioProcessorEditor)
 };

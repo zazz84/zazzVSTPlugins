@@ -21,8 +21,10 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
+
 //==============================================================================
-class MyPluginNameAudioProcessor  : public juce::AudioProcessor
+class SampleAndHoldAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -30,12 +32,12 @@ class MyPluginNameAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    MyPluginNameAudioProcessor();
-    ~MyPluginNameAudioProcessor() override;
+    SampleAndHoldAudioProcessor();
+    ~SampleAndHoldAudioProcessor() override;
 
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
-    static const int N_CHANNELS = 2
+	static const int N_CHANNELS = 2;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -77,8 +79,14 @@ public:
 
 private:	
 	//==============================================================================
+	std::array<float, N_CHANNELS> m_holdValue;
+	std::array<int, N_CHANNELS> m_samplesToHold;
+	std::array<OnePoleLowPassFilter, N_CHANNELS> m_frequencySmoother;
 
+	std::atomic<float>* thresholdParameter = nullptr;
+	std::atomic<float>* frequencyParameter = nullptr;
+	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SampleAndHoldAudioProcessor)
 };

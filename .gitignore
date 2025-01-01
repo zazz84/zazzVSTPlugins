@@ -6230,3 +6230,172 @@ MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.vst3/Contents
 MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo_VST3.log
 MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/resources.res
 MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/CL.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/.vs/SampleAndHold/v15/.suo
+SampleAndHold/Builds/VisualStudio2017/.vs/SampleAndHold/v15/Browse.VC.db
+SampleAndHold/Builds/VisualStudio2017/.vs/SampleAndHold/v15/Solution.VC.db
+SampleAndHold/Builds/VisualStudio2017/.vs/SampleAndHold/v15/Solution.VC.db-shm
+SampleAndHold/Builds/VisualStudio2017/.vs/SampleAndHold/v15/Solution.VC.db-wal
+SampleAndHold/Builds/VisualStudio2017/resources.rc
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold.sln
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_SharedCode.vcxproj
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_SharedCode.vcxproj.filters
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_StandalonePlugin.vcxproj
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_StandalonePlugin.vcxproj.filters
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_VST3.vcxproj
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_VST3.vcxproj.filters
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_VST3ManifestHelper.vcxproj
+SampleAndHold/Builds/VisualStudio2017/SampleAndHold_VST3ManifestHelper.vcxproj.filters
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/CL.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/CL.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/CL.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/Lib-link.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/Lib-link.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/Lib.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAn.D6FC60C1.tlog/SampleAndHold_SharedCode.lastbuildstate
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAndHold.lib
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAndHold.pdb
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/Shared Code/SampleAndHold_SharedCode.log
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/CL.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/CL.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/CL.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/link.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/link.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/link.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/rc.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/rc.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/rc.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAn.162F2D95.tlog/SampleAndHold_VST3ManifestHelper.lastbuildstate
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/SampleAndHold_VST3ManifestHelper.log
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/CL.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/CL.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/CL.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/link.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/link.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/link.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/rc.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/rc.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/rc.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/SampleAndHold_VST3.lastbuildstate
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAn.06650D6B.tlog/SampleAndHold_VST3.write.1u.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.dll
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.exp
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.ilk
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.lib
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.pdb
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.vst3/Contents/Resources/moduleinfo.json
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold.vst3/Contents/x86_64-win/SampleAndHold.vst3
+SampleAndHold/Builds/VisualStudio2017/x64/Debug/VST3/SampleAndHold_VST3.log
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/CL.13392.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/CL.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/CL.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/Lib-link.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/Lib-link.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/Lib.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAn.D6FC60C1.tlog/SampleAndHold_SharedCode.lastbuildstate
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAndHold.lib
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAndHold.pdb
+SampleAndHold/Builds/VisualStudio2017/x64/Release/Shared Code/SampleAndHold_SharedCode.log
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/CL.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/CL.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/CL.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/link.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/link.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/link.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/rc.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/rc.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/rc.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAn.162F2D95.tlog/SampleAndHold_VST3ManifestHelper.lastbuildstate
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SampleAndHold_VST3ManifestHelper.log
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/CL.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/CL.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/CL.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/link.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/link.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/link.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/rc.command.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/rc.read.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/rc.write.1.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/SampleAndHold_VST3.lastbuildstate
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAn.06650D6B.tlog/SampleAndHold_VST3.write.1u.tlog
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold.dll
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold.exp
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold.lib
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold.pdb
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold.vst3/Contents/Resources/moduleinfo.json
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold.vst3/Contents/x86_64-win/SampleAndHold.vst3
+SampleAndHold/Builds/VisualStudio2017/x64/Release/VST3/SampleAndHold_VST3.log
+SampleAndHold/JuceLibraryCode/include_juce_audio_basics.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_basics.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_processors.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_processors.mm
+SampleAndHold/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+SampleAndHold/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+SampleAndHold/JuceLibraryCode/include_juce_core.cpp
+SampleAndHold/JuceLibraryCode/include_juce_core.mm
+SampleAndHold/JuceLibraryCode/include_juce_data_structures.cpp
+SampleAndHold/JuceLibraryCode/include_juce_data_structures.mm
+SampleAndHold/JuceLibraryCode/include_juce_events.cpp
+SampleAndHold/JuceLibraryCode/include_juce_events.mm
+SampleAndHold/JuceLibraryCode/include_juce_graphics.cpp
+SampleAndHold/JuceLibraryCode/include_juce_graphics.mm
+SampleAndHold/JuceLibraryCode/include_juce_gui_basics.cpp
+SampleAndHold/JuceLibraryCode/include_juce_gui_basics.mm
+SampleAndHold/JuceLibraryCode/include_juce_gui_extra.cpp
+SampleAndHold/JuceLibraryCode/include_juce_gui_extra.mm
+SampleAndHold/JuceLibraryCode/JuceHeader.h
+SampleAndHold/JuceLibraryCode/JucePluginDefines.h
+SampleAndHold/JuceLibraryCode/ReadMe.txt
