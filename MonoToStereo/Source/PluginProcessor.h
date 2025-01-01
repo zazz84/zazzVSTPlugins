@@ -5,6 +5,8 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Oscillators/SinOscillator.h"
+
 
 //==============================================================================
 class MonoToStereoAudioProcessor  : public juce::AudioProcessor
@@ -21,7 +23,11 @@ public:
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
 	static const int N_CHANNELS = 2;
+	static const float MINIMUM_DELAY_TIME_MS;
 	static const float MAXIMUM_DELAY_TIME_MS;
+	static const float MINIMUM_MODULATION_FREQUENCY;
+	static const float MAXIMUM_MODULATION_FREQUENCY;
+	static const float MAXIMUM_WET;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -64,12 +70,15 @@ public:
 private:	
 	//==============================================================================
 	CircularBuffer m_buffer;
+	SinOscillator m_oscillator;
 	BiquadFilter m_colorFilter;
 	OnePoleLowPassFilter m_delayTimeSmoother;
+	OnePoleLowPassFilter m_modulationSmoother;
 
 	std::atomic<float>* delayParameter = nullptr;
 	std::atomic<float>* widthParameter = nullptr;
 	std::atomic<float>* colorParameter = nullptr;
+	std::atomic<float>* modulationParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoToStereoAudioProcessor)

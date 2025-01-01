@@ -6166,3 +6166,66 @@ MonoToStereo/JuceLibraryCode/include_juce_gui_extra.mm
 MonoToStereo/JuceLibraryCode/JuceHeader.h
 MonoToStereo/JuceLibraryCode/JucePluginDefines.h
 MonoToStereo/JuceLibraryCode/ReadMe.txt
+MonoToStereo/Builds/VisualStudio2017/MonoToStereo_VST3.vcxproj.user
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/CL.12944.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/CL.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/CL.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/Lib-link.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/Lib-link.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/Lib.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToSt.48AC5848.tlog/MonoToStereo_SharedCode.lastbuildstate
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToStereo.lib
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToStereo.pdb
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/MonoToStereo_SharedCode.log
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/CL.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/CL.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/CL.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/link.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/link.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/link.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/MonoToStereo_VST3ManifestHelper.lastbuildstate
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/rc.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/rc.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToSt.676BC076.tlog/rc.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MonoToStereo_VST3ManifestHelper.log
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/CL.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/CL.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/CL.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/link.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/link.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/link.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/MonoToStereo_VST3.lastbuildstate
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/MonoToStereo_VST3.write.1u.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/rc.command.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/rc.read.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToSt.532D5EFA.tlog/rc.write.1.tlog
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.dll
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.exp
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.lib
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.pdb
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.vst3/Contents/Resources/moduleinfo.json
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo.vst3/Contents/x86_64-win/MonoToStereo.vst3
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/MonoToStereo_VST3.log
+MonoToStereo/Builds/VisualStudio2017/x64/Release/VST3/resources.res

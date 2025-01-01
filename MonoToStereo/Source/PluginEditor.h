@@ -13,7 +13,7 @@ public:
     ~MonoToStereoAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 4;
+	static const int N_SLIDERS = 5;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 1;

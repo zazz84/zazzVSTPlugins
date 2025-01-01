@@ -5,6 +5,7 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial">
   <MAINGROUP id="U155NE" name="MonoToStereo">
     <GROUP id="{58E2F63A-3F56-16DE-1A12-ACD3EDD8B2B5}" name="Source">
+      <FILE id="gRFJDc" name="SinOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SinOscillator.h"/>
       <FILE id="Pb12yH" name="BiquadFilters.cpp" compile="1" resource="0"
             file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="z9TmC2" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>

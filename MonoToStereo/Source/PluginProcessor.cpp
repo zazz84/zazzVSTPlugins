@@ -13,9 +13,13 @@
 
 //==============================================================================
 
-const std::string MonoToStereoAudioProcessor::paramsNames[] = { "Delay", "Width", "Color", "Volume" };
-const std::string MonoToStereoAudioProcessor::paramsUnitNames[] = { " ms", " %", " %", " dB" };
+const std::string MonoToStereoAudioProcessor::paramsNames[] = { "Delay", "Width", "Color", "Modulation", "Volume" };
+const std::string MonoToStereoAudioProcessor::paramsUnitNames[] = { " ms", " %", " %", " %", " dB" };
+const float MonoToStereoAudioProcessor::MINIMUM_DELAY_TIME_MS = 1.0f;
 const float MonoToStereoAudioProcessor::MAXIMUM_DELAY_TIME_MS = 30.0f;
+const float MonoToStereoAudioProcessor::MINIMUM_MODULATION_FREQUENCY = 0.1f;
+const float MonoToStereoAudioProcessor::MAXIMUM_MODULATION_FREQUENCY = 1.0f;
+const float MonoToStereoAudioProcessor::MAXIMUM_WET = 0.4f;
 
 //==============================================================================
 MonoToStereoAudioProcessor::MonoToStereoAudioProcessor()
@@ -33,7 +37,8 @@ MonoToStereoAudioProcessor::MonoToStereoAudioProcessor()
 	delayParameter		= apvts.getRawParameterValue(paramsNames[0]);
 	widthParameter		= apvts.getRawParameterValue(paramsNames[1]);
 	colorParameter		= apvts.getRawParameterValue(paramsNames[2]);
-	volumeParameter		= apvts.getRawParameterValue(paramsNames[3]);
+	modulationParameter	= apvts.getRawParameterValue(paramsNames[3]);
+	volumeParameter		= apvts.getRawParameterValue(paramsNames[4]);
 }
 
 MonoToStereoAudioProcessor::~MonoToStereoAudioProcessor()
@@ -109,16 +114,23 @@ void MonoToStereoAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 	m_delayTimeSmoother.init(sr);
 	m_delayTimeSmoother.set(2.0f);
 
+	m_modulationSmoother.init(sr);
+	m_modulationSmoother.set(2.0f);
+
 	const int samples = static_cast<int>(static_cast<double>(MAXIMUM_DELAY_TIME_MS) * 0.001 * sampleRate);
 	m_buffer.init(samples);
 
 	m_colorFilter.init(sr);
+
+	m_oscillator.init(sr);
 }
 
 void MonoToStereoAudioProcessor::releaseResources()
 {
 	m_delayTimeSmoother.release();
+	m_modulationSmoother.release();
 	m_buffer.release();
+	m_oscillator.release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -148,33 +160,47 @@ bool MonoToStereoAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 
 void MonoToStereoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	// Process only stereo input
+	if (buffer.getNumChannels() != 2)
+	{
+		return;
+	}
+	
 	// Get params
 	const auto delayTime = delayParameter->load();
-	const auto mix = 0.4f * sqrtf(0.01f * widthParameter->load());					// Maximum width is at 30/70 wet/dry ratio
+	const auto mix = MAXIMUM_WET * sqrtf(0.01f * widthParameter->load());
 	const auto color = 0.01f * colorParameter->load();
+	const auto modulation = 0.01f * modulationParameter->load();
 	const auto gainCompensation = mix * 12.0f * color;
 	const auto gain = Math::dBToGain(volumeParameter->load() + gainCompensation);
 
 	// Mics constants
-	const auto sampleRate = static_cast<float>(getSampleRate());
+	const auto sampleRateMS = static_cast<float>(0.001 * getSampleRate());
 	const auto samples = buffer.getNumSamples();
-	const auto wet = gain * mix;
-	const auto dry = gain * (1.0f - mix);
 
 	// Left and right channel read pointers
 	auto* leftChannel = buffer.getWritePointer(0);
 	auto* rightChannel = buffer.getWritePointer(1);
 
+	// Set color filter
 	m_colorFilter.setLowShelf(800.0f, 0.707f, -12.0f * color);
 
 	for (int sample = 0; sample < samples; ++sample)
 	{
-		// Calculate delay in samples
-		const auto delayTimeSmooth = m_delayTimeSmoother.process(delayTime);
-		const auto delaySamples = 0.001f * delayTimeSmooth * sampleRate;
-
 		// Get delayed sample
-		const float delayedSample = m_colorFilter.processDF1(m_buffer.readDelay(delaySamples));
+		const auto delayTimeSmooth = m_delayTimeSmoother.process(delayTime);
+		const auto delaySamples = static_cast<int>(delayTimeSmooth * sampleRateMS);
+		const auto delayedSample = m_colorFilter.processDF1(m_buffer.readDelay(delaySamples));
+
+		// Handle modulation
+		const auto modulationSmooth = m_modulationSmoother.process(modulation);
+		const auto modulationFrequency = Math::remap(modulationSmooth, 0.0f, 1.0f, MINIMUM_MODULATION_FREQUENCY, MAXIMUM_MODULATION_FREQUENCY);
+		m_oscillator.set(modulationFrequency);
+		const auto oscilator = m_oscillator.process();
+		const auto wetModulation = (0.5f * 0.5f * MAXIMUM_WET) * oscilator * modulationSmooth;		// Maximum modulation is 50% of width range
+
+		// Get wet modulater
+		const auto wetModulated = Math::clamp(mix + wetModulation, 0.0f, MAXIMUM_WET);
 		
 		// Store current sample
 		const float inLeft = leftChannel[sample];
@@ -182,7 +208,8 @@ void MonoToStereoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 		m_buffer.write(inLeft + inRight);
 
 		// Calculate output
-		const float out = wet * delayedSample;
+		const float out = gain * wetModulated * delayedSample;
+		const float dry = gain * (1.0f - wetModulated);
 
 		// Apply wer/dry
 		leftChannel[sample] = dry * inLeft + out;
@@ -224,10 +251,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout MonoToStereoAudioProcessor::
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f, MAXIMUM_DELAY_TIME_MS, 0.1f, 0.7f), 10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( MINIMUM_DELAY_TIME_MS, MAXIMUM_DELAY_TIME_MS, 0.1f, 0.7f), 10.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 50.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f), 0.0f));
 
 	return layout;
 }

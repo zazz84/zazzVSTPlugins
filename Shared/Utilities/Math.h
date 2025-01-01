@@ -40,6 +40,18 @@ namespace Math
 	}
 
 	//==============================================================================
+	inline float fminf(const float a, const float b)
+	{
+		return a > b ? b : a;
+	}
+
+	//==============================================================================
+	inline float fmaxf(const float a, const float b)
+	{
+		return a > b ? a : b;
+	}
+	
+	//==============================================================================
 	// This is a fast approximation to log2()
 	// Y = C[0]*F*F*F + C[1]*F*F + C[2]*F + C[3] + E;
 	inline float log2(float x)
@@ -100,4 +112,21 @@ namespace Math
 		//return gain > 0.00001f ? 20.0f * std::log10(gain) : -100.0f;
 		return gain > 0.00001f ? 20.0f * Math::log10(gain) : -100.0f;
 	}
+
+	//==============================================================================
+	inline float remap(float value, float inMin, float inMax, float outMin, float outMax)
+	{
+		if (value <= inMin)
+		{
+			return outMin;
+		}
+		else if (value >= inMax)
+		{
+			return outMax;
+		}
+		else
+		{
+			return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);
+		}
+	};
 }
