@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 // https://www.hxaudiolab.com/uploads/2/5/5/3/25532092/cascading_biquads_to_create_even-order_highlow_pass_filters_2.pdf
 // https://henquist.github.io/0.3.2/filterfunctions.html
 
@@ -27,6 +44,10 @@ public:
 	{
 		return m_filter1.processDF1(in);
 	};
+	inline void release()
+	{
+		m_filter1.release();
+	};
 
 private:
 	BiquadFilter m_filter1;
@@ -51,6 +72,11 @@ public:
 	inline float process(const float in)
 	{
 		return m_filter1.processDF1(m_filter2.processDF1(in));
+	};
+	inline void release()
+	{
+		m_filter1.release();
+		m_filter2.release();
 	};
 
 private:
@@ -79,6 +105,12 @@ public:
 	{
 		return m_filter1.processDF1(m_filter2.processDF1(m_filter3.processDF1(in)));
 	};
+	inline void release()
+	{
+		m_filter1.release();
+		m_filter2.release();
+		m_filter3.release();
+	};
 
 private:
 	BiquadFilter m_filter1, m_filter2, m_filter3;
@@ -105,6 +137,12 @@ public:
 	inline float process(const float in)
 	{
 		return m_filter1.processDF1(m_filter2.processDF1(m_filter3.processDF1(in)));
+	};
+	inline void release()
+	{
+		m_filter1.release();
+		m_filter2.release();
+		m_filter3.release();
 	};
 
 private:
@@ -135,6 +173,13 @@ public:
 	{
 		return m_filter1.processDF1(m_filter2.processDF1(m_filter3.processDF1(m_filter4.processDF1(in))));
 	};
+	inline void release()
+	{
+		m_filter1.release();
+		m_filter2.release();
+		m_filter3.release();
+		m_filter4.release();
+	};
 
 private:
 	BiquadFilter m_filter1, m_filter2, m_filter3, m_filter4;
@@ -163,6 +208,13 @@ public:
 	inline float process(const float in)
 	{
 		return m_filter1.processDF1(m_filter2.processDF1(m_filter3.processDF1(m_filter4.processDF1(in))));
+	};
+	inline void release()
+	{
+		m_filter1.release();
+		m_filter2.release();
+		m_filter3.release();
+		m_filter4.release();
 	};
 
 private:
@@ -254,6 +306,13 @@ public:
 		}
 
 		return output;
+	};
+	inline void release()
+	{
+		m_filter[0].release();
+		m_filter[1].release();
+		m_filter[2].release();
+		m_filter[3].release();
 	};
 
 private:

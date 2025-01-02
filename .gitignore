@@ -6399,3 +6399,187 @@ SampleAndHold/JuceLibraryCode/include_juce_gui_extra.mm
 SampleAndHold/JuceLibraryCode/JuceHeader.h
 SampleAndHold/JuceLibraryCode/JucePluginDefines.h
 SampleAndHold/JuceLibraryCode/ReadMe.txt
+BitCrusher/Builds/VisualStudio2017/.vs/BitCrusher/v15/.suo
+BitCrusher/Builds/VisualStudio2017/.vs/BitCrusher/v15/Browse.VC.db
+BitCrusher/Builds/VisualStudio2017/.vs/BitCrusher/v15/Browse.VC.opendb
+BitCrusher/Builds/VisualStudio2017/.vs/BitCrusher/v15/Solution.VC.db
+BitCrusher/Builds/VisualStudio2017/.vs/BitCrusher/v15/Solution.VC.db-shm
+BitCrusher/Builds/VisualStudio2017/.vs/BitCrusher/v15/Solution.VC.db-wal
+BitCrusher/Builds/VisualStudio2017/BitCrusher.sln
+BitCrusher/Builds/VisualStudio2017/BitCrusher_SharedCode.vcxproj
+BitCrusher/Builds/VisualStudio2017/BitCrusher_SharedCode.vcxproj.filters
+BitCrusher/Builds/VisualStudio2017/BitCrusher_StandalonePlugin.vcxproj
+BitCrusher/Builds/VisualStudio2017/BitCrusher_StandalonePlugin.vcxproj.filters
+BitCrusher/Builds/VisualStudio2017/BitCrusher_VST3.vcxproj
+BitCrusher/Builds/VisualStudio2017/BitCrusher_VST3.vcxproj.filters
+BitCrusher/Builds/VisualStudio2017/BitCrusher_VST3ManifestHelper.vcxproj
+BitCrusher/Builds/VisualStudio2017/BitCrusher_VST3ManifestHelper.vcxproj.filters
+BitCrusher/Builds/VisualStudio2017/resources.rc
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/BitCrusher_SharedCode.lastbuildstate
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/CL.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/CL.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/CL.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/Lib-link.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/Lib-link.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrush.C60F5403.tlog/Lib.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrusher.lib
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrusher.pdb
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/BitCrusher_SharedCode.log
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/BitCrusher_VST3ManifestHelper.lastbuildstate
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/CL.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/CL.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/CL.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/link.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/link.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/link.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/rc.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/rc.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrush.5EADD133.tlog/rc.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/BitCrusher_VST3ManifestHelper.log
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.dll
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.exp
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.ilk
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.lib
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.pdb
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.vst3/Contents/Resources/moduleinfo.json
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher.vst3/Contents/x86_64-win/BitCrusher.vst3
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.log
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/BitCrusher_VST3.lastbuildstate
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/BitCrusher_VST3.write.1u.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/CL.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/CL.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/CL.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/link.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/link.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/link.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/rc.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/rc.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/BitCrusher_VST3.tlog/rc.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+BitCrusher/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/BitCrusher_SharedCode.lastbuildstate
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/CL.12388.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/CL.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/CL.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/Lib-link.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/Lib-link.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrush.C60F5403.tlog/Lib.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrusher.lib
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrusher.pdb
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/BitCrusher_SharedCode.log
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/BitCrusher_VST3ManifestHelper.lastbuildstate
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/CL.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/CL.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/CL.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/link.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/link.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/link.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/rc.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/rc.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrush.5EADD133.tlog/rc.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/BitCrusher_VST3ManifestHelper.log
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher.dll
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher.exp
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher.lib
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher.pdb
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher.vst3/Contents/Resources/moduleinfo.json
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher.vst3/Contents/x86_64-win/BitCrusher.vst3
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.log
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/BitCrusher_VST3.lastbuildstate
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/BitCrusher_VST3.write.1u.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/CL.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/CL.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/CL.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/link.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/link.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/link.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/rc.command.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/rc.read.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/BitCrusher_VST3.tlog/rc.write.1.tlog
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+BitCrusher/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+BitCrusher/JuceLibraryCode/include_juce_audio_basics.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_basics.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_devices.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_devices.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_formats.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_formats.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_processors.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_processors.mm
+BitCrusher/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_utils.cpp
+BitCrusher/JuceLibraryCode/include_juce_audio_utils.mm
+BitCrusher/JuceLibraryCode/include_juce_core.cpp
+BitCrusher/JuceLibraryCode/include_juce_core.mm
+BitCrusher/JuceLibraryCode/include_juce_data_structures.cpp
+BitCrusher/JuceLibraryCode/include_juce_data_structures.mm
+BitCrusher/JuceLibraryCode/include_juce_events.cpp
+BitCrusher/JuceLibraryCode/include_juce_events.mm
+BitCrusher/JuceLibraryCode/include_juce_graphics.cpp
+BitCrusher/JuceLibraryCode/include_juce_graphics.mm
+BitCrusher/JuceLibraryCode/include_juce_gui_basics.cpp
+BitCrusher/JuceLibraryCode/include_juce_gui_basics.mm
+BitCrusher/JuceLibraryCode/include_juce_gui_extra.cpp
+BitCrusher/JuceLibraryCode/include_juce_gui_extra.mm
+BitCrusher/JuceLibraryCode/JuceHeader.h
+BitCrusher/JuceLibraryCode/JucePluginDefines.h
+BitCrusher/JuceLibraryCode/ReadMe.txt

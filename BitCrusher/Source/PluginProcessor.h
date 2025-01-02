@@ -21,8 +21,10 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/BitCrusher.h"
+
 //==============================================================================
-class MyPluginNameAudioProcessor  : public juce::AudioProcessor
+class BitCrusherAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -30,12 +32,12 @@ class MyPluginNameAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    MyPluginNameAudioProcessor();
-    ~MyPluginNameAudioProcessor() override;
+    BitCrusherAudioProcessor();
+    ~BitCrusherAudioProcessor() override;
 
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
-    static const int N_CHANNELS = 2;
+	static const int N_CHANNELS = 2;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -77,8 +79,13 @@ public:
 
 private:	
 	//==============================================================================
+	BitCrusher m_bitCrusher;
 
+	std::atomic<float>* bitDepthParameter = nullptr;
+	std::atomic<float>* filterParameter = nullptr;
+	std::atomic<float>* downsampleParameter = nullptr;
+	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitCrusherAudioProcessor)
 };
