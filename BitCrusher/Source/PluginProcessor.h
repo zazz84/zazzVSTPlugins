@@ -79,7 +79,7 @@ public:
 
 private:	
 	//==============================================================================
-	BitCrusher m_bitCrusher;
+	std::array<BitCrusher, N_CHANNELS> m_bitCrusher;
 
 	std::atomic<float>* bitDepthParameter = nullptr;
 	std::atomic<float>* filterParameter = nullptr;

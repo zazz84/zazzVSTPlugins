@@ -114,12 +114,14 @@ void BitCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 {
 	const int sr = (int)sampleRate;
 
-	m_bitCrusher.init(sr, getTotalNumOutputChannels());
+	m_bitCrusher[0].init(sr);
+	m_bitCrusher[1].init(sr);
 }
 
 void BitCrusherAudioProcessor::releaseResources()
 {
-	
+	m_bitCrusher[0].release();
+	m_bitCrusher[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -157,11 +159,33 @@ void BitCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const auto mix = 0.01f * mixParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
-	m_bitCrusher.set(bitDepth, downsample, mix, frequency);
+	// Mics constants
+	const auto channels = getTotalNumOutputChannels();
+	const auto samples = buffer.getNumSamples();
+	const auto wet = gain * mix;
+	const auto dry = gain * (1.0f - mix);
 
-	m_bitCrusher.processBlock(buffer);
-	
-	buffer.applyGain(gain);
+	for (int channel = 0; channel < channels; channel++)
+	{
+		// Channel pointer
+		auto* channelBuffer = buffer.getWritePointer(channel);
+
+		// References
+		auto& bitCrusher = m_bitCrusher[channel];
+		bitCrusher.set(bitDepth, downsample, frequency);
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			// Read
+			const float in = channelBuffer[sample];
+
+			// BitCrusher
+			const float out = bitCrusher.process(in);
+
+			//Out
+			channelBuffer[sample] = dry * in + wet * out;
+		}
+	}
 }
 
 //==============================================================================
