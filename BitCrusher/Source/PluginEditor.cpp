@@ -19,9 +19,11 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
-const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
-const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::BACKGROUND_COLOR	= juce::Colour::fromRGB(90, 90, 100);
+const juce::Colour ZazzLookAndFeel::KNOB_COLOR			= juce::Colour::fromRGB(70, 70, 80);
+const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(50, 50, 60);
+const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
+const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
 
 const int BitCrusherAudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
 const float BitCrusherAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
@@ -31,7 +33,7 @@ BitCrusherAudioProcessorEditor::BitCrusherAudioProcessorEditor (BitCrusherAudioP
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {	
 	// Plugin name
-	m_pluginName.setText("BitCrusher", juce::dontSendNotification);
+	m_pluginName.setText("Bit Crusher", juce::dontSendNotification);
 	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
 	m_pluginName.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(m_pluginName);
@@ -60,8 +62,8 @@ BitCrusherAudioProcessorEditor::~BitCrusherAudioProcessorEditor()
 
 //==============================================================================
 void BitCrusherAudioProcessorEditor::paint (juce::Graphics& g)
-{
-	g.fillAll(ZazzLookAndFeel::LIGHT_COLOUR);
+{	
+	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
 }
 
 void BitCrusherAudioProcessorEditor::resized()

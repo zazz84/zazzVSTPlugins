@@ -32,8 +32,8 @@ public:
 		}
 
 		button.setClickingTogglesState(true);
-		button.setColour(juce::TextButton::buttonColourId, ZazzLookAndFeel::MEDIUM_COLOUR);
-		button.setColour(juce::TextButton::buttonOnColourId, ZazzLookAndFeel::DARK_COLOUR);
+		button.setColour(juce::TextButton::buttonColourId, ZazzLookAndFeel::BACKGROUND_COLOR);
+		button.setColour(juce::TextButton::buttonOnColourId, ZazzLookAndFeel::MAIN_COLOR);
 		button.setLookAndFeel(&zazzLookAndFeel);
 	}
 
@@ -117,8 +117,8 @@ public:
 		pluginNameRectangle.setPosition(0, topHeight);
 
 		pluginName.setBounds(pluginNameRectangle);
-		pluginName.setFont(juce::Font("Century Gothic", nameFontSize, juce::Font::bold));
-		pluginName.setColour(juce::Label::textColourId, ZazzLookAndFeel::DARK_COLOUR);
+		pluginName.setFont(juce::Font("Arial", nameFontSize, juce::Font::bold));
+		pluginName.setColour(juce::Label::textColourId, ZazzLookAndFeel::MAIN_COLOR);
 
 		int i = 0;
 
@@ -137,7 +137,8 @@ public:
 				rectangle.setPosition(xPos, yPos);
 
 				labels[i].setBounds(rectangle);
-				labels[i].setFont(juce::Font("Century Gothic", labelFontSize, juce::Font::bold));
+				labels[i].setFont(juce::Font("Arial", labelFontSize, juce::Font::plain));
+				labels[i].setColour(juce::Label::textColourId, ZazzLookAndFeel::MAIN_COLOR);
 
 				// Slider
 				rectangle.setSize(elementWidth, sliderHeight);
@@ -152,7 +153,6 @@ public:
 		}
 	}
 
-	
 	inline void resize2(juce::AudioProcessorEditor& audioProcessorEditor, std::unique_ptr<ButtonSlider> sliders[], juce::Label labels[], const int slidersCount[], const float columnOffset[], int rows, juce::Label& pluginName)
 	{
 		int slidersMax = 0;
@@ -202,8 +202,8 @@ public:
 		pluginNameRectangle.setPosition(0, topHeight);
 
 		pluginName.setBounds(pluginNameRectangle);
-		pluginName.setFont(juce::Font("Century Gothic", nameFontSize, juce::Font::bold));
-		pluginName.setColour(juce::Label::textColourId, ZazzLookAndFeel::DARK_COLOUR);
+		pluginName.setFont(juce::Font("Arial", nameFontSize, juce::Font::bold));
+		pluginName.setColour(juce::Label::textColourId, ZazzLookAndFeel::MAIN_COLOR);
 
 		int i = 0;
 
@@ -222,7 +222,7 @@ public:
 				rectangle.setPosition(xPos, yPos);
 
 				labels[i].setBounds(rectangle);
-				labels[i].setFont(juce::Font("Century Gothic", labelFontSize, juce::Font::bold));
+				labels[i].setFont(juce::Font("Arial", labelFontSize, juce::Font::bold));
 
 				// Slider
 				rectangle.setSize(elementWidth, sliderHeight);

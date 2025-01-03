@@ -3,30 +3,32 @@ class ZazzLookAndFeel : public juce::LookAndFeel_V4
 public:
 	ZazzLookAndFeel() {};
 
-	static const juce::Colour LIGHT_COLOUR;
-	static const juce::Colour MEDIUM_COLOUR;
-	static const juce::Colour DARK_COLOUR;
+	static const juce::Colour BACKGROUND_COLOR;
+	static const juce::Colour KNOB_COLOR;
+	static const juce::Colour KNOB_OUTLINE_COLOR;
+	static const juce::Colour KNOB_HIGHLIGHT;
+	static const juce::Colour MAIN_COLOR;
 
-	static const int NAME_FONT_SIZE = 33;
-	static const int LABEL_FONT_SIZE = 22;
-	static const int VALUE_FONT_SIZE = 17;
+	static const int NAME_FONT_SIZE = 35;
+	static const int LABEL_FONT_SIZE = 20;
+	static const int VALUE_FONT_SIZE = 16;
 
-	static const int ELEMENT_WIDTH = 88;
-	static const int TOP_HEIGHT = 1;
-	static const int NAME_HEIGHT = 27;
-	static const int ELEMENT_HEIGHT = 132;
+	static const int ELEMENT_WIDTH = 100;
+	static const int TOP_HEIGHT = 10;
+	static const int NAME_HEIGHT = 35;
+	static const int ELEMENT_HEIGHT = 145;
 	
-	static const int HEADER_HEIGHT = 33;
-	static const int SLIDER_HEIGHT = 99;
+	static const int HEADER_HEIGHT = 35;
+	static const int SLIDER_HEIGHT = 105;
 	static const int FOOTER_HEIGHT = 0;
 
-	float m_sliderTextSize = 18.0f;
+	float m_sliderTextSize = 15.0f;
 
 	void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider&) override
 	{
 		const auto widthHalf = (float)width  * 0.5f;
 		const auto heightHalf = (float)height  * 0.5f;
-		const auto radius = 0.9f * std::fminf(widthHalf, heightHalf);
+		const auto radius = 0.8f * std::fminf(widthHalf, heightHalf);
 		const auto centreX = (float)x + widthHalf;
 		const auto centreY = (float)y + heightHalf;
 		const auto rx = centreX - radius;
@@ -34,9 +36,13 @@ public:
 		const auto rw = radius * 2.0f;
 		const auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
+		// Draw know
+		g.setColour(KNOB_COLOR);
+		g.fillEllipse(rx, ry, rw, rw);
+		
 		// outer shadow
-		juce::Path shadow;
-		shadow.addEllipse(rx, ry, 1.03f * rw, 1.03f * rw); // Example shape
+		/*juce::Path shadow;
+		shadow.addEllipse(rx, ry, rw, rw); // Example shape
 
 		// Define the size of the image to contain the path
 		int imageWidth = width;
@@ -60,12 +66,13 @@ public:
 
 		// Draw the blurred image to the main graphics context
 		g.setOpacity(0.8f);
-		g.drawImageAt(image, 0, 0);
+		g.drawImageAt(image, 0, 0);*/
 
-		// Outline
+		// Knob outline
 		g.setOpacity(1.0f);
-		const float lineThickness = height / 35.0f;
-		g.setColour(DARK_COLOUR);
+		//const float lineThickness = height / 200.0f;
+		const float lineThickness = 1.0f;
+		g.setColour(KNOB_OUTLINE_COLOR);
 		g.drawEllipse(rx, ry, rw, rw, lineThickness);
 
 		// Knob point
@@ -76,11 +83,24 @@ public:
 		p.addEllipse(juce::Rectangle<float>(-pointerThickness * 0.5f, -0.85f * radius, knowRadiusFactor * width, knowRadiusFactor * width));
 		p.applyTransform(juce::AffineTransform::rotation(angle).translated(centreX, centreY));
 
-		g.setColour(DARK_COLOUR);
+		g.setColour(KNOB_HIGHLIGHT);
 		g.fillPath(p);
 
+		// Create the arc path
+		const float arcRadius = 1.08f * radius;
+		juce::Path arcPath;
+		arcPath.addCentredArc(centreX, centreY, arcRadius, arcRadius,
+			0.0f,																	// Rotation
+			rotaryStartAngle,														// Start angle
+			rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle),		// End angle
+			true);																	// UseAsSegment
+
+		juce::PathStrokeType strokeType(height / 25.0f);
+		g.setColour(KNOB_HIGHLIGHT);
+		g.strokePath(arcPath, strokeType);
+																																				
 		// Start and stop points
-		constexpr float radiusOffset = -1.3f;
+		/*constexpr float radiusOffset = -1.3f;
 
 		juce::Path p2;
 		p2.addEllipse(juce::Rectangle<float>(-pointerThickness * 0.5f, radiusOffset * radius, knowRadiusFactor * width, knowRadiusFactor * width));
@@ -91,7 +111,7 @@ public:
 		juce::Path p3;
 		p3.addEllipse(juce::Rectangle<float>(-pointerThickness * 0.5f, radiusOffset * radius, knowRadiusFactor * width, knowRadiusFactor * width));
 		p3.applyTransform(juce::AffineTransform::rotation(rotaryEndAngle).translated(centreX, centreY));
-		g.fillPath(p3);
+		g.fillPath(p3);*/
 	}
 
 	void setSliderTextSize(float size)
@@ -103,10 +123,11 @@ public:
 	{
 		auto font = label.getFont();
 		font.setHeight(m_sliderTextSize);
-		font.setTypefaceName("Century Gothic");
+		font.setTypefaceName("Arial");
 		g.setFont(font);
 
-		g.setColour(label.findColour(juce::Label::textColourId));
+		//g.setColour(label.findColour(juce::Label::textColourId));
+		g.setColour(MAIN_COLOR);
 		g.drawFittedText(label.getText(), label.getLocalBounds(), juce::Justification::centred, 1);
 
 		// TODO: Fix lable editing
