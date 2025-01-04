@@ -25,15 +25,15 @@ const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(5
 const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
 const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
 
-const int NoiseEnhancerAudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
-const float NoiseEnhancerAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
+const int BitmaskCrusherAudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
+const float BitmaskCrusherAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
 
 //==============================================================================
-NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor (NoiseEnhancerAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+BitmaskCrusherAudioProcessorEditor::BitmaskCrusherAudioProcessorEditor (BitmaskCrusherAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {	
 	// Plugin name
-	m_pluginName.setText("NoiseEnhancer", juce::dontSendNotification);
+	m_pluginName.setText("Bitmask Crusher", juce::dontSendNotification);
 	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
 	m_pluginName.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(m_pluginName);
@@ -43,8 +43,8 @@ NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor (NoiseEnhan
 	{
 		auto& label = m_labels[i];
 		auto& slider = m_sliders[i];
-		const std::string text = NoiseEnhancerAudioProcessor::paramsNames[i];
-		const std::string unit = NoiseEnhancerAudioProcessor::paramsUnitNames[i];
+		const std::string text = BitmaskCrusherAudioProcessor::paramsNames[i];
+		const std::string unit = BitmaskCrusherAudioProcessor::paramsUnitNames[i];
 
 		createSliderWithLabel(slider, label, text, unit);
 		addAndMakeVisible(label);
@@ -56,17 +56,17 @@ NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor (NoiseEnhan
 	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
-NoiseEnhancerAudioProcessorEditor::~NoiseEnhancerAudioProcessorEditor()
+BitmaskCrusherAudioProcessorEditor::~BitmaskCrusherAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void NoiseEnhancerAudioProcessorEditor::paint (juce::Graphics& g)
+void BitmaskCrusherAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
 }
 
-void NoiseEnhancerAudioProcessorEditor::resized()
+void BitmaskCrusherAudioProcessorEditor::resized()
 {
 	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
 }

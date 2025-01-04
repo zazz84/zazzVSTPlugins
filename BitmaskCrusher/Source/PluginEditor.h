@@ -23,14 +23,14 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
 //==============================================================================
-class NoiseEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class BitmaskCrusherAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
 {
 public:
-    NoiseEnhancerAudioProcessorEditor (NoiseEnhancerAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~NoiseEnhancerAudioProcessorEditor() override;
+    BitmaskCrusherAudioProcessorEditor (BitmaskCrusherAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~BitmaskCrusherAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 1;
+	static const int N_SLIDERS = 4;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 1;
@@ -43,7 +43,7 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    NoiseEnhancerAudioProcessor& audioProcessor;
+    BitmaskCrusherAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
@@ -52,5 +52,5 @@ protected:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoiseEnhancerAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitmaskCrusherAudioProcessorEditor)
 };

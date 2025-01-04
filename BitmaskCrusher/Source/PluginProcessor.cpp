@@ -18,13 +18,17 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <cstdint>
+
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+
 //==============================================================================
 
-const std::string NoiseEnhancerAudioProcessor::paramsNames[] = { "Volume" };
-const std::string NoiseEnhancerAudioProcessor::paramsUnitNames[] = { " dB" };
+const std::string BitmaskCrusherAudioProcessor::paramsNames[] = { "Threshold", "Mask", "Mix", "Volume" };
+const std::string BitmaskCrusherAudioProcessor::paramsUnitNames[] = { " dB", "", " %", " dB" };
 
 //==============================================================================
-NoiseEnhancerAudioProcessor::NoiseEnhancerAudioProcessor()
+BitmaskCrusherAudioProcessor::BitmaskCrusherAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -36,20 +40,23 @@ NoiseEnhancerAudioProcessor::NoiseEnhancerAudioProcessor()
                        )
 #endif
 {
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[0]);
+	thresholdParameter	= apvts.getRawParameterValue(paramsNames[0]);
+	bitMaskParameter		= apvts.getRawParameterValue(paramsNames[1]);
+	mixParameter		= apvts.getRawParameterValue(paramsNames[2]);
+	volumeParameter		= apvts.getRawParameterValue(paramsNames[3]);
 }
 
-NoiseEnhancerAudioProcessor::~NoiseEnhancerAudioProcessor()
+BitmaskCrusherAudioProcessor::~BitmaskCrusherAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String NoiseEnhancerAudioProcessor::getName() const
+const juce::String BitmaskCrusherAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool NoiseEnhancerAudioProcessor::acceptsMidi() const
+bool BitmaskCrusherAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -58,7 +65,7 @@ bool NoiseEnhancerAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool NoiseEnhancerAudioProcessor::producesMidi() const
+bool BitmaskCrusherAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -67,7 +74,7 @@ bool NoiseEnhancerAudioProcessor::producesMidi() const
    #endif
 }
 
-bool NoiseEnhancerAudioProcessor::isMidiEffect() const
+bool BitmaskCrusherAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -76,48 +83,49 @@ bool NoiseEnhancerAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double NoiseEnhancerAudioProcessor::getTailLengthSeconds() const
+double BitmaskCrusherAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int NoiseEnhancerAudioProcessor::getNumPrograms()
+int BitmaskCrusherAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int NoiseEnhancerAudioProcessor::getCurrentProgram()
+int BitmaskCrusherAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void NoiseEnhancerAudioProcessor::setCurrentProgram (int index)
+void BitmaskCrusherAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String NoiseEnhancerAudioProcessor::getProgramName (int index)
+const juce::String BitmaskCrusherAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void NoiseEnhancerAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void BitmaskCrusherAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void NoiseEnhancerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void BitmaskCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
 }
 
-void NoiseEnhancerAudioProcessor::releaseResources()
+void BitmaskCrusherAudioProcessor::releaseResources()
 {
-	
+	m_bitcrusher[0].release();
+	m_bitcrusher[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool NoiseEnhancerAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool BitmaskCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -142,27 +150,39 @@ bool NoiseEnhancerAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void BitmaskCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto threshold = Math::dBToGain(thresholdParameter->load());
+	const auto bitMask = static_cast<std::int8_t>(bitMaskParameter->load());
+	const auto mix = 0.01f * mixParameter->load();
+	const auto gain = Math::dBToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto wet = gain * mix;
+	const auto dry = gain * (1.0f - mix);
 
 	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
+		// References
+		auto& bitCrusher = m_bitcrusher[channel];
+		bitCrusher.set(threshold, bitMask);
+
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
 			const float in = channelBuffer[sample];
+
+			// BitCrusher
+			const float out = bitCrusher.process(in);
 		
 			//Out
-			channelBuffer[sample] = in;
+			channelBuffer[sample] = dry * in + wet * out;
 		}
 	}
 
@@ -170,25 +190,25 @@ void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 }
 
 //==============================================================================
-bool NoiseEnhancerAudioProcessor::hasEditor() const
+bool BitmaskCrusherAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* NoiseEnhancerAudioProcessor::createEditor()
+juce::AudioProcessorEditor* BitmaskCrusherAudioProcessor::createEditor()
 {
-    return new NoiseEnhancerAudioProcessorEditor (*this, apvts);
+    return new BitmaskCrusherAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void NoiseEnhancerAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void BitmaskCrusherAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void NoiseEnhancerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void BitmaskCrusherAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -197,13 +217,16 @@ void NoiseEnhancerAudioProcessor::setStateInformation (const void* data, int siz
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout NoiseEnhancerAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout BitmaskCrusherAudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -60.0f,   0.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, 127.0f,  1.0f, 1.0f), 127.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
 
 	return layout;
 }
@@ -212,5 +235,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout NoiseEnhancerAudioProcessor:
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new NoiseEnhancerAudioProcessor();
+    return new BitmaskCrusherAudioProcessor();
 }

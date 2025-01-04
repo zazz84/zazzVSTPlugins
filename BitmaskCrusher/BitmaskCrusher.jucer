@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="RShvza" name="NoiseEnhancer" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="nkiiif" name="BitmaskCrusher" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildVST3,enableIAA" companyName="zazz" pluginVST3Category="Generator"
-              version="2.0.0">
-  <MAINGROUP id="WekF2y" name="NoiseEnhancer">
-    <GROUP id="{3C7C84B1-C6CF-6187-3B09-C231D43E4C31}" name="Source">
-      <FILE id="fRsbyu" name="ADSR.h" compile="0" resource="0" file="../Shared/Oscillators/ADSR.h"/>
-      <FILE id="AoJchy" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
-      <FILE id="KAaKAz" name="Random.h" compile="0" resource="0" file="../Shared/Utilities/Random.h"/>
-      <FILE id="QuNjYL" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion">
+  <MAINGROUP id="LyQtgb" name="BitmaskCrusher">
+    <GROUP id="{A0DB3E2F-5F69-626A-D896-D270E2EFD4F7}" name="Source">
+      <FILE id="Bgj3hF" name="BitmaskCrusher.h" compile="0" resource="0"
+            file="../Shared/NonLinearFilters/BitmaskCrusher.h"/>
+      <FILE id="b319qO" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="VaKwiX" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="MG0K9A" name="ZazzLookAndFeel.h" compile="0" resource="0"
+      <FILE id="XrPRDp" name="ZazzLookAndFeel.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzLookAndFeel.h"/>
-      <FILE id="nR69Mt" name="PluginProcessor.cpp" compile="1" resource="0"
+      <FILE id="gy4w5b" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="MLCWRP" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="o8gMYO" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="lGbda2" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="hcIwda" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="YqfbES" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="FxsONu" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -41,15 +40,14 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="NoiseEnhancer" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="BitmaskCrusher" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="NoiseEnhancer" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="BitmaskCrusher" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="C:/Program Files/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_audio_plugin_client" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_audio_processors" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="C:/Program Files/JUCE/modules"/>
@@ -59,6 +57,7 @@
         <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="C:/Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>

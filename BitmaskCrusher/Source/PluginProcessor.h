@@ -21,8 +21,10 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/BitmaskCrusher.h"
+
 //==============================================================================
-class NoiseEnhancerAudioProcessor  : public juce::AudioProcessor
+class BitmaskCrusherAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -30,8 +32,8 @@ class NoiseEnhancerAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    NoiseEnhancerAudioProcessor();
-    ~NoiseEnhancerAudioProcessor() override;
+    BitmaskCrusherAudioProcessor();
+    ~BitmaskCrusherAudioProcessor() override;
 
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
@@ -77,8 +79,12 @@ public:
 
 private:	
 	//==============================================================================
+	std::array<BitmaskCrusher, N_CHANNELS> m_bitcrusher;
 
+	std::atomic<float>* thresholdParameter = nullptr;
+	std::atomic<float>* bitMaskParameter = nullptr;
+	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoiseEnhancerAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitmaskCrusherAudioProcessor)
 };
