@@ -21,6 +21,10 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/Oscillators/ADSR.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Random.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+
 //==============================================================================
 class NoiseEnhancerAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
@@ -77,7 +81,27 @@ public:
 
 private:	
 	//==============================================================================
+	std::array<BiquadFilter, N_CHANNELS> m_filter;
+	std::array<BiquadFilter, N_CHANNELS> m_scFilter;
+	std::array<AmplitudeEnvelope, N_CHANNELS> m_amplitudeEnvelope;
+	std::array<Envelope, N_CHANNELS> m_frequencyEnvelope;
+	std::array<LinearCongruentialRandom01, N_CHANNELS> m_random;
 
+	std::atomic<float>* attackParameter = nullptr;
+	std::atomic<float>* decayParameter = nullptr;
+	std::atomic<float>* sustainParameter = nullptr;
+	std::atomic<float>* sustainLevelParameter = nullptr;
+	std::atomic<float>* releaseParameter = nullptr;
+
+	std::atomic<float>* freqA0Parameter = nullptr;
+	std::atomic<float>* freqA1Parameter = nullptr;
+	std::atomic<float>* freqDParameter = nullptr;
+	std::atomic<float>* freqSParameter = nullptr;
+	std::atomic<float>* freqRParameter = nullptr;
+
+	std::atomic<float>* frequencyParameter = nullptr;
+	std::atomic<float>* thresholdParameter = nullptr;
+	std::atomic<float>* amountParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoiseEnhancerAudioProcessor)

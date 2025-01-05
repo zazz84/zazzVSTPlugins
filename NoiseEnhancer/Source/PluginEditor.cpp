@@ -25,15 +25,15 @@ const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(5
 const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
 const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
 
-const int NoiseEnhancerAudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
-const float NoiseEnhancerAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
+const int NoiseEnhancerAudioProcessorEditor::SLIDERS[] = { 5, 5, 4 };
+const float NoiseEnhancerAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f, 0.0f, 0.5f };
 
 //==============================================================================
 NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor (NoiseEnhancerAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
 {	
 	// Plugin name
-	m_pluginName.setText("NoiseEnhancer", juce::dontSendNotification);
+	m_pluginName.setText("Noise Enhancer", juce::dontSendNotification);
 	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
 	m_pluginName.setJustificationType(juce::Justification::centred);
 	addAndMakeVisible(m_pluginName);

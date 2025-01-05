@@ -48,7 +48,7 @@ public:
 			m_attack(attack),
 			m_decay(decay),
 			m_sustain(sustain),
-			release(release)
+			m_release(release)
 		{
 		}
 		~EnvelopeParams() = default;
@@ -62,7 +62,7 @@ public:
 		float m_attack = 0.0f;
 		float m_decay = 0.0f;
 		float m_sustain = 0.0f;
-		float release = 0.0f;
+		float m_release = 0.0f;
 	};
 
 	inline void init(const int sampleRate)
@@ -72,9 +72,9 @@ public:
 		m_phase = 100 * sampleRate;
 	};
 	inline void set(const EnvelopeParams& params)
-	{
+	{		
 		const float srMS = 0.001f * static_cast<float>(m_sampleRate);
-
+		
 		m_attackSamples = static_cast<int>(srMS * params.m_attackTimeMS);
 		m_decaySamples = m_attackSamples + static_cast<int>(srMS * params.m_decayTimeMS);
 		m_sustainSamples = m_decaySamples + static_cast<int>(srMS * params.m_sustainTimeMS);
@@ -83,9 +83,27 @@ public:
 		m_beggining = params.m_beggining;
 
 		m_attackStep = (params.m_attack - params.m_beggining) / static_cast<float>(m_attackSamples);
-		m_decayStep = (params.m_decay - params.m_attack) / static_cast<float>(m_decaySamples);
-		m_sustainStep = (params.m_sustain - params.m_decay) / static_cast<float>(m_decaySamples);
-		m_releaseStep = (params.m_releaseTimeMS - params.m_sustain) / static_cast<float>(m_releaseSamples);
+		m_decayStep = (params.m_decay - params.m_attack) / static_cast<float>(m_decaySamples - m_attackSamples);
+		m_sustainStep = (params.m_sustain - params.m_decay) / static_cast<float>(m_sustainSamples - m_decaySamples);
+		m_releaseStep = (params.m_release - params.m_sustain) / static_cast<float>(m_releaseSamples - m_sustainSamples);
+
+		// Handle m_out after parameters change
+		if (m_phase < m_attackSamples)
+		{
+			m_out = params.m_beggining + m_phase * m_attackStep;
+		}
+		else if (m_phase < m_decaySamples)
+		{
+			m_out = params.m_attack + (m_phase - m_attackSamples) * m_decayStep;
+		}
+		else if (m_phase < m_sustainSamples)
+		{
+			m_out = params.m_decay + (m_phase - m_decaySamples) * m_sustainStep;
+		}
+		else if (m_phase < m_releaseSamples)
+		{
+			m_out = params.m_sustain + (m_phase - m_sustainSamples) * m_releaseStep;
+		}
 	};
 	inline float process()
 	{		
@@ -95,7 +113,7 @@ public:
 		}
 		else if (m_phase < m_decaySamples)
 		{
-			m_out += m_sustainSamples;
+			m_out += m_decayStep;
 		}
 		else if (m_phase < m_sustainSamples)
 		{
@@ -143,8 +161,32 @@ public:
 	{
 		return m_phase >= m_sustainSamples;
 	}
+	inline bool isReleaseFinnished()
+	{
+		return m_phase >= m_releaseSamples;
+	}
 
 protected:
+	inline float getValue(const int phase)
+	{
+		if (phase < m_attackSamples)
+		{
+			m_out += m_attackStep;
+		}
+		else if (phase < m_decaySamples)
+		{
+			m_out += m_decayStep;
+		}
+		else if (phase < m_sustainSamples)
+		{
+			m_out += m_sustainStep;
+		}
+		else if (phase < m_releaseSamples)
+		{
+			m_out += m_releaseStep;
+		}
+	}
+
 	float m_out = 0.0f;
 	float m_beggining = 0.0f;
 	float m_attackStep = 0.0f;

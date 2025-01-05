@@ -6,6 +6,9 @@
               version="2.0.0">
   <MAINGROUP id="WekF2y" name="NoiseEnhancer">
     <GROUP id="{3C7C84B1-C6CF-6187-3B09-C231D43E4C31}" name="Source">
+      <FILE id="ip4Z3d" name="BiquadFilters.cpp" compile="1" resource="0"
+            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="L05QJ9" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="fRsbyu" name="ADSR.h" compile="0" resource="0" file="../Shared/Oscillators/ADSR.h"/>
       <FILE id="AoJchy" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="KAaKAz" name="Random.h" compile="0" resource="0" file="../Shared/Utilities/Random.h"/>

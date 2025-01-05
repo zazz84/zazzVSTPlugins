@@ -6882,3 +6882,6 @@ NoiseEnhancer/JuceLibraryCode/include_juce_gui_extra.mm
 NoiseEnhancer/JuceLibraryCode/JuceHeader.h
 NoiseEnhancer/JuceLibraryCode/JucePluginDefines.h
 NoiseEnhancer/JuceLibraryCode/ReadMe.txt
+NoiseEnhancer/Builds/VisualStudio2017/NoiseEnhancer_VST3.vcxproj.user
+NoiseEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/NoiseEnh.B7546002.tlog/CL.write.1.tlog

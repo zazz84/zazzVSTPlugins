@@ -18,10 +18,16 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+
 //==============================================================================
 
-const std::string NoiseEnhancerAudioProcessor::paramsNames[] = { "Volume" };
-const std::string NoiseEnhancerAudioProcessor::paramsUnitNames[] = { " dB" };
+const std::string NoiseEnhancerAudioProcessor::paramsNames[] = {	"Attack",		"Decay",		"Sustain",	"Sus. Level",	"Release",
+																	"Freq A0",		"Freq A1",		"Freq D",	"Freq S",		"Freq R",
+																	"Frequency",	"Threshold",	"Amount",	"Volume" };
+const std::string NoiseEnhancerAudioProcessor::paramsUnitNames[] = {	" ms",		" ms",			" ms",		" dB",			" ms",
+																		" Hz",		" Hz",			" Hz",		" Hz",			" Hz",
+																		" Hz",		" dB",			" %",		" dB" };
 
 //==============================================================================
 NoiseEnhancerAudioProcessor::NoiseEnhancerAudioProcessor()
@@ -36,7 +42,22 @@ NoiseEnhancerAudioProcessor::NoiseEnhancerAudioProcessor()
                        )
 #endif
 {
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[0]);
+	attackParameter			= apvts.getRawParameterValue(paramsNames[0]);
+	decayParameter			= apvts.getRawParameterValue(paramsNames[1]);
+	sustainParameter		= apvts.getRawParameterValue(paramsNames[2]);
+	sustainLevelParameter   = apvts.getRawParameterValue(paramsNames[3]);
+	releaseParameter		= apvts.getRawParameterValue(paramsNames[4]);
+
+	freqA0Parameter			= apvts.getRawParameterValue(paramsNames[5]);
+	freqA1Parameter			= apvts.getRawParameterValue(paramsNames[6]);
+	freqDParameter			= apvts.getRawParameterValue(paramsNames[7]);
+	freqSParameter			= apvts.getRawParameterValue(paramsNames[8]);
+	freqRParameter			= apvts.getRawParameterValue(paramsNames[9]);
+
+	frequencyParameter		= apvts.getRawParameterValue(paramsNames[10]);
+	thresholdParameter		= apvts.getRawParameterValue(paramsNames[11]);
+	amountParameter			= apvts.getRawParameterValue(paramsNames[12]);
+	volumeParameter			= apvts.getRawParameterValue(paramsNames[13]);
 }
 
 NoiseEnhancerAudioProcessor::~NoiseEnhancerAudioProcessor()
@@ -109,11 +130,33 @@ void NoiseEnhancerAudioProcessor::changeProgramName (int index, const juce::Stri
 void NoiseEnhancerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
+
+	m_amplitudeEnvelope[0].init(sr);
+	m_amplitudeEnvelope[1].init(sr);
+
+	m_frequencyEnvelope[0].init(sr);
+	m_frequencyEnvelope[1].init(sr);
+
+	m_filter[0].init(sr);
+	m_filter[1].init(sr);
+
+	m_scFilter[0].init(sr);
+	m_scFilter[1].init(sr);
 }
 
 void NoiseEnhancerAudioProcessor::releaseResources()
 {
-	
+	m_amplitudeEnvelope[0].release();
+	m_amplitudeEnvelope[1].release();
+
+	m_frequencyEnvelope[0].release();
+	m_frequencyEnvelope[1].release();
+
+	m_filter[0].release();
+	m_filter[1].release();
+
+	m_scFilter[0].release();
+	m_scFilter[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -145,24 +188,86 @@ bool NoiseEnhancerAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto attack = attackParameter->load();
+	const auto decay = decayParameter->load();
+	const auto sustain = sustainParameter->load();
+	const auto sustainLeveldB = sustainLevelParameter->load();
+	const auto release = releaseParameter->load();
+
+	const auto freqA0 = freqA0Parameter->load();
+	const auto freqA1 = freqA1Parameter->load();
+	const auto freqD = freqDParameter->load();
+	const auto freqS = freqSParameter->load();
+	const auto freqR = freqRParameter->load();
+
+	const auto frequency = frequencyParameter->load();
+	const auto threshold = Math::dBToGain(thresholdParameter->load());
+	const auto amount = Math::dBToGain(60.0f * (0.01f * amountParameter->load() - 1.0f));
+	const auto gain = Math::dBToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+
+	const Envelope::EnvelopeParams params(	attack,
+											decay,
+											sustain,
+											release,
+											freqA0,
+											freqA1,
+											freqD,
+											freqS,
+											freqR);
 
 	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
+		//References
+		auto& amplitudeEnvelope = m_amplitudeEnvelope[channel];
+		auto& frequencyEnvelope = m_frequencyEnvelope[channel];
+		auto& random = m_random[channel];
+		auto& filter = m_filter[channel];
+		auto& scFilter = m_scFilter[channel];
+
+		//Set params
+		amplitudeEnvelope.set(attack, decay, sustain, release, sustainLeveldB);
+		frequencyEnvelope.set(params);
+		scFilter.setBandPassPeakGain(frequency, 0.707f);
+
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
 			const float in = channelBuffer[sample];
-		
-			//Out
-			channelBuffer[sample] = in;
+
+			// Prepare side chain for trigger evaluation
+			const float sideChain = scFilter.processDF1(in);
+
+			if (amplitudeEnvelope.isFinnished())
+			{
+				if (sideChain > threshold || sideChain < -threshold)
+				{
+					amplitudeEnvelope.reset();
+					frequencyEnvelope.reset();
+
+					const float envelopeGain = amplitudeEnvelope.process();
+					float envelopeFrequency = frequencyEnvelope.process();
+					filter.setLowPass(envelopeFrequency, 0.707f);
+					const float noise = filter.processDF1(2.0f * random.process() - 1.0f);
+								
+					channelBuffer[sample] = in + amount * envelopeGain * noise;
+				}
+			}
+			else
+			{
+				const float envelopeGain = amplitudeEnvelope.process();
+				float envelopeFrequency = frequencyEnvelope.process();			
+				filter.setLowPass(envelopeFrequency, 0.707f);
+				const float noise = filter.processDF1(2.0f * random.process() - 1.0f);
+
+				channelBuffer[sample] = in + amount * envelopeGain * noise;
+			}
 		}
 	}
 
@@ -203,7 +308,22 @@ juce::AudioProcessorValueTreeState::ParameterLayout NoiseEnhancerAudioProcessor:
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 1.0f, 100.0f, 1.0f, 0.7f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( 1.0f, 100.0f, 1.0f, 0.7f), 5.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( 1.0f, 200.0f, 1.0f, 0.7f), 10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -24.0f, 0.0f, 1.0f, 1.7f), -6.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( 1.0f, 200.0f, 1.0f, 0.7f), 50.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(-48.0f, 0.0f, 1.0f, 1.0f), -6.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f), 0.0f));
 
 	return layout;
 }
