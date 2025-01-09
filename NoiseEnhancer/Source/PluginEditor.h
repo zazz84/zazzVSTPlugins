@@ -22,8 +22,13 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
+#include "../../../zazzVSTPlugins/Shared/GUI/SmallSliderComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ButtonComponent.h"
+
 //==============================================================================
-class NoiseEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class NoiseEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     NoiseEnhancerAudioProcessorEditor (NoiseEnhancerAudioProcessor&, juce::AudioProcessorValueTreeState&);
@@ -44,13 +49,39 @@ public:
 	
 protected:
     NoiseEnhancerAudioProcessor& audioProcessor;
-
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
 	juce::Label m_pluginName;
 	juce::Label m_labels[N_SLIDERS] = {};
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+
+	SmallSliderComponent m_attackSlider;
+	SmallSliderComponent m_decaySlider;
+	SmallSliderComponent m_sustainkSlider;
+	SmallSliderComponent m_sustainLevelSlider;
+	SmallSliderComponent m_releaseSlider;
+
+	SmallSliderComponent m_freqA0Slider;
+	SmallSliderComponent m_freqA1Slider;
+	SmallSliderComponent m_freqDSlider;
+	SmallSliderComponent m_freqSSlider;
+	SmallSliderComponent m_freqRSlider;
+
+	SmallSliderComponent m_frequencySlider;
+	SmallSliderComponent m_thresholdSlider;
+	SmallSliderComponent m_amountSlider;
+	SmallSliderComponent m_volumeSlider;
+
+	GroupLabelComponent m_amplitudeEnvelopeLabel;
+	GroupLabelComponent m_frequencyEnvelopeLabel;
+	GroupLabelComponent m_triggerLabel;
+	GroupLabelComponent m_outputLabel;
+
+	ButtonComponent m_triggerSoloButton;
+	ButtonComponent m_noiseSoloButton;
+
+	PluginNameComponent m_pluginLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoiseEnhancerAudioProcessorEditor)
 };

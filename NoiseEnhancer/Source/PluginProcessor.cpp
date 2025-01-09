@@ -22,9 +22,12 @@
 
 //==============================================================================
 
-const std::string NoiseEnhancerAudioProcessor::paramsNames[] = {	"Attack",		"Decay",		"Sustain",	"Sus. Level",	"Release",
-																	"Freq A0",		"Freq A1",		"Freq D",	"Freq S",		"Freq R",
-																	"Frequency",	"Threshold",	"Amount",	"Volume" };
+const std::string NoiseEnhancerAudioProcessor::paramsNames[] = {	"AmpAttack",	"AmpDecay",		"AmpSustain",	"AmpSustainLevel",	"AmpRelease",
+																	"FreqAttack0",	"FreqAttack1",	"FreqDecay",	"FreqSustain",		"FreqRelease",
+																	"Frequency",	"Threshold",	"Amount",		"Volume" };
+const std::string NoiseEnhancerAudioProcessor::labelNames[] = {		"Attack",		"Decay",		"Sustain",		"Sus. Level",	"Release",
+																	"Attack 0",		"Attack 1",		"Decay",		"Susutain",		"Release",
+																	"Frequency",	"Threshold",	"Amount",		"Volume" };
 const std::string NoiseEnhancerAudioProcessor::paramsUnitNames[] = {	" ms",		" ms",			" ms",		" dB",			" ms",
 																		" Hz",		" Hz",			" Hz",		" Hz",			" Hz",
 																		" Hz",		" dB",			" %",		" dB" };
@@ -58,6 +61,9 @@ NoiseEnhancerAudioProcessor::NoiseEnhancerAudioProcessor()
 	thresholdParameter		= apvts.getRawParameterValue(paramsNames[11]);
 	amountParameter			= apvts.getRawParameterValue(paramsNames[12]);
 	volumeParameter			= apvts.getRawParameterValue(paramsNames[13]);
+
+	triggerSoloParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("TriggerSolo"));
+	noiseSoloParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("NoiseSolo"));
 }
 
 NoiseEnhancerAudioProcessor::~NoiseEnhancerAudioProcessor()
@@ -205,6 +211,9 @@ void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 	const auto amount = Math::dBToGain(60.0f * (0.01f * amountParameter->load() - 1.0f));
 	const auto gain = Math::dBToGain(volumeParameter->load());
 
+	const auto triggerSolo = triggerSoloParameter->get();
+	const auto noiseSolo = noiseSoloParameter->get();
+
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
@@ -236,37 +245,74 @@ void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 		frequencyEnvelope.set(params);
 		scFilter.setBandPassPeakGain(frequency, 0.707f);
 
-		for (int sample = 0; sample < samples; sample++)
+		if (triggerSolo)
 		{
-			// Read
-			const float in = channelBuffer[sample];
-
-			// Prepare side chain for trigger evaluation
-			const float sideChain = scFilter.processDF1(in);
-
-			if (amplitudeEnvelope.isFinnished())
+			for (int sample = 0; sample < samples; sample++)
 			{
-				if (sideChain > threshold || sideChain < -threshold)
-				{
-					amplitudeEnvelope.reset();
-					frequencyEnvelope.reset();
+				// Read
+				const float in = channelBuffer[sample];
 
+				// Prepare side chain for trigger evaluation
+				const float sideChain = scFilter.processDF1(in);
+
+				channelBuffer[sample] = sideChain;
+			}
+		}
+		else
+		{
+			for (int sample = 0; sample < samples; sample++)
+			{
+				// Read
+				const float in = channelBuffer[sample];
+
+				// Prepare side chain for trigger evaluation
+				const float sideChain = scFilter.processDF1(in);
+
+				if (amplitudeEnvelope.isFinnished())
+				{
+					if (sideChain > threshold || sideChain < -threshold)
+					{
+						amplitudeEnvelope.reset();
+						frequencyEnvelope.reset();
+
+						const float envelopeGain = amplitudeEnvelope.process();
+						float envelopeFrequency = frequencyEnvelope.process();
+						filter.setLowPass(envelopeFrequency, 0.707f);
+						const float noise = filter.processDF1(2.0f * random.process() - 1.0f);
+
+						if (noiseSolo)
+						{
+							channelBuffer[sample] = amount * envelopeGain * noise;
+						}
+						else
+						{
+							channelBuffer[sample] = in + amount * envelopeGain * noise;
+						}
+					}
+					else
+					{
+						if (noiseSolo)
+						{
+							channelBuffer[sample] = 0.0f;
+						}
+					}
+				}
+				else
+				{
 					const float envelopeGain = amplitudeEnvelope.process();
 					float envelopeFrequency = frequencyEnvelope.process();
 					filter.setLowPass(envelopeFrequency, 0.707f);
 					const float noise = filter.processDF1(2.0f * random.process() - 1.0f);
-								
-					channelBuffer[sample] = in + amount * envelopeGain * noise;
-				}
-			}
-			else
-			{
-				const float envelopeGain = amplitudeEnvelope.process();
-				float envelopeFrequency = frequencyEnvelope.process();			
-				filter.setLowPass(envelopeFrequency, 0.707f);
-				const float noise = filter.processDF1(2.0f * random.process() - 1.0f);
 
-				channelBuffer[sample] = in + amount * envelopeGain * noise;
+					if (noiseSolo)
+					{
+						channelBuffer[sample] = amount * envelopeGain * noise;
+					}
+					else
+					{
+						channelBuffer[sample] = in + amount * envelopeGain * noise;
+					}
+				}
 			}
 		}
 	}
@@ -308,22 +354,25 @@ juce::AudioProcessorValueTreeState::ParameterLayout NoiseEnhancerAudioProcessor:
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 1.0f, 100.0f, 1.0f, 0.7f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 1.0f, 100.0f, 1.0f, 0.7f), 10.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( 1.0f, 100.0f, 1.0f, 0.7f), 5.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( 1.0f, 200.0f, 1.0f, 0.7f), 10.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -24.0f, 0.0f, 1.0f, 1.7f), -6.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( 1.0f, 200.0f, 1.0f, 0.7f), 50.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f),  100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 20000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f), 10000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f),  1000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.4f),   100.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(20.0f, 20000.0f, 1.0f, 0.4f), 1000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(-48.0f, 0.0f, 1.0f, 1.0f), -6.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(40.0f, 10000.0f, 1.0f, 0.4f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(-48.0f, 0.0f, 1.0f, 1.0f), -12.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f), 0.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("TriggerSolo", "TriggerSolo", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("NoiseSolo", "NoiseSolo", false));
 
 	return layout;
 }

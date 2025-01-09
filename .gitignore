@@ -6885,3 +6885,8 @@ NoiseEnhancer/JuceLibraryCode/ReadMe.txt
 NoiseEnhancer/Builds/VisualStudio2017/NoiseEnhancer_VST3.vcxproj.user
 NoiseEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/BiquadFilters.obj
 NoiseEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/NoiseEnh.B7546002.tlog/CL.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Debug/Shared Code/NoiseEnh.B7546002.tlog/unsuccessfulbuild
+NoiseEnhancer/Builds/VisualStudio2017/.vs/NoiseEnhancer/v15/Browse.VC.opendb
+NoiseEnhancer/Builds/VisualStudio2017/.vs/NoiseEnhancer/v15/Solution.VC.db-shm
+NoiseEnhancer/Builds/VisualStudio2017/.vs/NoiseEnhancer/v15/Solution.VC.db-wal
+NoiseEnhancer/Builds/VisualStudio2017/NoiseEnhancer_SharedCode.vcxproj.user

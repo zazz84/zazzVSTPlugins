@@ -38,6 +38,7 @@ public:
     ~NoiseEnhancerAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
 
@@ -103,6 +104,9 @@ private:
 	std::atomic<float>* thresholdParameter = nullptr;
 	std::atomic<float>* amountParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	juce::AudioParameterBool* triggerSoloParameter = nullptr;
+	juce::AudioParameterBool* noiseSoloParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoiseEnhancerAudioProcessor)
 };
