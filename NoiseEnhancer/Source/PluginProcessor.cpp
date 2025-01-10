@@ -191,7 +191,7 @@ bool NoiseEnhancerAudioProcessor::isBusesLayoutSupported (const BusesLayout& lay
 }
 #endif
 
-void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void NoiseEnhancerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
 	const auto attack = attackParameter->load();
@@ -218,15 +218,15 @@ void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
 
-	const Envelope::EnvelopeParams params(	attack,
-											decay,
-											sustain,
-											release,
-											freqA0,
-											freqA1,
-											freqD,
-											freqS,
-											freqR);
+	const Envelope::EnvelopeParams params(attack,
+		decay,
+		sustain,
+		release,
+		freqA0,
+		freqA1,
+		freqD,
+		freqS,
+		freqR);
 
 	for (int channel = 0; channel < channels; channel++)
 	{
@@ -317,7 +317,29 @@ void NoiseEnhancerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 		}
 	}
 
+	// Apply gain
 	buffer.applyGain(gain);
+
+	// Get peak value
+	m_peakLR = 0.0f;
+
+	for (int channel = 0; channel < channels; channel++)
+	{
+		// Channel pointer
+		auto* channelBuffer = buffer.getWritePointer(channel);
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			// Read
+			const float in = channelBuffer[sample];
+
+			// COmpare
+			if (in > m_peakLR)
+			{
+				m_peakLR = in;
+			}
+		}
+	}
 }
 
 //==============================================================================

@@ -26,9 +26,10 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ButtonComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PeakLevelMeterComponent.h"
 
 //==============================================================================
-class NoiseEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor
+class NoiseEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     NoiseEnhancerAudioProcessorEditor (NoiseEnhancerAudioProcessor&, juce::AudioProcessorValueTreeState&);
@@ -41,6 +42,7 @@ public:
 	static const int N_ROWS = 3;
 	
 	//==============================================================================
+	void timerCallback() override;
 	void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -80,6 +82,8 @@ protected:
 
 	ButtonComponent m_triggerSoloButton;
 	ButtonComponent m_noiseSoloButton;
+
+	PeakLevelMeterComponent m_peakMeter;
 
 	PluginNameComponent m_pluginLabel;
 

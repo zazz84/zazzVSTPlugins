@@ -70,6 +70,10 @@ public:
     void setCurrentProgram (int index) override;
     const juce::String getProgramName (int index) override;
     void changeProgramName (int index, const juce::String& newName) override;
+	float getRMS() const
+	{
+		return m_peakLR;
+	}
 
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
@@ -104,6 +108,8 @@ private:
 	std::atomic<float>* thresholdParameter = nullptr;
 	std::atomic<float>* amountParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	float m_peakLR = 0.0f;
 
 	juce::AudioParameterBool* triggerSoloParameter = nullptr;
 	juce::AudioParameterBool* noiseSoloParameter = nullptr;

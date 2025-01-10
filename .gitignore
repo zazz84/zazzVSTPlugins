@@ -6890,3 +6890,65 @@ NoiseEnhancer/Builds/VisualStudio2017/.vs/NoiseEnhancer/v15/Browse.VC.opendb
 NoiseEnhancer/Builds/VisualStudio2017/.vs/NoiseEnhancer/v15/Solution.VC.db-shm
 NoiseEnhancer/Builds/VisualStudio2017/.vs/NoiseEnhancer/v15/Solution.VC.db-wal
 NoiseEnhancer/Builds/VisualStudio2017/NoiseEnhancer_SharedCode.vcxproj.user
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/CL.11908.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/CL.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/CL.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/Lib-link.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/Lib-link.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/Lib.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnh.B7546002.tlog/NoiseEnhancer_SharedCode.lastbuildstate
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnhancer.lib
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnhancer.pdb
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/NoiseEnhancer_SharedCode.log
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/CL.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/CL.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/CL.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/link.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/link.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/link.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/NoiseEnhancer_VST3ManifestHelper.lastbuildstate
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/rc.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/rc.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnh.81FA6B51.tlog/rc.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/NoiseEnhancer_VST3ManifestHelper.log
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/CL.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/CL.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/CL.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/link.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/link.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/link.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/NoiseEnhancer_VST3.lastbuildstate
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/NoiseEnhancer_VST3.write.1u.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/rc.command.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/rc.read.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnh.F2D2AE43.tlog/rc.write.1.tlog
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.dll
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.exp
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.lib
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.pdb
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.vst3/Contents/Resources/moduleinfo.json
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.vst3/Contents/x86_64-win/NoiseEnhancer.vst3
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer_VST3.log
+NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/resources.res

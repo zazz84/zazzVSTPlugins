@@ -6,6 +6,9 @@
               version="2.0.0">
   <MAINGROUP id="WekF2y" name="NoiseEnhancer">
     <GROUP id="{3C7C84B1-C6CF-6187-3B09-C231D43E4C31}" name="Source">
+      <FILE id="Zy88JT" name="PeakDetector.h" compile="0" resource="0" file="../Shared/Dynamics/PeakDetector.h"/>
+      <FILE id="lxrvLj" name="PeakLevelMeterComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PeakLevelMeterComponent.h"/>
       <FILE id="tbkVLn" name="ButtonComponent.h" compile="0" resource="0"
             file="../Shared/GUI/ButtonComponent.h"/>
       <FILE id="Y0G1I8" name="PluginNameComponent.h" compile="0" resource="0"

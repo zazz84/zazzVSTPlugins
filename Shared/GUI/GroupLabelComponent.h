@@ -32,7 +32,7 @@ public:
 
 	inline void paint(juce::Graphics& g) override
 	{
-		// Size: 1 x n
+		// Size: n x 1
 		
 		g.fillAll(juce::Colour::fromRGB(90, 90, 100));
 

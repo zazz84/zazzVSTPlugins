@@ -57,7 +57,9 @@ NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor(NoiseEnhanc
 	m_pluginLabel("Noise Enhancer"),
 
 	m_triggerSoloButton(vts, "SOLO", "TriggerSolo"),
-	m_noiseSoloButton(vts, "SOLO", "NoiseSolo")
+	m_noiseSoloButton(vts, "SOLO", "NoiseSolo"),
+
+	m_peakMeter()
 {	
 	addAndMakeVisible(m_attackSlider);
 	addAndMakeVisible(m_decaySlider);
@@ -85,9 +87,11 @@ NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor(NoiseEnhanc
 	addAndMakeVisible(m_triggerSoloButton);
 	addAndMakeVisible(m_noiseSoloButton);
 
+	addAndMakeVisible(m_peakMeter);
+
 	setResizable(true, true);
 
-	const int canvasWidth = 5 * 3 * 30;
+	const int canvasWidth = (5 * 3 + 2) * 30;
 	const int canvasHeight = (2 + 1 + 4 + 1 + 4 + 1 + 4 + 1) * 30;
 
 	setSize(canvasWidth, canvasHeight);
@@ -100,13 +104,22 @@ NoiseEnhancerAudioProcessorEditor::NoiseEnhancerAudioProcessorEditor(NoiseEnhanc
 		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
 		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
+
+	startTimerHz(30);
 }
 
 NoiseEnhancerAudioProcessorEditor::~NoiseEnhancerAudioProcessorEditor()
 {
+	stopTimer();
 }
 
 //==============================================================================
+void NoiseEnhancerAudioProcessorEditor::timerCallback()
+{
+	m_peakMeter.setLevel(audioProcessor.getRMS());
+	m_peakMeter.repaint();
+}
+
 void NoiseEnhancerAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
@@ -117,7 +130,7 @@ void NoiseEnhancerAudioProcessorEditor::resized()
 	const int width = getWidth();
 	const int height = getHeight();
 
-	const int pixelWidth = width / 15;
+	const int pixelWidth = width / 17;
 	
 	// Set size
 	const int sliderWeidth = 3 * pixelWidth;
@@ -140,8 +153,8 @@ void NoiseEnhancerAudioProcessorEditor::resized()
 	m_amountSlider.setSize(sliderWeidth, sliderHeight);
 	m_volumeSlider.setSize(sliderWeidth, sliderHeight);
 
-	m_amplitudeEnvelopeLabel.setSize(width, pixelWidth);
-	m_frequencyEnvelopeLabel.setSize(width, pixelWidth);
+	m_amplitudeEnvelopeLabel.setSize(5 * sliderWeidth, pixelWidth);
+	m_frequencyEnvelopeLabel.setSize(5 * sliderWeidth, pixelWidth);
 	m_triggerLabel.setSize(6 * pixelWidth, pixelWidth);
 	m_outputLabel.setSize(6 * pixelWidth, pixelWidth);
 	
@@ -149,6 +162,8 @@ void NoiseEnhancerAudioProcessorEditor::resized()
 
 	m_triggerSoloButton.setSize(sliderWeidth, pixelWidth);
 	m_noiseSoloButton.setSize(sliderWeidth, pixelWidth);
+
+	m_peakMeter.setSize(2 * pixelWidth, height - 2 * pixelWidth);
 
 	// Set position
 
@@ -193,4 +208,6 @@ void NoiseEnhancerAudioProcessorEditor::resized()
 	const int bRow = row3 + 4 * pixelWidth;
 	m_triggerSoloButton.setTopLeftPosition(3 * pixelWidth / 2, bRow);
 	m_noiseSoloButton.setTopLeftPosition(6 * pixelWidth + 3 * pixelWidth / 2, bRow);
+
+	m_peakMeter.setTopLeftPosition(column5 + 3 * pixelWidth, glRow1);
 }
