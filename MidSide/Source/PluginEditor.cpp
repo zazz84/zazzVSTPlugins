@@ -33,6 +33,7 @@ MidSideAudioProcessorEditor::MidSideAudioProcessorEditor(MidSideAudioProcessor& 
 	m_panLabel("Pan"),
 
 	m_correlationMeter(),
+	m_balanceMeter(),
 
 	m_pluginLabel("Mid Side")
 {	
@@ -46,13 +47,14 @@ MidSideAudioProcessorEditor::MidSideAudioProcessorEditor(MidSideAudioProcessor& 
 	addAndMakeVisible(m_panLabel);
 
 	addAndMakeVisible(m_correlationMeter);
+	addAndMakeVisible(m_balanceMeter);
 
 	addAndMakeVisible(m_pluginLabel);
 
 	setResizable(true, true);
 
 	const int canvasWidth = (5 * 3 + 2) * 30;
-	const int canvasHeight = (2 + 1 + 4 + 2) * 30;
+	const int canvasHeight = (2 + 1 + 4 + 2 + 2) * 30;
 
 	setSize(canvasWidth, canvasHeight);
 
@@ -76,8 +78,11 @@ MidSideAudioProcessorEditor::~MidSideAudioProcessorEditor()
 //==============================================================================
 void MidSideAudioProcessorEditor::timerCallback()
 {
-	m_correlationMeter.setCorrelation(audioProcessor.getCorrelation());
+	m_correlationMeter.set(audioProcessor.getCorrelation());
 	m_correlationMeter.repaint();
+
+	m_balanceMeter.set(audioProcessor.getBalance());
+	m_balanceMeter.repaint();
 }
 
 void MidSideAudioProcessorEditor::paint (juce::Graphics& g)
@@ -109,6 +114,7 @@ void MidSideAudioProcessorEditor::resized()
 	m_volumeSlider.setSize(sliderWidth, sliderHeight);
 
 	m_correlationMeter.setSize(width - pixelSize2, pixelSize2);
+	m_balanceMeter.setSize(width - pixelSize2, pixelSize2);
 
 	// Set position
 	m_pluginLabel.setTopLeftPosition(0, 0);
@@ -133,4 +139,5 @@ void MidSideAudioProcessorEditor::resized()
 	m_volumeSlider.setTopLeftPosition(sliderColumn5, sliderRow1);
 
 	m_correlationMeter.setTopLeftPosition(sliderColumn1, sliderRow1 + sliderHeight);
+	m_balanceMeter.setTopLeftPosition(sliderColumn1, sliderRow1 + sliderHeight + pixelSize2);
 }

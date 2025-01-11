@@ -5,6 +5,9 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial">
   <MAINGROUP id="Y4pbpS" name="MidSide">
     <GROUP id="{4D1E7D6A-6F74-AA03-347F-83D4D3FF702B}" name="Source">
+      <FILE id="SpY8iI" name="Balance.h" compile="0" resource="0" file="../Shared/Utilities/Balance.h"/>
+      <FILE id="Gj3Jt9" name="BalanceMeterComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/BalanceMeterComponent.h"/>
       <FILE id="up7wlV" name="OnePoleFilters.h" compile="0" resource="0"
             file="../Shared/Filters/OnePoleFilters.h"/>
       <FILE id="YjVOzR" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>

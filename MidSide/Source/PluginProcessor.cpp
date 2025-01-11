@@ -115,8 +115,10 @@ void MidSideAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void MidSideAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	// Correlation uses 10ms buffer for calculation
-	m_correlation.init(static_cast<int>(sampleRate));
+	const int sr = (static_cast<int>(sampleRate));
+
+	m_correlation.init(sr);
+	m_balance.init(sr);
 }
 
 void MidSideAudioProcessor::releaseResources()
@@ -197,6 +199,8 @@ void MidSideAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			m_correlationMin = correlation;
 		}
 	}
+
+	m_balanceAvg = m_balance.processBlock(buffer);
 }
 
 //==============================================================================

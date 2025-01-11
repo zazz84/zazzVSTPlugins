@@ -20,6 +20,7 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/Correlation.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Balance.h"
 
 //==============================================================================
 class MidSideAudioProcessor  : public juce::AudioProcessor
@@ -73,6 +74,10 @@ public:
 	{
 		return m_correlationMin;
 	}
+	float getBalance()
+	{
+		return m_balanceAvg;
+	}
 
 	using APVTS = juce::AudioProcessorValueTreeState;
 	static APVTS::ParameterLayout createParameterLayout();
@@ -82,6 +87,7 @@ public:
 private:	
 	//==============================================================================
 	Correlation m_correlation;
+	Balance m_balance;
 	
 	std::atomic<float>* mGainParameter = nullptr;
 	std::atomic<float>* sGainParameter = nullptr;
@@ -90,6 +96,7 @@ private:
 	std::atomic<float>* volumeParameter = nullptr;
 
 	float m_correlationMin = 1.0f;
+	float m_balanceAvg = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidSideAudioProcessor)
 };

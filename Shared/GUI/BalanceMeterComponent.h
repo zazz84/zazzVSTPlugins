@@ -22,15 +22,15 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 
-class CorrelationMeterComponent : public juce::Component
+class BalanceMeterComponent : public juce::Component
 {
 public:
-	CorrelationMeterComponent()
+	BalanceMeterComponent()
 	{
 		m_smoother.init(30.0f);
 		m_smoother.set(2.0f);
 	};
-	~CorrelationMeterComponent()
+	~BalanceMeterComponent()
 	{
 		m_smoother.release();
 	};
@@ -68,45 +68,38 @@ public:
 		g.setFont(static_cast<float>(pixelSize / 2));
 		g.setColour(juce::Colours::white);
 		g.setOpacity(0.5f);
-		
+
 		const auto yPosText = pixelSize / 3;
 
 		bounds.setSize(pixelSize, pixelSize);
 		bounds.setPosition(xPos, yPosText);
-		g.drawText("-1", bounds, juce::Justification::topLeft);
+		g.drawText("L", bounds, juce::Justification::topLeft);
 
-		bounds.setPosition((width - pixelSize) / 2 , yPosText);
-		g.drawText("0", bounds, juce::Justification::centredTop);
+		bounds.setPosition((width - pixelSize) / 2, yPosText);
+		g.drawText("C", bounds, juce::Justification::centredTop);
 
 		bounds.setPosition(width - xPos - pixelSize, yPosText);
-		g.drawText("1", bounds, juce::Justification::topRight);
-		
+		g.drawText("R", bounds, juce::Justification::topRight);
+
 		// Draw meter value
-		const float correlationSmooth = m_smoother.process(m_correlation);
+		const float balanceSmooth = m_smoother.process(m_balance);
 
-		const auto peakWidth = static_cast<int>(Math::remap(Math::fabsf(correlationSmooth), 0.0f, 1.0f, 0.0f, static_cast<float>(meterWidth / 2)));
-		
-		bounds.setSize(peakWidth, meterHeight);
+		const auto markerPosition = static_cast<int>(Math::remap(balanceSmooth, -1.0f, 1.0f, 0.0f, static_cast<float>(meterWidth)));
 
-		if (m_correlation > 0.0f)
-		{		
-			bounds.setPosition(width / 2, yPos);
-		}
-		else
-		{
-			bounds.setPosition(width / 2 - peakWidth, yPos);
-		}
+		const auto markerWidth = pixelSize / 4;
+		bounds.setSize(markerWidth, meterHeight);
+		bounds.setPosition(xPos + markerPosition - markerWidth / 2, yPos);
 
 		g.setColour(juce::Colours::white);
 		g.setOpacity(1.0f);
 		g.fillRect(bounds);
 	}
-	inline void set(const float correlation)
+	inline void set(const float balance)
 	{
-		m_correlation = correlation;
+		m_balance = balance;
 	}
 
 private:
 	OnePoleLowPassFilter m_smoother;
-	float m_correlation = 0.0f;
+	float m_balance = 0.0f;
 };
