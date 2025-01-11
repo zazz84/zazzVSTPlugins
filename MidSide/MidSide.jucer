@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="KFWWIy" name="MS" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="KFWWIy" name="MidSide" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial">
-  <MAINGROUP id="Y4pbpS" name="MS">
+  <MAINGROUP id="Y4pbpS" name="MidSide">
     <GROUP id="{4D1E7D6A-6F74-AA03-347F-83D4D3FF702B}" name="Source">
+      <FILE id="zYwMdi" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="GW9E71" name="SmallSliderComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/SmallSliderComponent.h"/>
       <FILE id="P3jzMA" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="luSd6Y" name="PluginProcessor.h" compile="0" resource="0"
@@ -37,9 +41,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="MS" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MidSide" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="MS" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="MidSide" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

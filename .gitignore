@@ -6952,3 +6952,233 @@ NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.vst3/Conten
 NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer.vst3/Contents/x86_64-win/NoiseEnhancer.vst3
 NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/NoiseEnhancer_VST3.log
 NoiseEnhancer/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+MidSide/Builds/VisualStudio2017/.vs/MidSide/v15/.suo
+MidSide/Builds/VisualStudio2017/.vs/MidSide/v15/Browse.VC.db
+MidSide/Builds/VisualStudio2017/.vs/MidSide/v15/Solution.VC.db
+MidSide/Builds/VisualStudio2017/.vs/MS/v15/.suo
+MidSide/Builds/VisualStudio2017/.vs/MS/v15/Browse.VC.db
+MidSide/Builds/VisualStudio2017/.vs/MS/v15/Solution.VC.db
+MidSide/Builds/VisualStudio2017/MidSide.sln
+MidSide/Builds/VisualStudio2017/MidSide_SharedCode.vcxproj
+MidSide/Builds/VisualStudio2017/MidSide_SharedCode.vcxproj.filters
+MidSide/Builds/VisualStudio2017/MidSide_SharedCode.vcxproj.user
+MidSide/Builds/VisualStudio2017/MidSide_VST3.vcxproj
+MidSide/Builds/VisualStudio2017/MidSide_VST3.vcxproj.filters
+MidSide/Builds/VisualStudio2017/MidSide_VST3.vcxproj.user
+MidSide/Builds/VisualStudio2017/MidSide_VST3ManifestHelper.vcxproj
+MidSide/Builds/VisualStudio2017/MidSide_VST3ManifestHelper.vcxproj.filters
+MidSide/Builds/VisualStudio2017/MS.sln
+MidSide/Builds/VisualStudio2017/MS_SharedCode.vcxproj
+MidSide/Builds/VisualStudio2017/MS_SharedCode.vcxproj.filters
+MidSide/Builds/VisualStudio2017/MS_StandalonePlugin.vcxproj
+MidSide/Builds/VisualStudio2017/MS_StandalonePlugin.vcxproj.filters
+MidSide/Builds/VisualStudio2017/MS_VST3.vcxproj
+MidSide/Builds/VisualStudio2017/MS_VST3.vcxproj.filters
+MidSide/Builds/VisualStudio2017/MS_VST3ManifestHelper.vcxproj
+MidSide/Builds/VisualStudio2017/MS_VST3ManifestHelper.vcxproj.filters
+MidSide/Builds/VisualStudio2017/resources.rc
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide.Build.CppClean.log
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide.lib
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide.pdb
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/Lib-link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/Lib-link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/Lib.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_.A7BA12E9.tlog/MidSide_SharedCode.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MidSide_SharedCode.log
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS.lib
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.log
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/Lib-link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/Lib-link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/Lib.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/MS_SharedCode.tlog/MS_SharedCode.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.Build.CppClean.log
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/link.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/MidSide_VST3ManifestHelper.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/rc.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/rc.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_.228BADCB.tlog/rc.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MidSide_VST3ManifestHelper.log
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/link.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/MS_VST3ManifestHelper.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/rc.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/rc.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/rc.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/MS_VST3ManifestHelper.log
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.Build.CppClean.log
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.dll
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.exp
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.ilk
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.lib
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.pdb
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.vst3/Contents/Resources/moduleinfo.json
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide.vst3/Contents/x86_64-win/MidSide.vst3
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.log
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/link.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/MidSide_VST3.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/MidSide_VST3.write.1u.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/rc.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/rc.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MidSide_VST3.tlog/rc.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS.dll
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS.lib
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS.vst3/Contents/Resources/moduleinfo.json
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS.vst3/Contents/x86_64-win/MS.vst3
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.log
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/link.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/MS_VST3.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/MS_VST3.write.1u.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/rc.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/rc.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/MS_VST3.tlog/rc.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS.lib
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS.pdb
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.log
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/CL.14000.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/Lib-link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/Lib-link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/Lib.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MS_SharedCode.tlog/MS_SharedCode.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/link.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/MS_VST3ManifestHelper.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/rc.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/rc.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3M.228BADCB.tlog/rc.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/MS_VST3ManifestHelper.log
+MidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS.dll
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS.exp
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS.lib
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS.pdb
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS.vst3/Contents/Resources/moduleinfo.json
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS.vst3/Contents/x86_64-win/MS.vst3
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.log
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/CL.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/CL.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/CL.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/link.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/link.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/link.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/MS_VST3.lastbuildstate
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/MS_VST3.write.1u.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/rc.command.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/rc.read.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/MS_VST3.tlog/rc.write.1.tlog
+MidSide/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+MidSide/JuceLibraryCode/include_juce_audio_basics.cpp
+MidSide/JuceLibraryCode/include_juce_audio_basics.mm
+MidSide/JuceLibraryCode/include_juce_audio_devices.cpp
+MidSide/JuceLibraryCode/include_juce_audio_devices.mm
+MidSide/JuceLibraryCode/include_juce_audio_formats.cpp
+MidSide/JuceLibraryCode/include_juce_audio_formats.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+MidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+MidSide/JuceLibraryCode/include_juce_audio_processors.cpp
+MidSide/JuceLibraryCode/include_juce_audio_processors.mm
+MidSide/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+MidSide/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+MidSide/JuceLibraryCode/include_juce_audio_utils.cpp
+MidSide/JuceLibraryCode/include_juce_audio_utils.mm
+MidSide/JuceLibraryCode/include_juce_core.cpp
+MidSide/JuceLibraryCode/include_juce_core.mm
+MidSide/JuceLibraryCode/include_juce_data_structures.cpp
+MidSide/JuceLibraryCode/include_juce_data_structures.mm
+MidSide/JuceLibraryCode/include_juce_events.cpp
+MidSide/JuceLibraryCode/include_juce_events.mm
+MidSide/JuceLibraryCode/include_juce_graphics.cpp
+MidSide/JuceLibraryCode/include_juce_graphics.mm
+MidSide/JuceLibraryCode/include_juce_gui_basics.cpp
+MidSide/JuceLibraryCode/include_juce_gui_basics.mm
+MidSide/JuceLibraryCode/include_juce_gui_extra.cpp
+MidSide/JuceLibraryCode/include_juce_gui_extra.mm
+MidSide/JuceLibraryCode/ReadMe.txt
+MidSide/JuceLibraryCode/JucePluginDefines.h
+MidSide/JuceLibraryCode/JuceHeader.h

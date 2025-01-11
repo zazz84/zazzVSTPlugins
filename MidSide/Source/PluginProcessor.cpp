@@ -1,20 +1,31 @@
 /*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 //==============================================================================
 
-const std::string MSAudioProcessor::paramsNames[] = { "MGain", "SGain", "MPan", "SPan", "Volume" };
+const std::string MidSideAudioProcessor::paramsNames[] = { "MGain", "SGain", "MPan", "SPan", "Volume" };
+const std::string MidSideAudioProcessor::labelNames[] =  { "Mid", "Side", "Mid", "Side", "Volume" };
+const std::string MidSideAudioProcessor::paramsUnitNames[] =  { " dB", " dB", "", "", " dB" };
 
 //==============================================================================
-MSAudioProcessor::MSAudioProcessor()
+MidSideAudioProcessor::MidSideAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -33,17 +44,17 @@ MSAudioProcessor::MSAudioProcessor()
 	volumeParameter = apvts.getRawParameterValue(paramsNames[4]);
 }
 
-MSAudioProcessor::~MSAudioProcessor()
+MidSideAudioProcessor::~MidSideAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String MSAudioProcessor::getName() const
+const juce::String MidSideAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool MSAudioProcessor::acceptsMidi() const
+bool MidSideAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -52,7 +63,7 @@ bool MSAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool MSAudioProcessor::producesMidi() const
+bool MidSideAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -61,7 +72,7 @@ bool MSAudioProcessor::producesMidi() const
    #endif
 }
 
-bool MSAudioProcessor::isMidiEffect() const
+bool MidSideAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -70,47 +81,47 @@ bool MSAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double MSAudioProcessor::getTailLengthSeconds() const
+double MidSideAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int MSAudioProcessor::getNumPrograms()
+int MidSideAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int MSAudioProcessor::getCurrentProgram()
+int MidSideAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void MSAudioProcessor::setCurrentProgram (int index)
+void MidSideAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String MSAudioProcessor::getProgramName (int index)
+const juce::String MidSideAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void MSAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void MidSideAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void MSAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void MidSideAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 }
 
-void MSAudioProcessor::releaseResources()
+void MidSideAudioProcessor::releaseResources()
 {
 	
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool MSAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool MidSideAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -134,7 +145,7 @@ bool MSAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 }
 #endif
 
-void MSAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void MidSideAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	if (getTotalNumOutputChannels() != 2)
 	{
@@ -173,25 +184,25 @@ void MSAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::Mid
 }
 
 //==============================================================================
-bool MSAudioProcessor::hasEditor() const
+bool MidSideAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* MSAudioProcessor::createEditor()
+juce::AudioProcessorEditor* MidSideAudioProcessor::createEditor()
 {
-    return new MSAudioProcessorEditor (*this, apvts);
+    return new MidSideAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void MSAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void MidSideAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void MSAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void MidSideAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -200,7 +211,7 @@ void MSAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout MSAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout MidSideAudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
@@ -219,5 +230,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout MSAudioProcessor::createPara
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new MSAudioProcessor();
+    return new MidSideAudioProcessor();
 }
