@@ -7182,3 +7182,6 @@ MidSide/JuceLibraryCode/include_juce_gui_extra.mm
 MidSide/JuceLibraryCode/ReadMe.txt
 MidSide/JuceLibraryCode/JucePluginDefines.h
 MidSide/JuceLibraryCode/JuceHeader.h
+MidSide/Builds/VisualStudio2017/.vs/MidSide/v15/Browse.VC.opendb
+MidSide/Builds/VisualStudio2017/.vs/MidSide/v15/Solution.VC.db-shm
+MidSide/Builds/VisualStudio2017/.vs/MidSide/v15/Solution.VC.db-wal

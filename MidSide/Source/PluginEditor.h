@@ -22,6 +22,7 @@
 
 #include "../../../zazzVSTPlugins/Shared/GUI/SmallSliderComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 
 //==============================================================================
 class MidSideAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
@@ -45,6 +46,9 @@ private:
 	SmallSliderComponent m_midPanSlider;
 	SmallSliderComponent m_sidePanSlider;
 	SmallSliderComponent m_volumeSlider;
+
+	GroupLabelComponent m_gainLabel;
+	GroupLabelComponent m_panLabel;
 
 	PluginNameComponent m_pluginLabel;
 

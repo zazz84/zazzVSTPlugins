@@ -19,15 +19,18 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MidSideAudioProcessorEditor::MidSideAudioProcessorEditor (MidSideAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p),
-	audioProcessor (p),
+MidSideAudioProcessorEditor::MidSideAudioProcessorEditor(MidSideAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+	: AudioProcessorEditor(&p),
+	audioProcessor(p),
 	valueTreeState(vts),
 	m_midGainSlider(vts, MidSideAudioProcessor::paramsNames[0], MidSideAudioProcessor::paramsUnitNames[0], MidSideAudioProcessor::labelNames[0]),
 	m_sideGainSlider(vts, MidSideAudioProcessor::paramsNames[1], MidSideAudioProcessor::paramsUnitNames[1], MidSideAudioProcessor::labelNames[1]),
 	m_midPanSlider(vts, MidSideAudioProcessor::paramsNames[2], MidSideAudioProcessor::paramsUnitNames[2], MidSideAudioProcessor::labelNames[2]),
 	m_sidePanSlider(vts, MidSideAudioProcessor::paramsNames[3], MidSideAudioProcessor::paramsUnitNames[3], MidSideAudioProcessor::labelNames[3]),
 	m_volumeSlider(vts, MidSideAudioProcessor::paramsNames[4], MidSideAudioProcessor::paramsUnitNames[4], MidSideAudioProcessor::labelNames[4]),
+
+	m_gainLabel("Gain"),
+	m_panLabel("Pan"),
 
 	m_pluginLabel("Mid Side")
 {	
@@ -37,12 +40,15 @@ MidSideAudioProcessorEditor::MidSideAudioProcessorEditor (MidSideAudioProcessor&
 	addAndMakeVisible(m_sidePanSlider);
 	addAndMakeVisible(m_volumeSlider);
 
+	addAndMakeVisible(m_gainLabel);
+	addAndMakeVisible(m_panLabel);
+
 	addAndMakeVisible(m_pluginLabel);
 
 	setResizable(true, true);
 
 	const int canvasWidth = (5 * 3 + 2) * 30;
-	const int canvasHeight = (2 + 4) * 30;
+	const int canvasHeight = (2 + 1 + 4) * 30;
 
 	setSize(canvasWidth, canvasHeight);
 
@@ -92,6 +98,9 @@ void MidSideAudioProcessorEditor::resized()
 	m_sidePanSlider.setSize(sliderWidth, sliderHeight);
 	m_volumeSlider.setSize(sliderWidth, sliderHeight);
 
+	m_gainLabel.setSize(2 * sliderWidth, pixelSize);
+	m_panLabel.setSize(2 * sliderWidth, pixelSize);
+
 	m_pluginLabel.setSize(width, pixelSize2);
 
 	// Set position
@@ -103,7 +112,12 @@ void MidSideAudioProcessorEditor::resized()
 	const int sliderColumn4 = sliderColumn3 + sliderWidth;
 	const int sliderColumn5 = sliderColumn4 + sliderWidth;
 
-	const int sliderRow1 = pixelSize2;
+	const int lableRow1 = pixelSize2;
+
+	m_gainLabel.setTopLeftPosition(sliderColumn1, lableRow1);
+	m_panLabel.setTopLeftPosition(sliderColumn3, lableRow1);
+
+	const int sliderRow1 = pixelSize2 + pixelSize;
 
 	m_midGainSlider.setTopLeftPosition(sliderColumn1, sliderRow1);
 	m_sideGainSlider.setTopLeftPosition(sliderColumn2, sliderRow1);
