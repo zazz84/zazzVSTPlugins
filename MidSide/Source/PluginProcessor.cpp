@@ -18,6 +18,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+
 //==============================================================================
 
 const std::string MidSideAudioProcessor::paramsNames[] = { "MGain", "SGain", "MPan", "SPan", "Volume" };
@@ -113,6 +115,8 @@ void MidSideAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void MidSideAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+	// Correlation uses 10ms buffer for calculation
+	m_correlation.init(static_cast<int>(sampleRate));
 }
 
 void MidSideAudioProcessor::releaseResources()
@@ -170,6 +174,8 @@ void MidSideAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 	auto* LChannel = buffer.getWritePointer(0);
 	auto* RChannel = buffer.getWritePointer(1);
 
+	m_correlationMin = 1.0f;
+
 	for (int sample = 0; sample < samples; sample++)
 	{
 		const float LIn = LChannel[sample];
@@ -178,8 +184,18 @@ void MidSideAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 		const float mid = mGain * (LIn + RIn);
 		const float side = sGain * (LIn - RIn);
 			
-		LChannel[sample] = mPanL * mid + sPanL * side;
-		RChannel[sample] = mPanR * mid - sPanR * side;
+		const float LOut = mPanL * mid + sPanL * side;
+		const float ROut = mPanR * mid - sPanR * side;
+
+		LChannel[sample] = LOut;
+		RChannel[sample] = ROut;
+
+		// Get correlation
+		const float correlation = m_correlation.process(LOut, ROut);
+		if (correlation < m_correlationMin)
+		{
+			m_correlationMin = correlation;
+		}
 	}
 }
 

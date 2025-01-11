@@ -32,6 +32,8 @@ MidSideAudioProcessorEditor::MidSideAudioProcessorEditor(MidSideAudioProcessor& 
 	m_gainLabel("Gain"),
 	m_panLabel("Pan"),
 
+	m_correlationMeter(),
+
 	m_pluginLabel("Mid Side")
 {	
 	addAndMakeVisible(m_midGainSlider);
@@ -43,12 +45,14 @@ MidSideAudioProcessorEditor::MidSideAudioProcessorEditor(MidSideAudioProcessor& 
 	addAndMakeVisible(m_gainLabel);
 	addAndMakeVisible(m_panLabel);
 
+	addAndMakeVisible(m_correlationMeter);
+
 	addAndMakeVisible(m_pluginLabel);
 
 	setResizable(true, true);
 
 	const int canvasWidth = (5 * 3 + 2) * 30;
-	const int canvasHeight = (2 + 1 + 4) * 30;
+	const int canvasHeight = (2 + 1 + 4 + 2) * 30;
 
 	setSize(canvasWidth, canvasHeight);
 
@@ -72,7 +76,8 @@ MidSideAudioProcessorEditor::~MidSideAudioProcessorEditor()
 //==============================================================================
 void MidSideAudioProcessorEditor::timerCallback()
 {
-
+	m_correlationMeter.setCorrelation(audioProcessor.getCorrelation());
+	m_correlationMeter.repaint();
 }
 
 void MidSideAudioProcessorEditor::paint (juce::Graphics& g)
@@ -89,8 +94,13 @@ void MidSideAudioProcessorEditor::resized()
 	const int pixelSize2 = pixelSize + pixelSize;
 
 	// Set size
+	m_pluginLabel.setSize(width, pixelSize2);
+
 	const int sliderWidth = 3 * pixelSize;
 	const int sliderHeight = 4 * pixelSize;
+
+	m_gainLabel.setSize(2 * sliderWidth, pixelSize);
+	m_panLabel.setSize(2 * sliderWidth, pixelSize);
 
 	m_midGainSlider.setSize(sliderWidth, sliderHeight);
 	m_sideGainSlider.setSize(sliderWidth, sliderHeight);
@@ -98,10 +108,7 @@ void MidSideAudioProcessorEditor::resized()
 	m_sidePanSlider.setSize(sliderWidth, sliderHeight);
 	m_volumeSlider.setSize(sliderWidth, sliderHeight);
 
-	m_gainLabel.setSize(2 * sliderWidth, pixelSize);
-	m_panLabel.setSize(2 * sliderWidth, pixelSize);
-
-	m_pluginLabel.setSize(width, pixelSize2);
+	m_correlationMeter.setSize(width - pixelSize2, pixelSize2);
 
 	// Set position
 	m_pluginLabel.setTopLeftPosition(0, 0);
@@ -124,4 +131,6 @@ void MidSideAudioProcessorEditor::resized()
 	m_midPanSlider.setTopLeftPosition(sliderColumn3, sliderRow1);
 	m_sidePanSlider.setTopLeftPosition(sliderColumn4, sliderRow1);
 	m_volumeSlider.setTopLeftPosition(sliderColumn5, sliderRow1);
+
+	m_correlationMeter.setTopLeftPosition(sliderColumn1, sliderRow1 + sliderHeight);
 }

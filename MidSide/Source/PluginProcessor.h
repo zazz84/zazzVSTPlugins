@@ -19,6 +19,8 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Correlation.h"
+
 //==============================================================================
 class MidSideAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
@@ -67,6 +69,10 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+	float getCorrelation()
+	{
+		return m_correlationMin;
+	}
 
 	using APVTS = juce::AudioProcessorValueTreeState;
 	static APVTS::ParameterLayout createParameterLayout();
@@ -75,11 +81,15 @@ public:
 
 private:	
 	//==============================================================================
+	Correlation m_correlation;
+	
 	std::atomic<float>* mGainParameter = nullptr;
 	std::atomic<float>* sGainParameter = nullptr;
 	std::atomic<float>* mPanParameter = nullptr;
 	std::atomic<float>* sPanParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	float m_correlationMin = 1.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidSideAudioProcessor)
 };

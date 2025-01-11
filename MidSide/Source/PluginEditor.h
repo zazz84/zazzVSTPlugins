@@ -23,6 +23,7 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/SmallSliderComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/CorrelationMeterComponent.h"
 
 //==============================================================================
 class MidSideAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
@@ -49,6 +50,8 @@ private:
 
 	GroupLabelComponent m_gainLabel;
 	GroupLabelComponent m_panLabel;
+
+	CorrelationMeterComponent m_correlationMeter;
 
 	PluginNameComponent m_pluginLabel;
 
