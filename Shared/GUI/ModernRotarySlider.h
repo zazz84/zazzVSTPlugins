@@ -19,10 +19,10 @@
 
 #include <JuceHeader.h>
 
-class SmallSliderTextBox : public juce::Label
+class ModernRotarySliderTextBox : public juce::Label
 {
 public:
-	SmallSliderTextBox(const juce::String& componentName, const juce::String& initialText) : juce::Label(componentName, initialText)
+	ModernRotarySliderTextBox(const juce::String& componentName, const juce::String& initialText) : juce::Label(componentName, initialText)
 	{
 		setEditable(true, true, false);																// Allow editing on single or double-click
 		setJustificationType(juce::Justification::centred);
@@ -42,9 +42,9 @@ public:
 	{
 		//g.fillAll(juce::Colour::fromRGB(90, 90, 100));
 		
-		g.setFont(0.8f * static_cast<float>(getHeight()));
-		g.setColour(juce::Colours::white);
-		g.drawText(getText(), getLocalBounds(), getJustificationType(), true);
+		//g.setFont(0.8f * static_cast<float>(getHeight()));
+		//g.setColour(juce::Colours::white);
+		//g.drawText(getText(), getLocalBounds(), getJustificationType(), true);
 	}
 
 	// Override createEditorComponent to customize the TextEditor
@@ -74,94 +74,135 @@ public:
 
 	void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider&) override
 	{
-		const auto widthHalf = (float)width  * 0.5f;
-		const auto heightHalf = (float)height  * 0.5f;
-		const auto radius = 0.8f * std::fminf(widthHalf, heightHalf);
-		const auto centreX = (float)x + widthHalf;
-		const auto centreY = (float)y + heightHalf;
+		const auto widthHalf = 0.5f * static_cast<float>(width);
+		const auto heightHalf = 0.5f * static_cast<float>(height);
+		const auto radius = 0.8f * widthHalf;
+		const auto centreX = static_cast<float>(x) + widthHalf;
+		const auto centreY = static_cast<float>(y) + heightHalf;
 		const auto rx = centreX - radius;
 		const auto ry = centreY - radius;
-		const auto rw = radius * 2.0f;
+		const auto rw = 2.0f * radius;
 		const auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
-		// Knob
+		juce::Rectangle<float> bounds(rx, ry, rw, rw);
+
+		// Light outer circle
+		g.setColour(lightColor);
+		g.fillEllipse(bounds);
 		
+		// Dark outer stroke with gradiesnt	
+		float expandPixels = 0.004f * rw;
+		bounds.expand(-expandPixels, -expandPixels);
+		g.setColour(darkColor);
+		g.drawEllipse(bounds, expandPixels);
 
-		// Circle 1
-		juce::ColourGradient gradient(juce::Colour::fromRGB(70, 70, 80), rx, ry, juce::Colour::fromRGB(70, 70, 120), centreX, centreY, true);
+		// Light to dark circular gradient		
+		bounds.expand(-expandPixels, -expandPixels);
+		juce::ColourGradient gradient(darkColor, centreX, centreY, lightColor, centreX + 0.5f * bounds.getWidth(), centreY + 0.5f * bounds.getWidth(), true);
+		gradient.addColour(0.1f, darkColor);
 		g.setGradientFill(gradient);
-		g.fillEllipse(rx, ry, rw, rw);
+		g.fillEllipse(bounds);
 
-		// Circle 2		
-		// Define the ellipse's position and size
-		//const auto rx2 = centreX - 0.9f * radius;
-		//const auto ry2 = centreY - 0.9f * radius;
-		//const auto rw2 = 0.9f * radius * 2.0f;
+		// Dark to light gradient
+		expandPixels = bounds.getWidth() / 2.0f / 2.7f;
+		bounds.expand(-expandPixels, -expandPixels);
+		juce::ColourGradient gradient2(lightColor, centreX, centreY, darkColor, centreX + 0.5f * bounds.getWidth(), centreY + 0.5f * bounds.getWidth(), true);
+		gradient2.addColour(0.8f, darkColor);
+		g.setGradientFill(gradient2);
+		g.fillEllipse(bounds);
 
-		//juce::Rectangle<float> ellipseBounds(rx2, ry2, rw2, rw2);
+		// Light inner ring
+		expandPixels = 0.004f * rw;
+		bounds.expand(-expandPixels, -expandPixels);
+		g.setColour(lightColor);
+		g.drawEllipse(bounds, expandPixels);
 
-		//constexpr float lineThickness = 1.0f;
-		//g.setColour(juce::Colour::fromRGB(50, 50, 60));
-		//g.drawEllipse(ellipseBounds, lineThickness);
+		// Dark center circle
+		expandPixels = bounds.getWidth() / 2.0f / 4.3f;
+		bounds.expand(-expandPixels, -expandPixels);
+		g.setColour(darkColor);
+		g.fillEllipse(bounds);
 
-		// Create a DropShadow object
-		//juce::DropShadow shadow(juce::Colour::fromRGB(50, 50, 80), 5, juce::Point<int>(2, 2));
+		// Light outer ring
+		expandPixels = 0.008f * rw;
+		g.setColour(lightColor);
+		g.drawEllipse(bounds, expandPixels);
 
-		// Create a path for the ellipse
-		//juce::Path ellipsePath;
-		//ellipsePath.addEllipse(ellipseBounds);
-
-		// Apply the drop shadow before drawing the ellipse
-		//shadow.drawForPath(g, ellipsePath);
-
-		// Set the fill color for the ellipse
-		//g.setColour(juce::Colours::lightblue);
-
-		//juce::ColourGradient gradient2(juce::Colour::fromRGB(70, 70, 85), rx, ry, juce::Colour::fromRGB(70, 70, 90), rx + rw, ry + rw, true);
-		//g.setGradientFill(gradient2);
-
-		// Draw the ellipse (without the shadow, because the shadow is already applied)
-		//g.fillEllipse(ellipseBounds);
-
-
-		// Knob outline
-		g.setOpacity(1.0f);
-		constexpr float lineThickness = 1.0f;
-		g.setColour(juce::Colour::fromRGB(50, 50, 60));
-		g.drawEllipse(rx, ry, rw, rw, lineThickness);
-
-		// Knob point
-		constexpr float knowRadiusFactor = 0.05f;
-
-		juce::Path p;
-		auto pointerThickness = lineThickness;
-		p.addEllipse(juce::Rectangle<float>(-pointerThickness * 0.5f, -0.8f * radius, knowRadiusFactor * width, knowRadiusFactor * width));
-		p.applyTransform(juce::AffineTransform::rotation(angle).translated(centreX, centreY));
-
-		g.setColour(juce::Colour::fromRGB(55, 140, 255));
-		g.fillPath(p);
-
-		// Create the arc path
-		const float arcRadius = 1.08f * radius;
+		// Create background arc path
+		const float arcRadius = 0.8f * radius;
 		juce::Path arcPath;
 		arcPath.addCentredArc(centreX, centreY, arcRadius, arcRadius,
 			0.0f,																	// Rotation
 			rotaryStartAngle,														// Start angle
-			rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle),		// End angle
+			rotaryEndAngle,															// End angle
 			true);																	// UseAsSegment
 
-		juce::PathStrokeType strokeType(height / 25.0f);
-		g.setColour(juce::Colour::fromRGB(55, 140, 255));
-		g.strokePath(arcPath, strokeType);
+		const float strokeThicknessBeckground = 0.18f * radius;
+		juce::PathStrokeType strokeTypeBackground(strokeThicknessBeckground);
+		strokeTypeBackground.setEndStyle(juce::PathStrokeType::EndCapStyle::rounded);
+		
+		g.setColour(darkColor);
+		g.strokePath(arcPath, strokeTypeBackground);
+
+		// Create the arc path for set value
+		arcPath.clear();
+		arcPath.addCentredArc(centreX, centreY, arcRadius, arcRadius,
+			0.0f,																	// Rotation
+			rotaryStartAngle,														// Start angle																					
+			angle,																	// End angle
+			true);																	// UseAsSegment
+
+		const float strokeThicknessActive = 0.16f * radius;
+		juce::PathStrokeType strokeTypeActive(strokeThicknessActive);
+		strokeTypeActive.setEndStyle(juce::PathStrokeType::EndCapStyle::rounded);
+				
+		g.setColour(highlightColor);
+		g.strokePath(arcPath, strokeTypeActive);
+
+		// Knob point line
+		juce::Path markerPath;
+		juce::Line<float> line(0.0f, -0.7f * 0.5f * bounds.getWidth(), 0.0f, -0.4f * 0.5f * bounds.getWidth());
+		
+		markerPath.startNewSubPath(line.getStart());
+		markerPath.lineTo(line.getEnd());
+		markerPath.applyTransform(juce::AffineTransform::rotation(angle).translated(centreX, centreY));
+		
+		g.strokePath(markerPath, strokeTypeActive);
+
+		//juce::Colour shadowColor = highlightColor.withAlpha(0.5f);
+		//juce::DropShadow dropShadowEffect(shadowColor, 0.1f * radius, { 0, 0 });
+
+		//dropShadowEffect.drawForPath(g, arcPath);
+
+		//juce::Image tempImage(juce::Image::ARGB, width, height , true);
+
+		// Render marker to the image
+		//juce::Graphics tempGraphics(tempImage);
+
+		//tempGraphics.setColour(highlightColor);
+		//tempGraphics.strokePath(arcPath, strokeTypeActive);
+		//tempGraphics.strokePath(markerPath, strokeTypeActive);
+
+		// Apply drop shaddow effect
+		//dropShadowEffect.drawForImage(tempGraphics, tempImage);
+
+		// Render to graphic
+		//g.drawImageAt(tempImage, 0, 0, true);
+
+
 	}
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 };
 
 //==============================================================================
 
-class SmallSliderComponent : public juce::Component, private juce::Slider::Listener
+class ModernRotarySlider : public juce::Component, private juce::Slider::Listener
 {
 public:
-	SmallSliderComponent(juce::AudioProcessorValueTreeState& vts, const std::string name, const std::string unit, const std::string label) : valueTreeState(vts), m_name(name), m_unit(unit), m_label(label)
+	ModernRotarySlider(/*juce::AudioProcessorValueTreeState& vts, const std::string name, */const std::string unit, const std::string label) : /*valueTreeState(vts), m_name(name), */m_unit(unit), m_label(label)
 	{
 		// Use custom lookAndFeel
 		m_slider.setLookAndFeel(&m_smallSliderLookAndFeel);
@@ -173,16 +214,17 @@ public:
 		addAndMakeVisible(m_slider);
 
 		// Attach slider to valueTreeState
-		m_sliderAttachment.reset(new juce::AudioProcessorValueTreeState::SliderAttachment(vts, name, m_slider));
+		//m_sliderAttachment.reset(new juce::AudioProcessorValueTreeState::SliderAttachment(vts, name, m_slider));
 		
 		// Create text box
 		//m_textBox.setJustificationType(juce::Justification::centred);
 		//m_textBox.setEditable(true, true, false);														// Allow editing
-		m_textBox.setText(juce::String(m_slider.getValue()) + unit, juce::dontSendNotification);		// Initialize with slider value
-		m_textBox.onTextChange = [this]() { handleTextBoxChange(); };									// Update slider on label change
-		addAndMakeVisible(m_textBox);
+		
+		//m_textBox.setText(juce::String(m_slider.getValue()) + unit, juce::dontSendNotification);		// Initialize with slider value
+		//m_textBox.onTextChange = [this]() { handleTextBoxChange(); };									// Update slider on label change
+		//addAndMakeVisible(m_textBox);
 	};
-	~SmallSliderComponent()
+	~ModernRotarySlider()
 	{
 		m_slider.removeListener(this);
 	};
@@ -192,7 +234,7 @@ public:
 
 	inline void paint(juce::Graphics& g) override
 	{
-		//g.fillAll(juce::Colour::fromRGB(90, 90, 100));
+		g.fillAll(darkColor);
 
 		// Slider name bounds
 		const auto width = getWidth();
@@ -205,9 +247,9 @@ public:
 			bounds.setSize(width, 15 * height / 100);
 
 			// Slider name
-			g.setColour(juce::Colours::white);
-			g.setFont(0.8f * bounds.getHeight());
-			g.drawText(m_label, bounds, juce::Justification::centred, false);
+			//g.setColour(juce::Colours::white);
+			//g.setFont(0.8f * bounds.getHeight());
+			//g.drawText(m_label, bounds, juce::Justification::centred, false);
 		}
 	}
 	inline void resized() override
@@ -293,10 +335,10 @@ private:
 		m_slider.setValue(newValue, juce::sendNotification);      // Update slider value
 	}
 
-	juce::AudioProcessorValueTreeState& valueTreeState;
+	//juce::AudioProcessorValueTreeState& valueTreeState;
 	SmallSliderLookaAndFeel m_smallSliderLookAndFeel;
 
-	SmallSliderTextBox m_textBox{ "CustomLabel", "Default Text" };
+	ModernRotarySliderTextBox m_textBox{ "CustomLabel", "Default Text" };
 
 	juce::Slider m_slider;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> m_sliderAttachment;
@@ -304,4 +346,7 @@ private:
 	juce::String m_name;
 	juce::String m_unit;
 	juce::String m_label;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
 };

@@ -146,4 +146,16 @@ namespace Math
 	    reinterpreter.i += (((((((((((3537 * m) >> 16) + 13668) * m) >> 18) + 15817) * m) >> 14) - 80470) * m) >> 11);
 	    return reinterpreter.f;
 	}*/
+
+	//==============================================================================
+	inline float frequenyToMel(const float frequency)
+	{
+		return 1127.0f * std::log(1.0f + frequency / 700.0f);
+	};
+
+	//==============================================================================
+	inline float melToFrequency(const float mel)
+	{
+		return 700.0f * (std::expf(mel / 1127.0f) - 1.0f);
+	}
 }

@@ -29,7 +29,7 @@ public:
 
 	inline void paint(juce::Graphics& g) override
 	{
-		g.fillAll(juce::Colour::fromRGB(90, 90, 100));
+		//g.fillAll(juce::Colour::fromRGB(90, 90, 100));
 
 		const auto width = getWidth();
 		const auto height = getHeight();
