@@ -34,7 +34,7 @@ public:
 	{
 		// Size: n x 1
 		
-		//g.fillAll(juce::Colour::fromRGB(90, 90, 100));
+		g.fillAll(darkColor);
 
 		const auto width = getWidth();
 		const auto height = getHeight();
@@ -46,7 +46,7 @@ public:
 			bounds.setSize(width, height);
 
 			// Group label name
-			g.setColour(juce::Colours::white);
+			g.setColour(highlightColor);
 			g.setFont(0.4f * static_cast<float>(height));
 			g.setOpacity(0.5f);
 			g.drawText(m_name, bounds, juce::Justification::centred, false);
@@ -80,9 +80,12 @@ public:
 
 	inline void resized() override
 	{
-
 	}
 
 private:
 	juce::String m_name;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 };

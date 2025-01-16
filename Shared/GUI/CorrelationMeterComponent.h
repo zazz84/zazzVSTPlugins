@@ -66,7 +66,7 @@ public:
 
 		// Draw values
 		g.setFont(static_cast<float>(pixelSize / 2));
-		g.setColour(juce::Colours::white);
+		g.setColour(highlightColor);
 		g.setOpacity(0.5f);
 		
 		const auto yPosText = pixelSize / 3;
@@ -97,7 +97,7 @@ public:
 			bounds.setPosition(width / 2 - peakWidth, yPos);
 		}
 
-		g.setColour(juce::Colours::white);
+		g.setColour(highlightColor);
 		g.setOpacity(1.0f);
 		g.fillRect(bounds);
 	}
@@ -109,4 +109,8 @@ public:
 private:
 	OnePoleLowPassFilter m_smoother;
 	float m_correlation = 0.0f;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 };

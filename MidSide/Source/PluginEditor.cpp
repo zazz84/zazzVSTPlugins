@@ -35,7 +35,7 @@ MidSideAudioProcessorEditor::MidSideAudioProcessorEditor(MidSideAudioProcessor& 
 	m_correlationMeter(),
 	m_balanceMeter(),
 
-	m_pluginLabel("Mid Side")
+	m_pluginLabel("zazz::MidSide")
 {	
 	addAndMakeVisible(m_midGainSlider);
 	addAndMakeVisible(m_sideGainSlider);
@@ -86,8 +86,8 @@ void MidSideAudioProcessorEditor::timerCallback()
 }
 
 void MidSideAudioProcessorEditor::paint (juce::Graphics& g)
-{
-	g.fillAll(juce::Colour::fromRGB(90, 90, 100));
+{	
+	g.fillAll(darkColor);
 }
 
 void MidSideAudioProcessorEditor::resized()

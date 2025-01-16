@@ -65,6 +65,19 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
+	{
+		juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+		using namespace juce;
+
+		layout.add(std::make_unique<juce::AudioParameterFloat>("Test", "Test", NormalisableRange<float>(0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+
+		return layout;
+	}
+
+	juce::AudioProcessorValueTreeState vts{ *this, nullptr, "Parameters", createParameterLayout() };
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModernRotarySliderAudioProcessor)

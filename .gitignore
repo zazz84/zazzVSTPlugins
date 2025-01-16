@@ -7481,3 +7481,5 @@ SpectrumAnalyzer/Builds/VisualStudio2017/resources.rc
 SpectrumAnalyzer/Builds/VisualStudio2017/.vs/SpectrumAnalyzer/v15/Solution.VC.db
 SpectrumAnalyzer/Builds/VisualStudio2017/.vs/SpectrumAnalyzer/v15/Browse.VC.db
 SpectrumAnalyzer/Builds/VisualStudio2017/.vs/SpectrumAnalyzer/v15/.suo
+MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MidSide_.A7BA12E9.tlog/CL.11608.write.1.tlog
+ModernRotarySlider/Builds/VisualStudio2017/x64/Debug/Shared Code/include_melatonin_blur.obj

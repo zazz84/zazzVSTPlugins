@@ -20,7 +20,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-#include "../../../zazzVSTPlugins/Shared/GUI/SmallSliderComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/CorrelationMeterComponent.h"
@@ -43,11 +43,11 @@ private:
     MidSideAudioProcessor& audioProcessor;
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	SmallSliderComponent m_midGainSlider;
-	SmallSliderComponent m_sideGainSlider;
-	SmallSliderComponent m_midPanSlider;
-	SmallSliderComponent m_sidePanSlider;
-	SmallSliderComponent m_volumeSlider;
+	ModernRotarySlider m_midGainSlider;
+	ModernRotarySlider m_sideGainSlider;
+	ModernRotarySlider m_midPanSlider;
+	ModernRotarySlider m_sidePanSlider;
+	ModernRotarySlider m_volumeSlider;
 
 	GroupLabelComponent m_gainLabel;
 	GroupLabelComponent m_panLabel;
@@ -56,6 +56,10 @@ private:
 	BalanceMeterComponent m_balanceMeter;
 
 	PluginNameComponent m_pluginLabel;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MidSideAudioProcessorEditor)
 };

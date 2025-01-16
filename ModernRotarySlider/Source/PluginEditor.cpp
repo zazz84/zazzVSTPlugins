@@ -19,16 +19,24 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-ModernRotarySliderAudioProcessorEditor::ModernRotarySliderAudioProcessorEditor (ModernRotarySliderAudioProcessor& p)
-    : AudioProcessorEditor (&p),
-	audioProcessor (p),
-	m_slider(" dB", "Master Gain")
+ModernRotarySliderAudioProcessorEditor::ModernRotarySliderAudioProcessorEditor(ModernRotarySliderAudioProcessor& p)
+	: AudioProcessorEditor(&p),
+	audioProcessor(p),
+	m_slider(p.vts, "Test", " dB", "Full"),
+	m_slider2(p.vts, "Test", " dB", "Dots"),
+	m_slider3(p.vts, "Test", " dB", "NoRing")
 {
+	m_slider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Full);
+	m_slider2.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Dots);
+	m_slider3.setSliderType(ModernRotarySliderLookAndFeel::SliderType::NoRing);
+	
 	addAndMakeVisible(m_slider);
+	addAndMakeVisible(m_slider2);
+	addAndMakeVisible(m_slider3);
 
 	setResizable(true, true);
 
-	const int canvasWidth = 3*3 * 30;
+	const int canvasWidth = 3*3*3 * 30;
 	const int canvasHeight = 3*4 * 30;
 
 	setSize(canvasWidth, canvasHeight);
@@ -58,7 +66,7 @@ void ModernRotarySliderAudioProcessorEditor::timerCallback()
 
 void ModernRotarySliderAudioProcessorEditor::paint (juce::Graphics& g)
 {
-
+	g.fillAll(juce::Colour::fromRGB(40, 42, 46));
 }
 
 void ModernRotarySliderAudioProcessorEditor::resized()
@@ -66,6 +74,10 @@ void ModernRotarySliderAudioProcessorEditor::resized()
 	const auto width = getWidth();
 	const auto height = getHeight();
 
-	m_slider.setSize(width, height);
+	m_slider.setSize(width / 3.0f, height);
+	m_slider2.setSize(width / 3.0f, height);
+	m_slider3.setSize(width / 3.0f, height);
 	m_slider.setTopLeftPosition(0, 0);
+	m_slider2.setTopLeftPosition(width / 3.0f, 0);
+	m_slider3.setTopLeftPosition(2.0f * width / 3.0f, 0);
 }

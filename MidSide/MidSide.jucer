@@ -2,9 +2,12 @@
 
 <JUCERPROJECT id="KFWWIy" name="MidSide" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial"
+              version="2.0.1">
   <MAINGROUP id="Y4pbpS" name="MidSide">
     <GROUP id="{4D1E7D6A-6F74-AA03-347F-83D4D3FF702B}" name="Source">
+      <FILE id="rPyEaP" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="SpY8iI" name="Balance.h" compile="0" resource="0" file="../Shared/Utilities/Balance.h"/>
       <FILE id="Gj3Jt9" name="BalanceMeterComponent.h" compile="0" resource="0"
             file="../Shared/GUI/BalanceMeterComponent.h"/>
@@ -20,16 +23,10 @@
             file="../Shared/GUI/GroupLabelComponent.h"/>
       <FILE id="umn5D5" name="CorrelationMeterComponent.h" compile="0" resource="0"
             file="../Shared/GUI/CorrelationMeterComponent.h"/>
-      <FILE id="GW9E71" name="SmallSliderComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/SmallSliderComponent.h"/>
       <FILE id="P3jzMA" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="luSd6Y" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="HeAi9S" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="D4E3vA" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="Uma9Zg" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="UQjeLa" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
