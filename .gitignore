@@ -7483,3 +7483,186 @@ SpectrumAnalyzer/Builds/VisualStudio2017/.vs/SpectrumAnalyzer/v15/Browse.VC.db
 SpectrumAnalyzer/Builds/VisualStudio2017/.vs/SpectrumAnalyzer/v15/.suo
 MidSide/Builds/VisualStudio2017/x64/Release/Shared Code/MidSide_.A7BA12E9.tlog/CL.11608.write.1.tlog
 ModernRotarySlider/Builds/VisualStudio2017/x64/Debug/Shared Code/include_melatonin_blur.obj
+ThreeBandEQ/Builds/VisualStudio2017/.vs/ThreeBandEQ/v15/.suo
+ThreeBandEQ/Builds/VisualStudio2017/.vs/ThreeBandEQ/v15/Browse.VC.db
+ThreeBandEQ/Builds/VisualStudio2017/.vs/ThreeBandEQ/v15/Solution.VC.db
+ThreeBandEQ/Builds/VisualStudio2017/resources.rc
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ.sln
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_SharedCode.vcxproj
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_SharedCode.vcxproj.filters
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_SharedCode.vcxproj.user
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_StandalonePlugin.vcxproj
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_StandalonePlugin.vcxproj.filters
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_VST3.vcxproj
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_VST3.vcxproj.filters
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_VST3.vcxproj.user
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_VST3ManifestHelper.vcxproj
+ThreeBandEQ/Builds/VisualStudio2017/ThreeBandEQ_VST3ManifestHelper.vcxproj.filters
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/CL.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/CL.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/CL.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/Lib-link.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/Lib-link.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/Lib.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBan.C4D55D09.tlog/ThreeBandEQ_SharedCode.lastbuildstate
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBandEQ.lib
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBandEQ.pdb
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/Shared Code/ThreeBandEQ_SharedCode.log
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/CL.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/CL.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/CL.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/link.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/link.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/link.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/rc.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/rc.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/rc.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBan.436930FE.tlog/ThreeBandEQ_VST3ManifestHelper.lastbuildstate
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/ThreeBandEQ_VST3ManifestHelper.log
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.dll
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.exp
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.ilk
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.lib
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.pdb
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.vst3/Contents/Resources/moduleinfo.json
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ.vst3/Contents/x86_64-win/ThreeBandEQ.vst3
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.log
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/CL.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/CL.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/CL.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/link.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/link.delete.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/link.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/link.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/rc.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/rc.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/rc.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/ThreeBandEQ_VST3.lastbuildstate
+ThreeBandEQ/Builds/VisualStudio2017/x64/Debug/VST3/ThreeBandEQ_VST3.tlog/ThreeBandEQ_VST3.write.1u.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/CL.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/CL.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/CL.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/Lib-link.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/Lib-link.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/Lib.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBan.C4D55D09.tlog/ThreeBandEQ_SharedCode.lastbuildstate
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBandEQ.lib
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBandEQ.pdb
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/Shared Code/ThreeBandEQ_SharedCode.log
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/CL.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/CL.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/CL.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/link.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/link.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/link.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/rc.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/rc.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/rc.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBan.436930FE.tlog/ThreeBandEQ_VST3ManifestHelper.lastbuildstate
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ThreeBandEQ_VST3ManifestHelper.log
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ.dll
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ.exp
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ.lib
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ.pdb
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ.vst3/Contents/Resources/moduleinfo.json
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ.vst3/Contents/x86_64-win/ThreeBandEQ.vst3
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.log
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/CL.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/CL.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/CL.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/link.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/link.delete.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/link.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/link.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/rc.command.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/rc.read.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/rc.write.1.tlog
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/ThreeBandEQ_VST3.lastbuildstate
+ThreeBandEQ/Builds/VisualStudio2017/x64/Release/VST3/ThreeBandEQ_VST3.tlog/ThreeBandEQ_VST3.write.1u.tlog
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_basics.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_basics.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_devices.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_devices.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_formats.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_formats.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_processors.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_processors.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_utils.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_audio_utils.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_core.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_core.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_data_structures.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_data_structures.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_events.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_events.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_graphics.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_graphics.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_gui_basics.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_gui_basics.mm
+ThreeBandEQ/JuceLibraryCode/include_juce_gui_extra.cpp
+ThreeBandEQ/JuceLibraryCode/include_juce_gui_extra.mm
+ThreeBandEQ/JuceLibraryCode/JuceHeader.h
+ThreeBandEQ/JuceLibraryCode/JucePluginDefines.h
+ThreeBandEQ/JuceLibraryCode/ReadMe.txt
