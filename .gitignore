@@ -7666,3 +7666,126 @@ ThreeBandEQ/JuceLibraryCode/include_juce_gui_extra.mm
 ThreeBandEQ/JuceLibraryCode/JuceHeader.h
 ThreeBandEQ/JuceLibraryCode/JucePluginDefines.h
 ThreeBandEQ/JuceLibraryCode/ReadMe.txt
+AdaptiveNoiseGate/Builds/VisualStudio2017/.vs/AdaptiveNoiseGate/v15/.suo
+AdaptiveNoiseGate/Builds/VisualStudio2017/.vs/AdaptiveNoiseGate/v15/Browse.VC.db
+AdaptiveNoiseGate/Builds/VisualStudio2017/.vs/AdaptiveNoiseGate/v15/Browse.VC.opendb
+AdaptiveNoiseGate/Builds/VisualStudio2017/.vs/AdaptiveNoiseGate/v15/Solution.VC.db
+AdaptiveNoiseGate/Builds/VisualStudio2017/.vs/AdaptiveNoiseGate/v15/Solution.VC.db-shm
+AdaptiveNoiseGate/Builds/VisualStudio2017/.vs/AdaptiveNoiseGate/v15/Solution.VC.db-wal
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate.sln
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_SharedCode.vcxproj
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_SharedCode.vcxproj.filters
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_SharedCode.vcxproj.user
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_StandalonePlugin.vcxproj
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_StandalonePlugin.vcxproj.filters
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_VST3.vcxproj
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_VST3.vcxproj.filters
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_VST3.vcxproj.user
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_VST3ManifestHelper.vcxproj
+AdaptiveNoiseGate/Builds/VisualStudio2017/AdaptiveNoiseGate_VST3ManifestHelper.vcxproj.filters
+AdaptiveNoiseGate/Builds/VisualStudio2017/resources.rc
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/AdaptiveNoiseGate_SharedCode.lastbuildstate
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/CL.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/CL.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/CL.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/Lib-link.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/Lib-link.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/Adaptive.71DD18D7.tlog/Lib.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/AdaptiveNoiseGate.lib
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/AdaptiveNoiseGate.pdb
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/AdaptiveNoiseGate_SharedCode.log
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/AdaptiveNoiseGate_VST3ManifestHelper.lastbuildstate
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/CL.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/CL.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/CL.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/link.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/link.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/link.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/rc.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/rc.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/Adaptive.A3EE20D6.tlog/rc.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/AdaptiveNoiseGate_VST3ManifestHelper.log
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/AdaptiveNoiseGate_VST3.lastbuildstate
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/AdaptiveNoiseGate_VST3.write.1u.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/CL.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/CL.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/CL.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/link.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/link.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/link.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/rc.command.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/rc.read.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/Adaptive.599588CE.tlog/rc.write.1.tlog
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.dll
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.exp
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.ilk
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.lib
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.pdb
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.vst3/Contents/Resources/moduleinfo.json
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate.vst3/Contents/x86_64-win/AdaptiveNoiseGate.vst3
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/AdaptiveNoiseGate_VST3.log
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+AdaptiveNoiseGate/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_basics.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_basics.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_devices.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_devices.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_formats.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_formats.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_processors.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_processors.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_utils.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_audio_utils.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_core.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_core.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_data_structures.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_data_structures.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_events.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_events.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_graphics.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_graphics.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_gui_basics.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_gui_basics.mm
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_gui_extra.cpp
+AdaptiveNoiseGate/JuceLibraryCode/include_juce_gui_extra.mm
+AdaptiveNoiseGate/JuceLibraryCode/JuceHeader.h
+AdaptiveNoiseGate/JuceLibraryCode/JucePluginDefines.h
+AdaptiveNoiseGate/JuceLibraryCode/ReadMe.txt

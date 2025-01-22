@@ -88,7 +88,6 @@ private:
 		for (int i = 0; i < scopeSize; i++)                         // [3]
 		{
 			// Find maximum for given frequency range
-			//auto maxLevel = 0.0f;
 			auto sumLevel = 0.0f;
 
 			const auto curentIndex = fftDataIndexes[i];
@@ -97,10 +96,6 @@ private:
 			{
 				const auto currentLevel = fftData[j];
 				sumLevel += currentLevel;
-				/*if (currentLevel > maxLevel)
-				{
-					maxLevel = currentLevel;
-				}*/
 			}
 			
 			sumLevel /= (curentIndex - previousIndex);
@@ -108,8 +103,6 @@ private:
 			previousIndex = curentIndex;
 			
 			// Clamped and normalized
-			//auto level = Math::clamp(maxLevel / static_cast<float>(fftSize), 0.0f, 1.0f);
-			//auto level = Math::clamp(sumLevel / static_cast<float>(fftSize), 0.0f, 1.0f);
 			auto level = Math::clamp(sumLevel / static_cast<float>(fftSize), 0.0f, 1.0f);
 
 			scopeData[i] = level;                                   // [4]
@@ -118,10 +111,12 @@ private:
 
 	void getfftDataIndexes()
 	{
-		const auto melMax = Math::frequenyToMel(20000.0f);
-		const auto melStep = melMax / static_cast<float>(scopeSize);
+		/*const auto melMax = Math::frequenyToMel(20000.0f);
+		const auto melmin = Math::frequenyToMel(40.0f);
 
-		float mel = 0.0f;
+		const auto melStep = (melMax - melmin) / static_cast<float>(scopeSize);
+
+		float mel = melmin;
 		
 		for (int i = 0; i < scopeSize; i++)
 		{
@@ -130,7 +125,18 @@ private:
 
 			const auto idx = static_cast<int>(frequency * fftSize / static_cast<float>(m_sampleRate));
 			fftDataIndexes[i] = idx;
-		}
+		}*/
+
+
+		/*float frequency = 55.0f;
+
+		for (int i = 0; i < scopeSize; i++)
+		{
+			const auto idx = static_cast<int>(frequency * fftSize / static_cast<float>(m_sampleRate));
+			fftDataIndexes[i] = idx;
+
+			frequency *= 2.0f;
+		}*/
 	}
 
 	juce::dsp::FFT forwardFFT;                      // [4]
@@ -140,7 +146,7 @@ private:
 	float fftData[2 * fftSize];                     // [7]
 	int fifoIndex = 0;                              // [8]
 	float scopeData[scopeSize];                     // [10]
-	float fftDataIndexes[scopeSize];
+	int fftDataIndexes[scopeSize] = { 1, 2, 3, 4, 5, 6, 8, 10, 15, 30, 50, 70, 90, 120, 180, 220 };
 
 	int m_sampleRate = 48000;
 };

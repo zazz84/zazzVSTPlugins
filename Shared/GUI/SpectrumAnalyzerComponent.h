@@ -26,9 +26,9 @@
 
 enum
 {
-	fftOrder = 11,				// [1]
+	fftOrder = 9,				// [1]
 	fftSize = 1 << fftOrder,	// [2]
-	scopeSize = 64				// [3]
+	scopeSize = 16				// [3]
 };
 
 class SpectrumAnalyzerComponent : public juce::Component
@@ -61,11 +61,53 @@ public:
 
 	inline void paint(juce::Graphics& g) override
 	{
-		const auto width = getWidth();
-		const auto height = getHeight();
+		const auto width = getWidth() - 50;
+		const auto height = getHeight() - 50;
 
-		const auto bandWidth = (width - (scopeSize + 1)) / scopeSize;
+		const auto bandWidth = (width - (scopeSize + 1 + 2)) / scopeSize;
+		g.setFont(10.0f);
+		// Draw the scale
+		g.setColour(juce::Colours::white); // Set the line color
+		const auto count = 8;
+		const auto lineHeight = height / (count - 1);
+		int y = 0;
 
+		const auto scaleStep = (0 + 80) / count;
+
+		int value = 0;
+
+		juce::Rectangle<int> textBox;
+		textBox.setSize(25, lineHeight);
+
+		for (int i = 0; i < count; i++)
+		{
+			textBox.setPosition(width + 25, y - lineHeight / 2);
+
+			g.drawText(juce::String(value), textBox, juce::Justification::centred, true);
+
+			g.drawLine(width, y, width + 20, y, 1.0f);
+
+			y += lineHeight;
+			value -= scaleStep;
+		}
+
+		// Frequencies
+		int freqPosX = 0;
+		int freqValue = 92;
+
+		textBox.setSize(bandWidth, 25);
+
+		for (int i = 0; i < scopeSize; i++)
+		{
+			textBox.setPosition(freqPosX, height + 25);
+
+			g.drawText(juce::String(0.5f * (fftDataIndexes[i] + fftDataIndexes[i + 1]) * freqValue), textBox, juce::Justification::centred, true);
+
+			freqPosX += bandWidth + 1;
+		}
+		
+
+		// Bars
 		auto xPos = 1;
 		g.setColour(juce::Colours::yellow);
 
@@ -77,7 +119,7 @@ public:
 			constexpr auto gainCompenation = 6.0f;			// +6dB is gain amplitude compensation for Hann window
 			const auto dB = Math::gainTodB(gainSmooth) + gainCompenation;
 					
-			const auto bandHeight = static_cast<int>(Math::remap(dB, -60.0f, 6.0f, 0.0f, height));
+			const auto bandHeight = static_cast<int>(Math::remap(dB, -80.0f, 0.0f, 0.0f, height));
 
 			bounds.setSize(bandWidth, bandHeight);
 			bounds.setPosition(xPos, height - bandHeight);
@@ -90,6 +132,8 @@ public:
 private:
 	OnePoleLowPassFilter m_filters[scopeSize];
 	float m_scopeData[scopeSize];
+
+	int fftDataIndexes[scopeSize+1] = {0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 30, 50, 70, 90, 120, 180, 220};
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SpectrumAnalyzerComponent)
 };
