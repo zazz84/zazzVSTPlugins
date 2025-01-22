@@ -29,12 +29,12 @@ public:
 		m_envelopeFollowerFast.init(sampleRate);
 		m_gateSmoothing.init(sampleRate);
 
-		m_envelopeFollowerSlow.set(5.0f, 150.0f);
+		m_envelopeFollowerSlow.set(10.0f, 300.0f);
 		m_envelopeFollowerFast.set(0.3f, 30.0f);
 	}
 	inline void set(float attackTimeMS, float releaseTimeMS, float sensitivity)
 	{
-		m_gateSmoothing.set(attackTimeMS, releaseTimeMS);
+		m_gateSmoothing.set(attackTimeMS, releaseTimeMS, 100.0f);
 
 		m_sensitivity = sensitivity;
 	}
@@ -48,21 +48,10 @@ public:
 		// Clamp to ~ -12.0db, 12dB
 		float difference = std::fminf(4.0f, std::fmaxf(0.25f, envelopeFast / envelopeSlow));
 
-		// Smooth peak
-		m_peak = 0.95f * m_peak + 0.05f * envelopeIn;
-
-		// Get gate gain
-		//float gain = difference > m_sensitivity ? 1.0f : 0.0f;
-
-		// Smooth gate gain
-		//gain = m_gateSmoothing.process(gain);
-
-		//return gain * in;
-
-		// Set threshold, if we detect peak
+		// Update threshold
 		if (difference > m_sensitivity)
 		{
-			m_threshold = m_peak;
+			m_threshold = envelopeSlow;
 		}
 
 		float gain = envelopeIn > m_threshold ? 1.0f : 0.0f;
@@ -76,9 +65,8 @@ public:
 private:
 	BranchingEnvelopeFollower<float> m_envelopeFollowerSlow;
 	BranchingEnvelopeFollower<float> m_envelopeFollowerFast;
-	BranchingEnvelopeFollower<float> m_gateSmoothing;
+	HoldEnvelopeFollower<float> m_gateSmoothing;
 
-	float m_peak = 0.0f;
 	float m_threshold = 0.0f;
 	float m_sensitivity = 1.0f;
 };
