@@ -30,11 +30,11 @@ public:
 		m_gateSmoothing.init(sampleRate);
 
 		m_envelopeFollowerSlow.set(10.0f, 300.0f);
-		m_envelopeFollowerFast.set(0.3f, 30.0f);
+		m_envelopeFollowerFast.set(1.0f, 30.0f);
 	}
 	inline void set(float attackTimeMS, float releaseTimeMS, float sensitivity)
 	{
-		m_gateSmoothing.set(attackTimeMS, releaseTimeMS, 100.0f);
+		m_gateSmoothing.set(attackTimeMS, releaseTimeMS, 150.0f);
 
 		m_sensitivity = sensitivity;
 	}
