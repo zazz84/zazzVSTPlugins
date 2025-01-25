@@ -19,41 +19,44 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::BACKGROUND_COLOR	= juce::Colour::fromRGB(90, 90, 100);
-const juce::Colour ZazzLookAndFeel::KNOB_COLOR			= juce::Colour::fromRGB(70, 70, 80);
-const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(50, 50, 60);
-const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
-const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
-
-const int ClassBAmplifierAudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
-const float ClassBAmplifierAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
-
-//==============================================================================
 ClassBAmplifierAudioProcessorEditor::ClassBAmplifierAudioProcessorEditor (ClassBAmplifierAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
+    : AudioProcessorEditor (&p),
+	audioProcessor (p),
+	valueTreeState(vts),
+	m_colorSlider(vts, ClassBAmplifierAudioProcessor::paramsNames[0], ClassBAmplifierAudioProcessor::paramsUnitNames[0], ClassBAmplifierAudioProcessor::labelNames[0]),
+	m_frequencySlider(vts, ClassBAmplifierAudioProcessor::paramsNames[1], ClassBAmplifierAudioProcessor::paramsUnitNames[1], ClassBAmplifierAudioProcessor::labelNames[1]),
+	m_driveSlider(vts, ClassBAmplifierAudioProcessor::paramsNames[2], ClassBAmplifierAudioProcessor::paramsUnitNames[2], ClassBAmplifierAudioProcessor::labelNames[2]),
+	m_mixSlider(vts, ClassBAmplifierAudioProcessor::paramsNames[3], ClassBAmplifierAudioProcessor::paramsUnitNames[3], ClassBAmplifierAudioProcessor::labelNames[3]),
+	m_volumeSlider(vts, ClassBAmplifierAudioProcessor::paramsNames[4], ClassBAmplifierAudioProcessor::paramsUnitNames[4], ClassBAmplifierAudioProcessor::labelNames[4]),
+
+	m_pluginLabel("zazz::ClassBAmplifier")
 {	
-	// Plugin name
-	m_pluginName.setText("Class B Amplifier", juce::dontSendNotification);
-	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
-	m_pluginName.setJustificationType(juce::Justification::centred);
-	addAndMakeVisible(m_pluginName);
-	
-	// Lables and sliders
-	for (int i = 0; i < N_SLIDERS; i++)
+	addAndMakeVisible(m_colorSlider);
+	addAndMakeVisible(m_frequencySlider);
+	addAndMakeVisible(m_driveSlider);
+	addAndMakeVisible(m_mixSlider);
+	addAndMakeVisible(m_volumeSlider);
+
+	addAndMakeVisible(m_pluginLabel);
+
+	m_driveSlider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Dots);
+
+	setResizable(true, true);
+
+	const int canvasWidth = (4 * 3 + 6 + 2 + 1) * 30;
+	//const int canvasWidth = (2 * 3 + 6 + 2) * 30;
+	const int canvasHeight = (2 + 8 + 1) * 30;
+
+	setSize(canvasWidth, canvasHeight);
+
+	if (auto* constrainer = getConstrainer())
 	{
-		auto& label = m_labels[i];
-		auto& slider = m_sliders[i];
-		const std::string text = ClassBAmplifierAudioProcessor::paramsNames[i];
-		const std::string unit = ClassBAmplifierAudioProcessor::paramsUnitNames[i];
+		constexpr int minScale = 50;		// percentage
+		constexpr int maxScale = 200;		// percentage
 
-		createSliderWithLabel(slider, label, text, unit);
-		addAndMakeVisible(label);
-		addAndMakeVisible(slider);
-
-		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
+		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
+		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
-
-	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
 ClassBAmplifierAudioProcessorEditor::~ClassBAmplifierAudioProcessorEditor()
@@ -63,10 +66,61 @@ ClassBAmplifierAudioProcessorEditor::~ClassBAmplifierAudioProcessorEditor()
 //==============================================================================
 void ClassBAmplifierAudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
+	g.fillAll(darkColor);
 }
 
 void ClassBAmplifierAudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
+	const int width = getWidth();
+	const int height = getHeight();
+
+	const int pixelSize = width / 21;
+	//const int pixelSize = width / 14;
+	const int pixelSize2 = pixelSize + pixelSize;
+
+	// Set size
+	m_pluginLabel.setSize(width, pixelSize2);
+
+	const int sliderWidth = 3 * pixelSize;
+	const int sliderHeight = 4 * pixelSize;
+
+	const int bigSliderWidth = 2 * sliderWidth;
+	const int bigSliderHeight = 2 * sliderHeight;
+
+	m_colorSlider.setSize(sliderWidth, sliderHeight);
+	m_frequencySlider.setSize(sliderWidth, sliderHeight);
+	m_driveSlider.setSize(bigSliderWidth, bigSliderHeight);
+	m_mixSlider.setSize(sliderWidth, sliderHeight);
+	m_volumeSlider.setSize(sliderWidth, sliderHeight);
+
+	// Set position
+	m_pluginLabel.setTopLeftPosition(0, 0);
+
+	const int sliderColumn1 = pixelSize;
+	const int sliderColumn2 = sliderColumn1 + sliderWidth;
+	const int sliderColumn3 = sliderColumn2 + sliderWidth + pixelSize / 2;
+	const int sliderColumn4 = sliderColumn3 + bigSliderWidth + pixelSize / 2;
+	const int sliderColumn5 = sliderColumn4 + sliderWidth;
+
+	const int sliderRow1 = pixelSize2;
+	const int sliderRow2 = sliderRow1 + sliderHeight;
+
+	m_colorSlider.setTopLeftPosition(sliderColumn1, sliderRow2);
+	m_frequencySlider.setTopLeftPosition(sliderColumn2, sliderRow2);
+	m_driveSlider.setTopLeftPosition(sliderColumn3, sliderRow1 + pixelSize / 4);	// Trying to align sliders values
+	m_mixSlider.setTopLeftPosition(sliderColumn4, sliderRow2);
+	m_volumeSlider.setTopLeftPosition(sliderColumn5, sliderRow2);
+
+	/*const int sliderColumn1 = pixelSize;
+	const int sliderColumn2 = sliderColumn1 + sliderWidth;
+	const int sliderColumn3 = sliderColumn2 + bigSliderWidth;
+
+	const int sliderRow1 = pixelSize2;
+	const int sliderRow2 = sliderRow1 + sliderHeight;
+
+	m_colorSlider.setTopLeftPosition(sliderColumn1, sliderRow1);
+	m_frequencySlider.setTopLeftPosition(sliderColumn1, sliderRow2);
+	m_driveSlider.setTopLeftPosition(sliderColumn2, sliderRow1);
+	m_mixSlider.setTopLeftPosition(sliderColumn3, sliderRow1);
+	m_volumeSlider.setTopLeftPosition(sliderColumn3, sliderRow2);*/
 }

@@ -7908,3 +7908,65 @@ ClassBAmplifier/JuceLibraryCode/include_juce_gui_extra.mm
 ClassBAmplifier/JuceLibraryCode/JuceHeader.h
 ClassBAmplifier/JuceLibraryCode/JucePluginDefines.h
 ClassBAmplifier/JuceLibraryCode/ReadMe.txt
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/BiquadFilters.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/CL.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/CL.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/CL.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/ClassBAmplifier_SharedCode.lastbuildstate
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/Lib-link.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/Lib-link.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAm.E2FA3CBD.tlog/Lib.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAmplifier.lib
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAmplifier.pdb
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/ClassBAmplifier_SharedCode.log
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/CL.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/CL.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/CL.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/ClassBAmplifier_VST3ManifestHelper.lastbuildstate
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/link.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/link.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/link.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/rc.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/rc.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAm.E5360C2D.tlog/rc.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/ClassBAmplifier_VST3ManifestHelper.log
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/CL.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/CL.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/CL.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/ClassBAmplifier_VST3.lastbuildstate
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/ClassBAmplifier_VST3.write.1u.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/link.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/link.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/link.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/rc.command.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/rc.read.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAm.C8A14C97.tlog/rc.write.1.tlog
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier.dll
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier.exp
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier.lib
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier.pdb
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier.vst3/Contents/Resources/moduleinfo.json
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier.vst3/Contents/x86_64-win/ClassBAmplifier.vst3
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/ClassBAmplifier_VST3.log
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/resources.res

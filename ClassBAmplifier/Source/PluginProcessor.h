@@ -37,6 +37,7 @@ public:
     ~ClassBAmplifierAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
 

@@ -19,6 +19,7 @@
 
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 class ClassBAmplifier
 {
@@ -39,8 +40,8 @@ public:
 	}
 	inline float process(float in)
 	{
-		constexpr float positiveLimit = 23.6f;
-		constexpr float negativeLimit = 0.5f;
+		constexpr float positiveLimit = 31.6f;		// +30dB
+		constexpr float negativeLimit = 0.355f;		// -9dB
 
 		float posAsym = Waveshapers::Poletti(in, m_drive, positiveLimit, negativeLimit);
 		float negAsym = Waveshapers::Poletti(in, m_drive, negativeLimit, positiveLimit);
@@ -48,8 +49,8 @@ public:
 		posAsym = m_dcBlockerPos.processDF1(posAsym);
 		negAsym = m_dcBlockerNeg.processDF1(negAsym);
 
-		constexpr float symetricLimit = 0.5f;
-		constexpr float symetricGain = 4.0f;
+		constexpr float symetricLimit = 0.708f;		// -3db
+		constexpr float symetricGain = 3.98f;		// +12dB
 
 		posAsym =  Waveshapers::Poletti(posAsym, symetricGain, symetricLimit, symetricLimit);
 		negAsym =  Waveshapers::Poletti(negAsym, symetricGain, symetricLimit, symetricLimit);

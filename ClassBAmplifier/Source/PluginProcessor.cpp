@@ -20,7 +20,8 @@
 
 //==============================================================================
 
-const std::string ClassBAmplifierAudioProcessor::paramsNames[] = { "Color", "LP Frequency", "Drive", "Mix", "Volume" };
+const std::string ClassBAmplifierAudioProcessor::paramsNames[] = { "Color", "Frequency", "Drive", "Mix", "Volume" };
+const std::string ClassBAmplifierAudioProcessor::labelNames[] = { "Color", "Cutoff", "Drive", "Mix", "Volume" };
 const std::string ClassBAmplifierAudioProcessor::paramsUnitNames[] = { "", " Hz", " dB", " %", " dB" };
 
 //==============================================================================
@@ -160,6 +161,8 @@ bool ClassBAmplifierAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 
 void ClassBAmplifierAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+
 	// Get params
 	const auto color = -12.0f + (24.0f * 0.01f) * colorParameter->load();
 	const auto lpFrequency = lpFrequencyParameter->load();

@@ -19,21 +19,15 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
-class ClassBAmplifierAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class ClassBAmplifierAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     ClassBAmplifierAudioProcessorEditor (ClassBAmplifierAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~ClassBAmplifierAudioProcessorEditor() override;
-
-	// GUI setup
-	static const int N_SLIDERS = 5;
-	static const int SLIDERS[];
-	static const float COLUMN_OFFSET[];
-	static const int N_ROWS = 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -47,10 +41,17 @@ protected:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	juce::Label m_pluginName;
-	juce::Label m_labels[N_SLIDERS] = {};
-	juce::Slider m_sliders[N_SLIDERS] = {};
-	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+	ModernRotarySlider m_colorSlider;
+	ModernRotarySlider m_frequencySlider;
+	ModernRotarySlider m_driveSlider;
+	ModernRotarySlider m_mixSlider;
+	ModernRotarySlider m_volumeSlider;
+
+	PluginNameComponent m_pluginLabel;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClassBAmplifierAudioProcessorEditor)
 };
