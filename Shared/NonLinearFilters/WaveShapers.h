@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <JuceHeader.h>
@@ -140,6 +157,23 @@ public:
 		const float sign = (in > 0.0f) ? 1.0f : -1.0f;
 
 		return sign * std::powf(inAbs, driveAdjusted);
+	}
+
+	// Not gain normalized to the rest of the waveshapers
+	// https://www.willpirkle.com/special/Addendum_A19_Pirkle_v1.0.pdf
+	// https://patentimages.storage.googleapis.com/26/09/61/06441121cd3b24/US20080049950A1.pdf
+	inline static float Poletti(float in, float drive, float positiveLimit, float negativeLimit)
+	{
+		const float inDrive = in * drive;
+
+		if (in > 0)
+		{
+			return inDrive / (1.0f + (inDrive / positiveLimit));
+		}
+		else
+		{
+			return inDrive / (1.0f - (inDrive / negativeLimit));
+		}
 	}
 };
 
