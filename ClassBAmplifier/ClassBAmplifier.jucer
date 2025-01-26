@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="sW3F2U" name="ClassBAmplifier" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildVST3" companyName="zazz" pluginVST3Category="Distortion">
+              pluginFormats="buildVST3" companyName="zazz" pluginVST3Category="Distortion"
+              version="1.0.1">
   <MAINGROUP id="cof8zE" name="ClassBAmplifier">
     <GROUP id="{44EB9BB0-0A6C-F829-7E13-152A8615971C}" name="Source">
       <FILE id="wCUClY" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>

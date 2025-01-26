@@ -46,14 +46,14 @@ public:
 		const float envelopeFast = m_envelopeFollowerFast.process(envelopeIn);
 
 		// Clamp to ~ -12.0db, 12dB
-		float difference = std::fminf(4.0f, std::fmaxf(0.25f, envelopeFast / envelopeSlow));
+		m_difference = std::fminf(4.0f, std::fmaxf(0.0f, envelopeFast / envelopeSlow));
 
 		// Update threshold
-		if (difference > m_sensitivity)
+		if (m_difference > m_sensitivity)
 		{
 			m_threshold = envelopeSlow;
 		}
-
+		DBG("DIfference: " << m_difference);
 		float gain = envelopeIn > m_threshold ? 1.0f : 0.0f;
 
 		// Smooth gate gain
@@ -61,12 +61,17 @@ public:
 
 		return gain * in;
 	}
+	inline float getDifference()
+	{
+		return m_difference;
+	}
 
 private:
 	BranchingEnvelopeFollower<float> m_envelopeFollowerSlow;
 	BranchingEnvelopeFollower<float> m_envelopeFollowerFast;
 	HoldEnvelopeFollower<float> m_gateSmoothing;
 
-	float m_threshold = 0.0f;
-	float m_sensitivity = 1.0f;
+	float m_difference = 0.0f;
+	float m_threshold = 1.0f;
+	float m_sensitivity = 4.0f;
 };

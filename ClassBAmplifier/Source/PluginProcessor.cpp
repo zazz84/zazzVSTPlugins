@@ -168,13 +168,13 @@ void ClassBAmplifierAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto lpFrequency = lpFrequencyParameter->load();
 	const auto drive = juce::Decibels::decibelsToGain(driveParameter->load());
 	const auto mix = 0.01f * mixParameter->load();
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load() - 6.0f);	// -6dB volume compensation
+	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());	
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
 	const float dry = gain * (1.0f - mix);
-	const float wet = gain * mix;
+	const float wet = 0.5f * gain * mix;						// -6dB volume compensation
 
 	for (int channel = 0; channel < channels; channel++)
 	{
