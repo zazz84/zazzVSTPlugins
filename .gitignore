@@ -7973,3 +7973,182 @@ ClassBAmplifier/Builds/VisualStudio2017/x64/Release/VST3/resources.res
 ClassBAmplifier/Builds/VisualStudio2017/.vs/ClassBAmplifier/v15/Browse.VC.opendb
 ClassBAmplifier/Builds/VisualStudio2017/.vs/ClassBAmplifier/v15/Solution.VC.db-shm
 ClassBAmplifier/Builds/VisualStudio2017/.vs/ClassBAmplifier/v15/Solution.VC.db-wal
+DynamicMidSide/Builds/VisualStudio2017/.vs/DynamicMidSide/v15/.suo
+DynamicMidSide/Builds/VisualStudio2017/.vs/DynamicMidSide/v15/Browse.VC.db
+DynamicMidSide/Builds/VisualStudio2017/.vs/DynamicMidSide/v15/Solution.VC.db
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide.sln
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_SharedCode.vcxproj
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_SharedCode.vcxproj.filters
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_StandalonePlugin.vcxproj
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_StandalonePlugin.vcxproj.filters
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_VST3.vcxproj
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_VST3.vcxproj.filters
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_VST3ManifestHelper.vcxproj
+DynamicMidSide/Builds/VisualStudio2017/DynamicMidSide_VST3ManifestHelper.vcxproj.filters
+DynamicMidSide/Builds/VisualStudio2017/resources.rc
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/CL.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/CL.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/CL.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/DynamicMidSide_SharedCode.lastbuildstate
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/Lib-link.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/Lib-link.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicM.73BFEA7F.tlog/Lib.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicMidSide.lib
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicMidSide.pdb
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/DynamicMidSide_SharedCode.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_basics.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_devices.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_formats.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_plugin_client_ARA.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_ara.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_processors_lv2_libs.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_audio_utils.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_core.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_data_structures.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_events.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_graphics.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_basics.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/include_juce_gui_extra.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginEditor.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/Shared Code/PluginProcessor.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/CL.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/CL.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/CL.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/DynamicMidSide_VST3ManifestHelper.lastbuildstate
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/link.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/link.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/link.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/rc.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/rc.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicM.02BCA583.tlog/rc.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/DynamicMidSide_VST3ManifestHelper.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.exe
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.ilk
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_vst3_helper.pdb
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3 Manifest Helper/resources.res
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/CL.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/CL.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/CL.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/DynamicMidSide_VST3.lastbuildstate
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/DynamicMidSide_VST3.write.1u.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/link.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/link.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/link.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/rc.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/rc.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicM.511743B2.tlog/rc.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.dll
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.exp
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.ilk
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.lib
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.pdb
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.vst3/Contents/Resources/moduleinfo.json
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide.vst3/Contents/x86_64-win/DynamicMidSide.vst3
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/DynamicMidSide_VST3.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/include_juce_audio_plugin_client_VST3.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Debug/VST3/resources.res
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/CL.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/CL.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/CL.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/DynamicMidSide_SharedCode.lastbuildstate
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/Lib-link.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/Lib-link.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicM.73BFEA7F.tlog/Lib.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicMidSide.lib
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicMidSide.pdb
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/DynamicMidSide_SharedCode.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/CL.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/CL.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/CL.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/DynamicMidSide_VST3ManifestHelper.lastbuildstate
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/link.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/link.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/link.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/rc.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/rc.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicM.02BCA583.tlog/rc.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/DynamicMidSide_VST3ManifestHelper.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/CL.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/CL.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/CL.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/DynamicMidSide_VST3.lastbuildstate
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/DynamicMidSide_VST3.write.1u.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/link.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/link.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/link.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/rc.command.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/rc.read.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/rc.write.1.tlog
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide.dll
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide.exp
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide.lib
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide.pdb
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide.vst3/Contents/Resources/moduleinfo.json
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide.vst3/Contents/x86_64-win/DynamicMidSide.vst3
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicMidSide_VST3.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+DynamicMidSide/JuceLibraryCode/include_juce_audio_basics.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_basics.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_devices.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_devices.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_formats.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_formats.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_AAX.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_AAX.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_AAX_utils.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_ARA.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_AU_1.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_AU_2.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_AUv3.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_LV2.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_LV2.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_Standalone.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_Unity.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST2.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST2.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_plugin_client_VST3.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_processors.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_processors.mm
+DynamicMidSide/JuceLibraryCode/include_juce_audio_processors_ara.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_processors_lv2_libs.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_utils.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_audio_utils.mm
+DynamicMidSide/JuceLibraryCode/include_juce_core.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_core.mm
+DynamicMidSide/JuceLibraryCode/include_juce_data_structures.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_data_structures.mm
+DynamicMidSide/JuceLibraryCode/include_juce_events.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_events.mm
+DynamicMidSide/JuceLibraryCode/include_juce_graphics.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_graphics.mm
+DynamicMidSide/JuceLibraryCode/include_juce_gui_basics.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_gui_basics.mm
+DynamicMidSide/JuceLibraryCode/include_juce_gui_extra.cpp
+DynamicMidSide/JuceLibraryCode/include_juce_gui_extra.mm
+DynamicMidSide/JuceLibraryCode/JuceHeader.h
+DynamicMidSide/JuceLibraryCode/JucePluginDefines.h
+DynamicMidSide/JuceLibraryCode/ReadMe.txt
