@@ -8152,3 +8152,66 @@ DynamicMidSide/JuceLibraryCode/include_juce_gui_extra.mm
 DynamicMidSide/JuceLibraryCode/JuceHeader.h
 DynamicMidSide/JuceLibraryCode/JucePluginDefines.h
 DynamicMidSide/JuceLibraryCode/ReadMe.txt
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_basics.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_devices.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_formats.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_plugin_client_ARA.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_ara.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_processors_lv2_libs.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_audio_utils.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_core.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_data_structures.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_dsp.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_events.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_graphics.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_basics.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/include_juce_gui_extra.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/PluginEditor.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/PluginProcessor.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/CL.10596.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/CL.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/CL.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/Lib-link.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/Lib-link.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/Lib.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/Spectrum.5EF073CA.tlog/SpectrumAnalyzer_SharedCode.lastbuildstate
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/SpectrumAnalyzer.lib
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/SpectrumAnalyzer.pdb
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/Shared Code/SpectrumAnalyzer_SharedCode.log
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.exe
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_vst3_helper.pdb
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/juce_VST3ManifestHelper.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/resources.res
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/CL.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/CL.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/CL.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/link.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/link.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/link.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/rc.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/rc.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/rc.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/Spectrum.9EF08584.tlog/SpectrumAnalyzer_VST3ManifestHelper.lastbuildstate
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3 Manifest Helper/SpectrumAnalyzer_VST3ManifestHelper.log
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/include_juce_audio_plugin_client_VST3.obj
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/resources.res
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/CL.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/CL.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/CL.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/link.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/link.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/link.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/rc.command.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/rc.read.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/rc.write.1.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/SpectrumAnalyzer_VST3.lastbuildstate
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/SpectrumAnalyzer_VST3.write.1u.tlog
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/Spectrum.31292C55.tlog/unsuccessfulbuild
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/SpectrumAnalyzer.exp
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/SpectrumAnalyzer.lib
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/SpectrumAnalyzer.pdb
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/SpectrumAnalyzer.vst3/Contents/Resources/moduleinfo.json
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/SpectrumAnalyzer.vst3/Contents/x86_64-win/SpectrumAnalyzer.vst3
+SpectrumAnalyzer/Builds/VisualStudio2017/x64/Release/VST3/SpectrumAnalyzer_VST3.log
+DynamicMidSide/Builds/VisualStudio2017/x64/Release/VST3/DynamicM.511743B2.tlog/unsuccessfulbuild

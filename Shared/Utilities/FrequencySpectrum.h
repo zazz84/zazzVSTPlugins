@@ -26,16 +26,28 @@
 class FrequencySpectrum
 {
 public:
-	FrequencySpectrum() : forwardFFT(fftOrder), window(fftSize, juce::dsp::WindowingFunction<float>::hann)
+	FrequencySpectrum() : m_forwardFFT(fftOrder), m_window(fftSize, juce::dsp::WindowingFunction<float>::hann)
 	{
-
 	}
 	~FrequencySpectrum() = default;
 
 	inline void init(const int sampleRate)
 	{
 		m_sampleRate = sampleRate;
-		getfftDataIndexes();
+
+		// Get indexes
+		const int bucketFreq = m_sampleRate / fftSize;
+
+		for (int i = 0; i < scopeSize; i++)
+		{
+			int index = (frequencies[i] + frequencies[i + 1]) / (2 * bucketFreq);
+			if (index < 1)
+			{
+				index = 1;
+			}
+
+			m_fftDataIndexes[i] = index;
+		}
 	}
 
 	void processBlock(juce::AudioBuffer<float>& buffer)
@@ -43,58 +55,72 @@ public:
 		const auto channels = buffer.getNumChannels();
 		const auto samples = buffer.getNumSamples();
 		
-		auto* channelData = buffer.getWritePointer(0);
-		
-		for (int sample = 0; sample < samples; sample++)
+		if (channels == 1)
 		{
-			process(channelData[sample]);
+			auto* channelData = buffer.getWritePointer(0);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				process(channelData[sample]);
+			}
+		}
+		else
+		{
+			auto* channelDataLeft = buffer.getWritePointer(0);
+			auto* channelDataRight = buffer.getWritePointer(1);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				const float max = Math::fmaxf(channelDataLeft[sample], channelDataRight[sample]);
+				process(max);
+			}
 		}
 	}
 
 	float(&getScopeData())[scopeSize]
 	{
-		return scopeData;
+		return m_scopeData;
 	}
 
 private:
 	void process(float sample) noexcept
 	{
-		fifo[fifoIndex] = sample;
-		fifoIndex++;
+		m_fifo[m_fifoIndex] = sample;
+		m_fifoIndex++;
 
-		if (fifoIndex == fftSize)
+		if (m_fifoIndex == fftSize)
 		{
-			juce::zeromem(fftData, sizeof(fftData));
-			memcpy(fftData, fifo, sizeof(fifo));
+			juce::zeromem(m_fftData, sizeof(m_fftData));
+			memcpy(m_fftData, m_fifo, sizeof(m_fifo));
 			
 			getSpectrum();
 
-			fifoIndex = 0;
+			m_fifoIndex = 0;
 		}
 	}
 
 	void getSpectrum()
 	{
-		// first apply a windowing function to our data
-		window.multiplyWithWindowingTable(fftData, fftSize);       // [1]
+		// first apply a m_windowing function to our data
+		m_window.multiplyWithWindowingTable(m_fftData, fftSize);    
 
 		// then render our FFT data..
-		forwardFFT.performFrequencyOnlyForwardTransform(fftData);  // [2]
+		m_forwardFFT.performFrequencyOnlyForwardTransform(m_fftData); 
 
 		auto mindB = -100.0f;
 		auto maxdB = 0.0f;
 
 		auto previousIndex = 0;
-		for (int i = 0; i < scopeSize; i++)                         // [3]
+		for (int i = 0; i < scopeSize; i++) 
 		{
 			// Find maximum for given frequency range
 			auto sumLevel = 0.0f;
 
-			const auto curentIndex = fftDataIndexes[i];
+			const auto curentIndex = m_fftDataIndexes[i];
 
 			for (int j = previousIndex; j < curentIndex; j++)
 			{
-				const auto currentLevel = fftData[j];
+				const auto currentLevel = m_fftData[j];
 				sumLevel += currentLevel;
 			}
 			
@@ -105,48 +131,20 @@ private:
 			// Clamped and normalized
 			auto level = Math::clamp(sumLevel / static_cast<float>(fftSize), 0.0f, 1.0f);
 
-			scopeData[i] = level;                                   // [4]
+			m_scopeData[i] = level; 
 		}
 	}
 
-	void getfftDataIndexes()
-	{
-		/*const auto melMax = Math::frequenyToMel(20000.0f);
-		const auto melmin = Math::frequenyToMel(40.0f);
+	juce::dsp::FFT m_forwardFFT;                      
+	juce::dsp::WindowingFunction<float> m_window;     
 
-		const auto melStep = (melMax - melmin) / static_cast<float>(scopeSize);
+	float m_fifo[fftSize];                            
+	float m_fftData[2 * fftSize];                     
+	float m_scopeData[scopeSize];
 
-		float mel = melmin;
-		
-		for (int i = 0; i < scopeSize; i++)
-		{
-			mel += melStep;
-			const auto frequency = Math::melToFrequency(mel);
-
-			const auto idx = static_cast<int>(frequency * fftSize / static_cast<float>(m_sampleRate));
-			fftDataIndexes[i] = idx;
-		}*/
-
-
-		/*float frequency = 55.0f;
-
-		for (int i = 0; i < scopeSize; i++)
-		{
-			const auto idx = static_cast<int>(frequency * fftSize / static_cast<float>(m_sampleRate));
-			fftDataIndexes[i] = idx;
-
-			frequency *= 2.0f;
-		}*/
-	}
-
-	juce::dsp::FFT forwardFFT;                      // [4]
-	juce::dsp::WindowingFunction<float> window;     // [5]
-
-	float fifo[fftSize];                            // [6]
-	float fftData[2 * fftSize];                     // [7]
-	int fifoIndex = 0;                              // [8]
-	float scopeData[scopeSize];                     // [10]
-	int fftDataIndexes[scopeSize] = { 1, 2, 3, 4, 5, 6, 8, 10, 15, 30, 50, 70, 90, 120, 180, 220 };
-
+	int m_fftDataIndexes[scopeSize];
+	const int frequencies[scopeSize + 1] = { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 2000, 4000, 6000, 8000, 10000, 12000, 16000, 20000 };
+	
+	int m_fifoIndex = 0;
 	int m_sampleRate = 48000;
 };

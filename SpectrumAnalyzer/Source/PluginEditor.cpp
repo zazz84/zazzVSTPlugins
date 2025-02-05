@@ -28,8 +28,8 @@ SpectrumAnalyzerAudioProcessorEditor::SpectrumAnalyzerAudioProcessorEditor (Spec
 	
 	setResizable(true, true);
 
-	const int canvasWidth = 20 * 30;
-	const int canvasHeight = 10 * 30;
+	const int canvasWidth = 18 * 30;
+	const int canvasHeight = 8 * 30;
 
 	setSize(canvasWidth, canvasHeight);
 
@@ -61,8 +61,6 @@ void SpectrumAnalyzerAudioProcessorEditor::timerCallback()
 
 void SpectrumAnalyzerAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 }
 
 void SpectrumAnalyzerAudioProcessorEditor::resized()

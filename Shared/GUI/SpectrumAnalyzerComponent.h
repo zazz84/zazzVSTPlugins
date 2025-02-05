@@ -23,12 +23,14 @@
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 
 enum
 {
-	fftOrder = 9,				// [1]
-	fftSize = 1 << fftOrder,	// [2]
-	scopeSize = 16				// [3]
+	fftOrder = 9,
+	//fftOrder = 12,
+	fftSize = 1 << fftOrder,
+	scopeSize = 16
 };
 
 class SpectrumAnalyzerComponent : public juce::Component
@@ -42,10 +44,14 @@ public:
 
 	inline void init()
 	{
+		// Values smoothing
 		for (int i = 0; i < scopeSize; i++)
 		{
 			m_filters[i].init(30.0f);
 			m_filters[i].set(1.0f);
+
+			m_peaks[i].init(30.0f);
+			m_peaks[i].set(0.0f, 1000.0f, 2000.0f);
 		}
 	}
 		
@@ -55,85 +61,100 @@ public:
 		{
 			m_scopeData[i] = scopeData[i];
 		}
-
-		//memcpy(m_scopeData, scopeData, sizeof(scopeData));
 	}
 
 	inline void paint(juce::Graphics& g) override
 	{
-		const auto width = getWidth() - 50;
-		const auto height = getHeight() - 50;
+		// Draw background
+		g.fillAll(darkColor);
 
-		const auto bandWidth = (width - (scopeSize + 1 + 2)) / scopeSize;
+		// Get pixel size
+		const auto pixelSize = getWidth() / 18;
+
+		// Draw horizontal lines
+		g.setColour(highlightColor);
+		g.setOpacity(0.5f);
+		
+		const float left = static_cast<float>(pixelSize);
+		const float right = static_cast<float>(pixelSize * 17);
+
+		for (int i = 0; i < 7; i++)
+		{
+			g.drawHorizontalLine((i + 1) * pixelSize, left, right);
+		}
+
+		// Draw y scale numbers
+		g.setColour(juce::Colours::white);
+		g.setOpacity(1.0f);
 		g.setFont(10.0f);
-		// Draw the scale
-		g.setColour(juce::Colours::white); // Set the line color
-		const auto count = 8;
-		const auto lineHeight = height / (count - 1);
-		int y = 0;
-
-		const auto scaleStep = (0 + 80) / count;
-
-		int value = 0;
 
 		juce::Rectangle<int> textBox;
-		textBox.setSize(25, lineHeight);
+		textBox.setSize(pixelSize, pixelSize);
 
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < 7; i++)
 		{
-			textBox.setPosition(width + 25, y - lineHeight / 2);
-
-			g.drawText(juce::String(value), textBox, juce::Justification::centred, true);
-
-			g.drawLine(width, y, width + 20, y, 1.0f);
-
-			y += lineHeight;
-			value -= scaleStep;
+			textBox.setPosition(right, (i * pixelSize) + (pixelSize / 2));
+			g.drawText(juce::String(-12 * i), textBox, juce::Justification::centred, true);
 		}
 
-		// Frequencies
-		int freqPosX = 0;
-		int freqValue = 92;
-
-		textBox.setSize(bandWidth, 25);
-
-		for (int i = 0; i < scopeSize; i++)
+		// Draw x scale numbers
+		if (pixelSize > 20)
 		{
-			textBox.setPosition(freqPosX, height + 25);
+			const int posY = 7 * pixelSize;
 
-			g.drawText(juce::String(0.5f * (fftDataIndexes[i] + fftDataIndexes[i + 1]) * freqValue), textBox, juce::Justification::centred, true);
+			for (int i = 0; i < scopeSize; i++)
+			{
+				textBox.setPosition((i + 1) * pixelSize, posY);
 
-			freqPosX += bandWidth + 1;
+				g.drawText(frequencies[i], textBox, juce::Justification::centred, true);
+			}
 		}
 		
+		// Draw bars + peaks
+		g.setColour(highlightColor);
 
-		// Bars
-		auto xPos = 1;
-		g.setColour(juce::Colours::yellow);
-
+		const int maxBarHeight = 6 * pixelSize;
+		const int barWidth = pixelSize - 1;
+		
+		int posX = pixelSize;
 		juce::Rectangle<int> bounds;
 
 		for (int scopeIndex = 0; scopeIndex < scopeSize; scopeIndex++)
 		{
 			const auto gainSmooth = m_filters[scopeIndex].process(m_scopeData[scopeIndex]);
-			constexpr auto gainCompenation = 6.0f;			// +6dB is gain amplitude compensation for Hann window
+			constexpr auto gainCompenation = 6.0f;														// +6dB is gain amplitude compensation for Hann window
 			const auto dB = Math::gainTodB(gainSmooth) + gainCompenation;
 					
-			const auto bandHeight = static_cast<int>(Math::remap(dB, -80.0f, 0.0f, 0.0f, height));
+			const auto barHeight = static_cast<int>(Math::remap(dB, -80.0f, 0.0f, 0.0f, maxBarHeight));
 
-			bounds.setSize(bandWidth, bandHeight);
-			bounds.setPosition(xPos, height - bandHeight);
+			bounds.setSize(barWidth, barHeight);
+			bounds.setPosition(posX, maxBarHeight - barHeight + pixelSize);
+			g.setOpacity(0.8f);
 			g.fillRect(bounds);
 
-			xPos += bandWidth + 1;
+			// Draw peak
+			const float ratio = static_cast<float>(barHeight) / static_cast<float>(maxBarHeight);
+			const auto peakHeight = maxBarHeight * m_peaks[scopeIndex].process(ratio);					// Smooth ratio so it works with plugin resizing
+
+			bounds.setSize(barWidth, 2);
+			bounds.setPosition(posX, maxBarHeight - peakHeight + pixelSize);
+			g.setOpacity(1.0f);
+			g.fillRect(bounds);
+
+			posX += pixelSize;
 		}
 	}
 
 private:
 	OnePoleLowPassFilter m_filters[scopeSize];
+	HoldEnvelopeFollower<float> m_peaks[scopeSize];
 	float m_scopeData[scopeSize];
 
-	int fftDataIndexes[scopeSize+1] = {0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 30, 50, 70, 90, 120, 180, 220};
+	const juce::String frequencies[scopeSize] = { "100", "200", "300", "400", "500", "600", "700", "800", "1k", "2k", "4k", "6k", "8k", "10k", "12k", "16k" };
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SpectrumAnalyzerComponent)
 };

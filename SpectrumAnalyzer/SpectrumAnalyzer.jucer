@@ -16,6 +16,8 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="zecDtF" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="Y1sEtg" name="EnvelopeFollowers.h" compile="0" resource="0"
+            file="../Shared/Dynamics/EnvelopeFollowers.h"/>
       <FILE id="OgG64P" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="ecVE1s" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
