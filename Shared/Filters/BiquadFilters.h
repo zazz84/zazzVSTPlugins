@@ -17,26 +17,163 @@
 
 #pragma once
 
+#define M_LN2 0.69314718f
+#define M_PI  3.14159268f
+#define M_PI2 6.28318536f
+
 class  BiquadFilter
 {
 public:
-	BiquadFilter() {};
+	BiquadFilter() = default;
+	~BiquadFilter() = default;
 
-	inline void init(const int sampleRate)
-	{ 
+	inline void init(const int sampleRate) noexcept
+	{
 		m_SampleRate = sampleRate;
-	}
-	
-	void setLowPass(float frequency, float Q);
-	void setHighPass(float frequency, float Q);
-	void setBandPassSkirtGain(float frequency, float Q);
-	void setBandPassPeakGain(float frequency, float Q);
-	void setNotch(float frequency, float Q);
-	void setPeak(float frequency, float Q, float gain);
-	void setLowShelf(float frequency, float Q, float gain);
-	void setHighShelf(float frequency, float Q, float gain);
+	};
+	inline void setLowPass(const float frequency, const float Q)
+	{
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
 
-	inline float processDF1(const float in)
+		const float tmp = 1.0f - cs;
+		b0 = tmp * 0.5f;
+		b1 = tmp;
+		b2 = b0;
+		a0 = 1.0f + alpha;
+		a1 = -2.0f * cs;
+		a2 = 1.0f - alpha;
+
+		normalize();
+	};
+	inline void setHighPass(const float frequency, const float Q) noexcept
+	{
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+
+		const float tmp = 1 + cs;
+		b0 = tmp * 0.5f;
+		b1 = -tmp;
+		b2 = b0;
+		a0 = 1.0f + alpha;
+		a1 = -2.0f * cs;
+		a2 = 1.0f - alpha;
+
+		normalize();
+	};
+	inline void setBandPassSkirtGain(const float frequency, const float Q) noexcept
+	{
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+
+		b0 = Q * alpha;
+		b1 = 0.0f;
+		b2 = -Q * alpha;
+		a0 = 1.0f + alpha;
+		a1 = -2.0f * cs;
+		a2 = 1.0f - alpha;
+
+		normalize();
+	};
+	inline void setBandPassPeakGain(const float frequency, const float Q) noexcept
+	{
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+
+		b0 = alpha;
+		b1 = 0.0f;
+		b2 = -alpha;
+		a0 = 1.0f + alpha;
+		a1 = -2.0f * cs;
+		a2 = 1.0f - alpha;
+
+		normalize();
+	};
+	inline void setNotch(const float frequency, const float Q) noexcept
+	{
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+
+		b0 = 1.0f;
+		b1 = -2.0f * cs;
+		b2 = 1.0f;
+		a0 = 1.0f + alpha;
+		a1 = -2.0f * cs;
+		a2 = 1.0f - alpha;
+
+		normalize();
+	};
+	inline void setPeak(const float frequency, const float Q, const float gain) noexcept
+	{
+		const float A = powf(10.0f, gain / 40.0f);
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+		const float beta = sqrt(A + A);
+
+		float tmp = alpha * A;
+		b0 = 1.0f + tmp;
+		b1 = -2.0f * cs;
+		b2 = 1.0f - tmp;
+		tmp = alpha / A;
+		a0 = 1.0f + tmp;
+		a1 = -2.0f * cs;
+		a2 = 1.0f - tmp;
+
+		normalize();
+	};
+	inline void setLowShelf(const float frequency, const float Q, const float gain) noexcept
+	{
+		const float A = powf(10.0f, gain / 40.0f);
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+		const float beta = sqrt(A + A);
+
+		float tmp1 = A + 1.0f;
+		float tmp2 = A - 1.0f;
+		b0 = A * (tmp1 - tmp2 * cs + beta * sn);
+		b1 = 2 * A * (tmp2 - tmp1 * cs);
+		b2 = A * (tmp1 - tmp2 * cs - beta * sn);
+		a0 = tmp1 + tmp2 * cs + beta * sn;
+		a1 = -2 * (tmp2 + tmp1 * cs);
+		a2 = tmp1 + tmp2 * cs - beta * sn;
+
+		normalize();
+	};
+	inline void setHighShelf(const float frequency, const float Q, const float gain) noexcept
+	{
+		const float A = powf(10.0f, gain / 40.0f);
+		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+		const float beta = sqrt(A + A);
+
+		float tmp1 = A + 1.0f;
+		float tmp2 = A - 1.0f;
+		b0 = A * (tmp1 + tmp2 * cs + beta * sn);
+		b1 = -2 * A * (tmp2 + tmp1 * cs);
+		b2 = A * (tmp1 + tmp2 * cs - beta * sn);
+		a0 = tmp1 - tmp2 * cs + beta * sn;
+		a1 = 2 * (tmp2 - tmp1 * cs);
+		a2 = tmp1 - tmp2 * cs - beta * sn;
+
+		normalize();
+	};
+	inline float processDF1(const float in) noexcept
 	{
 		const float out = b0 * in + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
 
@@ -47,10 +184,30 @@ public:
 		y1 = out;
 
 		return out;
-	}
-	float processDF2(float in);
-	float processDF1T(float in);
-	inline float processDF2T(const float in)
+	};
+	inline float processDF2(const float in)
+	{
+		const float v = in - a1 * y1 - a2 * y2;
+		const float out = b0 * v + b1 * y1 + b2 * y2;
+
+		y2 = y1;
+		y1 = v;
+
+		return out;
+	};
+	inline float processDF1T(const float in) noexcept
+	{
+		float v = in + y2;
+		float out = b0 * v + x2;
+
+		x2 = b1 * v + x1;
+		y2 = -a1 * v + y1;
+		x1 = b2 * v;
+		y1 = -a2 * v;
+
+		return out;
+	};
+	inline float processDF2T(const float in) noexcept
 	{
 		const float out = b0 * in + x2;
 
@@ -61,9 +218,8 @@ public:
 		x1 = b2 * in - a2 * out;
 
 		return out;
-	}
-
-	inline void release()
+	};
+	inline void release() noexcept
 	{
 		a0 = 0.0f;
 		a1 = 0.0f;
@@ -80,10 +236,17 @@ public:
 		y2 = 0.0f;
 
 		m_SampleRate = 48000;
-	}
+	};
 
 private:
-	void normalize();
+	inline void normalize() noexcept
+	{
+		b0 = b0 / a0;
+		b1 = b1 / a0;
+		b2 = b2 / a0;
+		a1 = a1 / a0;
+		a2 = a2 / a0;
+	};
 	
 	float a0 = 0.0f;
 	float a1 = 0.0f;

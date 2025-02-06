@@ -83,7 +83,7 @@ public:
 	}
 
 private:
-	void process(float sample) noexcept
+	void process(float sample, int channel) noexcept
 	{
 		m_fifo[m_fifoIndex] = sample;
 		m_fifoIndex++;
@@ -138,9 +138,9 @@ private:
 	juce::dsp::FFT m_forwardFFT;                      
 	juce::dsp::WindowingFunction<float> m_window;     
 
-	float m_fifo[fftSize];                            
-	float m_fftData[2 * fftSize];                     
-	float m_scopeData[scopeSize];
+	float m_fifo[2][fftSize];                            
+	float m_fftData[2][2 * fftSize];                     
+	float m_scopeData[2][scopeSize];
 
 	int m_fftDataIndexes[scopeSize];
 	const int frequencies[scopeSize + 1] = { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 2000, 4000, 6000, 8000, 10000, 12000, 16000, 20000 };

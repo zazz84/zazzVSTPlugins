@@ -1,12 +1,19 @@
 /*
-  ==============================================================================
-
-    SmallSpeakerSimulation.h
-    Created: 21 Dec 2024 10:11:19pm
-    Author:  zazz
-
-  ==============================================================================
-*/
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #pragma once
 
@@ -15,8 +22,10 @@
 class SmallSpeakerSimulation
 {
 public:
-	SmallSpeakerSimulation() {};
-	inline void init(const int sampleRate)
+	SmallSpeakerSimulation() = default;
+	~SmallSpeakerSimulation() = default;
+	
+	inline void init(const int sampleRate) noexcept
 	{
 		m_filter1.init(sampleRate);
 		m_filter2.init(sampleRate);
@@ -25,7 +34,7 @@ public:
 		m_filter5.init(sampleRate);
 		m_filter6.init(sampleRate);
 	};
-	inline void set(const int type, const float tune)
+	inline void set(const int type, const float tune) noexcept
 	{
 		const float tuneFactor = 0.01f * tune;
 
@@ -129,7 +138,7 @@ public:
 			m_filter6.setLowPass(tuneFactor * 2600.0f, 4.0f);
 		}
 	}
-	inline float process(const float in)
+	inline float process(const float in) noexcept
 	{
 		float out = m_filter1.processDF2T(in);
 		out = m_filter2.processDF2T(out);
@@ -138,7 +147,7 @@ public:
 		out = m_filter5.processDF2T(out);
 		return m_gain * m_filter6.processDF2T(out);
 	};
-	inline void release()
+	inline void release() noexcept
 	{
 		m_filter1.release();
 		m_filter2.release();

@@ -58,7 +58,7 @@ public:
 		float lNormalize = 1.0f;
 		float rNormalize = 1.0f;
 
-		if (lEnvelope > 0.001f && rEnvelope > 0.001f)
+		if (lEnvelope > 0.0001f && rEnvelope > 0.0001f)
 		{
 			lNormalize = rEnvelope / lEnvelope;
 			rNormalize = lEnvelope / rEnvelope;
@@ -70,8 +70,10 @@ public:
 		const float mid = m_mGain * (lNormalized + rNormalized);
 		const float side = m_sGain * (lNormalized - rNormalized);
 
-		left = Math::remap(m_width, 0.0f, 100.0f, 1.0f, rNormalize) * (m_mPanL * mid + m_sPanL * side);
-		right = Math::remap(m_width, 0.0f, 100.0f, 1.0f, lNormalize) * (m_mPanR * mid - m_sPanR * side);
+		const float norm = Math::remap(m_width, 0.0f, 100.0f, 1.0f, rNormalize);
+
+		left = norm * (m_mPanL * mid + m_sPanL * side);
+		right = (m_mPanR * mid - m_sPanR * side) / norm;
 	};
 
 private:

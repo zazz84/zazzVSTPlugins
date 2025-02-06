@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
@@ -30,7 +47,8 @@ const float tangentialVertical2Time = sqrt(w * w + 4.0f * h * h) / speedOfSound;
 class RoomEarlyReflections : public CircularBuffer
 {
 public:
-	RoomEarlyReflections() {};
+	RoomEarlyReflections() = default;
+	~RoomEarlyReflections() = default;
 
 	/*static constexpr float delayTimesFactor[] = {	0.3580f,	0.4617f,	0.5753f,	0.5975f,
 													0.9555f,	0.7481f,	1.0000f };*/
@@ -51,17 +69,15 @@ public:
 		m_channel = channel;
 
 		const int sampleRateHalf = sampleRate / 2;
-		m_maximumFilterFrequency = (sampleRateHalf < 18000) ? (float)sampleRateHalf : 18000.0f;
+		m_maximumFilterFrequency = sampleRateHalf < 18000 ? static_cast<float>(sampleRateHalf) : 18000.0f;
 
 		for (auto filter : m_filter)
 		{
 			filter.init(sampleRate);
 		}
 	};
-	inline void set(const float damping, const int predelaySize, const int reflectionsSize, const float width, const float attenuationdB)
+	inline void set(const float damping, const int predelaySize, const int reflectionsSize, const float width, const float attenuationdB) noexcept
 	{
-		//__super::set(size);
-
 		const float frequency2 = m_maximumFilterFrequency - 500.0f;
 		const float w = m_channel == 0 ? 0.0f : width;
 
@@ -83,7 +99,7 @@ public:
 
 		m_damping = damping;
 	};
-	inline float process(const float in)
+	inline float process(const float in) noexcept
 	{
 		write(in);
 
@@ -116,8 +132,8 @@ public:
 
 private:
 	OnePoleLowPassFilter m_filter[N_DELAY_LINES];
-	int m_delaySize[N_DELAY_LINES];
 	float m_delayGain[N_DELAY_LINES];
+	int m_delaySize[N_DELAY_LINES];
 	float m_damping = 0.0f;
 	float m_maximumFilterFrequency = 18000.0f;
 	int m_channel = 0;
