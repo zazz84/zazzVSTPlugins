@@ -31,6 +31,9 @@ SpectrumAnalyzerAudioProcessor::SpectrumAnalyzerAudioProcessor()
                        )
 #endif
 {
+	buttonAParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonA"));
+	buttonBParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonB"));
+	buttonCParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonC"));
 }
 
 SpectrumAnalyzerAudioProcessor::~SpectrumAnalyzerAudioProcessor()
@@ -102,13 +105,16 @@ void SpectrumAnalyzerAudioProcessor::changeProgramName (int index, const juce::S
 //==============================================================================
 void SpectrumAnalyzerAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	m_frequenycSpectrum.init(static_cast<int>(sampleRate));
+	const auto sr = static_cast<int>(sampleRate);
+
+	m_frequenycSpectrum[0].init(sr);
+	m_frequenycSpectrum[1].init(sr);
 }
 
 void SpectrumAnalyzerAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+	m_frequenycSpectrum[0].release();
+	m_frequenycSpectrum[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -139,7 +145,71 @@ bool SpectrumAnalyzerAudioProcessor::isBusesLayoutSupported (const BusesLayout& 
 
 void SpectrumAnalyzerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-	m_frequenycSpectrum.processBlock(buffer);
+	juce::ScopedNoDenormals noDenormals;
+
+	// Buttons
+	const auto buttonA = buttonAParameter->get();
+	const auto buttonB = buttonBParameter->get();
+	const auto buttonC = buttonCParameter->get();
+
+	const auto channels = buffer.getNumChannels();
+	const auto samples = buffer.getNumSamples();
+
+	// Set type
+	if (channels == 1)
+	{
+		m_type = 3;
+	}
+	else
+	{
+		if (buttonA)
+		{
+			m_type = 0;
+		}
+		else if (buttonB)
+		{
+			m_type = 1;
+		}
+		else
+		{
+			m_type = 2;
+		}
+	}
+	
+	// Process
+	if (m_type == 2)
+	{
+		auto& frequencySpectrumM = m_frequenycSpectrum[0];
+		auto& frequencySpectrumS = m_frequenycSpectrum[1];
+		auto* channelDataL = buffer.getWritePointer(0);
+		auto* channelDataR = buffer.getWritePointer(1);
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			const float inL = channelDataL[sample];
+			const float inR = channelDataR[sample];
+
+			const float m = 0.5f * (inL + inR);
+			const float s = 0.5f * (inL - inR);
+
+			frequencySpectrumM.process(m);
+			frequencySpectrumS.process(s);
+		}
+	}
+	else
+	{
+		for (int channel = 0; channel < channels; channel++)
+		{
+			auto& frequencySpectrum = m_frequenycSpectrum[channel];
+			auto* channelData = buffer.getWritePointer(channel);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				frequencySpectrum.process(channelData[sample]);
+			}
+		}
+	}
+
 }
 
 //==============================================================================
@@ -150,21 +220,37 @@ bool SpectrumAnalyzerAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SpectrumAnalyzerAudioProcessor::createEditor()
 {
-    return new SpectrumAnalyzerAudioProcessorEditor (*this);
+    return new SpectrumAnalyzerAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void SpectrumAnalyzerAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void SpectrumAnalyzerAudioProcessor::getStateInformation(juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+	auto state = apvts.copyState();
+	std::unique_ptr<juce::XmlElement> xml(state.createXml());
+	copyXmlToBinary(*xml, destData);
 }
 
-void SpectrumAnalyzerAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void SpectrumAnalyzerAudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+	if (xmlState.get() != nullptr)
+		if (xmlState->hasTagName(apvts.state.getType()))
+			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout SpectrumAnalyzerAudioProcessor::createParameterLayout()
+{
+	APVTS::ParameterLayout layout;
+
+	using namespace juce;
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonA", "ButtonA", true));
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonB", "ButtonB", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonC", "ButtonC", false));
+
+	return layout;
 }
 
 //==============================================================================

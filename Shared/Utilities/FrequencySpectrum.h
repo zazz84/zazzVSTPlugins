@@ -48,42 +48,13 @@ public:
 
 			m_fftDataIndexes[i] = index;
 		}
-	}
 
-	void processBlock(juce::AudioBuffer<float>& buffer)
-	{
-		const auto channels = buffer.getNumChannels();
-		const auto samples = buffer.getNumSamples();
-		
-		if (channels == 1)
-		{
-			auto* channelData = buffer.getWritePointer(0);
-
-			for (int sample = 0; sample < samples; sample++)
-			{
-				process(channelData[sample]);
-			}
-		}
-		else
-		{
-			auto* channelDataLeft = buffer.getWritePointer(0);
-			auto* channelDataRight = buffer.getWritePointer(1);
-
-			for (int sample = 0; sample < samples; sample++)
-			{
-				const float max = Math::fmaxf(channelDataLeft[sample], channelDataRight[sample]);
-				process(max);
-			}
-		}
-	}
-
-	float(&getScopeData())[scopeSize]
-	{
-		return m_scopeData;
-	}
-
-private:
-	void process(float sample, int channel) noexcept
+		// Set all to zero
+		std::fill(std::begin(m_fifo), std::end(m_fifo), 0.0f);
+		std::fill(std::begin(m_fftData), std::end(m_fftData), 0.0f);
+		std::fill(std::begin(m_scopeData), std::end(m_scopeData), 0.0f);
+	};
+	inline void process(const float sample) noexcept
 	{
 		m_fifo[m_fifoIndex] = sample;
 		m_fifoIndex++;
@@ -92,13 +63,27 @@ private:
 		{
 			juce::zeromem(m_fftData, sizeof(m_fftData));
 			memcpy(m_fftData, m_fifo, sizeof(m_fifo));
-			
+
 			getSpectrum();
 
 			m_fifoIndex = 0;
 		}
 	}
+	inline void release()
+	{
+		std::fill(std::begin(m_fifo), std::end(m_fifo), 0.0f);
+		std::fill(std::begin(m_fftData), std::end(m_fftData), 0.0f);
+		std::fill(std::begin(m_scopeData), std::end(m_scopeData), 0.0f);
 
+		m_fifoIndex = 0;
+	}
+	float(&getScopeData())[scopeSize]
+	{
+		return m_scopeData;
+	}
+
+
+private:
 	void getSpectrum()
 	{
 		// first apply a m_windowing function to our data
@@ -138,9 +123,9 @@ private:
 	juce::dsp::FFT m_forwardFFT;                      
 	juce::dsp::WindowingFunction<float> m_window;     
 
-	float m_fifo[2][fftSize];                            
-	float m_fftData[2][2 * fftSize];                     
-	float m_scopeData[2][scopeSize];
+	float m_fifo[fftSize];                            
+	float m_fftData[2 * fftSize];                     
+	float m_scopeData[scopeSize];
 
 	int m_fftDataIndexes[scopeSize];
 	const int frequencies[scopeSize + 1] = { 100, 200, 300, 400, 500, 600, 700, 800, 1000, 2000, 4000, 6000, 8000, 10000, 12000, 16000, 20000 };

@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <array>
+
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/FrequencySpectrum.h"
@@ -68,14 +70,34 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 	//==============================================================================
-	FrequencySpectrum& getFrequencySpectrum()
+	FrequencySpectrum& getFrequencySpectrumL()
 	{
-		return m_frequenycSpectrum;
+		return m_frequenycSpectrum[0];
+	};
+	FrequencySpectrum& getFrequencySpectrumR()
+	{
+		return m_frequenycSpectrum[1];
+	};
+	int getType()
+	{
+		return m_type;
 	}
+
+	//==============================================================================
+	using APVTS = juce::AudioProcessorValueTreeState;
+	static APVTS::ParameterLayout createParameterLayout();
+
+	APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
 private:
     //==============================================================================
-	FrequencySpectrum m_frequenycSpectrum{};
+	std::array<FrequencySpectrum, 2> m_frequenycSpectrum;
+
+	juce::AudioParameterBool* buttonAParameter = nullptr;
+	juce::AudioParameterBool* buttonBParameter = nullptr;
+	juce::AudioParameterBool* buttonCParameter = nullptr;
+
+	int m_type = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumAnalyzerAudioProcessor)
 };

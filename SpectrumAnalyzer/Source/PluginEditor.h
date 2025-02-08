@@ -21,6 +21,17 @@
 #include "PluginProcessor.h"
 
 #include "../../../zazzVSTPlugins/Shared/GUI/SpectrumAnalyzerComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+
+//==============================================================================
+class CustomLookAndFeel : public juce::LookAndFeel_V4
+{
+public:
+	juce::Font getTextButtonFont(juce::TextButton&, int buttonHeight) override
+	{
+		return juce::Font(8.0f); // Custom font size
+	}
+};
 
 //==============================================================================
 /**
@@ -28,8 +39,10 @@
 class SpectrumAnalyzerAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
-    SpectrumAnalyzerAudioProcessorEditor (SpectrumAnalyzerAudioProcessor&);
+    SpectrumAnalyzerAudioProcessorEditor (SpectrumAnalyzerAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~SpectrumAnalyzerAudioProcessorEditor() override;
+
+	static const int TYPE_BUTTON_GROUP = 1;
 
     //==============================================================================
 	void timerCallback() override;
@@ -41,9 +54,26 @@ private:
     // access the processor object that created it.
     SpectrumAnalyzerAudioProcessor& audioProcessor;
 
+	juce::AudioProcessorValueTreeState& valueTreeState;
+
 	SpectrumAnalyzerComponent m_spectrumAnalyzer;
+	PluginNameComponent m_pluginName;
+
+	CustomLookAndFeel customLook;
+
+	juce::TextButton typeAButton{ "SUM" };
+	juce::TextButton typeBButton{ "LR" };
+	juce::TextButton typeCButton{ "MS" };
+
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonBAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonCAttachment;
 
 	juce::CriticalSection scopeLock;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumAnalyzerAudioProcessorEditor)
 };

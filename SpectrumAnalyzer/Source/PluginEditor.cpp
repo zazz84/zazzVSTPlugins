@@ -19,17 +19,20 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SpectrumAnalyzerAudioProcessorEditor::SpectrumAnalyzerAudioProcessorEditor (SpectrumAnalyzerAudioProcessor& p)
-    : AudioProcessorEditor (&p),
-	audioProcessor (p),
-	m_spectrumAnalyzer()
+SpectrumAnalyzerAudioProcessorEditor::SpectrumAnalyzerAudioProcessorEditor(SpectrumAnalyzerAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+	: AudioProcessorEditor(&p),
+	audioProcessor(p),
+	valueTreeState(vts),
+	m_spectrumAnalyzer(),
+	m_pluginName("zazz::SpectrumAnalyzer")
 {
 	addAndMakeVisible(m_spectrumAnalyzer);
+	addAndMakeVisible(m_pluginName);
 	
 	setResizable(true, true);
 
 	const int canvasWidth = 18 * 30;
-	const int canvasHeight = 8 * 30;
+	const int canvasHeight = 9 * 30;
 
 	setSize(canvasWidth, canvasHeight);
 
@@ -38,11 +41,40 @@ SpectrumAnalyzerAudioProcessorEditor::SpectrumAnalyzerAudioProcessorEditor (Spec
 		constexpr int minScale = 50;		// percentage
 		constexpr int maxScale = 200;		// percentage
 
-		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
+		constrainer->setFixedAspectRatio(static_cast<double>(canvasWidth) / static_cast<double>(canvasHeight));
 		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
 
 	startTimerHz(30);
+
+	// Buttons
+	typeAButton.setLookAndFeel(&customLook);
+	typeBButton.setLookAndFeel(&customLook);
+	typeCButton.setLookAndFeel(&customLook);
+
+	addAndMakeVisible(typeAButton);
+	addAndMakeVisible(typeBButton);
+	addAndMakeVisible(typeCButton);
+
+	typeAButton.setRadioGroupId(TYPE_BUTTON_GROUP);
+	typeBButton.setRadioGroupId(TYPE_BUTTON_GROUP);
+	typeCButton.setRadioGroupId(TYPE_BUTTON_GROUP);
+
+	typeAButton.setClickingTogglesState(true);
+	typeBButton.setClickingTogglesState(true);
+	typeCButton.setClickingTogglesState(true);
+
+	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonA", typeAButton));
+	buttonBAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonB", typeBButton));
+	buttonCAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonC", typeCButton));
+
+	typeAButton.setColour(juce::TextButton::buttonColourId, lightColor);
+	typeBButton.setColour(juce::TextButton::buttonColourId, lightColor);
+	typeCButton.setColour(juce::TextButton::buttonColourId, lightColor);
+
+	typeAButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+	typeBButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+	typeCButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
 }
 
 SpectrumAnalyzerAudioProcessorEditor::~SpectrumAnalyzerAudioProcessorEditor()
@@ -55,19 +87,39 @@ void SpectrumAnalyzerAudioProcessorEditor::timerCallback()
 {
 	juce::ScopedLock lock(scopeLock);
 	
-	m_spectrumAnalyzer.setScopeData(audioProcessor.getFrequencySpectrum().getScopeData());
+	m_spectrumAnalyzer.setScopeDataL(audioProcessor.getFrequencySpectrumL().getScopeData());
+	m_spectrumAnalyzer.setScopeDataR(audioProcessor.getFrequencySpectrumR().getScopeData());
+	m_spectrumAnalyzer.setType(static_cast<SpectrumAnalyzerComponent::Type>(audioProcessor.getType()));
+	
 	m_spectrumAnalyzer.repaint();
 }
 
 void SpectrumAnalyzerAudioProcessorEditor::paint (juce::Graphics& g)
 {
+	g.fillAll(darkColor);
 }
 
 void SpectrumAnalyzerAudioProcessorEditor::resized()
 {
 	const int width = getWidth();
 	const int height = getHeight();
+	const int pizelSize = width / 18;
 
-	m_spectrumAnalyzer.setSize(width, height);
-	m_spectrumAnalyzer.setTopLeftPosition(0, 0);
+	m_pluginName.setTopLeftPosition(0, 0);
+	m_pluginName.setSize(width, pizelSize + pizelSize);
+
+	m_spectrumAnalyzer.setSize(width, 8 * pizelSize);
+	m_spectrumAnalyzer.setTopLeftPosition(0, pizelSize);
+	
+	const int buttonSize = 80 * pizelSize / 100;
+
+	typeAButton.setSize(buttonSize, buttonSize);
+	typeBButton.setSize(buttonSize, buttonSize);
+	typeCButton.setSize(buttonSize, buttonSize);
+
+	const int posX = (pizelSize - buttonSize) / 2;
+
+	typeAButton.setTopLeftPosition(posX, 3 * pizelSize + posX);
+	typeBButton.setTopLeftPosition(posX, 4 * pizelSize + posX);
+	typeCButton.setTopLeftPosition(posX, 5 * pizelSize + posX);
 }
