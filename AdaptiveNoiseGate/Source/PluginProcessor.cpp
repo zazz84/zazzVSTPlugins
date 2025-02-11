@@ -20,8 +20,8 @@
 
 //==============================================================================
 
-const std::string AdaptiveNoiseGateAudioProcessor::paramsNames[] = { "Attack", "Release", "Sensitivity", "Volume" };
-const std::string AdaptiveNoiseGateAudioProcessor::paramsUnitNames[] = { " ms", " ms", "", " dB" };
+const std::string AdaptiveNoiseGateAudioProcessor::paramsNames[] = { "Attack", "Release", "Open Sensitivity", "Close Sensitivity", "Volume" };
+const std::string AdaptiveNoiseGateAudioProcessor::paramsUnitNames[] = { " ms", " ms", "", "", " dB" };
 
 //==============================================================================
 AdaptiveNoiseGateAudioProcessor::AdaptiveNoiseGateAudioProcessor()
@@ -36,10 +36,11 @@ AdaptiveNoiseGateAudioProcessor::AdaptiveNoiseGateAudioProcessor()
                        )
 #endif
 {
-	attackParameter      = apvts.getRawParameterValue(paramsNames[0]);
-	releaseParameter	 = apvts.getRawParameterValue(paramsNames[1]);
-	sensitivityParameter = apvts.getRawParameterValue(paramsNames[2]);
-	volumeParameter      = apvts.getRawParameterValue(paramsNames[3]);
+	attackParameter				= apvts.getRawParameterValue(paramsNames[0]);
+	releaseParameter			= apvts.getRawParameterValue(paramsNames[1]);
+	openSensitivityParameter	= apvts.getRawParameterValue(paramsNames[2]);
+	closeSensitivityParameter	= apvts.getRawParameterValue(paramsNames[3]);
+	volumeParameter				= apvts.getRawParameterValue(paramsNames[4]);
 }
 
 AdaptiveNoiseGateAudioProcessor::~AdaptiveNoiseGateAudioProcessor()
@@ -149,10 +150,13 @@ bool AdaptiveNoiseGateAudioProcessor::isBusesLayoutSupported (const BusesLayout&
 
 void AdaptiveNoiseGateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
 	const auto attack = attackParameter->load();
 	const auto release = releaseParameter->load();
-	const auto sensitivity = sensitivityParameter->load();
+	const auto openSensitivity = openSensitivityParameter->load();
+	const auto closeSensitivity = closeSensitivityParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -165,7 +169,7 @@ void AdaptiveNoiseGateAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
 		auto& gate = m_gate[channel];
-		gate.set(attack, release, sensitivity);
+		gate.set(attack, release, openSensitivity);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -214,10 +218,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout AdaptiveNoiseGateAudioProces
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f, 200.0f,  0.1f, 1.0f),  1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 500.0f,  0.1f, 1.0f),  100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   2.0f, 0.01f, 1.0f),  1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,  18.0f, 0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f, 300.0f,  1.0f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 300.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   8.0f, 0.01f, 1.0f),   2.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,   8.0f, 0.01f, 1.0f),   2.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
 
 	return layout;
 }

@@ -22,20 +22,49 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
 
+
+ //==============================================================================
+class SensitivityMeterComponent : public juce::Component
+{
+public:
+	SensitivityMeterComponent() = default;
+	~SensitivityMeterComponent() = default;
+
+	inline void paint(juce::Graphics& g) override
+	{
+		juce::Rectangle<float> rectangle;
+		rectangle.setSize(100, 100);
+		
+		//rectangle.setSize(getWidth() * m_difference / 2.0f, getHeight());
+		//g.setColour(juce::Colours::white);
+		//g.fillRect(rectangle);
+
+		g.drawText(juce::String(m_difference), rectangle, juce::Justification::centred);
+	};
+	inline void set(float difference)
+	{
+		m_difference = difference;
+	};
+
+private:
+	float m_difference = 0.0f;
+};
+
 //==============================================================================
-class AdaptiveNoiseGateAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class AdaptiveNoiseGateAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor, public juce::Timer
 {
 public:
     AdaptiveNoiseGateAudioProcessorEditor (AdaptiveNoiseGateAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~AdaptiveNoiseGateAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 4;
+	static const int N_SLIDERS = 5;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 1;
 	
 	//==============================================================================
+	void timerCallback() override;
 	void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -52,5 +81,9 @@ protected:
 	juce::Slider m_sliders[N_SLIDERS] = {};
 	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
 
+	SensitivityMeterComponent m_sensitivityMeter;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AdaptiveNoiseGateAudioProcessorEditor)
 };
+
+

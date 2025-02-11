@@ -77,13 +77,19 @@ public:
 
 	APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
+	float getDifference()
+	{
+		return m_gate[0].getDifference();
+	}
+
 private:	
 	//==============================================================================
 	std::array<AdaptiveNoiseGate, N_CHANNELS>  m_gate;
 
 	std::atomic<float>* attackParameter = nullptr;
 	std::atomic<float>* releaseParameter = nullptr;
-	std::atomic<float>* sensitivityParameter = nullptr;
+	std::atomic<float>* openSensitivityParameter = nullptr;
+	std::atomic<float>* closeSensitivityParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AdaptiveNoiseGateAudioProcessor)

@@ -53,14 +53,25 @@ AdaptiveNoiseGateAudioProcessorEditor::AdaptiveNoiseGateAudioProcessorEditor (Ad
 		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
 	}
 
+	addAndMakeVisible(m_sensitivityMeter);
+
 	createCanvas(*this, SLIDERS, N_ROWS);
+
+	startTimerHz(10);
 }
 
 AdaptiveNoiseGateAudioProcessorEditor::~AdaptiveNoiseGateAudioProcessorEditor()
 {
+	stopTimer();
 }
 
 //==============================================================================
+void AdaptiveNoiseGateAudioProcessorEditor::timerCallback()
+{
+	m_sensitivityMeter.set(audioProcessor.getDifference());
+	m_sensitivityMeter.repaint();
+}
+
 void AdaptiveNoiseGateAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
@@ -68,5 +79,8 @@ void AdaptiveNoiseGateAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AdaptiveNoiseGateAudioProcessorEditor::resized()
 {
+	m_sensitivityMeter.setSize(getWidth(), getHeight() / 6);
+	m_sensitivityMeter.setTopLeftPosition(0, 0);
+
 	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
 }
