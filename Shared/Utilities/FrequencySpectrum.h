@@ -92,9 +92,6 @@ private:
 		// then render our FFT data..
 		m_forwardFFT.performFrequencyOnlyForwardTransform(m_fftData); 
 
-		auto mindB = -100.0f;
-		auto maxdB = 0.0f;
-
 		auto previousIndex = 0;
 		for (int i = 0; i < scopeSize; i++) 
 		{

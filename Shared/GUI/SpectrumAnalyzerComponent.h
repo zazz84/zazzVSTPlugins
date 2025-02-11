@@ -134,6 +134,7 @@ public:
 		}
 
 		// Draw bars + peaks
+		constexpr float m_barGainMinimum = -72.0f;
 		const int maxBarHeight = 6 * pixelSize;
 		const int barWidth = pixelSize - 1;
 
@@ -148,7 +149,7 @@ public:
 				constexpr auto gainCompenation = 6.0f;														// +6dB is gain amplitude compensation for Hann window
 				const auto dBL = Math::gainTodB(gainSmoothL) + gainCompenation;
 
-				const auto barHeightL = static_cast<int>(Math::remap(dBL, -80.0f, 0.0f, 0.0f, maxBarHeight));
+				const auto barHeightL = static_cast<int>(Math::remap(dBL, m_barGainMinimum, 0.0f, 0.0f, maxBarHeight));
 
 				// Draw bars
 
@@ -182,8 +183,8 @@ public:
 				const auto dBL = Math::gainTodB(gainSmoothL) + gainCompenation;
 				const auto dBR = Math::gainTodB(gainSmoothR) + gainCompenation;
 
-				const auto barHeightL = static_cast<int>(Math::remap(dBL, -80.0f, 0.0f, 0.0f, maxBarHeight));
-				const auto barHeightR = static_cast<int>(Math::remap(dBR, -80.0f, 0.0f, 0.0f, maxBarHeight));
+				const auto barHeightL = static_cast<int>(Math::remap(dBL, m_barGainMinimum, 0.0f, 0.0f, maxBarHeight));
+				const auto barHeightR = static_cast<int>(Math::remap(dBR, m_barGainMinimum, 0.0f, 0.0f, maxBarHeight));
 
 				// Draw bars
 				if (m_type == Type::Max)
