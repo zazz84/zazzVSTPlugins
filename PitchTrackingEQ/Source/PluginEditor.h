@@ -25,11 +25,23 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 
 //==============================================================================
+class CustomLookAndFeel : public juce::LookAndFeel_V4
+{
+public:
+	juce::Font getTextButtonFont(juce::TextButton&, int buttonHeight) override
+	{
+		return juce::Font(10.0f); // Custom font size
+	}
+};
+ 
+//==============================================================================
 class PitchTrackingEQAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     PitchTrackingEQAudioProcessorEditor (PitchTrackingEQAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~PitchTrackingEQAudioProcessorEditor() override;
+
+	static const int TYPE_BUTTON_GROUP = 1;
 	
 	//==============================================================================
 	void timerCallback() override;
@@ -55,6 +67,16 @@ protected:
 	ModernRotarySlider m_filterQSlider;
 	ModernRotarySlider m_filterGainSlider;
 	ModernRotarySlider m_volumeSlider;
+
+	CustomLookAndFeel customLook;
+
+	juce::TextButton typeAButton{ "LP" };
+	juce::TextButton typeBButton{ "HP" };
+	juce::TextButton typeCButton{ "P" };
+
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonBAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonCAttachment;
 
 	std::atomic<float>* frequencyMinParameter = nullptr;
 	std::atomic<float>* frequencyMaxParameter = nullptr;

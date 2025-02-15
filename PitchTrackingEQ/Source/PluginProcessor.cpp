@@ -22,9 +22,9 @@
 
 //==============================================================================
 
-const std::string PitchTrackingEQAudioProcessor::paramsNames[] =     { "FrequencyMin", "FrequencyMax", "Speed", "FrequenyOffset", "Q", "Gain", "Volume" };
-const std::string PitchTrackingEQAudioProcessor::labelNames[] =      { "Min",          "Max",          "Speed", "Frequency",      "Q", "Gain", "Volume" };
-const std::string PitchTrackingEQAudioProcessor::paramsUnitNames[] = { " Hz",          " Hz",          "",      " x",             "",  " dB",  " dB" };
+const std::string PitchTrackingEQAudioProcessor::paramsNames[] =     { "FrequencyMin", "FrequencyMax", "Speed", "Pitch", "Q", "Gain", "Volume" };
+const std::string PitchTrackingEQAudioProcessor::labelNames[] =      { "Min",          "Max",          "Speed", "Pitch", "Q", "Gain", "Volume" };
+const std::string PitchTrackingEQAudioProcessor::paramsUnitNames[] = { " Hz",          " Hz",          "",      " st",   "",  " dB",  " dB" };
 
 //==============================================================================
 PitchTrackingEQAudioProcessor::PitchTrackingEQAudioProcessor()
@@ -46,6 +46,10 @@ PitchTrackingEQAudioProcessor::PitchTrackingEQAudioProcessor()
 	qParameter               = apvts.getRawParameterValue(paramsNames[4]);
 	gainParameter            = apvts.getRawParameterValue(paramsNames[5]);
 	volumeParameter          = apvts.getRawParameterValue(paramsNames[6]);
+
+	buttonAParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonA"));
+	buttonBParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonB"));
+	buttonCParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonC"));
 }
 
 PitchTrackingEQAudioProcessor::~PitchTrackingEQAudioProcessor()
@@ -163,8 +167,7 @@ void PitchTrackingEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto frequencyMin = frequencyMinParameter->load();
 	const auto frequencyMax = frequencyMaxParameter->load();
 	const auto speed = 0.01f * speedParameter->load();
-	const auto type = 0;
-	const auto frequencyOffset = frequencyOffsetParameter->load();
+	const auto semitones = frequencyOffsetParameter->load();
 	const auto q = qParameter->load();
 	const auto filterGain = gainParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
@@ -175,7 +178,12 @@ void PitchTrackingEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
 	// Configure
 	m_pitchDetection.set(frequencyMin, frequencyMax);
-	m_smoother.set(10.0f - 9.0f * speed);
+	m_smoother.set(1.0f + 9.0f * speed);
+
+	// Buttons
+	const auto LP = buttonAParameter->get();
+	const auto HP = buttonBParameter->get();
+	const auto P = buttonCParameter->get();
 
 	// Mono
 	if (channels == 1)
@@ -194,14 +202,14 @@ void PitchTrackingEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
 			// Smooth
 			m_frequency = Math::clamp(m_smoother.process(m_pitchDetection.getFrequency()), 20.0f, 20000.0f);
-			const float freq = Math::clamp(m_frequency * frequencyOffset, 20.0f, 20000.0f);
+			const float freq = Math::clamp(Math::shiftFrequency(m_frequency, semitones), 20.0f, 20000.0f);
 
 			// Filter
-			if (type == 1)
+			if (LP)
 			{
 				filter.setLowPass(freq, q);
 			}
-			else if (type == 2)
+			else if (HP)
 			{
 				filter.setHighPass(freq, q);
 			}
@@ -236,15 +244,15 @@ void PitchTrackingEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
 			// Smooth
 			m_frequency = Math::clamp(m_smoother.process(m_pitchDetection.getFrequency()), 20.0f, 20000.0f);
-			const float freq = Math::clamp(m_frequency * frequencyOffset, 20.0f, 20000.0f);
+			const float freq = Math::clamp(Math::shiftFrequency(m_frequency, semitones), 20.0f, 20000.0f);
 
 			// Filter
-			if (type == 1)
+			if (LP)
 			{
 				filterL.setLowPass(freq, q);
 				filterR.setLowPass(freq, q);
 			}
-			else if (type == 2)
+			else if (HP)
 			{
 				filterL.setHighPass(freq, q);
 				filterR.setHighPass(freq, q);
@@ -300,11 +308,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout PitchTrackingEQAudioProcesso
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  20.0f, 20000.0f, 10.0f, 0.5f),    20.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  20.0f, 20000.0f, 10.0f, 0.5f), 20000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,  100.0f,   1.0f, 1.0f),    50.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.1f,    10.0f, 0.01f, 0.7f),     1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   100.0f,  1.0f, 1.0f),    50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -48.0f,    48.0f, 0.01f, 1.0f),     0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.1f,    12.0f,  0.1f, 1.0f),     1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.1f,    18.0f,  0.1f, 1.0f),     0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -18.0f,    18.0f,  0.1f, 1.0f),     0.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonA", "ButtonA", true));
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonB", "ButtonB", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonC", "ButtonC", false));
 
 	return layout;
 }

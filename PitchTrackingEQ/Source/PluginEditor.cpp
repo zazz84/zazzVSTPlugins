@@ -50,6 +50,15 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	addAndMakeVisible(m_filterGainSlider);
 	addAndMakeVisible(m_volumeSlider);
 
+	m_detectorFrequencyMinSlider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::NoRing);
+	m_detectorFrequencyMaxSlider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::NoRing);
+	m_volumeSlider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Dots);
+
+	m_detectorFrequencyMinSlider.drawLabel(false);
+	//m_detectorFrequencyMinSlider.drawTextBox(false);
+	m_detectorFrequencyMaxSlider.drawLabel(false);
+	//m_detectorFrequencyMaxSlider.drawTextBox(false);
+
 	// Set canvas
 	setResizable(true, true);
 
@@ -68,6 +77,35 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	}
 
 	startTimerHz(30);
+
+	// Buttons
+	typeAButton.setLookAndFeel(&customLook);
+	typeBButton.setLookAndFeel(&customLook);
+	typeCButton.setLookAndFeel(&customLook);
+
+	addAndMakeVisible(typeAButton);
+	addAndMakeVisible(typeBButton);
+	addAndMakeVisible(typeCButton);
+
+	typeAButton.setRadioGroupId(TYPE_BUTTON_GROUP);
+	typeBButton.setRadioGroupId(TYPE_BUTTON_GROUP);
+	typeCButton.setRadioGroupId(TYPE_BUTTON_GROUP);
+
+	typeAButton.setClickingTogglesState(true);
+	typeBButton.setClickingTogglesState(true);
+	typeCButton.setClickingTogglesState(true);
+
+	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonA", typeAButton));
+	buttonBAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonB", typeBButton));
+	buttonCAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonC", typeCButton));
+
+	typeAButton.setColour(juce::TextButton::buttonColourId, lightColor);
+	typeBButton.setColour(juce::TextButton::buttonColourId, lightColor);
+	typeCButton.setColour(juce::TextButton::buttonColourId, lightColor);
+
+	typeAButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+	typeBButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+	typeCButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
 }
 
 PitchTrackingEQAudioProcessorEditor::~PitchTrackingEQAudioProcessorEditor()
@@ -139,4 +177,20 @@ void PitchTrackingEQAudioProcessorEditor::resized()
 	m_filterQSlider.setTopLeftPosition(column5, row3);
 	m_filterGainSlider.setTopLeftPosition(column6, row3);
 	m_volumeSlider.setTopLeftPosition(column8, row3);
+
+	// Buttons
+	const int buttonSize = 70 * pixelSize / 100;
+
+	typeAButton.setSize(buttonSize, buttonSize);
+	typeBButton.setSize(buttonSize, buttonSize);
+	typeCButton.setSize(buttonSize, buttonSize);
+
+	const int posX = column3 + (pixelSize - buttonSize) / 2;	
+	const int posY1 = row3 + 6 * pixelSize / 10;
+	const int posY2 = posY1 + pixelSize;
+	const int posY3 = posY2 + pixelSize;
+
+	typeAButton.setTopLeftPosition(posX, posY1);
+	typeBButton.setTopLeftPosition(posX, posY2);
+	typeCButton.setTopLeftPosition(posX, posY3);
 }

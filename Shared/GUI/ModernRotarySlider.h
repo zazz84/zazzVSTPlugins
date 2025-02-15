@@ -390,7 +390,7 @@ public:
 		const auto width = getWidth();
 		const auto height = getHeight();
 
-		if (width > MICRO_LOD_WIDTH_LIMIT)
+		if (width > MICRO_LOD_WIDTH_LIMIT && m_drawLabel)
 		{
 			juce::Rectangle<int> bounds;
 			bounds.setPosition(0, 0 * height / 100);
@@ -405,7 +405,22 @@ public:
 	inline void resized() override
 	{
 		// Size: 3 x 4
-		
+
+		if (m_drawTextBox)
+		{
+			if (!m_textBox.isVisible())
+			{
+				m_textBox.setVisible(true);
+			}
+		}
+		else
+		{
+			if (m_textBox.isVisible())
+			{
+				m_textBox.setVisible(false);
+			}
+		}
+
 		const auto width = getWidth();
 		const auto height = getHeight();
 
@@ -420,7 +435,7 @@ public:
 			bounds.setPosition(0, 83 * height / 100);
 			bounds.setSize(width, 15 * height / 100);
 			
-			if (!m_textBox.isVisible())
+			if (!m_textBox.isVisible() && m_drawTextBox)
 			{
 				m_textBox.setVisible(true);
 			}
@@ -458,6 +473,14 @@ public:
 	void setSliderType(ModernRotarySliderLookAndFeel::SliderType sliderType)
 	{
 		m_smallSliderLookAndFeel.setSliderType(sliderType);
+	}
+	void drawTextBox(bool drawTextBox)
+	{
+		m_drawTextBox = drawTextBox;
+	}
+	void drawLabel(bool drawLabel)
+	{
+		m_drawLabel = drawLabel;
 	}
 
 private:
@@ -497,6 +520,9 @@ private:
 
 	juce::Slider m_slider;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> m_sliderAttachment;
+
+	bool m_drawLabel = true;
+	bool m_drawTextBox = true;
 	
 	juce::String m_name;
 	juce::String m_unit;

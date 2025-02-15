@@ -27,10 +27,6 @@
             file="Source/PluginProcessor.h"/>
       <FILE id="Mrwx3S" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="pviWSF" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="HYKv0U" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="S89egw" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>

@@ -54,6 +54,11 @@ public:
 		g.setOpacity(1.0f);
 		g.fillRect(bounds);
 
+		// Draw meter outline
+		g.setColour(highlightColor);
+		g.setOpacity(0.5f);
+		g.drawRect(bounds, 1.0f);
+
 		// Draw limit regions
 		const auto m_frequency20Mel = Math::frequenyToMel(20.0f);
 		const auto m_frequency20kMel = Math::frequenyToMel(20000.0f);

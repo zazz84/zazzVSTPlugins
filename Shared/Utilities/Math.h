@@ -158,4 +158,10 @@ namespace Math
 	{
 		return 700.0f * (std::expf(mel / 1127.0f) - 1.0f);
 	}
+
+	//==============================================================================
+	inline float shiftFrequency(float frequency, float semitones)
+	{
+		return frequency * std::powf(2.0f, semitones / 12.0f);
+	}
 }

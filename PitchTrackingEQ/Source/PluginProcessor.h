@@ -99,6 +99,10 @@ private:
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
+	juce::AudioParameterBool* buttonAParameter = nullptr;
+	juce::AudioParameterBool* buttonBParameter = nullptr;
+	juce::AudioParameterBool* buttonCParameter = nullptr;
+
 	float m_frequency;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PitchTrackingEQAudioProcessor)
