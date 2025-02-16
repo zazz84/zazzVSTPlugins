@@ -113,8 +113,8 @@ void NoiseGateAudioProcessorEditor::resized()
 
 	//Set position
 	const int row1 = 0;
-	const int row2 = pixelSize2;
-	const int row3 = row2 + pixelSize4 + pixelSize;
+	const int row2 = pixelSize3;
+	const int row3 = row2 + pixelSize4;
 
 	const int column1 = 0;
 	const int column2 = pixelSize;

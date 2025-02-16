@@ -92,7 +92,7 @@ public:
 
 			juce::Rectangle<float> circle;
 			circle.setSize(static_cast<float>(pixelSizeHalf), static_cast<float>(pixelSizeHalf));
-			circle.setPosition(static_cast<float>(markerX - pixelSizeQuarter), 0.0f);
+			circle.setPosition(static_cast<float>(markerX - pixelSizeQuarter), static_cast<float>(pixelAndHalfSize));
 			g.setOpacity(1.0f);
 			g.fillEllipse(circle);
 		};
