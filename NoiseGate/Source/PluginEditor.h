@@ -30,7 +30,7 @@ public:
     NoiseGateAudioProcessorEditor (NoiseGateAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~NoiseGateAudioProcessorEditor() override;
 	
-	static const int CANVAS_WIDTH = 1 + 3 + 3 + 1 + 3 + 3 + 3 + 1 + 3 + 3 + 1;
+	static const int CANVAS_WIDTH = 1 + 3 + 1 + 3 + 3 + 3 + 1 + 3 + 3 + 1;
 	static const int CANVAS_HEIGHT = 2 + 1 + 4 + 2 + 1;
 
 	//==============================================================================
@@ -48,7 +48,6 @@ protected:
 	PluginNameComponent m_pluginLabel;
 	
 	ModernRotarySlider m_thresholdSlider;
-	ModernRotarySlider m_hystersisSlider;
 	ModernRotarySlider m_attackSlider;
 	ModernRotarySlider m_holdSlider;
 	ModernRotarySlider m_releaseSlider;
@@ -58,7 +57,6 @@ protected:
 	ThresholdMeterComponent m_thresholdMeter;
 
 	std::atomic<float>* thresholdParameter = nullptr;
-	std::atomic<float>* hystersisParameter = nullptr;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);

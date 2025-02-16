@@ -75,9 +75,9 @@ public:
 		constexpr float maxdB = 6.0f;
 		
 		// Draw amplitude
-		const auto amplitudeWidth = static_cast<int>(Math::remap(m_amplitude, mindB, maxdB, static_cast<float>(posX), static_cast<float>(posX + meterWidth)));
+		const auto amplitudeWidth = Math::remap(m_amplitude, mindB, maxdB, static_cast<float>(posX), static_cast<float>(posX + meterWidth));
 		const auto amplitudeWidthSmooth = m_smootherAmplitude.process(amplitudeWidth);
-		bounds.setSize(amplitudeWidthSmooth, pixelSize);
+		bounds.setSize(static_cast<int>(amplitudeWidthSmooth), pixelSize);
 		bounds.setPosition(0, pixelSizeHalf);	
 		g.setOpacity(m_amplitudeOpacity);
 		g.fillRect(bounds);
@@ -98,26 +98,25 @@ public:
 		};
 
 		drawMarker(m_threshold, juce::Colours::white);
-		drawMarker(m_hystersisMin, highlightColor);
-		drawMarker(m_hystersisMax, highlightColor);
 
-		// Draw scale values		
-		// -60 dB
-		bounds.setSize(pixelSize2, pixelSizeHalf);
-		bounds.setPosition(posX, pixelAndHalfSize);
-		g.drawText("-60 dB", bounds, juce::Justification::left);
+		if (pixelSize > 25)
+		{
+			// Draw scale values		
+			// -60 dB
+			bounds.setSize(pixelSize2, pixelSizeHalf);
+			bounds.setPosition(posX, pixelAndHalfSize);
+			g.drawText("-60 dB", bounds, juce::Justification::left);
 
-		// +6 dB
-		bounds.setSize(pixelSize2, pixelSizeHalf);
-		bounds.setPosition(width - pixelSize2, pixelAndHalfSize);
-		g.drawText("+6 dB", bounds, juce::Justification::right);
+			// +6 dB
+			bounds.setSize(pixelSize2, pixelSizeHalf);
+			bounds.setPosition(width - pixelSize2, pixelAndHalfSize);
+			g.drawText("+6 dB", bounds, juce::Justification::right);
+		}
 	}
-	inline void set(const float amplitude, const float threshold, const float hystersisMin, const float hystersisMax, const bool isOpen)
+	inline void set(const float amplitude, const float threshold, const bool isOpen)
 	{
 		m_amplitude = amplitude;
 		m_threshold = threshold;
-		m_hystersisMin = hystersisMin;
-		m_hystersisMax = hystersisMax;
 
 		m_amplitudeOpacity = 0.5f + m_smootherOpacity.process(static_cast<float>(isOpen));
 	}
@@ -129,8 +128,6 @@ private:
 	float m_amplitude = -100.0f;
 	float m_amplitudeOpacity = 0.5f;
 	float m_threshold = 0.0f;
-	float m_hystersisMin = 0.0f;
-	float m_hystersisMax = 0.0f;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);

@@ -30,73 +30,42 @@ public:
 	{
 		m_envlopeFollower.init(sampleRate);
 	};
-	inline void set(const float attack, const float release, const float hold, const float thresholddB, const float hystersisdB = 0.0f) noexcept
+	inline void set(const float attack, const float release, const float hold, const float thresholddB) noexcept
 	{
 		m_envlopeFollower.set(attack, release, hold);
-	
-		const float hystersisHalfdB = 0.5f * hystersisdB;
-		m_thresholdOpen = Math::dBToGain(thresholddB + hystersisHalfdB);
-		m_thresholdClose = Math::dBToGain(thresholddB - hystersisHalfdB);
+		m_threshold = Math::dBToGain(thresholddB);
 	};
 	inline float process(const float in) noexcept
 	{
 		const float inAbs = Math::fabsf(in);
 
-		float gatedGain = 1.0f;
-		if (m_isOpen)
+		float gatedGain = 0.0f;
+
+		if (inAbs > m_threshold)
 		{
-			if (inAbs < m_thresholdClose)
-			{
-				gatedGain = 0.0f;
-			}
-			else
-			{
-				//gated = 1.0f;
-				m_isOpenFrame = true;
-			}
-		}
-		else
-		{
-			if (inAbs < m_thresholdOpen)
-			{
-				gatedGain = 0.0f;
-			}
-			else
-			{
-				//gated = 1.0f;
-				m_isOpenFrame = true;
-			}
+			gatedGain = 1.0f;
+			m_isOpen = true;
 		}
 		
 		const float smoothGain = m_envlopeFollower.process(gatedGain);
-
-		// Is open?
-		/*if (smoothGain > 0.001f)
-		{
-			m_isOpenFrame = true;
-		}*/
 
 		return smoothGain * in;
 	};
 	inline void release() noexcept
 	{
-		//m_envlopeFollower.release();
-		m_thresholdOpen = 1.0f;
-		m_thresholdClose = 1.0f;
+		m_threshold = 1.0f;
 		m_isOpen = false;
 	}
 	inline bool isOpen()
 	{
-		bool isOpen = m_isOpenFrame;
-		m_isOpenFrame = false;
+		bool isOpen = m_isOpen;
+		m_isOpen = false;
 
 		return isOpen;
 	}
 
 protected:
 	HoldEnvelopeFollower<float> m_envlopeFollower;
-	float m_thresholdOpen = 1.0f;
-	float m_thresholdClose = 1.0f;
+	float m_threshold = 1.0f;
 	bool m_isOpen = false;
-	bool m_isOpenFrame = false;
 };

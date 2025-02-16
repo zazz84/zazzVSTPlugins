@@ -20,9 +20,9 @@
 
 //==============================================================================
 
-const std::string NoiseGateAudioProcessor::paramsNames[] =     { "Threshold", "Hystersis", "Attack", "Hold", "Release", "Mix", "Volume" };
-const std::string NoiseGateAudioProcessor::labelNames[] =      { "Threshold", "Hystersis", "Attack", "Hold", "Release", "Mix", "Volume" };
-const std::string NoiseGateAudioProcessor::paramsUnitNames[] = { " dB",       " dB",       " ms",    " ms",  " ms",     " %",  " dB" };
+const std::string NoiseGateAudioProcessor::paramsNames[] =     { "Threshold", "Attack", "Hold", "Release", "Mix", "Volume" };
+const std::string NoiseGateAudioProcessor::labelNames[] =      { "Threshold", "Attack", "Hold", "Release", "Mix", "Volume" };
+const std::string NoiseGateAudioProcessor::paramsUnitNames[] = { " dB",       " ms",    " ms",  " ms",     " %",  " dB" };
 
 //==============================================================================
 NoiseGateAudioProcessor::NoiseGateAudioProcessor()
@@ -38,12 +38,11 @@ NoiseGateAudioProcessor::NoiseGateAudioProcessor()
 #endif
 {
 	thresholdParameter = apvts.getRawParameterValue(paramsNames[0]);
-	hystersisParameter = apvts.getRawParameterValue(paramsNames[1]);
-	attackParameter    = apvts.getRawParameterValue(paramsNames[2]);
-	holdParameter      = apvts.getRawParameterValue(paramsNames[3]);
-	releaseParameter   = apvts.getRawParameterValue(paramsNames[4]);
-	mixParameter       = apvts.getRawParameterValue(paramsNames[5]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[6]);
+	attackParameter    = apvts.getRawParameterValue(paramsNames[1]);
+	holdParameter      = apvts.getRawParameterValue(paramsNames[2]);
+	releaseParameter   = apvts.getRawParameterValue(paramsNames[3]);
+	mixParameter       = apvts.getRawParameterValue(paramsNames[4]);
+	volumeParameter    = apvts.getRawParameterValue(paramsNames[5]);
 }
 
 NoiseGateAudioProcessor::~NoiseGateAudioProcessor()
@@ -153,7 +152,6 @@ void NoiseGateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 {
 	// Get params
 	const float thresholdbB = thresholdParameter->load();
-	const float hystersisdB = hystersisParameter->load();
 	const float attack = attackParameter->load();
 	const float hold = holdParameter->load();
 	const float release = releaseParameter->load();
@@ -170,7 +168,7 @@ void NoiseGateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
 		auto& gate = m_gate[channel];
-		gate.set(attack, release, hold, thresholdbB, hystersisdB);
+		gate.set(attack, release, hold, thresholdbB);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -230,12 +228,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout NoiseGateAudioProcessor::cre
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -48.0f,   0.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,  12.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.4f),  10.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.5f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.4f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.4f),  10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.5f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.4f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
 
 	return layout;
 }

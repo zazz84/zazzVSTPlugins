@@ -98,7 +98,6 @@ private:
 	std::array<NoiseGate, N_CHANNELS> m_gate;
 
 	std::atomic<float>* thresholdParameter = nullptr;
-	std::atomic<float>* hystersisParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
 	std::atomic<float>* holdParameter = nullptr;
 	std::atomic<float>* releaseParameter = nullptr;
