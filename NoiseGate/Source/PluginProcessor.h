@@ -36,6 +36,7 @@ public:
     ~NoiseGateAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
 
@@ -69,6 +70,21 @@ public:
     void changeProgramName (int index, const juce::String& newName) override;
 
     //==============================================================================
+	float getPeak()
+	{
+		const float peak = m_peak;
+		m_peak = 0.0f;
+
+		return peak;
+	}
+	float isOpen()
+	{
+		const bool isOpenL = m_gate[0].isOpen();
+		const bool isOpenR = m_gate[1].isOpen();
+
+		return isOpenL || isOpenR;
+	}
+    //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
@@ -88,6 +104,8 @@ private:
 	std::atomic<float>* releaseParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	float m_peak = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NoiseGateAudioProcessor)
 };

@@ -21,6 +21,7 @@
 //==============================================================================
 
 const std::string NoiseGateAudioProcessor::paramsNames[] =     { "Threshold", "Hystersis", "Attack", "Hold", "Release", "Mix", "Volume" };
+const std::string NoiseGateAudioProcessor::labelNames[] =      { "Threshold", "Hystersis", "Attack", "Hold", "Release", "Mix", "Volume" };
 const std::string NoiseGateAudioProcessor::paramsUnitNames[] = { " dB",       " dB",       " ms",    " ms",  " ms",     " %",  " dB" };
 
 //==============================================================================
@@ -176,6 +177,13 @@ void NoiseGateAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 			// Read
 			const float in = channelBuffer[sample];
 
+			// Get peak
+			const float inAbs = Math::fabsf(in);
+			if (inAbs > m_peak)
+			{
+				m_peak = inAbs;
+			}
+
 			// Process
 			const float out = gate.process(in);
 		
@@ -221,8 +229,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout NoiseGateAudioProcessor::cre
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -60.0f,   0.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,  18.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -48.0f,   0.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,  12.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.4f),  10.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.5f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 400.0f, 0.05f, 0.4f), 100.0f));

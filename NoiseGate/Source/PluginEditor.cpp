@@ -18,55 +18,130 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
-const juce::Colour ZazzLookAndFeel::BACKGROUND_COLOR	= juce::Colour::fromRGB(90, 90, 100);
-const juce::Colour ZazzLookAndFeel::KNOB_COLOR			= juce::Colour::fromRGB(70, 70, 80);
-const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(50, 50, 60);
-const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
-const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
-
-const int NoiseGateAudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
-const float NoiseGateAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 //==============================================================================
 NoiseGateAudioProcessorEditor::NoiseGateAudioProcessorEditor (NoiseGateAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
+	: AudioProcessorEditor(&p),
+	audioProcessor(p),
+	valueTreeState(vts),
+	m_pluginLabel("zazz::NoiseGate"),
+	m_thresholdSlider (vts, NoiseGateAudioProcessor::paramsNames[0], NoiseGateAudioProcessor::paramsUnitNames[0], NoiseGateAudioProcessor::labelNames[0]),
+	m_hystersisSlider (vts, NoiseGateAudioProcessor::paramsNames[1], NoiseGateAudioProcessor::paramsUnitNames[1], NoiseGateAudioProcessor::labelNames[1]),
+	m_attackSlider    (vts, NoiseGateAudioProcessor::paramsNames[2], NoiseGateAudioProcessor::paramsUnitNames[2], NoiseGateAudioProcessor::labelNames[2]),
+	m_holdSlider      (vts, NoiseGateAudioProcessor::paramsNames[3], NoiseGateAudioProcessor::paramsUnitNames[3], NoiseGateAudioProcessor::labelNames[3]),
+	m_releaseSlider   (vts, NoiseGateAudioProcessor::paramsNames[4], NoiseGateAudioProcessor::paramsUnitNames[4], NoiseGateAudioProcessor::labelNames[4]),
+	m_mixPanSlider    (vts, NoiseGateAudioProcessor::paramsNames[5], NoiseGateAudioProcessor::paramsUnitNames[5], NoiseGateAudioProcessor::labelNames[5]),
+	m_volumeSlider    (vts, NoiseGateAudioProcessor::paramsNames[6], NoiseGateAudioProcessor::paramsUnitNames[6], NoiseGateAudioProcessor::labelNames[6]),
+	m_thresholdMeter()
 {	
-	// Plugin name
-	m_pluginName.setText("NoiseGate", juce::dontSendNotification);
-	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
-	m_pluginName.setJustificationType(juce::Justification::centred);
-	addAndMakeVisible(m_pluginName);
+	addAndMakeVisible(m_pluginLabel);
 	
-	// Lables and sliders
-	for (int i = 0; i < N_SLIDERS; i++)
+	addAndMakeVisible(m_thresholdSlider);
+	addAndMakeVisible(m_hystersisSlider);
+	addAndMakeVisible(m_attackSlider);
+	addAndMakeVisible(m_holdSlider);
+	addAndMakeVisible(m_releaseSlider);
+	addAndMakeVisible(m_mixPanSlider);
+	addAndMakeVisible(m_volumeSlider);
+
+	addAndMakeVisible(m_thresholdMeter);
+
+	// Set canvas
+	setResizable(true, true);
+
+	const int canvasWidth = CANVAS_WIDTH * 30;
+	const int canvasHeight = CANVAS_HEIGHT * 30;
+
+	setSize(canvasWidth, canvasHeight);
+
+	if (auto* constrainer = getConstrainer())
 	{
-		auto& label = m_labels[i];
-		auto& slider = m_sliders[i];
-		const std::string text = NoiseGateAudioProcessor::paramsNames[i];
-		const std::string unit = NoiseGateAudioProcessor::paramsUnitNames[i];
+		constexpr int minScale = 50;		// percentage
+		constexpr int maxScale = 200;		// percentage
 
-		createSliderWithLabel(slider, label, text, unit);
-		addAndMakeVisible(label);
-		addAndMakeVisible(slider);
-
-		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
+		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
+		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
 
-	createCanvas(*this, SLIDERS, N_ROWS);
+	startTimerHz(30);
+
+	//
+	thresholdParameter = valueTreeState.getRawParameterValue(NoiseGateAudioProcessor::paramsNames[0]);
+	hystersisParameter = valueTreeState.getRawParameterValue(NoiseGateAudioProcessor::paramsNames[1]);
 }
 
 NoiseGateAudioProcessorEditor::~NoiseGateAudioProcessorEditor()
 {
+	stopTimer();
 }
 
 //==============================================================================
+void NoiseGateAudioProcessorEditor::timerCallback()
+{
+	const float amplitudedB = Math::gainTodB(audioProcessor.getPeak());
+	const float thresholdbB = thresholdParameter->load();
+	const float hystersisHalfdB = 0.5f * hystersisParameter->load();
+	const bool isOpen = audioProcessor.isOpen();
+
+	m_thresholdMeter.set(amplitudedB, thresholdbB, thresholdbB + hystersisHalfdB, thresholdbB - hystersisHalfdB, isOpen);
+	m_thresholdMeter.repaint();
+}
+
 void NoiseGateAudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
+	g.fillAll(darkColor);
 }
 
 void NoiseGateAudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
+	const int width = getWidth();
+	const int height = getHeight();
+
+	const int pixelSize = width / CANVAS_WIDTH;
+	const int pixelSize2 = pixelSize + pixelSize;
+	const int pixelSize3 = pixelSize2 + pixelSize;
+	const int pixelSize4 = pixelSize3 + pixelSize;
+
+	// Set size
+	m_pluginLabel.setSize(width, pixelSize2);
+	
+	m_thresholdSlider.setSize(pixelSize3, pixelSize4);
+	m_hystersisSlider.setSize(pixelSize3, pixelSize4);
+	m_attackSlider.setSize(pixelSize3, pixelSize4);
+	m_holdSlider.setSize(pixelSize3, pixelSize4);
+	m_releaseSlider.setSize(pixelSize3, pixelSize4);
+	m_mixPanSlider.setSize(pixelSize3, pixelSize4);
+	m_volumeSlider.setSize(pixelSize3, pixelSize4);
+
+	m_thresholdMeter.setSize(width - pixelSize2, pixelSize2);
+
+	//Set position
+	const int row1 = 0;
+	const int row2 = pixelSize2;
+	const int row3 = row2 + pixelSize4 + pixelSize;
+
+	const int column1 = 0;
+	const int column2 = pixelSize;
+	const int column3 = column2 + pixelSize3;
+	const int column4 = column3 + pixelSize3;
+	const int column5 = column4 + pixelSize;
+	const int column6 = column5 + pixelSize3;
+	const int column7 = column6 + pixelSize3;
+	const int column8 = column7 + pixelSize3;
+	const int column9 = column8 + pixelSize;
+	const int column10 = column9 + pixelSize3;
+	const int column11 = column10 + pixelSize3;
+
+	m_pluginLabel.setTopLeftPosition(column1, row1);
+
+	m_thresholdSlider.setTopLeftPosition(column2, row2);
+	m_hystersisSlider.setTopLeftPosition(column3, row2);
+	m_attackSlider.setTopLeftPosition(column5, row2);
+	m_holdSlider.setTopLeftPosition(column6, row2);
+	m_releaseSlider.setTopLeftPosition(column7, row2);
+	m_mixPanSlider.setTopLeftPosition(column9, row2);
+	m_volumeSlider.setTopLeftPosition(column10, row2);
+
+	m_thresholdMeter.setTopLeftPosition(column2, row3);
 }
