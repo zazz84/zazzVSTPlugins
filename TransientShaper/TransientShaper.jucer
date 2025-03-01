@@ -2,11 +2,21 @@
 
 <JUCERPROJECT id="eRwFEW" name="TransientShaper" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
+              version="1.1.0">
   <MAINGROUP id="eOCWoC" name="TransientShaper">
     <GROUP id="{D1570B5D-7FF4-281E-3A2A-53A93623A733}" name="Source">
-      <FILE id="MxZuQ7" name="EnvelopeFollowers.cpp" compile="1" resource="0"
-            file="../Shared/Dynamics/EnvelopeFollowers.cpp"/>
+      <FILE id="SdP4Gm" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="y4WgVo" name="GainMeterComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/GainMeterComponent.h"/>
+      <FILE id="wlWYKa" name="GroupLabelComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/GroupLabelComponent.h"/>
+      <FILE id="DxNiYh" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="lqEMU3" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="dNAcHK" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="ckGOzA" name="EnvelopeFollowers.h" compile="0" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
       <FILE id="EtuDSE" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -18,10 +28,6 @@
       <FILE id="FnsMMm" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="JWfqOQ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="b4GqX5" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="CK7nBN" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>

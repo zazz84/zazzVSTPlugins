@@ -16,6 +16,7 @@ public:
     ~TransientShaperAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
 
     //==============================================================================
@@ -56,14 +57,30 @@ public:
 
 	APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
+	//==============================================================================
+	inline float getMaxGain()
+	{
+		const float max0 = m_transientShaper[0].getMaxGain();
+		const float max1 = m_transientShaper[1].getMaxGain();
+
+		if (Math::fabsf(max0) > Math::fabsf(max1))
+		{
+			return max0;
+		}
+		else
+		{
+			return max1;
+		}
+	}
+
 private:	
 	//==============================================================================
-	TransientShaper m_transientShaper[2];
+	TransientShaperAdvanced m_transientShaper[2];
 
-	std::atomic<float>* attackTimeParameter = nullptr;
+	std::atomic<float>* attackLenghtParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;
+	std::atomic<float>* sustainLenghtParameter = nullptr;
 	std::atomic<float>* sustainParameter = nullptr;
-	std::atomic<float>* clipParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransientShaperAudioProcessor)

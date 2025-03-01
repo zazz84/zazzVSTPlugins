@@ -40,7 +40,7 @@ public:
 
 		// Group label name
 		g.setColour(highlightColor);
-		g.setFont(0.7f * static_cast<float>(height));
+		g.setFont(0.5f * static_cast<float>(height));
 		g.setOpacity(0.5f);
 		g.drawText(m_name, bounds, juce::Justification::centred, false);
 	}
