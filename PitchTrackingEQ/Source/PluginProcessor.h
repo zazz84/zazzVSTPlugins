@@ -87,13 +87,14 @@ public:
 
 private:	
 	//==============================================================================
-	PitchDetection m_pitchDetection;
+	std::array<PitchDetection, N_CHANNELS> m_pitchDetection;
 	std::array<BiquadFilter, N_CHANNELS> m_filter;
-	OnePoleLowPassFilter m_smoother;
+	std::array<OnePoleLowPassFilter, N_CHANNELS> m_smoother;
 
 	std::atomic<float>* frequencyMinParameter = nullptr;
 	std::atomic<float>* frequencyMaxParameter = nullptr;
 	std::atomic<float>* speedParameter = nullptr;
+	std::atomic<float>* linkParameter = nullptr;
 	std::atomic<float>* frequencyOffsetParameter = nullptr;
 	std::atomic<float>* qParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
@@ -102,6 +103,7 @@ private:
 	juce::AudioParameterBool* buttonAParameter = nullptr;
 	juce::AudioParameterBool* buttonBParameter = nullptr;
 	juce::AudioParameterBool* buttonCParameter = nullptr;
+	juce::AudioParameterBool* buttonDParameter = nullptr;
 
 	float m_frequency;
 

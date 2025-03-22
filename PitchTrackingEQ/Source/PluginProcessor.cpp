@@ -22,34 +22,37 @@
 
 //==============================================================================
 
-const std::string PitchTrackingEQAudioProcessor::paramsNames[] =     { "FrequencyMin", "FrequencyMax", "Speed", "Pitch", "Q", "Gain", "Volume" };
-const std::string PitchTrackingEQAudioProcessor::labelNames[] =      { "Min",          "Max",          "Speed", "Pitch", "Q", "Gain", "Volume" };
-const std::string PitchTrackingEQAudioProcessor::paramsUnitNames[] = { " Hz",          " Hz",          "",      " st",   "",  " dB",  " dB" };
+const std::string PitchTrackingEQAudioProcessor::paramsNames[] =     { "FrequencyMin", "FrequencyMax", "Speed", "Link", "Pitch", "Q", "Gain", "Volume" };
+const std::string PitchTrackingEQAudioProcessor::labelNames[] =      { "Min",          "Max",          "Speed", "Link", "Pitch", "Q", "Gain", "Volume" };
+const std::string PitchTrackingEQAudioProcessor::paramsUnitNames[] = { " Hz",          " Hz",          "",      "%",    " st",   "",  " dB",  " dB" };
 
 //==============================================================================
 PitchTrackingEQAudioProcessor::PitchTrackingEQAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+	: AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+		.withInput("Input", juce::AudioChannelSet::stereo(), true)
+#endif
+		.withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+		.withInput("Sidechain", juce::AudioChannelSet::stereo(), true)
+	)
 #endif
 {
 	frequencyMinParameter    = apvts.getRawParameterValue(paramsNames[0]);
 	frequencyMaxParameter    = apvts.getRawParameterValue(paramsNames[1]);
 	speedParameter		     = apvts.getRawParameterValue(paramsNames[2]);
-	frequencyOffsetParameter = apvts.getRawParameterValue(paramsNames[3]);
-	qParameter               = apvts.getRawParameterValue(paramsNames[4]);
-	gainParameter            = apvts.getRawParameterValue(paramsNames[5]);
-	volumeParameter          = apvts.getRawParameterValue(paramsNames[6]);
+	linkParameter		     = apvts.getRawParameterValue(paramsNames[3]);
+	frequencyOffsetParameter = apvts.getRawParameterValue(paramsNames[4]);
+	qParameter               = apvts.getRawParameterValue(paramsNames[5]);
+	gainParameter            = apvts.getRawParameterValue(paramsNames[6]);
+	volumeParameter          = apvts.getRawParameterValue(paramsNames[7]);
 
 	buttonAParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonA"));
 	buttonBParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonB"));
 	buttonCParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonC"));
+	buttonDParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonD"));
 }
 
 PitchTrackingEQAudioProcessor::~PitchTrackingEQAudioProcessor()
@@ -123,8 +126,11 @@ void PitchTrackingEQAudioProcessor::prepareToPlay (double sampleRate, int sample
 {
 	const int sr = (int)sampleRate;
 
-	m_pitchDetection.init(sr);
-	m_smoother.init(sr);
+	m_pitchDetection[0].init(sr);
+	m_pitchDetection[1].init(sr);
+	
+	m_smoother[0].init(sr);
+	m_smoother[1].init(sr);
 
 	m_filter[0].init(sr);
 	m_filter[1].init(sr);
@@ -138,26 +144,26 @@ void PitchTrackingEQAudioProcessor::releaseResources()
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool PitchTrackingEQAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
-    return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
-        return false;
+#if JucePlugin_IsMidiEffect
+	juce::ignoreUnused(layouts);
+	return true;
+#else
+	// This is the place where you check if the layout is supported.
+	// In this template code we only support mono or stereo.
+	// Some plugin hosts, such as certain GarageBand versions, will only
+	// load plugins that support stereo bus layouts.
+	if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
+		&& layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+		return false;
 
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-   #endif
+	// This checks if the input layout matches the output layout
+#if ! JucePlugin_IsSynth
+	if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+		return false;
+#endif
 
-    return true;
-  #endif
+	return true;
+#endif
 }
 #endif
 
@@ -170,38 +176,76 @@ void PitchTrackingEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto semitones = frequencyOffsetParameter->load();
 	const auto q = qParameter->load();
 	const auto filterGain = gainParameter->load();
+	const auto link = 0.01f * linkParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-
+	const auto linkSideGain = 0.5f * link;
+	const auto linkMainGain = 1.0f - linkSideGain;
+	
 	// Configure
-	m_pitchDetection.set(frequencyMin, frequencyMax);
-	m_smoother.set(1.0f + 9.0f * speed);
+	m_pitchDetection[0].set(frequencyMin, frequencyMax);
+	m_pitchDetection[1].set(frequencyMin, frequencyMax);
+	m_smoother[0].set(0.5f + 9.5f * speed);
+	m_smoother[1].set(0.5f + 9.5f * speed);
 
 	// Buttons
 	const auto LP = buttonAParameter->get();
 	const auto HP = buttonBParameter->get();
 	const auto P = buttonCParameter->get();
+	auto hasSideChain = buttonDParameter->get();
+
+	// Input buffers
+	auto* mainBus = getBus(true, 0);
+	if (mainBus == nullptr)
+	{
+		return;
+	}
+
+	auto* sideChainBus = getBus(true, 1);
+	if (hasSideChain && (sideChainBus == nullptr))
+	{
+		return;
+	}
+
+	// Get main input buffer
+	auto mainBuffer = mainBus->getBusBuffer(buffer);
+
+	// Get sidechain buffer
+	auto sideChainBuffer = hasSideChain ? sideChainBus->getBusBuffer(buffer) : mainBus->getBusBuffer(buffer);
+
+	// Get sidechannel number of channels
+	const auto sideChainChannels = sideChainBuffer.getNumChannels();
+	if (sideChainChannels == 0)
+	{
+		return;
+	}
 
 	// Mono
 	if (channels == 1)
 	{
-		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(0);
+		// Buffers
+		auto* mainChannelBuffer = mainBuffer.getWritePointer(0);
+
+		auto* sideChainChannelBuffer = hasSideChain ? sideChainBuffer.getWritePointer(0) : mainBuffer.getWritePointer(0);
+
 		auto& filter = m_filter[0];
+		auto& smoother = m_smoother[0];
+		auto& pitchDetection = m_pitchDetection[0];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
-			const float in = channelBuffer[sample];
+			const float in = mainChannelBuffer[sample];
+			const float sideChain = sideChainChannelBuffer[sample];
 
 			// Process pitch detection
-			m_pitchDetection.process(in);
+			pitchDetection.process(sideChain);
 
 			// Smooth
-			m_frequency = Math::clamp(m_smoother.process(m_pitchDetection.getFrequency()), 20.0f, 20000.0f);
+			m_frequency = Math::clamp(smoother.process(pitchDetection.getFrequency()), 20.0f, 20000.0f);
 			const float freq = Math::clamp(Math::shiftFrequency(m_frequency, semitones), 20.0f, 20000.0f);
 
 			// Filter
@@ -217,50 +261,70 @@ void PitchTrackingEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 			{
 				filter.setPeak(freq, q, filterGain);
 			}
-			
+
 			// Set output
-			channelBuffer[sample] = filter.processDF1(in);
+			mainChannelBuffer[sample] = filter.processDF1(in);
 		}
 	}
 	// Stereo
 	else
 	{
 		// Channel pointer
-		auto* channelBufferL = buffer.getWritePointer(0);
-		auto* channelBufferR = buffer.getWritePointer(1);
+		auto* channelBufferL = mainBuffer.getWritePointer(0);
+		auto* channelBufferR = mainBuffer.getWritePointer(1);
+
+		auto* sideChainChannelBufferL = hasSideChain ? sideChainBuffer.getWritePointer(0) : mainBuffer.getWritePointer(0);
+
+		// Use left side chain channel if mono
+		const auto rightIndex = sideChainChannels == 2 ? 1 : 0;
+		auto* sideChainChannelBufferR = hasSideChain ? sideChainBuffer.getWritePointer(rightIndex) : mainBuffer.getWritePointer(1);
 
 		auto& filterL = m_filter[0];
 		auto& filterR = m_filter[1];
+		auto& smootherL = m_smoother[0];
+		auto& smootherR = m_smoother[1];
+		auto& pitchDetectionL = m_pitchDetection[0];
+		auto& pitchDetectionR = m_pitchDetection[1];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
 			const float inL = channelBufferL[sample];
 			const float inR = channelBufferR[sample];
-			const float in = 0.5f * (inL + inR);
+			const float sideChainL = sideChainChannelBufferL[sample];
+			const float sideChainR = sideChainChannelBufferR[sample];
+
+			const float sideChainLinkL = linkMainGain * sideChainL + linkSideGain * sideChainR;
+			const float sideChainLinkR = linkMainGain * sideChainR + linkSideGain * sideChainL;
+
 
 			// Process pitch detection
-			m_pitchDetection.process(in);
+			pitchDetectionL.process(sideChainLinkL);
+			pitchDetectionR.process(sideChainLinkR);
 
 			// Smooth
-			m_frequency = Math::clamp(m_smoother.process(m_pitchDetection.getFrequency()), 20.0f, 20000.0f);
-			const float freq = Math::clamp(Math::shiftFrequency(m_frequency, semitones), 20.0f, 20000.0f);
+			const auto detectedFrequencyL = Math::clamp(smootherL.process(pitchDetectionL.getFrequency()), 20.0f, 20000.0f);
+			const auto detectedFrequencyR = Math::clamp(smootherR.process(pitchDetectionR.getFrequency()), 20.0f, 20000.0f);
+			m_frequency = 0.5f * (detectedFrequencyL + detectedFrequencyR);
+
+			const float freqL = Math::clamp(Math::shiftFrequency(detectedFrequencyL, semitones), 20.0f, 20000.0f);
+			const float freqR = Math::clamp(Math::shiftFrequency(detectedFrequencyR, semitones), 20.0f, 20000.0f);
 
 			// Filter
 			if (LP)
 			{
-				filterL.setLowPass(freq, q);
-				filterR.setLowPass(freq, q);
+				filterL.setLowPass(freqL, q);
+				filterR.setLowPass(freqR, q);
 			}
 			else if (HP)
 			{
-				filterL.setHighPass(freq, q);
-				filterR.setHighPass(freq, q);
+				filterL.setHighPass(freqL, q);
+				filterR.setHighPass(freqR, q);
 			}
 			else
 			{
-				filterL.setPeak(freq, q, filterGain);
-				filterR.setPeak(freq, q, filterGain);
+				filterL.setPeak(freqL, q, filterGain);
+				filterR.setPeak(freqR, q, filterGain);
 			}
 
 			// Set output
@@ -309,14 +373,16 @@ juce::AudioProcessorValueTreeState::ParameterLayout PitchTrackingEQAudioProcesso
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  20.0f, 20000.0f, 10.0f, 0.5f),    20.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  20.0f, 20000.0f, 10.0f, 0.5f), 20000.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   100.0f,  1.0f, 1.0f),    50.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -48.0f,    48.0f, 0.01f, 1.0f),     0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.1f,    12.0f,  0.1f, 1.0f),     1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.1f,    18.0f,  0.1f, 1.0f),     0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -18.0f,    18.0f,  0.1f, 1.0f),     0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,   100.0f,  1.0f, 1.0f),     0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -48.0f,    48.0f, 0.01f, 1.0f),     0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.1f,    18.0f,  0.1f, 1.0f),     1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -24.0f,    24.0f,  0.1f, 1.0f),     0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>( -18.0f,    18.0f,  0.1f, 1.0f),     0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonA", "ButtonA", true));
 	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonB", "ButtonB", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonC", "ButtonC", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonD", "ButtonD", false));
 
 	return layout;
 }

@@ -29,10 +29,11 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	m_detectorFrequencyMinSlider     (vts, PitchTrackingEQAudioProcessor::paramsNames[0], PitchTrackingEQAudioProcessor::paramsUnitNames[0], PitchTrackingEQAudioProcessor::labelNames[0]),
 	m_detectorFrequencyMaxSlider     (vts, PitchTrackingEQAudioProcessor::paramsNames[1], PitchTrackingEQAudioProcessor::paramsUnitNames[1], PitchTrackingEQAudioProcessor::labelNames[1]),
 	m_smootherSpeedSlider            (vts, PitchTrackingEQAudioProcessor::paramsNames[2], PitchTrackingEQAudioProcessor::paramsUnitNames[2], PitchTrackingEQAudioProcessor::labelNames[2]),
-	m_filterFrequencyMultiplierSlider(vts, PitchTrackingEQAudioProcessor::paramsNames[3], PitchTrackingEQAudioProcessor::paramsUnitNames[3], PitchTrackingEQAudioProcessor::labelNames[3]),
-	m_filterQSlider                  (vts, PitchTrackingEQAudioProcessor::paramsNames[4], PitchTrackingEQAudioProcessor::paramsUnitNames[4], PitchTrackingEQAudioProcessor::labelNames[4]),
-	m_filterGainSlider               (vts, PitchTrackingEQAudioProcessor::paramsNames[5], PitchTrackingEQAudioProcessor::paramsUnitNames[5], PitchTrackingEQAudioProcessor::labelNames[5]),
-	m_volumeSlider                   (vts, PitchTrackingEQAudioProcessor::paramsNames[6], PitchTrackingEQAudioProcessor::paramsUnitNames[6], PitchTrackingEQAudioProcessor::labelNames[6])
+	m_linkSlider                     (vts, PitchTrackingEQAudioProcessor::paramsNames[3], PitchTrackingEQAudioProcessor::paramsUnitNames[3], PitchTrackingEQAudioProcessor::labelNames[3]),
+	m_filterFrequencyMultiplierSlider(vts, PitchTrackingEQAudioProcessor::paramsNames[4], PitchTrackingEQAudioProcessor::paramsUnitNames[4], PitchTrackingEQAudioProcessor::labelNames[4]),
+	m_filterQSlider                  (vts, PitchTrackingEQAudioProcessor::paramsNames[5], PitchTrackingEQAudioProcessor::paramsUnitNames[5], PitchTrackingEQAudioProcessor::labelNames[5]),
+	m_filterGainSlider               (vts, PitchTrackingEQAudioProcessor::paramsNames[6], PitchTrackingEQAudioProcessor::paramsUnitNames[6], PitchTrackingEQAudioProcessor::labelNames[6]),
+	m_volumeSlider                   (vts, PitchTrackingEQAudioProcessor::paramsNames[7], PitchTrackingEQAudioProcessor::paramsUnitNames[7], PitchTrackingEQAudioProcessor::labelNames[7])
 {	
 
 	frequencyMinParameter = valueTreeState.getRawParameterValue(PitchTrackingEQAudioProcessor::paramsNames[0]);
@@ -45,6 +46,7 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	addAndMakeVisible(m_detectorFrequencyMinSlider);
 	addAndMakeVisible(m_detectorFrequencyMaxSlider);
 	addAndMakeVisible(m_smootherSpeedSlider);
+	addAndMakeVisible(m_linkSlider);
 	addAndMakeVisible(m_filterFrequencyMultiplierSlider);
 	addAndMakeVisible(m_filterQSlider);
 	addAndMakeVisible(m_filterGainSlider);
@@ -62,7 +64,7 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	// Set canvas
 	setResizable(true, true);
 
-	const int canvasWidth = (1 + 3 + 1 + 1 + 3 * 3 + 1 + 3 + 1) * 30;
+	const int canvasWidth = (1 + 3 + 3 + 1 + 1 + 3 * 3 + 1 + 3 + 1) * 30;
 	const int canvasHeight = (2 + 1 + 4 + 2 + 1) * 30;
 
 	setSize(canvasWidth, canvasHeight);
@@ -82,10 +84,12 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	typeAButton.setLookAndFeel(&customLook);
 	typeBButton.setLookAndFeel(&customLook);
 	typeCButton.setLookAndFeel(&customLook);
+	typeDButton.setLookAndFeel(&customLook);
 
 	addAndMakeVisible(typeAButton);
 	addAndMakeVisible(typeBButton);
 	addAndMakeVisible(typeCButton);
+	addAndMakeVisible(typeDButton);
 
 	typeAButton.setRadioGroupId(TYPE_BUTTON_GROUP);
 	typeBButton.setRadioGroupId(TYPE_BUTTON_GROUP);
@@ -94,18 +98,22 @@ PitchTrackingEQAudioProcessorEditor::PitchTrackingEQAudioProcessorEditor(PitchTr
 	typeAButton.setClickingTogglesState(true);
 	typeBButton.setClickingTogglesState(true);
 	typeCButton.setClickingTogglesState(true);
+	typeDButton.setClickingTogglesState(true);
 
 	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonA", typeAButton));
 	buttonBAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonB", typeBButton));
 	buttonCAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonC", typeCButton));
+	buttonDAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonD", typeDButton));
 
 	typeAButton.setColour(juce::TextButton::buttonColourId, lightColor);
 	typeBButton.setColour(juce::TextButton::buttonColourId, lightColor);
 	typeCButton.setColour(juce::TextButton::buttonColourId, lightColor);
+	typeDButton.setColour(juce::TextButton::buttonColourId, lightColor);
 
 	typeAButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
 	typeBButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
 	typeCButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+	typeDButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
 }
 
 PitchTrackingEQAudioProcessorEditor::~PitchTrackingEQAudioProcessorEditor()
@@ -130,7 +138,7 @@ void PitchTrackingEQAudioProcessorEditor::resized()
 	const int width = getWidth();
 	const int height = getHeight();
 
-	const int pixelSize = width / 20;
+	const int pixelSize = width / 23;
 	const int pixelSize2 = pixelSize + pixelSize;
 	const int pixelSize3 = pixelSize2 + pixelSize;
 	const int pixelSize4 = pixelSize3 + pixelSize;
@@ -146,6 +154,7 @@ void PitchTrackingEQAudioProcessorEditor::resized()
 	m_detectorFrequencyMinSlider.setSize(smallSliderWidth, pixelSize2);
 	m_detectorFrequencyMaxSlider.setSize(smallSliderWidth, pixelSize2);
 	m_smootherSpeedSlider.setSize(pixelSize3, pixelSize4);
+	m_linkSlider.setSize(pixelSize3, pixelSize4);
 	m_filterFrequencyMultiplierSlider.setSize(pixelSize3, pixelSize4);
 	m_filterQSlider.setSize(pixelSize3, pixelSize4);
 	m_filterGainSlider.setSize(pixelSize3, pixelSize4);
@@ -155,28 +164,31 @@ void PitchTrackingEQAudioProcessorEditor::resized()
 	const int row2 = pixelSize2;
 	const int row3 = row2 + pixelSize;
 	const int row4 = row3 + pixelSize4;
+	const int row5 = row4 + pixelSize2;
 
 	const int column1 = pixelSize;
 	const int column2 = column1 + pixelSize3;
-	const int column3 = column2 + pixelSize;
+	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize;
-	const int column5 = column4 + pixelSize3;
+	const int column5 = column4 + pixelSize;
 	const int column6 = column5 + pixelSize3;
 	const int column7 = column6 + pixelSize3;
-	const int column8 = column7 + pixelSize;
+	const int column8 = column7 + pixelSize3;
+	const int column9 = column8 + pixelSize;
 
 	m_pluginNameComponent.setTopLeftPosition(0, 0);
-	m_filterGroupLabel.setTopLeftPosition(column3, row2);
+	m_filterGroupLabel.setTopLeftPosition(column4, row2);
 	m_frequencyMeterComponent.setTopLeftPosition(column1 + smallSliderWidth, row4);
 	
 	m_detectorFrequencyMinSlider.setTopLeftPosition(column1, row4);
 	m_detectorFrequencyMaxSlider.setTopLeftPosition(width - pixelSize - smallSliderWidth, row4);
 
 	m_smootherSpeedSlider.setTopLeftPosition(column1, row3);
-	m_filterFrequencyMultiplierSlider.setTopLeftPosition(column4, row3);
-	m_filterQSlider.setTopLeftPosition(column5, row3);
-	m_filterGainSlider.setTopLeftPosition(column6, row3);
-	m_volumeSlider.setTopLeftPosition(column8, row3);
+	m_linkSlider.setTopLeftPosition(column2, row3);
+	m_filterFrequencyMultiplierSlider.setTopLeftPosition(column5, row3);
+	m_filterQSlider.setTopLeftPosition(column6, row3);
+	m_filterGainSlider.setTopLeftPosition(column7, row3);
+	m_volumeSlider.setTopLeftPosition(column9, row3);
 
 	// Buttons
 	const int buttonSize = 70 * pixelSize / 100;
@@ -184,8 +196,9 @@ void PitchTrackingEQAudioProcessorEditor::resized()
 	typeAButton.setSize(buttonSize, buttonSize);
 	typeBButton.setSize(buttonSize, buttonSize);
 	typeCButton.setSize(buttonSize, buttonSize);
+	typeDButton.setSize(buttonSize, buttonSize);
 
-	const int posX = column3 + (pixelSize - buttonSize) / 2;	
+	const int posX = column4 + (pixelSize - buttonSize) / 2;	
 	const int posY1 = row3 + 6 * pixelSize / 10;
 	const int posY2 = posY1 + pixelSize;
 	const int posY3 = posY2 + pixelSize;
@@ -193,4 +206,8 @@ void PitchTrackingEQAudioProcessorEditor::resized()
 	typeAButton.setTopLeftPosition(posX, posY1);
 	typeBButton.setTopLeftPosition(posX, posY2);
 	typeCButton.setTopLeftPosition(posX, posY3);
+
+	// ButtonD
+	const auto posDX = (width - buttonSize) / 2;
+	typeDButton.setTopLeftPosition(posDX, row5);
 }

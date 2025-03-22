@@ -63,6 +63,7 @@ protected:
 	ModernRotarySlider m_detectorFrequencyMinSlider;
 	ModernRotarySlider m_detectorFrequencyMaxSlider;
 	ModernRotarySlider m_smootherSpeedSlider;
+	ModernRotarySlider m_linkSlider;
 	ModernRotarySlider m_filterFrequencyMultiplierSlider;
 	ModernRotarySlider m_filterQSlider;
 	ModernRotarySlider m_filterGainSlider;
@@ -73,10 +74,12 @@ protected:
 	juce::TextButton typeAButton{ "LP" };
 	juce::TextButton typeBButton{ "HP" };
 	juce::TextButton typeCButton{ "P" };
+	juce::TextButton typeDButton{ "SC" };
 
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAAttachment;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonBAttachment;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonCAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonDAttachment;
 
 	std::atomic<float>* frequencyMinParameter = nullptr;
 	std::atomic<float>* frequencyMaxParameter = nullptr;

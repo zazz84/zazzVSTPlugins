@@ -63,8 +63,8 @@ public:
 			int xRightStop = width - (height / 2);
 
 			g.setOpacity(1.0f);
-			g.drawLine(xLeftStart, yPosition, xLeftStop, yPosition, 0.5f);			// Line width = 1.0f
-			g.drawLine(xRightStart, yPosition, xRightStop, yPosition, 0.5f);		// Line width = 1.0f
+			g.drawLine(static_cast<float>(xLeftStart), static_cast<float>(yPosition), static_cast<float>(xLeftStop), yPosition, 0.5f);			// Line width = 1.0f
+			g.drawLine(static_cast<float>(xRightStart), static_cast<float>(yPosition), static_cast<float>(xRightStop), static_cast<float>(yPosition), 0.5f);		// Line width = 1.0f
 		}
 		else
 		{
