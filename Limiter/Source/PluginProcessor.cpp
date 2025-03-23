@@ -1,10 +1,19 @@
 /*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
@@ -106,8 +115,9 @@ void LimiterAudioProcessor::changeProgramName (int index, const juce::String& ne
 void LimiterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
-	const int attackSize1 = (int)(10.0 * 0.001 * sampleRate);
+	const int attackSize1 = (int)(10.0 * 0.001 * sampleRate);		// Maximum attack time
 
+	// Limiter 1
 	m_limiter1[0].init(sr, attackSize1);
 	m_limiter1[1].init(sr, attackSize1);
 
@@ -118,11 +128,16 @@ void LimiterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 	m_clipper[0].init(sr);
 	m_clipper[1].init(sr);
 
+	// Limiter 2
 	m_logLimiter[0].init(sr, attackSize1);
 	m_logLimiter[1].init(sr, attackSize1);
 
 	m_clipper2[0].init(sr);
 	m_clipper2[1].init(sr);
+
+	// Limiter 3
+	m_advancedLimiter[0].init(sr, attackSize1);
+	m_advancedLimiter[1].init(sr, attackSize1);
 }
 
 void LimiterAudioProcessor::releaseResources()
@@ -208,7 +223,7 @@ void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 				channelBuffer[sample] = in;
 			}
 		}
-		else
+		else if (type == 2)
 		{
 			auto& logLimiter = m_logLimiter[channel];
 			logLimiter.set(attack, release, threshold);
@@ -220,6 +235,18 @@ void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 				float in = channelBuffer[sample];
 
 				channelBuffer[sample] = clipper.process(logLimiter.process(in), threshold);
+			}
+		}
+		else
+		{
+			auto& limiter = m_advancedLimiter[channel];
+			limiter.set(attack, release, threshold);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				float in = channelBuffer[sample];
+
+				channelBuffer[sample] = limiter.process(in);
 			}
 		}
 	}
@@ -261,7 +288,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout LimiterAudioProcessor::creat
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,  2.0f,  1.0f, 1.0f),  1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,  3.0f,  1.0f, 1.0f),  1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, 10.0f,  1.0f, 1.0f),  7.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   1.0f, 40.0f,  1.0f, 1.0f), 30.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -30.0f,  0.0f,  1.0f, 1.0f),  0.0f));

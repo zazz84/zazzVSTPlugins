@@ -1,9 +1,27 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter2.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter3.h"
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/Clippers.h"
 
 //==============================================================================
@@ -67,6 +85,8 @@ private:
 
 	Limiter2 m_logLimiter[2];
 	SlopeClipper m_clipper2[2];
+
+	Limiter3 m_advancedLimiter[2];
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* attackParameter = nullptr;

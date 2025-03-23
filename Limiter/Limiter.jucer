@@ -3,11 +3,11 @@
 <JUCERPROJECT id="tPty7N" name="Limiter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
-              version="1.0.1">
+              version="1.0.2">
   <MAINGROUP id="Xy6ZHl" name="Limiter">
     <GROUP id="{9B0CDA92-217B-67BC-61BD-0F82E7C56F12}" name="Source">
-      <FILE id="S59kcA" name="EnvelopeFollowers.cpp" compile="1" resource="0"
-            file="../Shared/Dynamics/EnvelopeFollowers.cpp"/>
+      <FILE id="v7I8we" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="yZqGZF" name="Limiter3.h" compile="0" resource="0" file="../Shared/Dynamics/Limiter3.h"/>
       <FILE id="jsD2eN" name="EnvelopeFollowers.h" compile="0" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
       <FILE id="QpFsi2" name="Limiter2.h" compile="0" resource="0" file="../Shared/Dynamics/Limiter2.h"/>
@@ -17,8 +17,6 @@
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="RrIKY9" name="ZazzLookAndFeel.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzLookAndFeel.h"/>
-      <FILE id="O1e514" name="CircularBuffers.cpp" compile="1" resource="0"
-            file="../Shared/Utilities/CircularBuffers.cpp"/>
       <FILE id="NMEW49" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="kSAAge" name="PluginProcessor.cpp" compile="1" resource="0"
