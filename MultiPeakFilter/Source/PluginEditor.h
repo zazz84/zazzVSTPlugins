@@ -23,11 +23,11 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
-class HarmonicEQAudioProcessorEditor : public juce::AudioProcessorEditor
+class MultiPeakFilterAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-    HarmonicEQAudioProcessorEditor (HarmonicEQAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~HarmonicEQAudioProcessorEditor() override;
+    MultiPeakFilterAudioProcessorEditor (MultiPeakFilterAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~MultiPeakFilterAudioProcessorEditor() override;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -37,7 +37,7 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    HarmonicEQAudioProcessor& audioProcessor;
+    MultiPeakFilterAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
@@ -55,5 +55,5 @@ protected:
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
 	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HarmonicEQAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiPeakFilterAudioProcessorEditor)
 };

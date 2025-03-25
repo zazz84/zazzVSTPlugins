@@ -19,18 +19,18 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-HarmonicEQAudioProcessorEditor::HarmonicEQAudioProcessorEditor (HarmonicEQAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+MultiPeakFilterAudioProcessorEditor::MultiPeakFilterAudioProcessorEditor (MultiPeakFilterAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p),
 	audioProcessor (p),
 	valueTreeState(vts),
-	m_pluginNameComponent("zazz::HarmonicEQ"),
-	m_frequencySlider	(vts, HarmonicEQAudioProcessor::paramsNames[0], HarmonicEQAudioProcessor::paramsUnitNames[0], HarmonicEQAudioProcessor::labelNames[0]),
-	m_qSlider			(vts, HarmonicEQAudioProcessor::paramsNames[1], HarmonicEQAudioProcessor::paramsUnitNames[1], HarmonicEQAudioProcessor::labelNames[1]),
-	m_gainSlider		(vts, HarmonicEQAudioProcessor::paramsNames[2], HarmonicEQAudioProcessor::paramsUnitNames[2], HarmonicEQAudioProcessor::labelNames[2]),
-	m_stepSlider		(vts, HarmonicEQAudioProcessor::paramsNames[3], HarmonicEQAudioProcessor::paramsUnitNames[3], HarmonicEQAudioProcessor::labelNames[3]),
-	m_coutSlider		(vts, HarmonicEQAudioProcessor::paramsNames[4], HarmonicEQAudioProcessor::paramsUnitNames[4], HarmonicEQAudioProcessor::labelNames[4]),
-	m_slopeSlider		(vts, HarmonicEQAudioProcessor::paramsNames[5], HarmonicEQAudioProcessor::paramsUnitNames[5], HarmonicEQAudioProcessor::labelNames[5]),
-	m_volumeSlider		(vts, HarmonicEQAudioProcessor::paramsNames[6], HarmonicEQAudioProcessor::paramsUnitNames[6], HarmonicEQAudioProcessor::labelNames[6])
+	m_pluginNameComponent("zazz::MultiPeakFilter"),
+	m_frequencySlider	(vts, MultiPeakFilterAudioProcessor::paramsNames[0], MultiPeakFilterAudioProcessor::paramsUnitNames[0], MultiPeakFilterAudioProcessor::labelNames[0]),
+	m_qSlider			(vts, MultiPeakFilterAudioProcessor::paramsNames[1], MultiPeakFilterAudioProcessor::paramsUnitNames[1], MultiPeakFilterAudioProcessor::labelNames[1]),
+	m_gainSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[2], MultiPeakFilterAudioProcessor::paramsUnitNames[2], MultiPeakFilterAudioProcessor::labelNames[2]),
+	m_stepSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[3], MultiPeakFilterAudioProcessor::paramsUnitNames[3], MultiPeakFilterAudioProcessor::labelNames[3]),
+	m_coutSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[4], MultiPeakFilterAudioProcessor::paramsUnitNames[4], MultiPeakFilterAudioProcessor::labelNames[4]),
+	m_slopeSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[5], MultiPeakFilterAudioProcessor::paramsUnitNames[5], MultiPeakFilterAudioProcessor::labelNames[5]),
+	m_volumeSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[6], MultiPeakFilterAudioProcessor::paramsUnitNames[6], MultiPeakFilterAudioProcessor::labelNames[6])
 {	
 	addAndMakeVisible(m_pluginNameComponent);
 
@@ -62,17 +62,17 @@ HarmonicEQAudioProcessorEditor::HarmonicEQAudioProcessorEditor (HarmonicEQAudioP
 	}
 }
 
-HarmonicEQAudioProcessorEditor::~HarmonicEQAudioProcessorEditor()
+MultiPeakFilterAudioProcessorEditor::~MultiPeakFilterAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void HarmonicEQAudioProcessorEditor::paint (juce::Graphics& g)
+void MultiPeakFilterAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(darkColor);
 }
 
-void HarmonicEQAudioProcessorEditor::resized()
+void MultiPeakFilterAudioProcessorEditor::resized()
 {
 	const int width = getWidth();
 	const int height = getHeight();

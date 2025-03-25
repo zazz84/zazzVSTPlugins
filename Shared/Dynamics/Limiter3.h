@@ -31,6 +31,9 @@ public:
 
 	struct Peak
 	{
+		Peak() : m_samples(0), m_step(0.0)
+		{
+		};
 		Peak(int samples, float step) : m_samples(samples), m_step(step)
 		{
 		};
@@ -50,6 +53,9 @@ public:
 		m_sampleRate = sampleRate;
 		m_buffer.init(size);
 		m_envelopeFollower.init(sampleRate);
+
+		m_peaks = new Peak[size];
+		m_attackSizeMax = size;
 	}
 	inline void set(const float attackMS, const float releaseMS, const float threshold)
 	{
@@ -75,27 +81,42 @@ public:
 			const float attenuatedB = Math::gainTodB(inAbs) - m_thresholddB;
 			const float step = attenuatedB * m_attackFactor;
 			
-			m_peaks.push_back(Peak(m_attackSize, step));
+			Peak& peak = m_peaks[m_peaksWritteIndex];
+			m_peaksWritteIndex++;
+			if (m_peaksWritteIndex >= m_attackSizeMax)
+			{
+				m_peaksWritteIndex -= m_attackSizeMax;
+			}
+
+			peak.m_samples = m_attackSize;
+			peak.m_step = step;
+			peak.m_value = 0.0f;
 		}
 		
 		// Process peaks
 		float max = 0.0f;
-		for (int i = m_peaks.size() - 1; i >= 0; i--)
+		//const int validPeaksCount = m_firstValidPeakIndex <= m_peaksWritteIndex ? m_peaksWritteIndex - m_firstValidPeakIndex + 1 : m_firstValidPeakIndex + m_attackSizeMax - m_peaksWritteIndex - 1;
+
+		//for (int i = 0; i < validPeaksCount; i++)
+		for (int i = 0; i < m_attackSizeMax; i++)
 		{
+			//const int idx = (i + m_firstValidPeakIndex) % m_attackSizeMax;
+			
+			//Peak& peak = m_peaks[idx];
 			Peak& peak = m_peaks[i];
 
 			// Find maximum
 			const float value = peak.increase();
-			if (value > max)
+			if (peak.m_samples > 0 && value > max)
 			{
 				max = value;
 			}
 
-			// Remove invalid peaks
-			if (peak.m_samples <= 0)
+			// Store first invalid peak
+			/*if (peak.m_samples <= 0)
 			{
-				m_peaks.erase(m_peaks.begin() + i);
-			}
+				m_firstValidPeakIndex = idx;
+			}*/
 		}
 
 		// Apply release
@@ -108,18 +129,23 @@ public:
 	inline void release()
 	{
 		m_buffer.release();
-		m_peaks.clear();
+		
+		delete[] m_peaks;
+		m_peaks = nullptr;
+		
 		m_envelopeFollower.release();
 
 		m_threshold = 1.0;
 		m_thresholddB = 0.0f;
 		m_sampleRate = 48000;
 		m_attackSize = 0;
+		m_peaksWritteIndex = 0;
+		m_firstValidPeakIndex = 0;
 	}
 
 private:
 	CircularBuffer m_buffer;
-	std::vector<Peak> m_peaks;
+	Peak* m_peaks = nullptr;
 	BranchingEnvelopeFollower<float> m_envelopeFollower;
 	
 	float m_threshold = 1.0;
@@ -127,4 +153,7 @@ private:
 	float m_attackFactor = 1.0f;
 	int m_sampleRate = 48000;
 	int m_attackSize = 0;
+	int m_attackSizeMax = 0;
+	int m_peaksWritteIndex = 0;
+	int m_firstValidPeakIndex = 0;
 };

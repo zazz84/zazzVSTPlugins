@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="tqyizh" name="HarmonicEQ" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="tqyizh" name="MultiPeakFilter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildVST3" companyName="zazz" pluginVST3Category="EQ">
-  <MAINGROUP id="CPErZz" name="HarmonicEQ">
+              pluginFormats="buildVST3" companyName="zazz" pluginVST3Category="EQ"
+              version="1.0.1">
+  <MAINGROUP id="CPErZz" name="MultiPeakFilter">
     <GROUP id="{5AC08715-9F68-4061-9F32-FE4A8F4F0D11}" name="Source">
       <FILE id="pxQqNm" name="ModernRotarySlider.h" compile="0" resource="0"
             file="../Shared/GUI/ModernRotarySlider.h"/>
@@ -41,9 +42,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="HarmonicEQ" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MultiPeakFilter" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="HarmonicEQ" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="MultiPeakFilter" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

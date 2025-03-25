@@ -25,7 +25,7 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 
 //==============================================================================
-class HarmonicEQAudioProcessor  : public juce::AudioProcessor
+class MultiPeakFilterAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -33,8 +33,8 @@ class HarmonicEQAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    HarmonicEQAudioProcessor();
-    ~HarmonicEQAudioProcessor() override;
+    MultiPeakFilterAudioProcessor();
+    ~MultiPeakFilterAudioProcessor() override;
 
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
@@ -87,6 +87,8 @@ private:
 	OnePoleLowPassFilter m_frequencySmoother[N_CHANNELS];
 	OnePoleLowPassFilter m_qSmoother[N_CHANNELS];
 	OnePoleLowPassFilter m_gainSmoother[N_CHANNELS];
+	OnePoleLowPassFilter m_stepSmoother[N_CHANNELS];
+	OnePoleLowPassFilter m_slopeSmoother[N_CHANNELS];
 
 	std::atomic<float>* frequencyParameter = nullptr;
 	std::atomic<float>* qParameter = nullptr;
@@ -96,5 +98,5 @@ private:
 	std::atomic<float>* slopeParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HarmonicEQAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiPeakFilterAudioProcessor)
 };

@@ -22,12 +22,12 @@
 
 //==============================================================================
 
-const std::string HarmonicEQAudioProcessor::paramsNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume" };
-const std::string HarmonicEQAudioProcessor::labelNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume" };
-const std::string HarmonicEQAudioProcessor::paramsUnitNames[] = { " Hz",		"",		" dB",	" st",	"",			"",			" dB" };
+const std::string MultiPeakFilterAudioProcessor::paramsNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume" };
+const std::string MultiPeakFilterAudioProcessor::labelNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume" };
+const std::string MultiPeakFilterAudioProcessor::paramsUnitNames[] = { " Hz",		"",		" dB",	" st",	"",			"",			" dB" };
 
 //==============================================================================
-HarmonicEQAudioProcessor::HarmonicEQAudioProcessor()
+MultiPeakFilterAudioProcessor::MultiPeakFilterAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -48,17 +48,17 @@ HarmonicEQAudioProcessor::HarmonicEQAudioProcessor()
 	volumeParameter		= apvts.getRawParameterValue(paramsNames[6]);
 }
 
-HarmonicEQAudioProcessor::~HarmonicEQAudioProcessor()
+MultiPeakFilterAudioProcessor::~MultiPeakFilterAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String HarmonicEQAudioProcessor::getName() const
+const juce::String MultiPeakFilterAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool HarmonicEQAudioProcessor::acceptsMidi() const
+bool MultiPeakFilterAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -67,7 +67,7 @@ bool HarmonicEQAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool HarmonicEQAudioProcessor::producesMidi() const
+bool MultiPeakFilterAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -76,7 +76,7 @@ bool HarmonicEQAudioProcessor::producesMidi() const
    #endif
 }
 
-bool HarmonicEQAudioProcessor::isMidiEffect() const
+bool MultiPeakFilterAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -85,37 +85,37 @@ bool HarmonicEQAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double HarmonicEQAudioProcessor::getTailLengthSeconds() const
+double MultiPeakFilterAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int HarmonicEQAudioProcessor::getNumPrograms()
+int MultiPeakFilterAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int HarmonicEQAudioProcessor::getCurrentProgram()
+int MultiPeakFilterAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void HarmonicEQAudioProcessor::setCurrentProgram (int index)
+void MultiPeakFilterAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String HarmonicEQAudioProcessor::getProgramName (int index)
+const juce::String MultiPeakFilterAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void HarmonicEQAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void MultiPeakFilterAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void HarmonicEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void MultiPeakFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
 
@@ -134,7 +134,7 @@ void HarmonicEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 	m_gainSmoother[0].init(sr);
 	m_gainSmoother[1].init(sr);
 
-	constexpr float frequency = 2.0f;
+	constexpr float frequency = 3.0f;
 
 	m_frequencySmoother[0].set(frequency);
 	m_frequencySmoother[1].set(frequency);
@@ -142,15 +142,19 @@ void HarmonicEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 	m_qSmoother[1].set(frequency);
 	m_gainSmoother[0].set(frequency);
 	m_gainSmoother[1].set(frequency);
+	m_stepSmoother[0].set(frequency);
+	m_stepSmoother[1].set(frequency);
+	m_slopeSmoother[0].set(frequency);
+	m_slopeSmoother[1].set(frequency);
 }
 
-void HarmonicEQAudioProcessor::releaseResources()
+void MultiPeakFilterAudioProcessor::releaseResources()
 {
 	
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool HarmonicEQAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool MultiPeakFilterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -175,8 +179,11 @@ bool HarmonicEQAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 #endif
 
-void HarmonicEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	// Prevent denormals for this function scope
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
 	const auto frequency = frequencyParameter->load();
 	const auto q = qParameter->load();
@@ -191,7 +198,17 @@ void HarmonicEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const auto samples = buffer.getNumSamples();
 	const auto srHalf = 0.5f * static_cast<float>(getSampleRate());
 
-	const auto gainStep = (1.0f - slope) * (filterGain / count);
+	// Limit count to half of sampling freq
+	// TODO: Solve better
+	int countLimited = 0;
+
+	for (int i = 0; i < count; i++)
+	{
+		if (Math::shiftFrequency(frequency, i * step) < 16000.0f)
+		{
+			countLimited = i;
+		}
+	}
 
 	for (int channel = 0; channel < channels; channel++)
 	{
@@ -201,6 +218,8 @@ void HarmonicEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 		auto& frequencySmoother = m_frequencySmoother[channel];
 		auto& qSmoother = m_qSmoother[channel];
 		auto& gainSmoother = m_gainSmoother[channel];
+		auto& stepSmoother = m_stepSmoother[channel];
+		auto& slopeSmoother = m_slopeSmoother[channel];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -211,25 +230,21 @@ void HarmonicEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 			const auto frequencySmooth = frequencySmoother.process(frequency);
 			const auto qSmooth = qSmoother.process(q);
 			const auto gainSmooth = gainSmoother.process(filterGain);
+			const auto stepSmooth = stepSmoother.process(step);
+			const auto slopeSmooth = slopeSmoother.process(slope);
 
-			for (int filter = 0; filter < count; filter++)
+			const auto gainStep = (1.0f - slopeSmooth) * (gainSmooth / (float)countLimited);
+
+			// Set filters
+			for (int i = 0; i <= countLimited; i++)
 			{
-				float f = Math::shiftFrequency(frequencySmooth, filter * step);
-				float g = gainSmooth + filter * gainStep;
+				const float f = Math::shiftFrequency(frequencySmooth, i * stepSmooth);
+				const float g = gainSmooth + i * gainStep;
 
-				if (f > srHalf)
-				{
-					f = 16000.0f;
-					g = 0.0f;
-				}
+				m_filter[channel][i].setPeak(f, qSmooth, g);
 
-				m_filter[channel][filter].setPeak(f, qSmooth, g);
-			}
-
-			// Process filter
-			for (int filter = 0; filter < count; filter++)
-			{
-				out = m_filter[channel][filter].processDF1(out);
+				// Process
+				out = m_filter[channel][i].processDF1(out);
 			}
 		
 			//Out
@@ -241,25 +256,25 @@ void HarmonicEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 }
 
 //==============================================================================
-bool HarmonicEQAudioProcessor::hasEditor() const
+bool MultiPeakFilterAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* HarmonicEQAudioProcessor::createEditor()
+juce::AudioProcessorEditor* MultiPeakFilterAudioProcessor::createEditor()
 {
-    return new HarmonicEQAudioProcessorEditor (*this, apvts);
+    return new MultiPeakFilterAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void HarmonicEQAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void MultiPeakFilterAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void HarmonicEQAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void MultiPeakFilterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -268,7 +283,7 @@ void HarmonicEQAudioProcessor::setStateInformation (const void* data, int sizeIn
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout HarmonicEQAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout MultiPeakFilterAudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
@@ -277,10 +292,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout HarmonicEQAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(  40.0f,   8000.0f,  1.0f, 0.4f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.3f,     24.0f,  0.1f, 0.7f),   8.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -36.0f,     36.0f,  0.1f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,     48.0f, 0.01f, 1.0f),  12.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   1.0f,     48.0f, 0.01f, 1.0f),  12.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   1.0f, COUNT_MAX,  1.0f, 1.0f),   4.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f,    200.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -18.0f,     18.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -36.0f,     36.0f,  0.1f, 1.0f),   0.0f));
 
 	return layout;
 }
@@ -289,5 +304,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout HarmonicEQAudioProcessor::cr
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new HarmonicEQAudioProcessor();
+    return new MultiPeakFilterAudioProcessor();
 }
