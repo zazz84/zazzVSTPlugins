@@ -37,6 +37,30 @@ public:
 		m_thresholdMultiplier = 1.0f / threshold;
 		m_envelopeFollower.set(attackMS, releaseMS);
 	}
+	inline void setAttackTime(const float attackMS)
+	{
+		m_attackSize = (int)(attackMS * 0.001f * (float)m_sampleRate);
+		m_envelopeFollower.setAttackSize(m_attackSize);
+	}
+	inline void setAttackSize(const int attackSize)
+	{
+		m_attackSize = attackSize;
+		m_envelopeFollower.setAttackSize(attackSize);
+	}
+	inline void setReleaseTime(const float releaseMS)
+	{
+		m_envelopeFollower.setReleaseTime(releaseMS);
+	}
+	inline void setThreshold(const float threshold)
+	{
+		m_thresholdMultiplier = 1.0f / threshold;
+	}
+	inline float getGainMin()
+	{
+		const float gainMin = m_gainMin;
+		m_gainMin = 1.0f;
+		return gainMin;
+	}
 	inline float process(float in)
 	{
 		// Handle buffer
@@ -48,13 +72,22 @@ public:
 		const float aboveThresholdNormalized = m_thresholdMultiplier * inAbs;
 		const float envelope = std::max(1.0f, m_envelopeFollower.process(aboveThresholdNormalized));
 
+		// Get min gain
+		const float gain = 1 / envelope;
+		if (gain < m_gainMin)
+		{
+			m_gainMin = gain;
+		}
+
 		// apply attenuation for output
-		return inDelayed / envelope;
+		return gain * inDelayed;
 	};
 	inline void release()
 	{
 		m_buffer.release();
+		m_envelopeFollower.release();
 
+		m_gainMin = 1.0f;
 		m_thresholdMultiplier = 1.0f;
 		m_sampleRate = 48000;
 		m_attackSize = 0;
@@ -64,6 +97,7 @@ private:
 	CircularBuffer m_buffer;
 	BranchingEnvelopeFollower<float> m_envelopeFollower;
 
+	float m_gainMin = 1.0f;
 	float m_thresholdMultiplier = 1.0f;
 	int m_sampleRate = 48000;
 	int m_attackSize = 0;

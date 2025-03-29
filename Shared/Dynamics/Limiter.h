@@ -31,9 +31,33 @@ public:
 	}
 	inline void set(const float attackMS, const float releaseMS, const float threshold)
 	{
-		m_attackSize = (int)(attackMS * 0.001f * (float)m_sampleRate);
-		m_releaseSize = (int)(releaseMS * 0.001f * (float)m_sampleRate);
+		const float factor = 0.001f * (float)m_sampleRate;
+
+		m_attackSize = (int)(attackMS * factor);
+		m_releaseSize = (int)(releaseMS * factor);
 		m_threshold = threshold;
+	}
+	inline void setAttackTime(const float attackMS)
+	{
+		m_attackSize = (int)(attackMS * 0.001f * (float)m_sampleRate);
+	}
+	inline void setAttackSize(const int attackSize)
+	{
+		m_attackSize = attackSize;
+	}
+	inline void setReleaseTime(const float releaseMS)
+	{
+		m_releaseSize = (int)(releaseMS * 0.001f * (float)m_sampleRate);
+	}
+	inline void setThreshold(const float threshold)
+	{
+		m_threshold = threshold;
+	}
+	inline float getGainMin()
+	{
+		const float gainMin = m_gainMin;
+		m_gainMin = 1.0f;
+		return gainMin;
 	}
 	inline float process(float in)
 	{
@@ -67,6 +91,12 @@ public:
 			m_interpolationMultiplier += m_interpolationSpeed;
 		}
 
+		// Get min gain
+		if (m_interpolationMultiplier < m_gainMin)
+		{
+			m_gainMin = m_interpolationMultiplier;
+		}
+
 		//Out
 		return m_interpolationMultiplier * inDelayed;
 	};
@@ -74,6 +104,8 @@ public:
 	{
 		m_buffer.release();
 
+		m_gainMin = 1.0f;
+		m_currentPeak = 0.0f;
 		m_interpolationMultiplier = 1.0f;
 		m_interpolationSpeed = 0.0f;
 		m_threshold = 1.0f;
@@ -86,6 +118,7 @@ public:
 private:
 	CircularBuffer m_buffer;
 
+	float m_gainMin = 1.0f;
 	float m_currentPeak = 0.0f;
 	float m_interpolationMultiplier = 1.0f;
 	float m_interpolationSpeed = 0.0f;

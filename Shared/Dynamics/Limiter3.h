@@ -68,6 +68,36 @@ public:
 		
 		m_envelopeFollower.set(0.0f, releaseMS);
 	}
+	inline void setAttackTime(const float attackMS)
+	{
+		const auto tmp = attackMS * 0.001f * (float)m_sampleRate;
+		m_attackSize = (int)(tmp);
+		m_attackFactor = 1.0f / tmp;
+
+		m_envelopeFollower.setAttackSize(1);
+	}
+	inline void setAttackSize(const int attackSize)
+	{
+		m_attackSize = attackSize;
+		m_attackFactor = 1.0f / (float)attackSize;
+
+		m_envelopeFollower.setAttackSize(1);
+	}
+	inline void setReleaseTime(const float releaseMS)
+	{
+		m_envelopeFollower.setReleaseTime(releaseMS);
+	}
+	inline void setThreshold(const float threshold)
+	{
+		m_threshold = threshold;
+		m_thresholddB = Math::gainTodB(threshold);
+	}
+	inline float getGainMin()
+	{
+		const float gainMin = m_gainMin;
+		m_gainMin = 1.0f;
+		return gainMin;
+	}
 	inline float process(float in)
 	{
 		// Handle buffer
@@ -123,6 +153,12 @@ public:
 		const float maxSmooth = m_envelopeFollower.process(max);
 		const float gain = Math::dBToGain(-maxSmooth);
 
+		// Get min gain
+		if (gain < m_gainMin)
+		{
+			m_gainMin = gain;
+		}
+
 		// apply attenuation for output
 		return gain * inDelayed;
 	};
@@ -135,10 +171,13 @@ public:
 		
 		m_envelopeFollower.release();
 
+		m_gainMin = 1.0;
 		m_threshold = 1.0;
 		m_thresholddB = 0.0f;
+		m_attackFactor = 1.0f;
 		m_sampleRate = 48000;
 		m_attackSize = 0;
+		m_attackSizeMax = 0;
 		m_peaksWritteIndex = 0;
 		m_firstValidPeakIndex = 0;
 	}
@@ -147,7 +186,8 @@ private:
 	CircularBuffer m_buffer;
 	Peak* m_peaks = nullptr;
 	BranchingEnvelopeFollower<float> m_envelopeFollower;
-	
+
+	float m_gainMin = 1.0f;	
 	float m_threshold = 1.0;
 	float m_thresholddB = 0.0f;
 	float m_attackFactor = 1.0f;

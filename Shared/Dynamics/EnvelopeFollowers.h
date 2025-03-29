@@ -38,6 +38,22 @@ public:
 		m_attackCoef = exp(T(-1000.0) / (attackTimeMs * static_cast<T>(m_sampleRate)));
 		m_releaseCoef = exp(T(-1000.0) / (releaseTimeMs * static_cast<T>(m_sampleRate)));
 	};
+	inline void setAttackTime(const T attackTimeMs)
+	{
+		m_attackCoef = exp(T(-1000.0) / (attackTimeMs * static_cast<T>(m_sampleRate)));
+	};
+	inline void setAttackSize(const int attackSize)
+	{
+		m_attackCoef = exp(static_cast<T>(-m_sampleRate) / static_cast<T>(attackSize));
+	};
+	inline void setReleaseTime(const T releaseTimeMs)
+	{
+		m_releaseCoef = exp(T(-1000.0) / (releaseTimeMs * static_cast<T>(m_sampleRate)));
+	};
+	inline void setReleaseSize(const int releaseSize)
+	{
+		m_attackCoef = exp(static_cast<T>(-m_sampleRate) / static_cast<T>(releaseSize));
+	};
 	inline void release()
 	{
 		m_attackCoef = T(0.0);

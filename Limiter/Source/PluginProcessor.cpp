@@ -18,12 +18,13 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-#include <immintrin.h>
-
 //==============================================================================
 
-const std::string LimiterAudioProcessor::paramsNames[] = { "Type", "Attack", "Release", "Threshold", "Volume" };
-const std::string LimiterAudioProcessor::paramsUnitNames[] = {"", " ms", " ms", " dB", " dB" };
+const std::string LimiterAudioProcessor::paramsNames[] = { "Type", "Gain", "Release", "Threshold", "Volume" };
+const std::string LimiterAudioProcessor::labelNames[] =  { "Type", "Input", "Release", "Threshold", "Output" };
+const std::string LimiterAudioProcessor::paramsUnitNames[] = {"", " dB", " ms", " dB", " dB" };
+
+const float LimiterAudioProcessor::MAXIMUM_ATTACK_TIME_MS = 1.0f;
 
 //==============================================================================
 LimiterAudioProcessor::LimiterAudioProcessor()
@@ -39,7 +40,7 @@ LimiterAudioProcessor::LimiterAudioProcessor()
 #endif
 {
 	typeParameter      = apvts.getRawParameterValue(paramsNames[0]);
-	attackParameter    = apvts.getRawParameterValue(paramsNames[1]);
+	gainParameter      = apvts.getRawParameterValue(paramsNames[1]);
 	releaseParameter   = apvts.getRawParameterValue(paramsNames[2]);
 	thresholdParameter = apvts.getRawParameterValue(paramsNames[3]);
 	volumeParameter    = apvts.getRawParameterValue(paramsNames[4]);
@@ -115,37 +116,59 @@ void LimiterAudioProcessor::changeProgramName (int index, const juce::String& ne
 void LimiterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
-	const int attackSize1 = (int)(10.0 * 0.001 * sampleRate);		// Maximum attack time
+	const int attackSize = (int)(MAXIMUM_ATTACK_TIME_MS * 0.001 * sampleRate);		// Maximum attack time
+	
+	setLatencySamples(attackSize);
 
 	// Limiter 1
+	const int attackSize1 = 2 * attackSize / 3;
+	const int attackSize2 = attackSize - attackSize1;
+
 	m_limiter1[0].init(sr, attackSize1);
 	m_limiter1[1].init(sr, attackSize1);
 
-	const int attackSize2 = (int)(5.0 * 0.001 * sampleRate);
 	m_limiter2[0].init(sr, attackSize2);
 	m_limiter2[1].init(sr, attackSize2);
+
+	m_limiter1[0].setAttackSize(attackSize1);
+	m_limiter1[1].setAttackSize(attackSize1);
+
+	m_limiter2[0].setAttackSize(attackSize2);
+	m_limiter2[1].setAttackSize(attackSize2);
 
 	m_clipper[0].init(sr);
 	m_clipper[1].init(sr);
 
 	// Limiter 2
-	m_logLimiter[0].init(sr, attackSize1);
-	m_logLimiter[1].init(sr, attackSize1);
+	m_logLimiter[0].init(sr, attackSize);
+	m_logLimiter[1].init(sr, attackSize);
+
+	m_logLimiter[0].setAttackSize(attackSize);
+	m_logLimiter[1].setAttackSize(attackSize);
 
 	m_clipper2[0].init(sr);
 	m_clipper2[1].init(sr);
 
 	// Limiter 3
-	m_advancedLimiter[0].init(sr, attackSize1);
-	m_advancedLimiter[1].init(sr, attackSize1);
+	m_advancedLimiter[0].init(sr, attackSize);
+	m_advancedLimiter[1].init(sr, attackSize);
+
+	m_advancedLimiter[0].setAttackSize(attackSize);
+	m_advancedLimiter[1].setAttackSize(attackSize);
 }
 
 void LimiterAudioProcessor::releaseResources()
 {
-	/*m_limiter1[0].release();
+	m_limiter1[0].release();
 	m_limiter1[1].release();
 	m_limiter2[0].release();
-	m_limiter2[1].release();*/
+	m_limiter2[1].release();
+
+	m_logLimiter[0].release();
+	m_logLimiter[1].release();
+
+	m_advancedLimiter[0].release();
+	m_advancedLimiter[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -177,28 +200,18 @@ bool LimiterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto type    = typeParameter->load();
-	const auto attack  = attackParameter->load();
-	const auto release = releaseParameter->load();
-	const auto threshold = juce::Decibels::decibelsToGain(thresholdParameter->load());
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto type			= typeParameter->load();
+	const auto inputGain	= juce::Decibels::decibelsToGain(gainParameter->load());
+	const auto release		= releaseParameter->load();
+	const auto threshold	= juce::Decibels::decibelsToGain(thresholdParameter->load());
+	const auto outputGain	= juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-
-	// Set latency
-	if (type == 1)
-	{
-		const auto latency = (int)((double)(1.5f * attack) * 0.001 * getSampleRate());
-		setLatencySamples(latency);
-	}
-	else
-	{
-		const auto latency = (int)((double)(attack) * 0.001 * getSampleRate());
-		setLatencySamples(latency);
-	}
 	
+	buffer.applyGain(inputGain);
+
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
@@ -210,8 +223,17 @@ void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			auto& limiter2 = m_limiter2[channel];
 			auto& clipper = m_clipper[channel];
 
-			limiter1.set(attack, release, threshold);
-			limiter2.set(0.5 * attack, 0.5f * release, threshold);
+			limiter1.setReleaseTime(release);
+			limiter1.setThreshold(threshold);
+
+			limiter2.setReleaseTime(release);
+			limiter2.setThreshold(threshold);
+
+			const float gainMin = limiter1.getGainMin() * limiter2.getGainMin();
+			if (gainMin < m_gainMin)
+			{
+				m_gainMin = gainMin;
+			}
 
 			for (int sample = 0; sample < samples; sample++)
 			{
@@ -219,14 +241,24 @@ void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
 				in = limiter1.process(in);
 				in = limiter2.process(in);
-				in = clipper.process(in, threshold);
-				channelBuffer[sample] = in;
+
+				const float out = clipper.process(in, threshold);
+
+				channelBuffer[sample] = out;
 			}
 		}
 		else if (type == 2)
 		{
 			auto& logLimiter = m_logLimiter[channel];
-			logLimiter.set(attack, release, threshold);
+			
+			logLimiter.setReleaseTime(release);
+			logLimiter.setThreshold(threshold);
+
+			const float gainMin = logLimiter.getGainMin();
+			if (gainMin < m_gainMin)
+			{
+				m_gainMin = gainMin;
+			}
 
 			auto& clipper = m_clipper2[channel];
 
@@ -234,24 +266,36 @@ void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			{
 				float in = channelBuffer[sample];
 
-				channelBuffer[sample] = clipper.process(logLimiter.process(in), threshold);
+				const float out = clipper.process(logLimiter.process(in), threshold);
+
+				channelBuffer[sample] = out;
 			}
 		}
 		else
 		{
 			auto& limiter = m_advancedLimiter[channel];
-			limiter.set(attack, release, threshold);
+			
+			limiter.setReleaseTime(release);
+			limiter.setThreshold(threshold);
+
+			const float gainMin = limiter.getGainMin();
+			if (gainMin < m_gainMin)
+			{
+				m_gainMin = gainMin;
+			}
 
 			for (int sample = 0; sample < samples; sample++)
 			{
 				float in = channelBuffer[sample];
 
-				channelBuffer[sample] = limiter.process(in);
+				const float out = limiter.process(in);
+
+				channelBuffer[sample] = out;
 			}
 		}
 	}
 
-	buffer.applyGain(gain);
+	buffer.applyGain(outputGain);
 }
 
 //==============================================================================
@@ -288,11 +332,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout LimiterAudioProcessor::creat
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,  3.0f,  1.0f, 1.0f),  1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, 10.0f,  1.0f, 1.0f),  7.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   1.0f, 40.0f,  1.0f, 1.0f), 30.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -30.0f,  0.0f,  1.0f, 1.0f),  0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f, 1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,   3.0f,  1.0f, 1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   1.0f, 100.0f,  1.0f, 0.7f), 5.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -30.0f,   0.0f,  0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f), 0.0f));
 
 	return layout;
 }
