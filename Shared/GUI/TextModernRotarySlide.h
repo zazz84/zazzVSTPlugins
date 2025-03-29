@@ -37,7 +37,7 @@ public:
 		m_textBox.setEditable(false, false, false);
 		
 		// Set init text
-		const auto value = Math::clampInt((int)m_slider.getValue(), 1, (int)m_names.size() - 1);
+		const auto value = (int)m_slider.getValue() - 1;
 		m_textBox.setText(m_names[value], juce::dontSendNotification);
 
 		m_textBox.onTextChange = [this]() { handleTextBoxChange(); };
@@ -53,7 +53,7 @@ private:
 	{
 		if (sliderThatChanged == &m_slider)
 		{
-			const auto value = (int)Math::clamp(m_slider.getValue(), 1, m_names.size()) - 1;
+			const auto value = (int)m_slider.getValue() - 1;
 			m_textBox.setText(m_names[value], juce::dontSendNotification);
 		}
 	}
