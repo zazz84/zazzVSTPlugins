@@ -348,7 +348,7 @@ public:
 
 //==============================================================================
 
-class ModernRotarySlider : public juce::Component, private juce::Slider::Listener
+class ModernRotarySlider : public juce::Component, public juce::Slider::Listener
 {
 public:
 
@@ -483,7 +483,7 @@ public:
 		m_drawLabel = drawLabel;
 	}
 
-private:
+public:
 	// Update label when slider changes
 	void sliderValueChanged(juce::Slider* sliderThatChanged) override
 	{

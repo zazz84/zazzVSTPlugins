@@ -38,6 +38,12 @@ namespace Math
 		const float t = val < minval ? minval : val;
 		return t > maxval ? maxval : t;
 	}
+	//==============================================================================
+	inline int clampInt(int val, int minval, int maxval)
+	{
+		const int t = val < minval ? minval : val;
+		return t > maxval ? maxval : t;
+	}
 
 	//==============================================================================
 	inline float fminf(const float a, const float b)

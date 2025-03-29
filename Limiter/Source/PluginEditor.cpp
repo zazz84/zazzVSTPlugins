@@ -26,7 +26,7 @@ LimiterAudioProcessorEditor::LimiterAudioProcessorEditor (LimiterAudioProcessor&
 	m_gainSlider		(vts, LimiterAudioProcessor::paramsNames[1], LimiterAudioProcessor::paramsUnitNames[1], LimiterAudioProcessor::labelNames[1]),
 	m_thresholdSlider	(vts, LimiterAudioProcessor::paramsNames[3], LimiterAudioProcessor::paramsUnitNames[3], LimiterAudioProcessor::labelNames[3]),
 	m_volumeSlider		(vts, LimiterAudioProcessor::paramsNames[4], LimiterAudioProcessor::paramsUnitNames[4], LimiterAudioProcessor::labelNames[4]),
-	m_typeSlider		(vts, LimiterAudioProcessor::paramsNames[0], LimiterAudioProcessor::paramsUnitNames[0], LimiterAudioProcessor::labelNames[0]),
+	m_typeSlider		(vts, LimiterAudioProcessor::paramsNames[0], LimiterAudioProcessor::paramsUnitNames[0], LimiterAudioProcessor::labelNames[0], { "Dirty", "Agressive", "Clean" }),
 	m_releaseSlider		(vts, LimiterAudioProcessor::paramsNames[2], LimiterAudioProcessor::paramsUnitNames[2], LimiterAudioProcessor::labelNames[2]),
 	m_pluginLabel("zazz::Limiter"),
 	m_gainReductionMeter()

@@ -8,8 +8,8 @@
     <GROUP id="{E462C0D6-ECCB-D9CD-72E5-C7765CEC32C9}" name="GUI">
       <FILE id="LTLOsX" name="GainReductionMeterComponent.h" compile="0"
             resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
-      <FILE id="oLfm1s" name="LimiterTypeModernRotarySlide.h" compile="0"
-            resource="0" file="../Shared/GUI/LimiterTypeModernRotarySlide.h"/>
+      <FILE id="oLfm1s" name="TextModernRotarySlide.h" compile="0" resource="0"
+            file="../Shared/GUI/TextModernRotarySlide.h"/>
       <FILE id="We9D5s" name="ModernRotarySlider.h" compile="0" resource="0"
             file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="xb8n3j" name="PluginNameComponent.h" compile="0" resource="0"

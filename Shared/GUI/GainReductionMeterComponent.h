@@ -86,7 +86,7 @@ public:
 
 		// Draw marker line
 		const auto heightMin = static_cast<int>(static_cast<float>(meterHeight * levelNormalizedSmooth));
-		const auto lineHeight = 2.0f;
+		const auto lineHeight = 2;
 		bounds.setSize(pixelSize, lineHeight);
 		bounds.setPosition(xPos, yPos + heightMin);
 		g.setColour(juce::Colours::white);

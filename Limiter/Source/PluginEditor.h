@@ -21,7 +21,7 @@
 #include "PluginProcessor.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/LimiterTypeModernRotarySlide.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/TextModernRotarySlide.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GainReductionMeterComponent.h"
 
 //==============================================================================
@@ -50,7 +50,7 @@ protected:
 	ModernRotarySlider m_gainSlider;
 	ModernRotarySlider m_thresholdSlider;
 	ModernRotarySlider m_volumeSlider;
-	LimiterTypeModernRotarySlider m_typeSlider;
+	TextModernRotarySlider m_typeSlider;
 	ModernRotarySlider m_releaseSlider;
 
 	PluginNameComponent m_pluginLabel;
