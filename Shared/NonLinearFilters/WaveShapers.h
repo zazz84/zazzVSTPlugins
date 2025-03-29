@@ -51,7 +51,7 @@ public:
 
 	inline static float Reciprocal(float in, float drive)
 	{
-		const float drive2in = 1.35f * drive * in;
+		const float drive2in = 1.4f * drive * in;
 		return drive2in / (1.0f + std::fabsf(drive2in));
 	}
 
@@ -152,7 +152,7 @@ public:
 
 	inline static float Exponential(float in, float drive)
 	{
-		const float driveAdjusted = 0.5f + std::expf(-0.5f * drive);
+		const float driveAdjusted = 0.4f + std::expf(-0.6f * drive);
 		const float inAbs = std::fabsf(in);
 		const float sign = (in > 0.0f) ? 1.0f : -1.0f;
 

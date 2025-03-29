@@ -2,52 +2,89 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
-const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
-const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
-
-const int WaveshaperAudioProcessorEditor::SLIDERS[] = { 6 };
-const int WaveshaperAudioProcessorEditor::COLUMN_OFFSET[] = { 0 };
-
-//==============================================================================
 WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
+    : AudioProcessorEditor (&p),
+	audioProcessor (p),
+	valueTreeState(vts),
+	m_typeSlider	(vts, WaveshaperAudioProcessor::paramsNames[0], WaveshaperAudioProcessor::paramsUnitNames[0], WaveshaperAudioProcessor::labelNames[0], { "Tanh", "Reciprocal", "Exponential" }),
+	m_gainSlider	(vts, WaveshaperAudioProcessor::paramsNames[1], WaveshaperAudioProcessor::paramsUnitNames[1], WaveshaperAudioProcessor::labelNames[1]),
+	m_colorSlider	(vts, WaveshaperAudioProcessor::paramsNames[2], WaveshaperAudioProcessor::paramsUnitNames[2], WaveshaperAudioProcessor::labelNames[2]),
+	m_mixSlider		(vts, WaveshaperAudioProcessor::paramsNames[3], WaveshaperAudioProcessor::paramsUnitNames[3], WaveshaperAudioProcessor::labelNames[3]),
+	m_volumeSlider	(vts, WaveshaperAudioProcessor::paramsNames[4], WaveshaperAudioProcessor::paramsUnitNames[4], WaveshaperAudioProcessor::labelNames[4]),
+	m_pluginLabel("zazz::Waveshaper")
 {	
-	// Plugin name
-	m_pluginName.setText("Waveshaper", juce::dontSendNotification);
-	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
-	m_pluginName.setJustificationType(juce::Justification::centred);
-	addAndMakeVisible(m_pluginName);
-	
-	// Lables and sliders
-	for (int i = 0; i < N_SLIDERS; i++)
+	addAndMakeVisible(m_typeSlider);
+	addAndMakeVisible(m_gainSlider);
+	addAndMakeVisible(m_colorSlider);
+	addAndMakeVisible(m_mixSlider);
+	addAndMakeVisible(m_volumeSlider);
+
+	addAndMakeVisible(m_pluginLabel);
+
+	setResizable(true, true);
+
+	const int canvasWidth = CANVAS_WIDTH * 30;
+	const int canvasHeight = CANVAS_HEIGHT * 30;
+
+	setSize(canvasWidth, canvasHeight);
+
+	if (auto* constrainer = getConstrainer())
 	{
-		auto& label = m_labels[i];
-		auto& slider = m_sliders[i];
-		const std::string text = WaveshaperAudioProcessor::paramsNames[i];
-		const std::string unit = WaveshaperAudioProcessor::paramsUnitNames[i];
+		constexpr int minScale = 50;		// percentage
+		constexpr int maxScale = 200;		// percentage
 
-		createSliderWithLabel(slider, label, text, unit);
-		addAndMakeVisible(label);
-		addAndMakeVisible(slider);
-
-		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
+		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
+		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
-
-	createCanvas(*this, SLIDERS, N_ROWS);;
 }
 
 WaveshaperAudioProcessorEditor::~WaveshaperAudioProcessorEditor()
 {
 }
 
-//==============================================================================
 void WaveshaperAudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll(ZazzLookAndFeel::LIGHT_COLOUR);
+	g.fillAll(darkColor);
 }
 
 void WaveshaperAudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
+	const int width = getWidth();
+	const int height = getHeight();
+
+	const int pixelSize = width / CANVAS_WIDTH;
+	const int pixelSize15 = pixelSize + pixelSize / 2;
+	const int pixelSize2 = pixelSize + pixelSize;
+	const int pixelSize3 = pixelSize2 + pixelSize;
+	const int pixelSize4 = pixelSize3 + pixelSize;
+
+	// Set size
+	m_pluginLabel.setSize(width, pixelSize2);
+
+	m_typeSlider.setSize(pixelSize3, pixelSize4);
+	m_gainSlider.setSize(pixelSize3, pixelSize4);
+	m_colorSlider.setSize(pixelSize3, pixelSize4);
+	m_mixSlider.setSize(pixelSize3, pixelSize4);
+	m_volumeSlider.setSize(pixelSize3, pixelSize4);
+
+	//Set position
+	const int row1 = 0;
+	const int row2 = pixelSize2;
+	const int row3 = row2 + pixelSize4;
+
+	const int column1 = 0;
+	const int column2 = pixelSize;
+	const int column3 = column2 + pixelSize3;
+	const int column4 = column3 + pixelSize3;
+	const int column25 = column2 + pixelSize15;
+	const int column35 = column3 + pixelSize15;
+
+	m_pluginLabel.setTopLeftPosition(column1, row1);
+
+	m_typeSlider.setTopLeftPosition(column2, row2);
+	m_gainSlider.setTopLeftPosition(column3, row2);
+	m_colorSlider.setTopLeftPosition(column4, row2);
+
+	m_mixSlider.setTopLeftPosition(column25, row3);
+	m_volumeSlider.setTopLeftPosition(column35, row3);
 }

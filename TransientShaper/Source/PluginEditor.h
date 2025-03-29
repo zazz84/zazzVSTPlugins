@@ -15,8 +15,8 @@ public:
     TransientShaperAudioProcessorEditor (TransientShaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~TransientShaperAudioProcessorEditor() override;
 	
-	static const int CANVAS_WIDTH = 1 + 3 + 2 + 3 + 1 + 3 + 1;
-	static const int CANVAS_HEIGHT = 2 + 1 + 4 + 4 + 1;
+	static const int CANVAS_WIDTH = 1 + 3 + 3 + 3 + 3 + 2 + 1;
+	static const int CANVAS_HEIGHT = 2 + 4 + 4 + 1;
 
 	//==============================================================================
 	void timerCallback() override;

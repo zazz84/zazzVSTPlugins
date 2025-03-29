@@ -2,16 +2,21 @@
 
 <JUCERPROJECT id="QPbKdp" name="Waveshaper" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" version="1.0.2">
+              companyName="zazz" pluginFormats="buildVST3" version="1.1.0">
   <MAINGROUP id="njm7Tj" name="Waveshaper">
+    <GROUP id="{B419E272-D7E6-39F9-CB49-4E89D2A01BE1}" name="GUI">
+      <FILE id="XZ1Lff" name="GainReductionMeterComponent.h" compile="0"
+            resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
+      <FILE id="DqRFcI" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="JWm9mK" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="dJKF3A" name="TextModernRotarySlide.h" compile="0" resource="0"
+            file="../Shared/GUI/TextModernRotarySlide.h"/>
+    </GROUP>
     <GROUP id="{7E5A61C9-1855-0A97-1192-F96E0F1285C7}" name="Source">
-      <FILE id="Rg31GW" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="Jnv4Z7" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="rsAV3N" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="xFGDkE" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="LbVGID" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="h5SbQh" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="xTNWYL" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

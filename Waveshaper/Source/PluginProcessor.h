@@ -17,6 +17,7 @@ public:
     ~WaveshaperAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
 
     //==============================================================================
@@ -64,7 +65,6 @@ private:
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
-	std::atomic<float>* driveParameter = nullptr;
 	std::atomic<float>* colorParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;

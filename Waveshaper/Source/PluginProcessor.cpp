@@ -9,20 +9,25 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <cmath>
+
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+
 //==============================================================================
 #define PROCESS_WAVESHAPER(WAVESHAPER)												\
     for (int sample = 0; sample < samples; sample++) {                              \
         float& in = channelBuffer[sample];                                          \
-        float out = preFilter.processDF1(in);                                       \
-        out = WAVESHAPER(gain * out, drive);										\
+		float out = preFilter.processDF1(gain * in);                                \
+        out = WAVESHAPER(out, drive);												\
 		out = postFilter.processDF1(out);											\
-        in = volume * ((1.0f - mix) * in + mix * out);                              \
+        in = volume * ((1.0f - mix) * in + mix * out);								\
     }
 
 //==============================================================================
 
-const std::string WaveshaperAudioProcessor::paramsNames[] = { "Type", "Gain", "Drive", "Color", "Mix", "Volume" };
-const std::string WaveshaperAudioProcessor::paramsUnitNames[] = { "", " dB", "", "", " %", "dB" };
+const std::string WaveshaperAudioProcessor::paramsNames[] = { "Type", "Gain", "Color", "Mix", "Volume" };
+const std::string WaveshaperAudioProcessor::labelNames[]  = { "Type", "Gain", "Color", "Mix", "Volume" };
+const std::string WaveshaperAudioProcessor::paramsUnitNames[] = { "", " dB", "", " %", "dB" };
 
 //==============================================================================
 WaveshaperAudioProcessor::WaveshaperAudioProcessor()
@@ -39,10 +44,9 @@ WaveshaperAudioProcessor::WaveshaperAudioProcessor()
 {
 	typeParameter   = apvts.getRawParameterValue(paramsNames[0]);
 	gainParameter   = apvts.getRawParameterValue(paramsNames[1]);
-	driveParameter  = apvts.getRawParameterValue(paramsNames[2]);
-	colorParameter  = apvts.getRawParameterValue(paramsNames[3]);
-	mixParameter    = apvts.getRawParameterValue(paramsNames[4]);
-	volumeParameter = apvts.getRawParameterValue(paramsNames[5]);
+	colorParameter  = apvts.getRawParameterValue(paramsNames[2]);
+	mixParameter    = apvts.getRawParameterValue(paramsNames[3]);
+	volumeParameter = apvts.getRawParameterValue(paramsNames[4]);
 }
 
 WaveshaperAudioProcessor::~WaveshaperAudioProcessor()
@@ -158,8 +162,7 @@ void WaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 {
 	// Get params
 	const auto type   = typeParameter->load();
-	const auto gain   = juce::Decibels::decibelsToGain(gainParameter->load());
-	const auto drive  = 1.0f + (7.0f / 100.0f) * driveParameter->load();
+	const auto gain = type != 3 ? juce::Decibels::decibelsToGain(gainParameter->load()) : juce::Decibels::decibelsToGain(gainParameter->load() - 6.0f);
 	const auto color  = 18.0f * 0.01f * colorParameter->load();
 	const auto mix    = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
@@ -191,14 +194,20 @@ void WaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 		auto* channelBuffer = buffer.getWritePointer(channel);
 		if (type == 1)
 		{
+			const auto drive = 1.0f;
+
 			PROCESS_WAVESHAPER(Waveshapers::Tanh)
 		}
 		else if(type == 2)
 		{
+			const auto drive = 1.0f;
+
 			PROCESS_WAVESHAPER(Waveshapers::Reciprocal)
 		}
 		else if (type == 3)
 		{
+			const auto drive = Math::remap(gain, 0.0f, 18.0f, 1.0f, 8.0f);
+
 			PROCESS_WAVESHAPER(Waveshapers::Exponential)
 		}
 	}
@@ -239,11 +248,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout WaveshaperAudioProcessor::cr
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(    1.0f,   3.0f,  1.0f, 1.0f),   1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(  -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));
 
 	return layout;
 }
