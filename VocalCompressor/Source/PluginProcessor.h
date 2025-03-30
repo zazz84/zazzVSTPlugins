@@ -4,6 +4,7 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Dynamics/VocalCompressor.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/VocalCompressorClean.h"
 
 //==============================================================================
 class VocalCompressorAudioProcessor  : public juce::AudioProcessor
@@ -74,10 +75,12 @@ public:
 private:	
 	//==============================================================================
 	std::array<VocalCompressor, N_CHANNELS> m_vocalCompressor;
+	std::array<VocalCompressorClean, N_CHANNELS> m_vocalCompressorClean;
 
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+	std::atomic<float>* typeParameter = nullptr;
 
 	float m_inputMax = 0.0f;
 	float m_outputMax = 0.0f;

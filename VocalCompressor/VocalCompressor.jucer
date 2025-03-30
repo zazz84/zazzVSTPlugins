@@ -3,7 +3,7 @@
 <JUCERPROJECT id="yQS6t9" name="VocalCompressor" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
-              version="1.1.0">
+              version="1.1.1">
   <MAINGROUP id="DfrvpD" name="VocalCompressor">
     <GROUP id="{190B883E-1575-A4A9-02D8-5B272923ADDD}" name="GUI">
       <FILE id="t0r38Y" name="GainReductionMeterComponent.h" compile="0"
@@ -12,8 +12,12 @@
             file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="VWKEnh" name="PluginNameComponent.h" compile="0" resource="0"
             file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="BNroET" name="TextModernRotarySlide.h" compile="0" resource="0"
+            file="../Shared/GUI/TextModernRotarySlide.h"/>
     </GROUP>
     <GROUP id="{D0BF00D3-53C2-5BA6-9D09-0D9A313DE127}" name="Source">
+      <FILE id="nznV71" name="VocalCompressorClean.h" compile="0" resource="0"
+            file="../Shared/Dynamics/VocalCompressorClean.h"/>
       <FILE id="biAbPg" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="HGxGkg" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="CHqXG8" name="TubeEmulation.h" compile="0" resource="0" file="../Shared/NonLinearFilters/TubeEmulation.h"/>

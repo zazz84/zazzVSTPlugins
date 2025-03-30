@@ -9,12 +9,14 @@ VocalCompressorAudioProcessorEditor::VocalCompressorAudioProcessorEditor(VocalCo
 	m_gainSlider   (vts, VocalCompressorAudioProcessor::paramsNames[0], VocalCompressorAudioProcessor::paramsUnitNames[0], VocalCompressorAudioProcessor::labelNames[0]),
 	m_mixSlider    (vts, VocalCompressorAudioProcessor::paramsNames[1], VocalCompressorAudioProcessor::paramsUnitNames[1], VocalCompressorAudioProcessor::labelNames[1]),
 	m_volumeSlider (vts, VocalCompressorAudioProcessor::paramsNames[2], VocalCompressorAudioProcessor::paramsUnitNames[2], VocalCompressorAudioProcessor::labelNames[2]),
+	m_typeSlider   (vts, VocalCompressorAudioProcessor::paramsNames[3], VocalCompressorAudioProcessor::paramsUnitNames[3], VocalCompressorAudioProcessor::labelNames[3], {"Warm", "Clean"}),
 	m_pluginLabel("zazz::VocalCompressor"),
 	m_gainReductionMeter()
 {
 	addAndMakeVisible(m_gainSlider);
 	addAndMakeVisible(m_mixSlider);
 	addAndMakeVisible(m_volumeSlider);
+	addAndMakeVisible(m_typeSlider);
 
 	addAndMakeVisible(m_pluginLabel);
 	addAndMakeVisible(m_gainReductionMeter);
@@ -73,6 +75,7 @@ void VocalCompressorAudioProcessorEditor::resized()
 	m_gainSlider.setSize(pixelSize3, pixelSize4);
 	m_mixSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
+	m_typeSlider.setSize(pixelSize3, pixelSize4);
 
 	m_gainReductionMeter.setSize(pixelSize2, pixelSize4 + pixelSize4);
 
@@ -84,7 +87,6 @@ void VocalCompressorAudioProcessorEditor::resized()
 
 	const int column1 = 0;
 	const int column2 = pixelSize2;
-	const int column25 = column2 + pixelSize15;
 	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize3;
 
@@ -93,7 +95,8 @@ void VocalCompressorAudioProcessorEditor::resized()
 	m_gainSlider.setTopLeftPosition(column2, row2);
 	m_volumeSlider.setTopLeftPosition(column3, row2);
 
-	m_mixSlider.setTopLeftPosition(column25, row3);
+	m_typeSlider.setTopLeftPosition(column2, row3);
+	m_mixSlider.setTopLeftPosition(column3, row3);
 
 	m_gainReductionMeter.setTopLeftPosition(column4, row2);
 }

@@ -11,9 +11,9 @@
 
 //==============================================================================
 
-const std::string VocalCompressorAudioProcessor::paramsNames[] =		{ "Gain",	"Mix", "Volume" };
-const std::string VocalCompressorAudioProcessor::labelNames[] =			{ "Gain",	"Mix", "Volume" };
-const std::string VocalCompressorAudioProcessor::paramsUnitNames[] =	{ " dB",	" %",		" dB" };
+const std::string VocalCompressorAudioProcessor::paramsNames[] =		{ "Gain",	"Mix", "Volume", "Type" };
+const std::string VocalCompressorAudioProcessor::labelNames[] =			{ "Gain",	"Mix", "Volume", "Type" };
+const std::string VocalCompressorAudioProcessor::paramsUnitNames[] =	{ " dB",	" %",	" dB",	 "" };
 
 //==============================================================================
 VocalCompressorAudioProcessor::VocalCompressorAudioProcessor()
@@ -28,9 +28,10 @@ VocalCompressorAudioProcessor::VocalCompressorAudioProcessor()
                        )
 #endif
 {
-	gainParameter     = apvts.getRawParameterValue(paramsNames[0]);
-	mixParameter       = apvts.getRawParameterValue(paramsNames[1]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[2]);
+	gainParameter   = apvts.getRawParameterValue(paramsNames[0]);
+	mixParameter    = apvts.getRawParameterValue(paramsNames[1]);
+	volumeParameter = apvts.getRawParameterValue(paramsNames[2]);
+	typeParameter	= apvts.getRawParameterValue(paramsNames[3]);
 }
 
 VocalCompressorAudioProcessor::~VocalCompressorAudioProcessor()
@@ -106,6 +107,9 @@ void VocalCompressorAudioProcessor::prepareToPlay (double sampleRate, int sample
 
 	m_vocalCompressor[0].init(sr);
 	m_vocalCompressor[1].init(sr);
+
+	m_vocalCompressorClean[0].init(sr);
+	m_vocalCompressorClean[1].init(sr);
 }
 
 void VocalCompressorAudioProcessor::releaseResources()
@@ -141,10 +145,13 @@ bool VocalCompressorAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 
 void VocalCompressorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
 	const auto gain = juce::Decibels::decibelsToGain(gainParameter->load());
 	const auto mix = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto type = typeParameter->load();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
@@ -153,33 +160,63 @@ void VocalCompressorAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
-		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
-
-		auto& vocalCompressor = m_vocalCompressor[channel];
-
-		for (int sample = 0; sample < samples; sample++)
+		
+		if (type == 1)
 		{
-			const float in = gain * channelBuffer[sample];
+			auto& vocalCompressor = m_vocalCompressor[channel];
 
-			// Get input peak
-			const float inAbs = std::fabsf(in);
-			if (inAbs > m_inputMax)
+			for (int sample = 0; sample < samples; sample++)
 			{
-				m_inputMax = inAbs;
+				const float in = gain * channelBuffer[sample];
+
+				// Get input peak
+				const float inAbs = std::fabsf(in);
+				if (inAbs > m_inputMax)
+				{
+					m_inputMax = inAbs;
+				}
+
+				float out = vocalCompressor.process(in);
+				out = dry * in + mix * out;
+
+				// Get output peak
+				const float outAbs = std::fabsf(out);
+				if (outAbs > m_outputMax)
+				{
+					m_outputMax = outAbs;
+				}
+
+				channelBuffer[sample] = volume * out;
 			}
+		}
+		else
+		{
+			auto& vocalCompressor = m_vocalCompressorClean[channel];
 
-			float out = vocalCompressor.process(in);
-			out = dry * in + mix * out;
-
-			// Get output peak
-			const float outAbs = std::fabsf(out);
-			if (outAbs > m_outputMax)
+			for (int sample = 0; sample < samples; sample++)
 			{
-				m_outputMax = outAbs;
-			}
+				const float in = gain * channelBuffer[sample];
 
-			channelBuffer[sample] = volume * out;
+				// Get input peak
+				const float inAbs = std::fabsf(in);
+				if (inAbs > m_inputMax)
+				{
+					m_inputMax = inAbs;
+				}
+
+				float out = vocalCompressor.process(in);
+				out = dry * in + mix * out;
+
+				// Get output peak
+				const float outAbs = std::fabsf(out);
+				if (outAbs > m_outputMax)
+				{
+					m_outputMax = outAbs;
+				}
+
+				channelBuffer[sample] = volume * out;
+			}
 		}
 	}
 }
@@ -221,6 +258,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout VocalCompressorAudioProcesso
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f, 1.0f,  1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f,  18.0f, 0.1f,  1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   1.0f,   2.0f, 1.0f,  1.0f),   1.0f));
 
 	return layout;
 }
