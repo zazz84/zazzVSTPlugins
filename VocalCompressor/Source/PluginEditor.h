@@ -2,23 +2,23 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/GainReductionMeterComponent.h"
 
 //==============================================================================
-class VocalCompressorAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class VocalCompressorAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
 	VocalCompressorAudioProcessorEditor(VocalCompressorAudioProcessor&, juce::AudioProcessorValueTreeState&);
 	~VocalCompressorAudioProcessorEditor() override;
 
-	// GUI setup
-	static const int N_SLIDERS = 3;
-	static const int SLIDERS[];
-	static const float COLUMN_OFFSET[];
-	static const int N_ROWS = 1;
+	static const int CANVAS_WIDTH = 2 + 3 + 3 + 2 + 2;
+	static const int CANVAS_HEIGHT = 2 + 4 + 4 + 1;
 
 	//==============================================================================
+	void timerCallback() override;
 	void paint(juce::Graphics&) override;
 	void resized() override;
 
@@ -30,10 +30,17 @@ protected:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	juce::Label m_pluginName;
-	juce::Label m_labels[N_SLIDERS] = {};
-	juce::Slider m_sliders[N_SLIDERS] = {};
-	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+	ModernRotarySlider m_gainSlider;
+	ModernRotarySlider m_mixSlider;
+	ModernRotarySlider m_volumeSlider;
+
+	PluginNameComponent m_pluginLabel;
+
+	GainReductionMeterComponent m_gainReductionMeter;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VocalCompressorAudioProcessorEditor)
 };

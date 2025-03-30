@@ -18,6 +18,7 @@ public:
     ~VocalCompressorAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
 	static const int N_CHANNELS = 2;
 
@@ -59,6 +60,17 @@ public:
 
 	APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
+	float getPeakReductiondB()
+	{
+		const float inputMaxdB = juce::Decibels::gainToDecibels(m_inputMax);
+		const float outputMaxdB = juce::Decibels::gainToDecibels(m_outputMax);
+
+		m_inputMax = 0.0f;
+		m_outputMax = 0.0f;
+
+		return inputMaxdB - outputMaxdB;
+	}
+
 private:	
 	//==============================================================================
 	std::array<VocalCompressor, N_CHANNELS> m_vocalCompressor;
@@ -66,6 +78,9 @@ private:
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	float m_inputMax = 0.0f;
+	float m_outputMax = 0.0f;
 
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalCompressorAudioProcessor)
