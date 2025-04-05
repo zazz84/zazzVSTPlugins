@@ -23,6 +23,16 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
+class CustomLookAndFeel : public juce::LookAndFeel_V4
+{
+public:
+	juce::Font getTextButtonFont(juce::TextButton&, int buttonHeight) override
+	{
+		return juce::Font(10.0f); // Custom font size
+	}
+};
+
+//==============================================================================
 class MultiPeakFilterAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
@@ -41,6 +51,8 @@ protected:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
+	CustomLookAndFeel customLook;
+
 	PluginNameComponent m_pluginNameComponent;
 
 	ModernRotarySlider m_frequencySlider;
@@ -50,6 +62,9 @@ protected:
 	ModernRotarySlider m_coutSlider;
 	ModernRotarySlider m_slopeSlider;
 	ModernRotarySlider m_volumeSlider;
+
+	juce::TextButton typeAButton{ "A" };
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAAttachment;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);

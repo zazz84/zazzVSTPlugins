@@ -41,6 +41,7 @@ public:
 	static const std::string labelNames[];
     static const int N_CHANNELS = 2;
     static const int COUNT_MAX = 16;
+    static const int NOISE_LENGTH = 512;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -82,13 +83,21 @@ public:
 
 private:	
 	//==============================================================================
+	float m_noise[NOISE_LENGTH] = {};
+	
 	BiquadFilter m_filter[N_CHANNELS][COUNT_MAX];
+	BiquadFilter m_filterAutoGain[COUNT_MAX];
 
+	// Smoothers
 	OnePoleLowPassFilter m_frequencySmoother[N_CHANNELS];
 	OnePoleLowPassFilter m_qSmoother[N_CHANNELS];
 	OnePoleLowPassFilter m_gainSmoother[N_CHANNELS];
 	OnePoleLowPassFilter m_stepSmoother[N_CHANNELS];
 	OnePoleLowPassFilter m_slopeSmoother[N_CHANNELS];
+	OnePoleLowPassFilter m_volumeSmoother[N_CHANNELS];
+
+	//float m_noiseRMS = 0.0f;
+	float m_noisePeak = 0.0f;
 
 	std::atomic<float>* frequencyParameter = nullptr;
 	std::atomic<float>* qParameter = nullptr;
@@ -97,6 +106,8 @@ private:
 	std::atomic<float>* countParameter = nullptr;
 	std::atomic<float>* slopeParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	juce::AudioParameterBool* buttonAParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiPeakFilterAudioProcessor)
 };

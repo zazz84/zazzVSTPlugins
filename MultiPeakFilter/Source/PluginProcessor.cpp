@@ -19,6 +19,7 @@
 #include "PluginEditor.h"
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Random.h"
 
 //==============================================================================
 
@@ -46,6 +47,8 @@ MultiPeakFilterAudioProcessor::MultiPeakFilterAudioProcessor()
 	countParameter		= apvts.getRawParameterValue(paramsNames[4]);
 	slopeParameter		= apvts.getRawParameterValue(paramsNames[5]);
 	volumeParameter		= apvts.getRawParameterValue(paramsNames[6]);
+
+	buttonAParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonA"));
 }
 
 MultiPeakFilterAudioProcessor::~MultiPeakFilterAudioProcessor()
@@ -127,14 +130,22 @@ void MultiPeakFilterAudioProcessor::prepareToPlay (double sampleRate, int sample
 		}
 	}
 
+	// Filters for auuto gain init
+	for (int filter = 0; filter < COUNT_MAX; filter++)
+	{
+		m_filterAutoGain[filter].init(sr);
+	}
+
 	m_frequencySmoother[0].init(sr);
 	m_frequencySmoother[1].init(sr);
 	m_qSmoother[0].init(sr);
 	m_qSmoother[1].init(sr);
 	m_gainSmoother[0].init(sr);
 	m_gainSmoother[1].init(sr);
+	m_volumeSmoother[0].init(sr);
+	m_volumeSmoother[1].init(sr);
 
-	constexpr float frequency = 3.0f;
+	constexpr float frequency = 2.0f;
 
 	m_frequencySmoother[0].set(frequency);
 	m_frequencySmoother[1].set(frequency);
@@ -146,6 +157,35 @@ void MultiPeakFilterAudioProcessor::prepareToPlay (double sampleRate, int sample
 	m_stepSmoother[1].set(frequency);
 	m_slopeSmoother[0].set(frequency);
 	m_slopeSmoother[1].set(frequency);
+	m_volumeSmoother[0].set(frequency);
+	m_volumeSmoother[1].set(frequency);
+
+	// Create noise and get RMS
+	LinearCongruentialRandom01 random01;
+	BiquadFilter m_lowPassFilter;
+	BiquadFilter m_highPassFilter;
+
+	m_lowPassFilter.init(sr);
+	m_highPassFilter.init(sr);
+
+	m_lowPassFilter.setLowPass(2000.0, 0.707f);
+	m_highPassFilter.setHighPass(40.0, 0.707f);
+
+	//float sum = 0.0f;
+	for (int i = 0; i < NOISE_LENGTH; i++)
+	{
+		const float noise = m_highPassFilter.processDF1(m_lowPassFilter.processDF1(2.0f * random01.process() - 1.0f));
+		m_noise[i] = noise;
+		//sum += noise * noise;
+
+		const float noiseAbs = std::fabsf(noise);
+		if (noiseAbs > m_noisePeak)
+		{
+			m_noisePeak = noiseAbs;
+		}
+	}
+
+	//m_noiseRMS = std::sqrt(sum / (float)NOISE_LENGTH);
 }
 
 void MultiPeakFilterAudioProcessor::releaseResources()
@@ -191,7 +231,9 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto step = stepParameter->load();
 	const auto count = countParameter->load();
 	const auto slope = 0.01f * slopeParameter->load();
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+
+	const auto applyAutoGain = buttonAParameter->get();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
@@ -210,6 +252,51 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		}
 	}
 
+	// Handle autoGain
+	if (applyAutoGain)
+	{
+		// Handle autoGain
+		// Set autoGain filter
+		const auto gainStep = (1.0f - slope) * (gain / (float)countLimited);
+
+		for (int i = 0; i <= countLimited; i++)
+		{
+			const float f = Math::shiftFrequency(frequency, i * step);
+			const float g = filterGain + i * gainStep;
+
+			m_filterAutoGain[i].setPeak(f, q, g);
+		}
+
+		// Filter noise and calculate RMS
+		float peak = 0.0f;
+		//float sum = 0.0f;
+		for (int i = 0; i < NOISE_LENGTH; i++)
+		{
+			float out = m_noise[i];
+
+			// Process all filters
+			for (int i = 0; i <= countLimited; i++)
+			{
+				out = m_filterAutoGain[i].processDF1(out);
+			}
+
+			const float outAbs = std::fabsf(out);
+			if (outAbs > peak)
+			{
+				peak = outAbs;
+			}
+
+			//sum += out * out;
+		}
+
+		//const float m_filteredNoiseRMS = std::sqrt(sum / (float)NOISE_LENGTH);
+		//const float autoGain = m_noiseRMS / m_filteredNoiseRMS;
+		const float autoGain = m_noisePeak / peak;
+
+		// Apply autoGain
+		gain *= autoGain;
+	}
+	
 	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
@@ -220,6 +307,7 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		auto& gainSmoother = m_gainSmoother[channel];
 		auto& stepSmoother = m_stepSmoother[channel];
 		auto& slopeSmoother = m_slopeSmoother[channel];
+		auto& volumeSmoother = m_volumeSmoother[channel];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -232,6 +320,7 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 			const auto gainSmooth = gainSmoother.process(filterGain);
 			const auto stepSmooth = stepSmoother.process(step);
 			const auto slopeSmooth = slopeSmoother.process(slope);
+			const auto volumeSmooth = volumeSmoother.process(gain);
 
 			const auto gainStep = (1.0f - slopeSmooth) * (gainSmooth / (float)countLimited);
 
@@ -242,17 +331,19 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 				const float g = gainSmooth + i * gainStep;
 
 				m_filter[channel][i].setPeak(f, qSmooth, g);
+				if (channel == 0)
+				{
+					m_filterAutoGain[i].setPeak(f, qSmooth, g);
+				}
 
 				// Process
 				out = m_filter[channel][i].processDF1(out);
 			}
 		
 			//Out
-			channelBuffer[sample] = out;
+			channelBuffer[sample] = volumeSmooth * out;
 		}
-	}
-
-	buffer.applyGain(gain);
+	}	
 }
 
 //==============================================================================
@@ -293,9 +384,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiPeakFilterAudioProcesso
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.3f,     24.0f,  0.1f, 0.7f),   8.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -36.0f,     36.0f,  0.1f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   1.0f,     48.0f, 0.01f, 1.0f),  12.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   1.0f, COUNT_MAX,  1.0f, 1.0f),   4.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   2.0f, COUNT_MAX,  1.0f, 1.0f),   4.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f,    200.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -36.0f,     36.0f,  0.1f, 1.0f),   0.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonA", "ButtonA", true));
 
 	return layout;
 }

@@ -60,6 +60,19 @@ MultiPeakFilterAudioProcessorEditor::MultiPeakFilterAudioProcessorEditor (MultiP
 		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
 		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
+
+	// Buttons
+	typeAButton.setLookAndFeel(&customLook);
+
+	addAndMakeVisible(typeAButton);
+
+	typeAButton.setClickingTogglesState(true);
+
+	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonA", typeAButton));
+
+	typeAButton.setColour(juce::TextButton::buttonColourId, lightColor);
+
+	typeAButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
 }
 
 MultiPeakFilterAudioProcessorEditor::~MultiPeakFilterAudioProcessorEditor()
@@ -116,4 +129,14 @@ void MultiPeakFilterAudioProcessorEditor::resized()
 	m_slopeSlider.setTopLeftPosition(column3, row3);
 
 	m_volumeSlider.setTopLeftPosition(column5, row2 + pixelSize15);
+
+	// Buttons
+	const int buttonSize = 70 * pixelSize / 100;
+
+	typeAButton.setSize(buttonSize, buttonSize);
+
+	const int posX = column5 + pixelSize15 - buttonSize / 2;
+	const int posY = row2 + pixelSize2 + pixelSize4;
+
+	typeAButton.setTopLeftPosition(posX, posY);
 }

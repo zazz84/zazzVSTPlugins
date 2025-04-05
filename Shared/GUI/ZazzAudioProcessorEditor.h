@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../zazzVSTPlugins/Shared/GUI/ButtonSlider.h"
+#include "ButtonSlider.h"
 
 class ZazzAudioProcessorEditor
 {
