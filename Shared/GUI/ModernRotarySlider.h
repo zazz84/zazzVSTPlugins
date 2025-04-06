@@ -489,7 +489,13 @@ public:
 	{
 		if (sliderThatChanged == &m_slider)
 		{
-			const auto value = m_slider.getValue();
+			auto value = m_slider.getValue();
+			
+			if (juce::ModifierKeys::currentModifiers.isShiftDown())
+			{
+				value = std::round(value);
+			}
+		
 			m_textBox.setText(juce::String(value) + m_unit, juce::dontSendNotification);
 		}
 	}

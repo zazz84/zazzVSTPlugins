@@ -100,6 +100,7 @@ private:
 	float m_noisePeak = 0.0f;
 
 	std::atomic<float>* frequencyParameter = nullptr;
+	std::atomic<float>* noteParameter = nullptr;
 	std::atomic<float>* qParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* stepParameter = nullptr;
@@ -108,6 +109,7 @@ private:
 	std::atomic<float>* volumeParameter = nullptr;
 
 	juce::AudioParameterBool* buttonAParameter = nullptr;
+	juce::AudioParameterBool* buttonBParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiPeakFilterAudioProcessor)
 };

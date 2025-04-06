@@ -3,9 +3,11 @@
 <JUCERPROJECT id="tqyizh" name="MultiPeakFilter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               pluginFormats="buildVST3" companyName="zazz" pluginVST3Category="EQ"
-              version="1.0.2">
+              version="1.0.3">
   <MAINGROUP id="CPErZz" name="MultiPeakFilter">
     <GROUP id="{5AC08715-9F68-4061-9F32-FE4A8F4F0D11}" name="Source">
+      <FILE id="Sl4QT8" name="NoteModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/NoteModernRotarySlider.h"/>
       <FILE id="pxQqNm" name="ModernRotarySlider.h" compile="0" resource="0"
             file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="SGYap9" name="PluginNameComponent.h" compile="0" resource="0"

@@ -30,11 +30,13 @@ MultiPeakFilterAudioProcessorEditor::MultiPeakFilterAudioProcessorEditor (MultiP
 	m_stepSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[3], MultiPeakFilterAudioProcessor::paramsUnitNames[3], MultiPeakFilterAudioProcessor::labelNames[3]),
 	m_coutSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[4], MultiPeakFilterAudioProcessor::paramsUnitNames[4], MultiPeakFilterAudioProcessor::labelNames[4]),
 	m_slopeSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[5], MultiPeakFilterAudioProcessor::paramsUnitNames[5], MultiPeakFilterAudioProcessor::labelNames[5]),
-	m_volumeSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[6], MultiPeakFilterAudioProcessor::paramsUnitNames[6], MultiPeakFilterAudioProcessor::labelNames[6])
+	m_volumeSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[6], MultiPeakFilterAudioProcessor::paramsUnitNames[6], MultiPeakFilterAudioProcessor::labelNames[6]),
+	m_noteSlider		(vts, MultiPeakFilterAudioProcessor::paramsNames[7], MultiPeakFilterAudioProcessor::paramsUnitNames[7], MultiPeakFilterAudioProcessor::labelNames[7])
 {	
 	addAndMakeVisible(m_pluginNameComponent);
 
 	addAndMakeVisible(m_frequencySlider);
+	addAndMakeVisible(m_noteSlider);
 	addAndMakeVisible(m_qSlider);
 	addAndMakeVisible(m_gainSlider);
 	addAndMakeVisible(m_stepSlider);
@@ -48,7 +50,7 @@ MultiPeakFilterAudioProcessorEditor::MultiPeakFilterAudioProcessorEditor (MultiP
 	setResizable(true, true);
 
 	const int canvasWidth = (1 + 3 + 3 + 3 + 1 + 3 + 1) * 30;
-	const int canvasHeight = (2 + 4 + 4 + 1) * 30;
+	const int canvasHeight = (2 + 4 + 2 + 4 + 1) * 30;
 
 	setSize(canvasWidth, canvasHeight);
 
@@ -63,16 +65,51 @@ MultiPeakFilterAudioProcessorEditor::MultiPeakFilterAudioProcessorEditor (MultiP
 
 	// Buttons
 	typeAButton.setLookAndFeel(&customLook);
+	typeBButton.setLookAndFeel(&customLook);
 
 	addAndMakeVisible(typeAButton);
+	addAndMakeVisible(typeBButton);
 
 	typeAButton.setClickingTogglesState(true);
+	typeBButton.setClickingTogglesState(true);
 
 	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonA", typeAButton));
+	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonB", typeBButton));
 
 	typeAButton.setColour(juce::TextButton::buttonColourId, lightColor);
+	typeBButton.setColour(juce::TextButton::buttonColourId, lightColor);
 
 	typeAButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+	typeBButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+
+	// Handle switching between frequency and note sliders
+	typeBButton.onClick = [this]()
+	{
+		if (typeBButton.getToggleState())
+		{
+			m_frequencySlider.setVisible(false);
+			m_noteSlider.setVisible(true);
+		}
+		else
+		{
+			m_frequencySlider.setVisible(true);
+			m_noteSlider.setVisible(false);
+		}
+	};
+
+	// Handle load
+	auto note = static_cast<bool>(vts.getRawParameterValue("ButtonB")->load());
+	
+	if (note)
+	{
+		m_frequencySlider.setVisible(false);
+		m_noteSlider.setVisible(true);
+	}
+	else
+	{
+		m_frequencySlider.setVisible(true);
+		m_noteSlider.setVisible(false);
+	}
 }
 
 MultiPeakFilterAudioProcessorEditor::~MultiPeakFilterAudioProcessorEditor()
@@ -94,12 +131,14 @@ void MultiPeakFilterAudioProcessorEditor::resized()
 	const int pixelSize2 = pixelSize + pixelSize;
 	const int pixelSize3 = pixelSize2 + pixelSize;
 	const int pixelSize4 = pixelSize3 + pixelSize;
+	const int pixelSize5 = pixelSize4 + pixelSize;
 	const int pixelSize15 = pixelSize3 / 2;
 
 	// Set size
 	m_pluginNameComponent.setSize(width, pixelSize2);
 
 	m_frequencySlider.setSize(pixelSize3, pixelSize4);
+	m_noteSlider.setSize(pixelSize3, pixelSize4);
 	m_qSlider.setSize(pixelSize3, pixelSize4);
 	m_gainSlider.setSize(pixelSize3, pixelSize4);
 	m_stepSlider.setSize(pixelSize3, pixelSize4);
@@ -111,6 +150,7 @@ void MultiPeakFilterAudioProcessorEditor::resized()
 	const int row1 = 0;
 	const int row2 = pixelSize2;
 	const int row3 = row2 + pixelSize4;
+	const int row4 = row3 + pixelSize2;
 
 	const int column1 = pixelSize;
 	const int column2 = column1 + pixelSize3;
@@ -121,22 +161,26 @@ void MultiPeakFilterAudioProcessorEditor::resized()
 	m_pluginNameComponent.setTopLeftPosition(0, row1);
 
 	m_frequencySlider.setTopLeftPosition(column1, row2);
+	m_noteSlider.setTopLeftPosition(column1, row2);
 	m_qSlider.setTopLeftPosition(column2, row2);
 	m_gainSlider.setTopLeftPosition(column3, row2);
 
-	m_stepSlider.setTopLeftPosition(column1, row3);
-	m_coutSlider.setTopLeftPosition(column2, row3);
-	m_slopeSlider.setTopLeftPosition(column3, row3);
+	m_stepSlider.setTopLeftPosition(column1, row4);
+	m_coutSlider.setTopLeftPosition(column2, row4);
+	m_slopeSlider.setTopLeftPosition(column3, row4);
 
-	m_volumeSlider.setTopLeftPosition(column5, row2 + pixelSize15);
+	const int volumePosY = row2 + pixelSize3;
+	m_volumeSlider.setTopLeftPosition(column5, volumePosY);
 
 	// Buttons
 	const int buttonSize = 70 * pixelSize / 100;
 
 	typeAButton.setSize(buttonSize, buttonSize);
+	typeBButton.setSize(buttonSize, buttonSize);
 
-	const int posX = column5 + pixelSize15 - buttonSize / 2;
-	const int posY = row2 + pixelSize2 + pixelSize4;
+	const int buttonOffsetX = pixelSize15 - buttonSize / 2;
+	const int buttonOffsetY = pixelSize4 + buttonSize / 2;
 
-	typeAButton.setTopLeftPosition(posX, posY);
+	typeAButton.setTopLeftPosition(column5 + buttonOffsetX, volumePosY + buttonOffsetY);
+	typeBButton.setTopLeftPosition(column1 + buttonOffsetX, row2 + buttonOffsetY);
 }

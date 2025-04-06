@@ -170,4 +170,10 @@ namespace Math
 	{
 		return frequency * std::powf(2.0f, semitones / 12.0f);
 	}
+
+	//==============================================================================
+	inline float noteToFrequency(int midiNoteNumber)
+	{
+		return 440.0f * std::pow(2.0f, (float)(midiNoteNumber - 69) / 12.0f);
+	}
 }

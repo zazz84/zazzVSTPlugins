@@ -23,9 +23,9 @@
 
 //==============================================================================
 
-const std::string MultiPeakFilterAudioProcessor::paramsNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume" };
-const std::string MultiPeakFilterAudioProcessor::labelNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume" };
-const std::string MultiPeakFilterAudioProcessor::paramsUnitNames[] = { " Hz",		"",		" dB",	" st",	"",			"",			" dB" };
+const std::string MultiPeakFilterAudioProcessor::paramsNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume", "Note" };
+const std::string MultiPeakFilterAudioProcessor::labelNames[] =		{ "Frequency",	"Q",	"Gain",	"Step", "Count",	"Slope",	"Volume", "Note" };
+const std::string MultiPeakFilterAudioProcessor::paramsUnitNames[] = { " Hz",		"",		" dB",	" st",	"",			"",			" dB", "" };
 
 //==============================================================================
 MultiPeakFilterAudioProcessor::MultiPeakFilterAudioProcessor()
@@ -47,8 +47,10 @@ MultiPeakFilterAudioProcessor::MultiPeakFilterAudioProcessor()
 	countParameter		= apvts.getRawParameterValue(paramsNames[4]);
 	slopeParameter		= apvts.getRawParameterValue(paramsNames[5]);
 	volumeParameter		= apvts.getRawParameterValue(paramsNames[6]);
+	noteParameter		= apvts.getRawParameterValue(paramsNames[7]);
 
 	buttonAParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonA"));
+	buttonBParameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ButtonB"));
 }
 
 MultiPeakFilterAudioProcessor::~MultiPeakFilterAudioProcessor()
@@ -225,7 +227,8 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	juce::ScopedNoDenormals noDenormals;
 	
 	// Get params
-	const auto frequency = frequencyParameter->load();
+	const auto useNote = buttonBParameter->get();
+	const auto frequency = useNote ? Math::noteToFrequency(noteParameter->load()) : frequencyParameter->load();
 	const auto q = qParameter->load();
 	const auto filterGain = gainParameter->load();
 	const auto step = stepParameter->load();
@@ -277,7 +280,7 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 			// Process all filters
 			for (int i = 0; i <= countLimited; i++)
 			{
-				out = m_filterAutoGain[i].processDF1(out);
+				out = m_filterAutoGain[i].processDF2T(out);
 			}
 
 			const float outAbs = std::fabsf(out);
@@ -337,7 +340,7 @@ void MultiPeakFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 				}
 
 				// Process
-				out = m_filter[channel][i].processDF1(out);
+				out = m_filter[channel][i].processDF2T(out);
 			}
 		
 			//Out
@@ -387,8 +390,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiPeakFilterAudioProcesso
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   2.0f, COUNT_MAX,  1.0f, 1.0f),   4.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f,    200.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>( -36.0f,     36.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f,    119.0f,  1.0f, 1.0f),   0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonA", "ButtonA", true));
+	layout.add(std::make_unique<juce::AudioParameterBool>("ButtonB", "ButtonB", false));
 
 	return layout;
 }

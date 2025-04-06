@@ -20,6 +20,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/NoteModernRotarySlider.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
@@ -56,6 +57,7 @@ protected:
 	PluginNameComponent m_pluginNameComponent;
 
 	ModernRotarySlider m_frequencySlider;
+	NoteModernRotarySlider m_noteSlider;
 	ModernRotarySlider m_qSlider;
 	ModernRotarySlider m_gainSlider;
 	ModernRotarySlider m_stepSlider;
@@ -64,7 +66,9 @@ protected:
 	ModernRotarySlider m_volumeSlider;
 
 	juce::TextButton typeAButton{ "A" };
+	juce::TextButton typeBButton{ "N" };
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonAAttachment;
+	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> buttonBAttachment;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
