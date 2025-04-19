@@ -74,7 +74,7 @@ MultiPeakFilterAudioProcessorEditor::MultiPeakFilterAudioProcessorEditor (MultiP
 	typeBButton.setClickingTogglesState(true);
 
 	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonA", typeAButton));
-	buttonAAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonB", typeBButton));
+	buttonBAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "ButtonB", typeBButton));
 
 	typeAButton.setColour(juce::TextButton::buttonColourId, lightColor);
 	typeBButton.setColour(juce::TextButton::buttonColourId, lightColor);

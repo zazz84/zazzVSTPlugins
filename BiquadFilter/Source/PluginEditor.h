@@ -2,20 +2,31 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
+
+class CustomLookAndFeel : public juce::LookAndFeel_V4
+{
+public:
+	juce::Font getTextButtonFont(juce::TextButton&, int buttonHeight) override
+	{
+		return juce::Font(10.0f); // Custom font size
+	}
+};
 
 //==============================================================================
-class BiquadFilterAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class BiquadFilterAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     BiquadFilterAudioProcessorEditor (BiquadFilterAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~BiquadFilterAudioProcessorEditor() override;
 
-	// GUI setup
-	static const int N_SLIDERS = 5;
 	static const int TYPE_BUTTON_GROUP = 1;
 	static const int ALGORITHM_TYPE_BUTTON_GROUP = 2;
+
+	static const int CANVAS_WIDTH = 1 + 2 + 1 + 2 + 1 + 3 + 3 + 3 + 3 + 3 + 1;
+	static const int CANVAS_HEIGHT = 2 + 1 + 4 + 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -29,14 +40,23 @@ private:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	juce::Label m_labels[N_SLIDERS] = {};
-	juce::Slider m_sliders[N_SLIDERS] = {};
-	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+	PluginNameComponent m_pluginNameComponent;
+
+	GroupLabelComponent m_typeGroupLabel;
+	GroupLabelComponent m_algorithmGroupLabel;
+
+	ModernRotarySlider m_frequencySlider;
+	ModernRotarySlider m_gainSlider;
+	ModernRotarySlider m_QSlider;
+	ModernRotarySlider m_mixSlider;
+	ModernRotarySlider m_volumeSlider;
+
+	CustomLookAndFeel customLook;
 
 	juce::TextButton type1Button{ "LP" };
 	juce::TextButton type2Button{ "HP" };
-	juce::TextButton type3Button{ "BP1" };
-	juce::TextButton type4Button{ "BP2" };
+	juce::TextButton type3Button{ "AP" };
+	juce::TextButton type4Button{ "BP" };
 	juce::TextButton type5Button{ "N" };
 	juce::TextButton type6Button{ "P" };
 	juce::TextButton type7Button{ "LS" };
@@ -60,6 +80,10 @@ private:
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button10Attachment;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button11Attachment;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button12Attachment;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BiquadFilterAudioProcessorEditor)
 };

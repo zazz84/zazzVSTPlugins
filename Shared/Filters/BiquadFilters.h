@@ -27,13 +27,34 @@ public:
 	BiquadFilter() = default;
 	~BiquadFilter() = default;
 
+	enum Type
+	{
+		LowPass,
+		HighPass,
+		BandPassSkirtGain,
+		BandPassPeakGain,
+		Notch,
+		Peak,
+		LowShelf,
+		HighShelf,
+		AllPass
+	};
+
+	enum Algorithm
+	{
+		DF1,
+		DF2,
+		DF1T,
+		DF2T
+	};
+
 	inline void init(const int sampleRate) noexcept
 	{
-		m_SampleRate = sampleRate;
+		m_samplePeriod = 1.0f / sampleRate;
 	};
-	inline void setLowPass(const float frequency, const float Q)
+	inline void setLowPass(const float frequency, const float Q, const float gain = 0.0f)
 	{
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
@@ -47,15 +68,29 @@ public:
 		a2 = 1.0f - alpha;
 
 		normalize();
+
+		/*const double omega = 3.1415926535897932384626433832795028841971693993751058209749445923078164062 * (double)frequency * (double)m_samplePeriod;
+		const double sn = sin(omega);
+		const double cs = cos(omega);
+		const double alpha = sn / (2.0 * (double)Q);
+
+		const double tmp = 1.0 - cs;
+		const double normalize = 1.0 / (1.0 + alpha);
+		
+		b0 = (float)(tmp * 0.5 * normalize);
+		b1 = (float)(tmp * normalize);
+		b2 = b0;
+		a1 = (float)(-2.0 * cs * normalize);
+		a2 = (float)((1.0 - alpha) * normalize);*/
 	};
-	inline void setHighPass(const float frequency, const float Q) noexcept
+	inline void setHighPass(const float frequency, const float Q, const float gain = 0.0f) noexcept
 	{
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
 
-		const float tmp = 1 + cs;
+		const float tmp = 1.0f + cs;
 		b0 = tmp * 0.5f;
 		b1 = -tmp;
 		b2 = b0;
@@ -65,9 +100,9 @@ public:
 
 		normalize();
 	};
-	inline void setBandPassSkirtGain(const float frequency, const float Q) noexcept
+	inline void setBandPassSkirtGain(const float frequency, const float Q, const float gain = 0.0f) noexcept
 	{
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
@@ -81,9 +116,9 @@ public:
 
 		normalize();
 	};
-	inline void setBandPassPeakGain(const float frequency, const float Q) noexcept
+	inline void setBandPassPeakGain(const float frequency, const float Q, const float gain = 0.0f) noexcept
 	{
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
@@ -97,9 +132,10 @@ public:
 
 		normalize();
 	};
-	inline void setNotch(const float frequency, const float Q) noexcept
+	inline void setNotch(const float frequency, const float Q, const float gain = 0.0f) noexcept
 	{
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
+		
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
@@ -108,7 +144,7 @@ public:
 		b1 = -2.0f * cs;
 		b2 = 1.0f;
 		a0 = 1.0f + alpha;
-		a1 = -2.0f * cs;
+		a1 = b1;
 		a2 = 1.0f - alpha;
 
 		normalize();
@@ -116,11 +152,11 @@ public:
 	inline void setPeak(const float frequency, const float Q, const float gain) noexcept
 	{
 		const float A = powf(10.0f, gain / 40.0f);
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
-		const float beta = sqrt(A + A);
+		const float beta = sqrt(A) / Q;
 
 		float tmp = alpha * A;
 		b0 = 1.0f + tmp;
@@ -136,19 +172,19 @@ public:
 	inline void setLowShelf(const float frequency, const float Q, const float gain) noexcept
 	{
 		const float A = powf(10.0f, gain / 40.0f);
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
-		const float beta = sqrt(A + A);
+		const float beta = sqrt(A) / Q;
 
 		float tmp1 = A + 1.0f;
 		float tmp2 = A - 1.0f;
 		b0 = A * (tmp1 - tmp2 * cs + beta * sn);
-		b1 = 2 * A * (tmp2 - tmp1 * cs);
+		b1 = 2.0f * A * (tmp2 - tmp1 * cs);
 		b2 = A * (tmp1 - tmp2 * cs - beta * sn);
 		a0 = tmp1 + tmp2 * cs + beta * sn;
-		a1 = -2 * (tmp2 + tmp1 * cs);
+		a1 = -2.0f * (tmp2 + tmp1 * cs);
 		a2 = tmp1 + tmp2 * cs - beta * sn;
 
 		normalize();
@@ -156,23 +192,40 @@ public:
 	inline void setHighShelf(const float frequency, const float Q, const float gain) noexcept
 	{
 		const float A = powf(10.0f, gain / 40.0f);
-		const float omega = M_PI2 * frequency / m_SampleRate;
+		const float omega = M_PI2 * frequency * m_samplePeriod;
 		const float sn = sin(omega);
 		const float cs = cos(omega);
 		const float alpha = sn / (2.0f * Q);
-		const float beta = sqrt(A + A);
+		const float beta = sqrt(A) / Q;
 
 		float tmp1 = A + 1.0f;
 		float tmp2 = A - 1.0f;
 		b0 = A * (tmp1 + tmp2 * cs + beta * sn);
-		b1 = -2 * A * (tmp2 + tmp1 * cs);
+		b1 = -2.0f * A * (tmp2 + tmp1 * cs);
 		b2 = A * (tmp1 + tmp2 * cs - beta * sn);
 		a0 = tmp1 - tmp2 * cs + beta * sn;
-		a1 = 2 * (tmp2 - tmp1 * cs);
+		a1 = 2.0f * (tmp2 - tmp1 * cs);
 		a2 = tmp1 - tmp2 * cs - beta * sn;
 
 		normalize();
 	};
+	inline void setAllPass(const float frequency, const float Q, const float gain = 0.0f) noexcept
+	{
+		const float omega = M_PI2 * frequency * m_samplePeriod;
+		const float cs = cos(omega);
+		const float sn = sin(omega);
+		const float alpha = sn / (2.0f * Q);
+
+		b0 = 1.0f - alpha;
+		b1 = -2.0f * cs;
+		b2 = 1.0f + alpha;
+		a0 = b2;
+		a1 = b1;
+		a2 = 1.0f - alpha;
+		
+		normalize();
+	}
+
 	inline float processDF1(const float in) noexcept
 	{
 		const float out = b0 * in + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
@@ -235,19 +288,92 @@ public:
 		y1 = 0.0f;
 		y2 = 0.0f;
 
-		m_SampleRate = 48000;
+		m_samplePeriod = 2.08e-5f;
 	};
+
+	std::function<void(const float, const float, const float)> set;
+	void setType(Type type)
+	{
+		switch (type)
+		{
+		case Type::LowPass:
+			set = [this](float x, float y, float z) { return setLowPass(x, y, z); };
+			break;
+
+		case Type::HighPass:
+			set = [this](float x, float y, float z) { return setHighPass(x, y, z); };
+			break;
+
+		case Type::BandPassSkirtGain:
+			set = [this](float x, float y, float z) { return setBandPassSkirtGain(x, y, z); };
+			break;
+
+		case Type::BandPassPeakGain:
+			set = [this](float x, float y, float z) { return setBandPassPeakGain(x, y, z); };
+			break;
+
+		case Type::Notch:
+			set = [this](float x, float y, float z) { return setNotch(x, y, z); };
+			break;
+
+		case Type::Peak:
+			set = [this](float x, float y, float z) { return setPeak(x, y, z); };
+			break;
+
+		case Type::LowShelf:
+			set = [this](float x, float y, float z) { return setLowShelf(x, y, z); };
+			break;
+
+		case Type::HighShelf:
+			set = [this](float x, float y, float z) { return setHighShelf(x, y, z); };
+			break;
+
+		case Type::AllPass:
+			set = [this](float x, float y, float z) { return setAllPass(x, y, z); };
+			break;
+		}
+	}
+
+	std::function<float(const float)> process;
+	void setAlgorithm(Algorithm algorithm)
+	{
+		switch (algorithm)
+		{
+		case Algorithm::DF1:
+			process = [this](float x) { return processDF1(x); };
+			break;
+
+		case Algorithm::DF2:
+			process = [this](float x) { return processDF2(x); };
+			break;
+
+		case Algorithm::DF1T:
+			process = [this](float x) { return processDF1T(x); };
+			break;
+
+		case Algorithm::DF2T:
+			process = [this](float x) { return processDF2T(x); };
+			break;
+		}
+	}
 
 private:
 	inline void normalize() noexcept
 	{
-		b0 = b0 / a0;
+		/*b0 = b0 / a0;
 		b1 = b1 / a0;
 		b2 = b2 / a0;
 		a1 = a1 / a0;
-		a2 = a2 / a0;
+		a2 = a2 / a0;*/
+
+		const float normalize = 1.0f / a0;
+		b0 = b0 * normalize;
+		b1 = b1 * normalize;
+		b2 = b2 * normalize;
+		a1 = a1 * normalize;
+		a2 = a2 * normalize;
 	};
-	
+		
 	float a0 = 0.0f;
 	float a1 = 0.0f;
 	float a2 = 0.0f;
@@ -262,5 +388,5 @@ private:
 	float y1 = 0.0f;
 	float y2 = 0.0f;
 
-	int m_SampleRate = 48000;
+	float m_samplePeriod = 2.08e-5f;
 };

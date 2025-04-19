@@ -11,7 +11,9 @@
 
 //==============================================================================
 
-const std::string BiquadFilterAudioProcessor::paramsNames[] = { "Frequency", "Gain", "Q", "Mix", "Volume" };
+const std::string BiquadFilterAudioProcessor::paramsNames[] =		{ "Frequency",	"Gain", "Q",	"Mix",	"Volume" };
+const std::string BiquadFilterAudioProcessor::labelNames[] =		{ "Frequency",	"Gain", "Q",	"Mix",	"Volume" };
+const std::string BiquadFilterAudioProcessor::paramsUnitNames[] =	{ " Hz",		" dB",	"",		" %",	" dB" };
 
 //==============================================================================
 BiquadFilterAudioProcessor::BiquadFilterAudioProcessor()
@@ -34,8 +36,8 @@ BiquadFilterAudioProcessor::BiquadFilterAudioProcessor()
 
 	button1Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LP"));
 	button2Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("HP"));
-	button3Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("BP1"));
-	button4Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("BP2"));
+	button3Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("AP"));
+	button4Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("BP"));
 	button5Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("N"));
 	button6Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("P"));
 	button7Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("LS"));
@@ -119,6 +121,19 @@ void BiquadFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 	int sr = (int)sampleRate;
 	m_filter[0].init(sr);
 	m_filter[1].init(sr);
+
+	m_frequencySmoother.set(sr);
+	m_gainSmoother.set(sr);
+	m_QSmoother.set(sr);
+	m_mixSmoother.set(sr);
+	m_volumeSmoother.set(sr);
+
+	const float frequency = 6.0f;
+	m_frequencySmoother.set(frequency);
+	m_gainSmoother.set(frequency);
+	m_QSmoother.set(frequency);
+	m_mixSmoother.set(frequency);
+	m_volumeSmoother.set(frequency);
 }
 
 void BiquadFilterAudioProcessor::releaseResources()
@@ -152,7 +167,7 @@ bool BiquadFilterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void BiquadFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void BiquadFilterAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Buttons
 	const auto button1 = button1Parameter->get();
@@ -162,82 +177,105 @@ void BiquadFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 	const auto button5 = button5Parameter->get();
 	const auto button6 = button6Parameter->get();
 	const auto button7 = button7Parameter->get();
-	
+
 	const auto button9 = button9Parameter->get();
 	const auto button10 = button10Parameter->get();
 	const auto button11 = button11Parameter->get();
-
 
 	// Get params
 	const auto frequency = frequencyParameter->load();
 	const auto gain = gainParameter->load();
 	const auto Q = QParameter->load();
-	const auto mix = mixParameter->load();
+	const auto mix = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const int channels = getTotalNumOutputChannels();
 	const int samples = buffer.getNumSamples();
 
+	// Set filter type and algorithm
 	for (int channel = 0; channel < channels; ++channel)
 	{
-		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
 		auto& filter = m_filter[channel];
-		
+
+		// Set filter type
 		if (button1)
-			filter.setLowPass(frequency, Q);
-		else if(button2)
-			filter.setHighPass(frequency, Q);
-		else if(button3)
-			filter.setBandPassSkirtGain(frequency, Q);
-		else if(button4)
-			filter.setBandPassPeakGain(frequency, Q);
-		else if(button5)
-			filter.setNotch(frequency, Q);
-		else if(button6)
-			filter.setPeak(frequency, Q, gain);
-		else if(button7)
-			filter.setLowShelf(frequency, Q, gain);
+			filter.setType(BiquadFilter::Type::LowPass);
+		else if (button2)
+			filter.setType(BiquadFilter::Type::HighPass);
+		else if (button3)
+			filter.setType(BiquadFilter::Type::AllPass);
+		else if (button4)
+			filter.setType(BiquadFilter::Type::BandPassPeakGain);
+		else if (button5)
+			filter.setType(BiquadFilter::Type::Notch);
+		else if (button6)
+			filter.setType(BiquadFilter::Type::Peak);
+		else if (button7)
+			filter.setType(BiquadFilter::Type::LowShelf);
 		else
-			filter.setHighShelf(frequency, Q, gain);
+			filter.setType(BiquadFilter::Type::HighShelf);
 
-
+		// Set processing type
 		if (button9)
-		{
-			for (int sample = 0; sample < samples; sample++)
-			{
-				const float in = channelBuffer[sample];
-				const float inFiltered = filter.processDF1(in);
-				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
-			}
-		}
+			filter.setAlgorithm(BiquadFilter::Algorithm::DF1);
 		else if (button10)
-		{
-			for (int sample = 0; sample < samples; sample++)
-			{
-				const float in = channelBuffer[sample];
-				const float inFiltered = filter.processDF2(in);
-				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
-			}
-		}
+			filter.setAlgorithm(BiquadFilter::Algorithm::DF2);
 		else if (button11)
-		{
-			for (int sample = 0; sample < samples; sample++)
-			{
-				const float in = channelBuffer[sample];
-				const float inFiltered = filter.processDF1T(in);
-				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
-			}
-		}
+			filter.setAlgorithm(BiquadFilter::Algorithm::DF1T);
 		else
+			filter.setAlgorithm(BiquadFilter::Algorithm::DF2T);
+	}
+
+	if (channels == 1)
+	{
+		for (int sample = 0; sample < samples; sample++)
 		{
-			for (int sample = 0; sample < samples; sample++)
-			{
-				const float in = channelBuffer[sample];
-				const float inFiltered = filter.processDF2T(in);
-				channelBuffer[sample] = volume * ((1.0f - mix) * in + inFiltered * mix);
-			}
+			const float frequencySmooth = m_frequencySmoother.process(frequency);
+			const float gainSmooth = m_gainSmoother.process(gain);
+			const float QSmooth = m_QSmoother.process(Q);
+			const float mixSmooth = m_mixSmoother.process(mix);
+			const float volumeSmooth = m_volumeSmoother.process(volume);
+
+			auto* channelBuffer = buffer.getWritePointer(0);
+			auto& filter = m_filter[0];
+
+			filter.set(frequencySmooth, QSmooth, gainSmooth);
+
+			const float in = channelBuffer[sample];
+			const float inFiltered = filter.process(in);
+			channelBuffer[sample] = volumeSmooth * ((1.0f - mixSmooth) * in + inFiltered * mixSmooth);
+		}
+	}
+	else
+	{
+		for (int sample = 0; sample < samples; sample++)
+		{
+			const float frequencySmooth = m_frequencySmoother.process(frequency);
+			const float gainSmooth = m_gainSmoother.process(gain);
+			const float QSmooth = m_QSmoother.process(Q);
+			const float mixSmooth = m_mixSmoother.process(mix);
+			const float volumeSmooth = m_volumeSmoother.process(volume);
+
+			auto* leftChannelBuffer = buffer.getWritePointer(0);
+			auto* rightChannelBuffer = buffer.getWritePointer(1);
+			auto& filterLeft = m_filter[0];
+			auto& filterRight = m_filter[1];
+
+			filterLeft.set(frequencySmooth, QSmooth, gainSmooth);
+			filterRight.set(frequencySmooth, QSmooth, gainSmooth);
+
+			const float inLeft = leftChannelBuffer[sample];
+			const float inRight = rightChannelBuffer[sample];
+
+			const float inLeftFiltered = filterLeft.process(inLeft);
+			const float inRightFiltered = filterRight.process(inRight);
+
+			const float dry = volumeSmooth * (1.0f - mixSmooth);
+			const float wet = volumeSmooth * mixSmooth;
+
+			leftChannelBuffer[sample] = dry * inLeft + wet * inLeftFiltered;
+			rightChannelBuffer[sample] = dry * inRight + wet * inRightFiltered;
 		}
 	}
 }
@@ -278,14 +316,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout BiquadFilterAudioProcessor::
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 0.3f), 500.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(        -18.0f,         18.0f, 0.01f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(          0.1f,          10.0, 0.01f, 1.0f),   0.7f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(          0.0f,           1.0, 0.01f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(          0.1f,          12.0, 0.01f, 1.0f),   0.7f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(          0.0f,         100.0,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(        -18.0f,         18.0f,  0.1f, 1.0f),   0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("LP", "LP", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("HP", "HP", false));
-	layout.add(std::make_unique<juce::AudioParameterBool>("BP1", "BP1", false));
-	layout.add(std::make_unique<juce::AudioParameterBool>("BP2", "BP2", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("AP", "AP", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("BP", "BP", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("N", "N", false));
 	layout.add(std::make_unique<juce::AudioParameterBool>("P", "P", true));
 	layout.add(std::make_unique<juce::AudioParameterBool>("LS", "LS", false));

@@ -2,16 +2,19 @@
 
 <JUCERPROJECT id="R40GXi" name="BiquadFilter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="EQ">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="EQ"
+              version="1.1.0">
   <MAINGROUP id="Qesf0i" name="BiquadFilter">
     <GROUP id="{6B834CEB-42A0-61AA-7749-F97AD2E74B18}" name="Source">
-      <FILE id="mTVRes" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
+      <FILE id="TvqpWc" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="O44XKc" name="GroupLabelComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/GroupLabelComponent.h"/>
+      <FILE id="hA0enb" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="SmYNnx" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
       <FILE id="i7b7F6" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="dgdBm6" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="cWk5yG" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="Yuu1HN" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="ATnDbd" name="PluginProcessor.h" compile="0" resource="0"

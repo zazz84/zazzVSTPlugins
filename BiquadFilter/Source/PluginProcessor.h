@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 
 //==============================================================================
 class BiquadFilterAudioProcessor  : public juce::AudioProcessor
@@ -18,6 +19,8 @@ public:
 	static const int FREQUENCY_MIN = 20;
 	static const int FREQUENCY_MAX = 20000;
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
+	static const std::string paramsUnitNames[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -59,6 +62,12 @@ public:
 
 private:	
 	//==============================================================================
+
+	OnePoleLowPassFilter m_frequencySmoother;
+	OnePoleLowPassFilter m_gainSmoother;
+	OnePoleLowPassFilter m_QSmoother;
+	OnePoleLowPassFilter m_mixSmoother;
+	OnePoleLowPassFilter m_volumeSmoother;
 
 	std::atomic<float>* frequencyParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;

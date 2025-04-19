@@ -74,7 +74,7 @@ public:
 			int xStop = width - (height / 2);
 			
 			g.setColour(juce::Colours::white);
-			g.drawLine(xStart, yPosition, xStop, yPosition, 0.5f);			// Line width = 1.0f
+			g.drawLine((float)xStart, (float)yPosition, (float)xStop, (float)yPosition, 0.5f);			// Line width = 1.0f
 		}
 	}
 

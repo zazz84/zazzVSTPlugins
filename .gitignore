@@ -7,3 +7,9 @@
 VocalCompressor/VocalCompressor.filtergraph
 SineWaveshaper/SineWaveshaper.filtergraph
 FDNReverb/FDNReverb.filtergraph
+AirAbsorbtion/AirAbsorbtion.filtergraph
+AirAbsorbtion/AirAbsorbtion.jucer
+AirAbsorbtion/Source/PluginEditor.cpp
+AirAbsorbtion/Source/PluginProcessor.cpp
+AirAbsorbtion/Source/PluginEditor.h
+AirAbsorbtion/Source/PluginProcessor.h
