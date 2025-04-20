@@ -519,6 +519,11 @@ public:
 		m_slider.setValue(newValue, juce::sendNotification);      // Update slider value
 	}
 
+	float getValue()
+	{
+		return m_slider.getValue();
+	}
+
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	ModernRotarySliderLookAndFeel m_smallSliderLookAndFeel;
 

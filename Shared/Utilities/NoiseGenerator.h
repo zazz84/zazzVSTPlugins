@@ -215,3 +215,44 @@ private:
 
 	std::bernoulli_distribution m_bernoulliDistribution{ 0.5 };
 };
+
+//==============================================================================
+class VelvetNoiseGenerator
+{
+public:
+	VelvetNoiseGenerator()
+	{
+		m_densityGenerator.setSeed(526.65);
+	}
+	~VelvetNoiseGenerator() = default;
+	inline void set(const float density)
+	{
+		m_density = density;
+	}
+	inline float process11()
+	{
+		// Should be zero?
+		if (m_densityGenerator.process() > m_density)
+		{
+			return 0.0f;
+		}
+		else
+		{
+			// Generate sign
+			if (m_signGenerator.process() > 0.5f)
+			{
+				return 1.0f;
+			}
+			else
+			{
+				return -1.0f;
+			}
+		}
+	}
+
+private:
+	LinearCongruentialNoiseGenerator m_densityGenerator;
+	LinearCongruentialNoiseGenerator m_signGenerator;
+
+	float m_density = 0.5f;
+};
