@@ -222,12 +222,17 @@ class VelvetNoiseGenerator
 public:
 	VelvetNoiseGenerator()
 	{
-		m_densityGenerator.setSeed(526.65);
+		reset();
 	}
 	~VelvetNoiseGenerator() = default;
 	inline void set(const float density)
 	{
 		m_density = density;
+	}
+	inline void reset()
+	{
+		m_densityGenerator.setSeed(526.65);
+		m_signGenerator.setSeed(79L);
 	}
 	inline float process11()
 	{

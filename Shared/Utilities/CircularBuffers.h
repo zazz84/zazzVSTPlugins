@@ -25,7 +25,7 @@ public:
 	CircularBuffer() = default;
 	~CircularBuffer() { clearBuffer(); }
 
-	inline void init(const int size)
+	/*inline void init(const int size)
 	{
 		if (m_buffer != nullptr)
 		{
@@ -40,6 +40,41 @@ public:
 
 		m_buffer = new float[sizePowerOfTwo];
 		memset(m_buffer, 0, sizePowerOfTwo * sizeof(float));
+
+		m_buffer = (float*)_aligned_malloc(sizePowerOfTwo * sizeof(float), 16);
+	}*/
+	inline void init(const int size)
+	{
+		if (m_buffer != nullptr)
+		{
+			clearBuffer();
+		}
+
+		m_head = 0;
+		const int sizePowerOfTwo = GetPowerOfTwo(size);
+		m_bitMask = sizePowerOfTwo - 1;
+		m_readOffset = m_bitMask - size;
+
+		const size_t alignment = 32; // Use 16 for SSE, 32 for AVX
+		const size_t allocSize = sizePowerOfTwo * sizeof(float);
+
+#if defined(_MSC_VER) // Windows with MSVC
+		m_buffer = static_cast<float*>(_aligned_malloc(allocSize, alignment));
+		if (!m_buffer)
+		{
+			throw std::bad_alloc();
+		}
+#elif defined(__APPLE__) || defined(__linux__) || defined(__unix__) // POSIX
+		if (posix_memalign(reinterpret_cast<void**>(&m_buffer), alignment, allocSize) != 0)
+		{
+			m_buffer = nullptr;
+			throw std::bad_alloc();
+		}
+#else
+#error "Unknown platform: please define aligned allocation"
+#endif
+
+		std::memset(m_buffer, 0, allocSize);
 	}
 	inline void set(const int size) 
 	{
@@ -64,10 +99,9 @@ public:
 		
 		clearBuffer();
 	}
-	inline float readDelay(const int sample) const
+	__forceinline float readDelay(const int sample) const noexcept
 	{
-		const int readIdx = (m_head - sample) & m_bitMask;
-		return m_buffer[readIdx];
+		return m_buffer[(m_head - sample) & m_bitMask];
 	}
 	inline float readDelayLinearInterpolation(const float sample)
 	{
@@ -160,6 +194,11 @@ public:
 		return ((c3 * z + c2) * z + c1) * z + c0;
 	}
 
+	inline float* getRawPointer() { return m_buffer; }
+	inline const float* getRawPointer() const { return m_buffer; }
+	inline int getHead() const { return m_head; }
+	inline int getMask() const { return m_bitMask; }
+
 private:
 	inline int GetPowerOfTwo(int i)
 	{
@@ -174,10 +213,22 @@ private:
 
 		return n;
 	}
-	inline void clearBuffer()
+	/*inline void clearBuffer()
 	{
 		delete[] m_buffer;
 		m_buffer = nullptr;
+	}*/
+	inline void clearBuffer()
+	{
+		if (m_buffer)
+		{
+#if defined(_MSC_VER)
+			_aligned_free(m_buffer);
+#else
+			free(m_buffer);
+#endif
+			m_buffer = nullptr;
+		}
 	}
 
 	float* m_buffer = nullptr;
