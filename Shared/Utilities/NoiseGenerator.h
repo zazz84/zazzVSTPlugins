@@ -67,7 +67,7 @@ public:
 			m_seed == 7600 ||
 			m_seed == 6688)
 		{
-			m_seed = (float)(m_conter++);
+			m_seed = m_conter++;
 			m_conter %= 10000;
 		}
 
@@ -231,8 +231,13 @@ public:
 	}
 	inline void reset()
 	{
-		m_densityGenerator.setSeed(526.65);
+		m_densityGenerator.setSeed(526L);
 		m_signGenerator.setSeed(79L);
+	}
+	inline void setSeed(const long densitySeed, const long signSeed)
+	{
+		m_densityGenerator.setSeed(densitySeed);
+		m_signGenerator.setSeed(signSeed);
 	}
 	inline float process11()
 	{

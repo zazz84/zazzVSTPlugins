@@ -24,7 +24,7 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/NoiseGenerator.h"
 
-class VelvetNoiseReverb : CircularBuffer
+class VelvetNoiseReverb
 {
 public:
 	VelvetNoiseReverb() = default;
@@ -39,6 +39,12 @@ public:
 		VNC() = default;
 		~VNC() = default;
 
+		inline void release()
+		{
+			m_positiveSize = 0;
+			m_negativeSize = 0;
+		}
+
 		//! Holds indexes to positive values in velvet noise IR for given region
 		int m_positiveIdx[VNC_MAX_SIZE];
 		//! Holds indexes to negative values in velvet noise IR for given region
@@ -47,25 +53,31 @@ public:
 		int m_negativeSize = 0;
 	};
 
-	inline void init(const int sampleRate, const float lengthSeconds)
+	inline void init(const int sampleRate, const float lengthSeconds, const long densitySeed = 79L, const long signSeed = 264L)
 	{
-		const int size = lengthSeconds * (float)sampleRate;	
-		CircularBuffer::init(size);
+		m_sampleRate = sampleRate;
 		
+		const int size = (int)(lengthSeconds * (float)sampleRate);
+		m_buffer.init(size);
+
 		// Generate velvet noise IR
 		VelvetNoiseGenerator velvetNoiseGenerator;
-		velvetNoiseGenerator.set(0.02f);
+		velvetNoiseGenerator.setSeed(densitySeed, signSeed);
+		velvetNoiseGenerator.set(0.01f);
 
 		m_velvetNoiseIR = new int8_t[size];
 
-		for (int i = 0; i < size; i++)
+		std::memset(m_velvetNoiseIR, 0, 20);
+
+		for (int i = 21; i < size; i++)
 		{			
 			m_velvetNoiseIR[i] = static_cast<int8_t>(velvetNoiseGenerator.process11());
 		}
 	
-		// Generate exponantialy decaying gains fro VNC
+		// Generate exponantialy decaying gains for VNC
 		const float decayRate = log(1000.0f);
 
+		m_segmentCount = 0;
 		for (int i = 1; i <= VNC_COUNT; i++)
 		{
 			m_segmentCount += i;
@@ -76,15 +88,15 @@ public:
 
 		for (int i = 0; i < VNC_COUNT; i++)
 		{
-			time += i * segmentTimeSeconds;
+			time += (float)i * segmentTimeSeconds;
 			m_gains[i] = expf(-decayRate * time);
 		}
 	}
 	inline void set(const float lengthSeconds)
 	{
 		// Devide inpulse response to segments with non-uniform lenght		
-		const int size = (int)(lengthSeconds * (float)m_sampleRate);
-		const int segmentSize = size / m_segmentCount;
+		const float size = lengthSeconds * (float)m_sampleRate;
+		const int segmentSize = (int)(size / (float)m_segmentCount);
 
 		int segmentIdx[VNC_COUNT + 1];
 		segmentIdx[0] = 0;
@@ -94,7 +106,7 @@ public:
 			segmentIdx[i] = segmentIdx[i - 1] + i * segmentSize;
 		}
 
-		segmentIdx[VNC_COUNT] = size;
+		segmentIdx[VNC_COUNT] = size - 1;
 
 		// Get indexes
 		for (int i = 0; i < VNC_COUNT; i++)
@@ -132,7 +144,7 @@ public:
 	}
 	inline float process(const float in) noexcept
 	{
-		write(in);
+		m_buffer.write(in);
 
 		float out = 0.0f;
 
@@ -143,14 +155,14 @@ public:
 			float positiveValue = 0.0f;
 			float negativeValue = 0.0f;
 
-			for (int i = 0; i < vnc.m_positiveSize; i++)
+			for (int j = 0; j < vnc.m_positiveSize; j++)
 			{
-				positiveValue += readDelay(vnc.m_positiveIdx[i]);
+				positiveValue += m_buffer.readDelay(vnc.m_positiveIdx[j]);
 			}
 
-			for (int i = 0; i < vnc.m_negativeSize; i++)
+			for (int j = 0; j < vnc.m_negativeSize; j++)
 			{
-				negativeValue += readDelay(vnc.m_negativeIdx[i]);
+				negativeValue += m_buffer.readDelay(vnc.m_negativeIdx[j]);
 			}
 
 			out += m_gains[i] * (positiveValue - negativeValue);
@@ -163,12 +175,22 @@ public:
 		delete[] m_velvetNoiseIR;
 		m_velvetNoiseIR = nullptr;
 
-		CircularBuffer::release();
+		m_buffer.release();
+
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			m_VNC[i].release();
+			m_gains[i] = 0.0f;
+		}
+
+		m_segmentCount = 0;
+		m_sampleRate = 48000;
 	}
 
 private:
+	CircularBuffer m_buffer;
 	int8_t* m_velvetNoiseIR = nullptr;
-	VNC m_VNC[VNC_COUNT];
+	VNC m_VNC[VNC_COUNT] = {};
 	float m_gains[VNC_COUNT];
 	int m_segmentCount = 0;
 	int m_sampleRate = 48000;

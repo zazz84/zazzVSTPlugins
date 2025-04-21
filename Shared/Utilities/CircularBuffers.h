@@ -40,8 +40,6 @@ public:
 
 		m_buffer = new float[sizePowerOfTwo];
 		memset(m_buffer, 0, sizePowerOfTwo * sizeof(float));
-
-		m_buffer = (float*)_aligned_malloc(sizePowerOfTwo * sizeof(float), 16);
 	}*/
 	inline void init(const int size)
 	{
@@ -99,7 +97,7 @@ public:
 		
 		clearBuffer();
 	}
-	__forceinline float readDelay(const int sample) const noexcept
+	inline float readDelay(const int sample) const noexcept
 	{
 		return m_buffer[(m_head - sample) & m_bitMask];
 	}

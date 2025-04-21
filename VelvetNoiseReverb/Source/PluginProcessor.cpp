@@ -113,14 +113,14 @@ void VelvetNoiseReverbAudioProcessor::prepareToPlay (double sampleRate, int samp
 
 	const float lengthSeconds = 2.0f;
 
-	m_reverb[0].init(sampleRate, lengthSeconds);
-	m_reverb[1].init(sampleRate, lengthSeconds);
-
+	m_reverb[0].init(sr, lengthSeconds, 76L, 512L);
+	m_reverb[1].init(sr, lengthSeconds, 76L, 128L);
 }
 
 void VelvetNoiseReverbAudioProcessor::releaseResources()
 {
-	
+	m_reverb[0].release();
+	m_reverb[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
