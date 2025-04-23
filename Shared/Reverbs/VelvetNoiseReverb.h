@@ -23,8 +23,173 @@
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/NoiseGenerator.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 class VelvetNoiseReverb
+{
+public:
+	VelvetNoiseReverb() = default;
+	~VelvetNoiseReverb() = default;
+
+	static const int VNC_COUNT = 16;
+	static const int VNC_MAX_SIZE = 64;
+
+	struct VNC
+	{
+	public:
+		VNC() = default;
+		~VNC() = default;
+
+		//! Holds indexes to positive values in velvet noise IR for given region
+		int m_positiveIdx[VNC_MAX_SIZE];
+		//! Holds indexes to negative values in velvet noise IR for given region
+		int m_negativeIdx[VNC_MAX_SIZE];
+	};
+
+	inline void init(const int sampleRate, const float lengthSeconds)
+	{
+		m_sampleRate = sampleRate;
+		
+		const int size = (int)(lengthSeconds * (float)sampleRate);
+		m_buffer.init(size);
+	
+		// Filters
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			m_highPass[i].init(sampleRate);
+			m_lowPass[i].init(sampleRate);
+		}
+	}
+	inline void set(const float lengthSeconds, const float preDelaySeconds, const float decayFactor, const float density, const long seed, const float low, const float high)
+	{
+		m_VNCSize = 4 + (VNC_MAX_SIZE - 4) * density;
+		
+		// Generate exponantialy decaying gains for VNC
+		m_segmentCount = 0;
+		for (int i = 1; i <= VNC_COUNT; i++)
+		{
+			m_segmentCount += i;
+		}
+
+		const float segmentTimeSeconds = 1.0f / m_segmentCount;
+		const float decayRate = log(1000.0f) * decayFactor;
+		float time = 0.0f;
+
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			time += (float)i * segmentTimeSeconds;
+			m_gains[i] = expf(-decayRate * time);
+		}
+
+		// Add lead in to the IR
+		m_gains[0] = 0.5f * m_gains[0];
+
+		// Devide inpulse response to segments with non-uniform lenght		
+		const float size = lengthSeconds * (float)m_sampleRate;
+		const int segmentSize = (int)(size / (float)m_segmentCount);
+		const float predelaySize = preDelaySeconds * (float)m_sampleRate;
+
+		int segmentIdx[VNC_COUNT + 1];
+		segmentIdx[0] = predelaySize + 1;
+
+		for (int i = 1; i < VNC_COUNT; i++)
+		{
+			segmentIdx[i] = segmentIdx[i - 1] + i * segmentSize;
+		}
+
+		segmentIdx[VNC_COUNT] = size + predelaySize - 1;
+
+		// Generate velvet noise indexes
+		LinearCongruentialNoiseGenerator noiseGenerator;
+		noiseGenerator.setSeed(seed);
+		
+		// Rest of the segments
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			auto& vnc = m_VNC[i];
+
+			const int currSegmentOffset = segmentIdx[i];
+			const int currSegmentSize = segmentIdx[i + 1] - currSegmentOffset;
+			
+			for (int j = 0; j < m_VNCSize; j++)
+			{
+				vnc.m_positiveIdx[j] = currSegmentOffset + (int)(noiseGenerator.process() * currSegmentSize);
+				vnc.m_negativeIdx[j] = currSegmentOffset + (int)(noiseGenerator.process() * currSegmentSize);
+			}
+		}
+
+		// Filters
+		const float baseHighFrequency = 15000.0f - (1.0f - high) * 7000.0f;
+		const float baseLowFrequency = 20.0f + (1.0f - low) * 120.0f;
+		const float highFactor = (1.0f - high) * 450.0f;
+		const float lowFactor = (1.0f - low) * 10.0f;
+		const float qHigh = 0.5f + high * 0.7f;
+		const float qLow = 0.5f + low * 0.5f;
+
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			m_highPass[i].setHighPass(baseLowFrequency + i * lowFactor, qLow);
+			m_lowPass[i].setLowPass(baseHighFrequency - i * highFactor, qHigh);
+		}
+	}
+	inline float process(const float in) noexcept
+	{
+		m_buffer.write(in);
+
+		float out = 0.0f;
+
+		LinearCongruentialNoiseGenerator randomGenerator = {};
+
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			auto& vnc = m_VNC[i];
+			
+			float positiveValue = 0.0f;
+			float negativeValue = 0.0f;
+
+			for (int j = 0; j < m_VNCSize; j++)
+			{
+				positiveValue += m_buffer.readDelay(vnc.m_positiveIdx[j]);
+				negativeValue += m_buffer.readDelay(vnc.m_negativeIdx[j]);
+			}
+
+			out += m_gains[i] * m_highPass[i].processDF1(m_lowPass[i].processDF1((positiveValue - negativeValue)));
+		}
+
+		return out;
+	}
+	inline void release()
+	{
+		delete[] m_velvetNoiseIR;
+		m_velvetNoiseIR = nullptr;
+
+		m_buffer.release();
+
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			m_gains[i] = 0.0f;
+		}
+
+		m_sampleRate = 48000;
+		m_segmentCount = 0;
+		m_VNCSize = VNC_MAX_SIZE;
+	}
+
+private:
+	CircularBuffer m_buffer;
+	int8_t* m_velvetNoiseIR = nullptr;
+	BiquadFilter m_lowPass[VNC_COUNT];
+	BiquadFilter m_highPass[VNC_COUNT];
+	VNC m_VNC[VNC_COUNT] = {};
+	float m_gains[VNC_COUNT];
+	int m_sampleRate = 48000;
+	int m_segmentCount = 0;
+	int m_VNCSize = VNC_MAX_SIZE;
+};
+
+//==============================================================================
+
+/*class VelvetNoiseReverb
 {
 public:
 	VelvetNoiseReverb() = default;
@@ -63,7 +228,7 @@ public:
 		// Generate velvet noise IR
 		VelvetNoiseGenerator velvetNoiseGenerator;
 		velvetNoiseGenerator.setSeed(densitySeed, signSeed);
-		velvetNoiseGenerator.set(0.01f);
+		velvetNoiseGenerator.set(0.015f);
 
 		m_velvetNoiseIR = new int8_t[size];
 
@@ -91,8 +256,15 @@ public:
 			time += (float)i * segmentTimeSeconds;
 			m_gains[i] = expf(-decayRate * time);
 		}
+
+		// Filters
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			m_highPass[i].init(sampleRate);
+			m_lowPass[i].init(sampleRate);
+		}
 	}
-	inline void set(const float lengthSeconds)
+	inline void set(const float lengthSeconds, const float low, const float high)
 	{
 		// Devide inpulse response to segments with non-uniform lenght		
 		const float size = lengthSeconds * (float)m_sampleRate;
@@ -141,6 +313,20 @@ public:
 			vnc.m_positiveSize = positiveIndex;
 			vnc.m_negativeSize = negativeIndex;
 		}
+
+		// Filters
+		const float baseHighFrequency = 18000.0f - (1.0f - high) * 9500.0f;
+		const float baseLowFrequency = 20.0f + (1.0f - low) * 120.0f;
+		const float highFactor = (1.0f - high) * 500.0f;
+		const float lowFactor = (1.0f - low) * 10.0f;
+		const float qHigh = 0.5f + high * 0.7f;
+		const float qLow = 0.5f + low * 0.5f;
+
+		for (int i = 0; i < VNC_COUNT; i++)
+		{
+			m_highPass[i].setHighPass(baseLowFrequency + i * lowFactor, qLow);
+			m_lowPass[i].setLowPass(baseHighFrequency - i * highFactor, qHigh);
+		}
 	}
 	inline float process(const float in) noexcept
 	{
@@ -165,7 +351,7 @@ public:
 				negativeValue += m_buffer.readDelay(vnc.m_negativeIdx[j]);
 			}
 
-			out += m_gains[i] * (positiveValue - negativeValue);
+			out += m_gains[i] * m_highPass[i].processDF1(m_lowPass[i].processDF1((positiveValue - negativeValue)));
 		}
 
 		return out;
@@ -190,11 +376,13 @@ public:
 private:
 	CircularBuffer m_buffer;
 	int8_t* m_velvetNoiseIR = nullptr;
+	BiquadFilter m_lowPass[VNC_COUNT];
+	BiquadFilter m_highPass[VNC_COUNT];
 	VNC m_VNC[VNC_COUNT] = {};
 	float m_gains[VNC_COUNT];
 	int m_segmentCount = 0;
 	int m_sampleRate = 48000;
-};
+};*/
 
 //==============================================================================
 /*static const int8_t VELVET_NOISE1[16] = { 1, 0,-1, 0, 0, 0, 0, 0, 0, 1, 0, 0,-1, 0, 0, 0 };

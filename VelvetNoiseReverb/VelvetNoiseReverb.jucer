@@ -6,6 +6,7 @@
               pluginVST3Category="Reverb">
   <MAINGROUP id="D1IPyP" name="VelvetNoiseReverb">
     <GROUP id="{F5B31DEE-7150-3929-3FB3-45E0E15B0896}" name="Source">
+      <FILE id="DjNBcF" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="opyOGb" name="NoiseGenerator.h" compile="0" resource="0"
             file="../Shared/Utilities/NoiseGenerator.h"/>
       <FILE id="kOeDwP" name="VelvetNoiseReverb.h" compile="0" resource="0"

@@ -30,7 +30,7 @@ public:
     ~VelvetNoiseReverbAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 2;
+	static const int N_SLIDERS = 9;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
 	static const int N_ROWS = 1;

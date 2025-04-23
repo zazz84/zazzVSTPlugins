@@ -20,8 +20,8 @@
 
 //==============================================================================
 
-const std::string VelvetNoiseReverbAudioProcessor::paramsNames[] = { "Reverb Time", "Volume" };
-const std::string VelvetNoiseReverbAudioProcessor::paramsUnitNames[] = { " s", " dB" };
+const std::string VelvetNoiseReverbAudioProcessor::paramsNames[] = { "PreDelay Time", "Reverb Time", "Decay Shape", "Density", "Low", "High", "Width", "Mix", "Volume" };
+const std::string VelvetNoiseReverbAudioProcessor::paramsUnitNames[] = { " ms", " s", "", " %", " %", " %", " %", " %", " dB" };
 
 //==============================================================================
 VelvetNoiseReverbAudioProcessor::VelvetNoiseReverbAudioProcessor()
@@ -36,8 +36,15 @@ VelvetNoiseReverbAudioProcessor::VelvetNoiseReverbAudioProcessor()
                        )
 #endif
 {
-	reverbTimeParameter	= apvts.getRawParameterValue(paramsNames[0]);
-	volumeParameter		= apvts.getRawParameterValue(paramsNames[1]);
+	preDelayTimeParameter	= apvts.getRawParameterValue(paramsNames[0]);
+	reverbTimeParameter		= apvts.getRawParameterValue(paramsNames[1]);
+	decayShapeParameter		= apvts.getRawParameterValue(paramsNames[2]);
+	densityParameter		= apvts.getRawParameterValue(paramsNames[3]);
+	lowParameter			= apvts.getRawParameterValue(paramsNames[4]);
+	highParameter			= apvts.getRawParameterValue(paramsNames[5]);
+	widthParameter			= apvts.getRawParameterValue(paramsNames[6]);
+	mixParameter			= apvts.getRawParameterValue(paramsNames[7]);
+	volumeParameter			= apvts.getRawParameterValue(paramsNames[8]);
 }
 
 VelvetNoiseReverbAudioProcessor::~VelvetNoiseReverbAudioProcessor()
@@ -111,10 +118,10 @@ void VelvetNoiseReverbAudioProcessor::prepareToPlay (double sampleRate, int samp
 {
 	const int sr = (int)sampleRate;
 
-	const float lengthSeconds = 2.0f;
+	const float lengthSeconds = 2.0f + 0.1f;
 
-	m_reverb[0].init(sr, lengthSeconds, 76L, 512L);
-	m_reverb[1].init(sr, lengthSeconds, 76L, 128L);
+	m_reverb[0].init(sr, lengthSeconds);
+	m_reverb[1].init(sr, lengthSeconds);
 }
 
 void VelvetNoiseReverbAudioProcessor::releaseResources()
@@ -155,34 +162,75 @@ void VelvetNoiseReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	juce::ScopedNoDenormals noDenormals;
 	
 	// Get params
+	const auto preDelayTime = 0.001f * preDelayTimeParameter->load();
 	const auto reverbTime = reverbTimeParameter->load();
+	const auto decayShape = decayShapeParameter->load();
+	const auto density = 0.01f * densityParameter->load();
+	const auto low = 0.01f * lowParameter->load();
+	const auto high = 0.01f * highParameter->load();
+	const auto mix = 0.01f * mixParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-
+	const auto reverbGainCompensation = juce::Decibels::decibelsToGain(-25.0f + (1.0f - density) * 9.0f);
 
 	//TEMP
-	m_reverb[0].set(reverbTime);
-	m_reverb[1].set(reverbTime);
+	m_reverb[0].set(reverbTime, preDelayTime, decayShape, density, 79L, low, high);
+	m_reverb[1].set(reverbTime, preDelayTime, decayShape, density, 99L, low, high);
 
-	for (int channel = 0; channel < channels; channel++)
+	if (channels == 1)
 	{
 		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
-
-		auto& reverb = m_reverb[channel];
+		auto* channelBuffer = buffer.getWritePointer(0);
+		auto& reverb = m_reverb[0];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
 			const float in = channelBuffer[sample];
 
-			const float out = reverb.process(in);
-		
+			const float out = reverbGainCompensation * reverb.process(in);
+
 			//Out
-			channelBuffer[sample] = out;
+			channelBuffer[sample] = (1.0f - mix) * in + mix * out;
+		}
+	}
+	else if (channels == 2)
+	{
+		// Channel pointer
+		auto* leftChannelBuffer = buffer.getWritePointer(0);
+		auto* rightChannelBuffer = buffer.getWritePointer(1);
+
+		auto& leftReverb = m_reverb[0];
+		auto& rightReverb = m_reverb[1];
+
+		// MidSide gain
+		const auto width = 0.01f * widthParameter->load();
+		const float midGain = 2.0f - width;
+		const float sideGain = width;
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			// Read
+			const float inLeft = leftChannelBuffer[sample];
+			const float inRight = rightChannelBuffer[sample];
+
+			// Process reverb
+			float outLeft = reverbGainCompensation * leftReverb.process(inLeft);
+			float outRight = reverbGainCompensation * rightReverb.process(inRight);
+
+			// Handle MS
+			const float mid = midGain * (outLeft + outRight);
+			const float side = sideGain * (outLeft - outRight);
+
+			outLeft = mid + side;
+			outRight = mid - side;
+
+			//Out
+			leftChannelBuffer[sample] = (1.0f - mix) * inLeft + mix * outLeft;
+			rightChannelBuffer[sample] = (1.0f - mix) * inRight + mix * outRight;
 		}
 	}
 
@@ -223,8 +271,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout VelvetNoiseReverbAudioProces
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.1f,  2.0f, 0.1f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.1f,   2.0f, 0.01f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.1f,   2.0f, 0.01f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f, 200.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
 
 	return layout;
 }

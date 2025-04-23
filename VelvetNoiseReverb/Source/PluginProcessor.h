@@ -81,7 +81,14 @@ private:
 	//==============================================================================
 	VelvetNoiseReverb m_reverb[2];
 
+	std::atomic<float>* preDelayTimeParameter = nullptr;
 	std::atomic<float>* reverbTimeParameter = nullptr;
+	std::atomic<float>* decayShapeParameter = nullptr;
+	std::atomic<float>* densityParameter = nullptr;
+	std::atomic<float>* lowParameter = nullptr;
+	std::atomic<float>* highParameter = nullptr;
+	std::atomic<float>* widthParameter = nullptr;
+	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VelvetNoiseReverbAudioProcessor)
