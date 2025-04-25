@@ -20,7 +20,7 @@
 
 //==============================================================================
 
-const std::string VelvetNoiseReverbAudioProcessor::paramsNames[] = { "PreDelay Time", "Reverb Time", "Decay Shape", "Density", "Low", "High", "Width", "Mix", "Volume" };
+const std::string VelvetNoiseReverbAudioProcessor::paramsNames[] = { "Predelay", "Decay", "Shape", "Density", "Low", "High", "Width", "Mix", "Volume" };
 const std::string VelvetNoiseReverbAudioProcessor::paramsUnitNames[] = { " ms", " s", "", " %", " %", " %", " %", " %", " dB" };
 
 //==============================================================================

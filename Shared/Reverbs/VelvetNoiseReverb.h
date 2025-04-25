@@ -138,8 +138,6 @@ public:
 
 		float out = 0.0f;
 
-		LinearCongruentialNoiseGenerator randomGenerator = {};
-
 		for (int i = 0; i < VNC_COUNT; i++)
 		{
 			auto& vnc = m_VNC[i];
@@ -153,7 +151,9 @@ public:
 				negativeValue += m_buffer.readDelay(vnc.m_negativeIdx[j]);
 			}
 
-			out += m_gains[i] * m_highPass[i].processDF1(m_lowPass[i].processDF1((positiveValue - negativeValue)));
+			const float gain = m_gains[i];
+
+			out += gain * m_highPass[i].processDF1(m_lowPass[i].processDF1((positiveValue - negativeValue)));
 		}
 
 		return out;
