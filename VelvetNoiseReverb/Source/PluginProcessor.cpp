@@ -174,7 +174,7 @@ void VelvetNoiseReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto reverbGainCompensation = juce::Decibels::decibelsToGain(-25.0f + (1.0f - density) * 9.0f);
+	const auto reverbGainCompensation = juce::Decibels::decibelsToGain(-32.0f + (1.0f - density) * 9.0f);
 
 	//TEMP
 	m_reverb[0].set(reverbTime, preDelayTime, decayShape, density, 79L, low, high);

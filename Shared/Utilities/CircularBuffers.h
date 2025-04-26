@@ -18,6 +18,7 @@
 #pragma once
 
 #include <math.h>
+#include <immintrin.h> // for AVX/SSE intrinsics
 
 class CircularBuffer
 {
@@ -100,6 +101,18 @@ public:
 	inline float readDelay(const int sample) const noexcept
 	{
 		return m_buffer[(m_head - sample) & m_bitMask];
+	}
+	inline __m128 CircularBuffer::readDelaysSIMD(const int* samples) const noexcept
+	{
+		alignas(16) float values[4];
+
+		for (int i = 0; i < 4; ++i)
+		{
+			const int index = (m_head - samples[i]) & m_bitMask;
+			values[i] = m_buffer[index];
+		}
+
+		return _mm_load_ps(values); // load 4 floats into SIMD register
 	}
 	inline float readDelayLinearInterpolation(const float sample)
 	{

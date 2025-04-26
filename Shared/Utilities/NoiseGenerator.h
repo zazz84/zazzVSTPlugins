@@ -194,7 +194,7 @@ public:
 		}
 		else
 		{
-			return m_pieceWiceDistribution(m_mersenneTwisterGenerator);
+			return (float)(m_pieceWiceDistribution(m_mersenneTwisterGenerator));
 		}
 	}
 
