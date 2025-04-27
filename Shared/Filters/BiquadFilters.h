@@ -50,7 +50,7 @@ public:
 
 	inline void init(const int sampleRate) noexcept
 	{
-		m_samplePeriod = 1.0f / sampleRate;
+		m_samplePeriod = 1.0f / static_cast<float>(sampleRate);
 	};
 	inline void setLowPass(const float frequency, const float Q, const float gain = 0.0f)
 	{
