@@ -24,6 +24,7 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/NoiseGenerator.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Delays/AllPassFilter.h"
 
 class VelvetNoiseReverb
 {

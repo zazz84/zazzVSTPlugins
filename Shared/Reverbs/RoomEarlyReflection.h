@@ -138,3 +138,86 @@ private:
 	float m_maximumFilterFrequency = 18000.0f;
 	int m_channel = 0;
 };
+
+class RoomEarlyReflectionsSimple : public CircularBuffer
+{
+public:
+	RoomEarlyReflectionsSimple() = default;
+	~RoomEarlyReflectionsSimple() = default;
+
+	/*static constexpr float delayTimesFactor[] = {	0.1123f,	0.1615f,	0.3384f,	0.3730f,
+													0.6067f,	0.9307f,	1.0000f };*/
+
+	static constexpr float delayTimesFactor[] = {   0.0123f,	0.0370f,	0.1963f,	0.2037f,
+													0.3070f,	0.6530f,	1.0000f };
+
+	static constexpr float	widthChannel[] =	{	0.0120f,	-0.0253f,	0.0133f,	-0.0520f,
+													-0.0950f,	 0.1010f,	0.0000f };
+
+	/*static constexpr float delayGains[] =		{	1.000f,		0.6957f,	0.33118f,	0.3010f,
+													0.1850f,	0.1206f,	0.1123f };*/
+
+	static constexpr float delayGains[] =		{	0.5000f,	-0.4500f,	0.4000f,	-0.3500f,
+													0.3100f,	-0.2800f,	0.2500f };
+
+	static const int N_DELAY_LINES = 7;
+
+	inline void init(const int size, const int channel) noexcept
+	{
+		__super::init(size);
+
+		m_channel = channel;
+	};
+	inline void set(const int predelaySize, const int reflectionsSize, const float width) noexcept
+	{
+		if (m_channel == 0)
+		{
+			for (int i = 0; i < N_DELAY_LINES; i++)
+			{
+				m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * delayTimesFactor[i]);
+			}
+		}
+		else if (m_channel == 1)
+		{
+			for (int i = 0; i < N_DELAY_LINES; i++)
+			{
+				m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * (delayTimesFactor[i] + width * widthChannel[i]));
+			}
+		}
+		else
+		{
+			for (int i = 0; i < N_DELAY_LINES; i++)
+			{
+				m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * (delayTimesFactor[i] - width * widthChannel[i]));
+			}
+		}
+	};
+	inline float process(const float in) noexcept
+	{
+		write(in);
+
+		float out = 0.0f;
+
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			out += delayGains[i] * readDelay(m_delaySize[i]);
+		}
+
+		return out;
+	};
+	inline void release()
+	{
+		__super::release();
+
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			m_delaySize[i] = 0;
+		}
+
+		m_channel = 0;
+	}
+
+private:
+	int m_delaySize[N_DELAY_LINES];
+	int m_channel = 0;
+};
