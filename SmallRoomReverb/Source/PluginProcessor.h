@@ -86,13 +86,11 @@ public:
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
 	
-	static const int N_COMBS = 4;
-	static const int N_ALLPASSES = 4;
+	static const int N_ALLPASSES = 6;
 	static const int BUFFER_MINIMUM_SIZE = 2;
 	static const int MAX_CHANNELS = 2;
 	static const float ALLPASS_DELAY_TIMES_MS[];
 	static const float ALLPASS_DELAY_WIDTH[3][6];
-	static const float COMP_DELAY_TIMES_MS[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -135,10 +133,10 @@ public:
 private:	
 	//==============================================================================
 	RoomEarlyReflectionsSimple m_earlyReflections[MAX_CHANNELS];
-	CombFilter m_combs[MAX_CHANNELS][N_COMBS];
 	Allpass m_allpass[MAX_CHANNELS][N_ALLPASSES];
 
-	BiquadFilter m_filter[MAX_CHANNELS];
+	LowPassBiquadFilter m_ERfilter[MAX_CHANNELS];
+	LowPassBiquadFilter m_LRfilter[MAX_CHANNELS];
 
 	std::atomic<float>* ERpredelayParameter = nullptr;
 	std::atomic<float>* ERsizeParameter = nullptr;

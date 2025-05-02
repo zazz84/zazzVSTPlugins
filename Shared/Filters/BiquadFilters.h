@@ -390,3 +390,76 @@ private:
 
 	float m_samplePeriod = 2.08e-5f;
 };
+
+class LowPassBiquadFilter
+{
+public:
+	LowPassBiquadFilter() = default;
+	~LowPassBiquadFilter() = default;
+
+	inline void init(const int sampleRate) noexcept
+	{
+		m_samplePeriod = 1.0f / static_cast<float>(sampleRate);
+	};
+	inline void set(const float frequency, const float Q) noexcept
+	{
+		const float omega = M_PI2 * frequency * m_samplePeriod;
+		const float sn = sin(omega);
+		const float cs = cos(omega);
+		const float alpha = sn / (2.0f * Q);
+
+		m_b1 = 1.0f - cs;
+		const float a0 = 1.0f + alpha;
+		m_a1 = 2.0f * cs;
+		m_a2 = alpha - 1.0f;
+
+		const float normalize = 1.0f / a0;
+		m_b1 *= normalize;
+		m_b0 = 0.5f * m_b1;
+		m_a1 *= normalize;
+		m_a2 *= normalize;
+	};
+	inline float process(const float in) noexcept
+	{
+		const float out = m_b0 * (in + m_x2) + m_b1 * m_x1 + m_a1 * m_y1 + m_a2 * m_y2;
+
+		m_x2 = m_x1;
+		m_x1 = in;
+
+		m_y2 = m_y1;
+		m_y1 = out;
+
+		return out;
+	};
+	inline void release() noexcept
+	{
+		m_a1 = 0.0f;
+		m_a2 = 0.0f;
+
+		m_b0 = 0.0f;
+		m_b1 = 0.0f;
+
+		m_x1 = 0.0f;
+		m_x2 = 0.0f;
+
+		m_y1 = 0.0f;
+		m_y2 = 0.0f;
+
+		m_samplePeriod = 2.08e-5f;
+	};
+
+private:
+	float m_a1 = 0.0f;
+	float m_a2 = 0.0f;
+
+	float m_b0 = 0.0f;
+	float m_b1 = 0.0f;
+
+	float m_x1 = 0.0f;
+	float m_x2 = 0.0f;
+
+	float m_y1 = 0.0f;
+	float m_y2 = 0.0f;
+
+	float m_samplePeriod = 2.08e-5f;
+};

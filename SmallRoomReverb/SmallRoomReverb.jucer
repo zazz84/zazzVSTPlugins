@@ -5,10 +5,13 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Reverb">
   <MAINGROUP id="OW3WNE" name="SmallRoomReverb">
     <GROUP id="{C8C9680F-2002-F82B-D7C4-0F0C199E24D7}" name="Source">
+      <FILE id="JNuyxo" name="AllPassFilter.h" compile="0" resource="0" file="../Shared/Delays/AllPassFilter.h"/>
       <FILE id="rGCulH" name="RoomEarlyReflection.h" compile="0" resource="0"
             file="../Shared/Reverbs/RoomEarlyReflection.h"/>
       <FILE id="UV5Ua2" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
+      <FILE id="io0U0j" name="SmallRoomReverb.h" compile="0" resource="0"
+            file="../Shared/Reverbs/SmallRoomReverb.h"/>
       <FILE id="xJdFCh" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
             file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
       <FILE id="B0yRhi" name="ZazzLookAndFeel.h" compile="0" resource="0"

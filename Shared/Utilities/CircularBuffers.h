@@ -102,7 +102,7 @@ public:
 	{
 		return m_buffer[(m_head - sample) & m_bitMask];
 	}
-	inline __m128 CircularBuffer::readDelaysSIMD(const int* samples) const noexcept
+	inline __m128 readDelaysSIMD128(const int* samples) const noexcept
 	{
 		alignas(16) float values[4];
 
@@ -113,6 +113,29 @@ public:
 		}
 
 		return _mm_load_ps(values); // load 4 floats into SIMD register
+	}
+	// Helper to read 4 samples at once from the delay buffer
+	inline __m128 readDelaySIMD128(int d0, int d1, int d2, int d3) const noexcept
+	{
+		alignas(16) float values[4];
+		values[0] = readDelay(d0);
+		values[1] = readDelay(d1);
+		values[2] = readDelay(d2);
+		values[3] = readDelay(d3);
+
+		return _mm_load_ps(values); // Load 4 values into a single __m128 register
+	}
+	inline __m256 readDelaysSIMD256(const int* samples) const noexcept
+	{
+		alignas(32) float values[8];
+
+		for (int i = 0; i < 8; ++i)
+		{
+			const int index = (m_head - samples[i]) & m_bitMask;
+			values[i] = m_buffer[index];
+		}
+
+		return _mm256_load_ps(values); // load 8 floats into AVX register
 	}
 	inline float readDelayLinearInterpolation(const float sample)
 	{

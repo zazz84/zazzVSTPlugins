@@ -54,3 +54,21 @@ private:
 	CircularBuffer m_buffer;
 	float m_feedback = 0.0f;
 };
+
+//==============================================================================
+
+class AllPassFilterSimple : public CircularBuffer
+{
+public:
+	AllPassFilterSimple() = default;
+	~AllPassFilterSimple() = default;
+
+	float process(float in)
+	{
+		const float delayOut = read();
+
+		write(in + 0.5f * delayOut);
+
+		return 0.5f * (delayOut - in);
+	};
+};
