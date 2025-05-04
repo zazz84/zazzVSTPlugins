@@ -20,11 +20,11 @@
 
 //==============================================================================
 
-const std::string SmallRoomReverbAudioProcessor::paramsNames[] =		{	"ER Predelay",	"ER Size", "ER Damping", "ER Width",	"LR Predelay", "LR Size",	"LR Damping",	"LR Width", "ER Volume",	"LR Volume",	"Mix",	"Volume" };
-const std::string SmallRoomReverbAudioProcessor::paramsUnitNames[] =	{	" ms",			" ms",			"",			" %",			" ms",			"",			"",				" %",		" dB",			" dB",			" %",	" dB" };
+const std::string SmallRoomReverb51AudioProcessor::paramsNames[] =		{	"ER Predelay",	"ER Size", "ER Damping", "ER Width",	"LR Predelay", "LR Size",	"LR Damping",	"LR Width", "ER Volume",	"LR Volume",	"Mix",	"Volume", "Type" };
+const std::string SmallRoomReverb51AudioProcessor::paramsUnitNames[] =	{	" ms",			" ms",		"",				" %",			" ms",			"",			"",				" %",		" dB",			" dB",		" %",	" dB", "" };
 
 //==============================================================================
-SmallRoomReverbAudioProcessor::SmallRoomReverbAudioProcessor()
+SmallRoomReverb51AudioProcessor::SmallRoomReverb51AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -50,19 +50,21 @@ SmallRoomReverbAudioProcessor::SmallRoomReverbAudioProcessor()
 	LRvolumeParameter = apvts.getRawParameterValue(paramsNames[9]);
 	mixParameter = apvts.getRawParameterValue(paramsNames[10]);
 	volumeParameter = apvts.getRawParameterValue(paramsNames[11]);
+
+	typeParameter = apvts.getRawParameterValue(paramsNames[12]);
 }
 
-SmallRoomReverbAudioProcessor::~SmallRoomReverbAudioProcessor()
+SmallRoomReverb51AudioProcessor::~SmallRoomReverb51AudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String SmallRoomReverbAudioProcessor::getName() const
+const juce::String SmallRoomReverb51AudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool SmallRoomReverbAudioProcessor::acceptsMidi() const
+bool SmallRoomReverb51AudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -71,7 +73,7 @@ bool SmallRoomReverbAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool SmallRoomReverbAudioProcessor::producesMidi() const
+bool SmallRoomReverb51AudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -80,7 +82,7 @@ bool SmallRoomReverbAudioProcessor::producesMidi() const
    #endif
 }
 
-bool SmallRoomReverbAudioProcessor::isMidiEffect() const
+bool SmallRoomReverb51AudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -89,52 +91,56 @@ bool SmallRoomReverbAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double SmallRoomReverbAudioProcessor::getTailLengthSeconds() const
+double SmallRoomReverb51AudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int SmallRoomReverbAudioProcessor::getNumPrograms()
+int SmallRoomReverb51AudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int SmallRoomReverbAudioProcessor::getCurrentProgram()
+int SmallRoomReverb51AudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void SmallRoomReverbAudioProcessor::setCurrentProgram (int index)
+void SmallRoomReverb51AudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String SmallRoomReverbAudioProcessor::getProgramName (int index)
+const juce::String SmallRoomReverb51AudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void SmallRoomReverbAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void SmallRoomReverb51AudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void SmallRoomReverbAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void SmallRoomReverb51AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
 
-	m_reverb[0].init(sr, 0);
-	m_reverb[1].init(sr, 1);
+	for (int i = 0; i < MAX_CHANNELS; i++)
+	{
+		m_reverb[i].init(sr, i);
+	}
 }
 
-void SmallRoomReverbAudioProcessor::releaseResources()
+void SmallRoomReverb51AudioProcessor::releaseResources()
 {
-	m_reverb[0].release();
-	m_reverb[1].release();
+	for (int i = 0; i < MAX_CHANNELS; i++)
+	{
+		m_reverb[i].release();
+	}
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool SmallRoomReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool SmallRoomReverb51AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -144,8 +150,7 @@ bool SmallRoomReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
     // In this template code we only support mono or stereo.
     // Some plugin hosts, such as certain GarageBand versions, will only
     // load plugins that support stereo bus layouts.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::create5point1())
         return false;
 
     // This checks if the input layout matches the output layout
@@ -159,7 +164,7 @@ bool SmallRoomReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 }
 #endif
 
-void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void SmallRoomReverb51AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
 	const auto earlyReflectionsPredelay = ERpredelayParameter->load();
@@ -177,30 +182,101 @@ void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto mix = 0.01f * mixParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
+	const auto type = typeParameter->load();
+
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
 
-	// Process
-	for (int channel = 0; channel < channels; channel++)
+	// Channels layout: left, right, centre, LFE, leftSurround, rightSurround
+	if (channels != 6)
 	{
-		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
+		return;
+	}
 
-		auto& reverb = m_reverb[channel];
-		reverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
-					lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+	// Process
+	// 5 channel reverb
+	if (type == 1)
+	{
+		for (int channel = 0; channel < channels; channel++)
+		{
+			if (channel == 3)
+			{
+				continue;
+			}
+
+			// Channel pointer
+			auto* channelBuffer = buffer.getWritePointer(channel);
+
+			auto& reverb = m_reverb[channel];
+			reverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+				lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				// Read
+				const float in = channelBuffer[sample];
+
+				// Process reverb
+				const float out = reverb.process(in);
+
+				//Out
+				channelBuffer[sample] = in - mix * (in - out);
+			}
+		}
+	}
+	else if (type == 2)
+	{
+		auto* leftChannelBuffer = buffer.getWritePointer(0);
+		auto* rightChannelBuffer = buffer.getWritePointer(1);
+		auto* centreChannelBuffer = buffer.getWritePointer(2);
+		auto* LFEChannelBuffer = buffer.getWritePointer(3);
+		auto* leftSurroundChannelBuffer = buffer.getWritePointer(4);
+		auto* rightSurroundChannelBuffer = buffer.getWritePointer(5);
+
+		auto& leftReverb = m_reverb[0];
+		auto& rightReverb = m_reverb[1];
+		auto& backReverb = m_reverb[2];
+
+		leftReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+			lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+		rightReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+			lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+		backReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+			lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
-			// Read
-			const float in = channelBuffer[sample];
+			// Read 5.1
+			const float left = leftChannelBuffer[sample];
+			const float right = rightChannelBuffer[sample];
+			const float centre = centreChannelBuffer[sample];
+			const float leftSurround = leftSurroundChannelBuffer[sample];
+			const float rightSurround = rightSurroundChannelBuffer[sample];
 
-			// Process reverb
-			const float out = reverb.process(in);
+			// Downmix to 3.0
+			float L = 0.5f * left + 0.25f * centre + 0.25f * leftSurround;
+			float R = 0.5f * right + 0.25f * centre + 0.25f * rightSurround;
+			float B = 0.5f * leftSurround + 0.5f * rightSurround;
 
-			//Out
-			channelBuffer[sample] = in - mix * (in - out);
+			// Process
+			L = leftReverb.process(L);
+			R = rightReverb.process(R);
+			B = backReverb.process(B);
+
+			// Upmix to 5.1
+			const float leftUpmix = L;
+			const float rightUpmix = R;
+			const float centreUpmix = 0.5f * L + 0.5f * R;
+			const float leftSurroundUpmix = 0.5f * L + 0.5f * B;
+			const float rightSurroundUpmix = 0.5f * R + 0.5f * B;
+
+			//Out		
+			leftChannelBuffer[sample] = left - mix * (left - leftUpmix);
+			rightChannelBuffer[sample] = right - mix * (right - rightUpmix);
+			centreChannelBuffer[sample] = centre - mix * (centre - centreUpmix);
+			leftSurroundChannelBuffer[sample] = leftSurround - mix * (leftSurround - leftSurroundUpmix);
+			rightSurroundChannelBuffer[sample] = rightSurround - mix * (rightSurround - rightSurroundUpmix);
 		}
 	}
 
@@ -208,25 +284,25 @@ void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 }
 
 //==============================================================================
-bool SmallRoomReverbAudioProcessor::hasEditor() const
+bool SmallRoomReverb51AudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* SmallRoomReverbAudioProcessor::createEditor()
+juce::AudioProcessorEditor* SmallRoomReverb51AudioProcessor::createEditor()
 {
-    return new SmallRoomReverbAudioProcessorEditor (*this, apvts);
+    return new SmallRoomReverb51AudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void SmallRoomReverbAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void SmallRoomReverb51AudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void SmallRoomReverbAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void SmallRoomReverb51AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -235,7 +311,7 @@ void SmallRoomReverbAudioProcessor::setStateInformation (const void* data, int s
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout SmallRoomReverbAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout SmallRoomReverb51AudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
@@ -256,6 +332,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SmallRoomReverbAudioProcesso
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>( -18.0f,  18.0f,  0.1f,  1.0f),   0.0f));
 
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 1.0f, 2.0f,  1.0f,  1.0f), 1.0f));
+
 	return layout;
 }
 
@@ -263,5 +341,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout SmallRoomReverbAudioProcesso
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new SmallRoomReverbAudioProcessor();
+    return new SmallRoomReverb51AudioProcessor();
 }

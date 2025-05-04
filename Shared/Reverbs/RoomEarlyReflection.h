@@ -145,16 +145,26 @@ public:
 	RoomEarlyReflectionsSimple() = default;
 	~RoomEarlyReflectionsSimple() = default;
 
-	alignas(16) static constexpr float delayTimesFactor[] = {   0.0123f,	0.0370f,	0.1963f,	0.2037f,
-																0.3070f,	0.6530f,	0.8610f,	1.0000f };
-
-	alignas(16) static constexpr float	widthChannel[] =	{	0.0120f,	-0.0253f,	0.0133f,	-0.0520f,
-																-0.0950f,	 0.1010f,	-0.0510f,	0.0000f };
-
-	alignas(16) static constexpr float delayGains[] =		{	0.5000f,	-0.4500f,	0.4000f,	-0.3500f,
-																0.3100f,	-0.2800f,	0.2500f,	-0.2000f };
-
 	static const int N_DELAY_LINES = 8;
+	
+	alignas(32) static constexpr float delayTimesFactor[N_DELAY_LINES] = {  0.0230f,	0.1123f,	0.1963f,	0.2637f,
+																			0.3070f,	0.6530f,	0.8610f,	1.0000f };
+
+	alignas(32) static constexpr float delayGains[N_DELAY_LINES] = {	0.5000f,	-0.4500f,	0.4000f,	-0.3500f,
+																		0.3100f,	-0.2800f,	0.2500f,	-0.2000f };
+	static constexpr float G1 = 0.011f;
+	static constexpr float G2 = 0.009f;
+	static constexpr float G3 = 0.000f;
+	static constexpr float G4 = 0.014f;
+	static constexpr float G5 = 0.012f;
+
+	alignas(32) static constexpr float	WIDTH[5][N_DELAY_LINES] =	{
+																		{ G1, -G2,  G3, -G1,  G2, -G3,  G1, -G2 },
+																		{ G3,  G1, -G2,  G3, -G1,  G2, -G3,  G1 },
+																		{ G2, -G3,  G1, -G2,  G3, -G1,  G2, -G3 },
+																		{ G4, -G5,  G4, -G5,  G4, -G5,  G4, -G5 },
+																		{ G5, -G4,  G5, -G4,  G5, -G4,  G5, -G4 }
+																	};
 
 	inline void init(const int size, const int channel) noexcept
 	{
@@ -164,26 +174,11 @@ public:
 	};
 	inline void set(const int predelaySize, const int reflectionsSize, const float width) noexcept
 	{
-		if (m_channel == 0)
+		auto& WIDTH_CHANNEL = WIDTH[m_channel];
+
+		for (int i = 0; i < N_DELAY_LINES; i++)
 		{
-			for (int i = 0; i < N_DELAY_LINES; i++)
-			{
-				m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * delayTimesFactor[i]);
-			}
-		}
-		else if (m_channel == 1)
-		{
-			for (int i = 0; i < N_DELAY_LINES; i++)
-			{
-				m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * (delayTimesFactor[i] + width * widthChannel[i]));
-			}
-		}
-		else
-		{
-			for (int i = 0; i < N_DELAY_LINES; i++)
-			{
-				m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * (delayTimesFactor[i] - width * widthChannel[i]));
-			}
+			m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * (delayTimesFactor[i] + width * WIDTH_CHANNEL[i]));
 		}
 	};
 	inline float process(const float in) noexcept
@@ -212,88 +207,6 @@ public:
 	}
 
 private:
-	alignas(16) int m_delaySize[N_DELAY_LINES];
+	alignas(32) int m_delaySize[N_DELAY_LINES];
 	int m_channel = 0;
 };
-
-/*#include <xmmintrin.h> // SSE
-
-class RoomEarlyReflectionsSimple : public CircularBuffer
-{
-public:
-	RoomEarlyReflectionsSimple() = default;
-	~RoomEarlyReflectionsSimple() = default;
-
-	static constexpr int N_DELAY_LINES = 8;
-
-	// Static arrays for delay time factors and width channels
-	static constexpr float delayTimesFactor[N_DELAY_LINES] = {
-		0.0123f, 0.0370f, 0.1963f, 0.2037f,
-		0.3070f, 0.6530f, 0.8500f, 1.000f
-	};
-
-	static constexpr float widthChannel[N_DELAY_LINES] = {
-		0.0120f, -0.0253f, 0.0133f, -0.0520f,
-		-0.0950f, 0.1010f, 0.0500f, 0.0000f
-	};
-
-	    // Define delayGains inline to ensure it only has one definition
-    inline static const __m128 delayGains[N_DELAY_LINES / 4] = {
-        _mm_set_ps(0.5000f, -0.4500f, 0.4000f, -0.3500f),  // Gain values for 0-3
-        _mm_set_ps(0.3100f, -0.2800f, 0.2500f, 0.2000f)   // Gain values for 4-7
-    };
-
-	inline void init(const int size, const int channel) noexcept
-	{
-		__super::init(size);
-		m_channel = channel;
-	}
-	inline void set(int predelaySize, int reflectionsSize, float width) noexcept
-	{
-		for (int i = 0; i < N_DELAY_LINES; ++i)
-		{
-			const float base = delayTimesFactor[i];
-			const float mod = width * widthChannel[i];
-
-			const float time =	(m_channel == 0) ? base :
-								(m_channel == 1) ? (base + mod) :
-								(base - mod);
-
-			m_delaySize[i] = static_cast<int>(predelaySize + reflectionsSize * time);
-		}
-	}
-	// Process using SIMD (4 samples at once)
-	float process(float in) noexcept
-	{
-		write(in);
-
-		// Read 4 delay samples at once using readDelaySIMD128
-		__m128 samples0 = readDelaySIMD128(m_delaySize[0], m_delaySize[1], m_delaySize[2], m_delaySize[3]);
-		__m128 samples1 = readDelaySIMD128(m_delaySize[4], m_delaySize[5], m_delaySize[6], m_delaySize[7]);
-
-		// Read the corresponding gain values for these 4 samples
-		__m128 gains0 = delayGains[0];
-		__m128 gains1 = delayGains[1];
-
-		// Multiply samples by the gains
-		__m128 mul0 = _mm_mul_ps(samples0, gains0);
-		__m128 mul1 = _mm_mul_ps(samples1, gains1);
-
-		// Horizontal add (sum of all the products)
-		__m128 sum0 = _mm_hadd_ps(mul0, mul1); // horizontal add
-		__m128 sum1 = _mm_hadd_ps(sum0, sum0);  // horizontal add again
-
-		// Extract the final result (the sum of all the gains applied to the samples)
-		return _mm_cvtss_f32(sum1); // Convert the final result to a scalar float
-	}
-	inline void release() noexcept
-	{
-		__super::release();
-		for (int& d : m_delaySize) d = 0;
-		m_channel = 0;
-	}
-
-private:
-	alignas(16) int m_delaySize[N_DELAY_LINES]{};
-	int m_channel = 0;
-};*/

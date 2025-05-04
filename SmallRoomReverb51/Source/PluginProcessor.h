@@ -24,7 +24,7 @@
 #include "../../../zazzVSTPlugins/Shared/Reverbs/SmallRoomReverb.h"
 
 //==============================================================================
-class SmallRoomReverbAudioProcessor  : public juce::AudioProcessor
+class SmallRoomReverb51AudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -32,13 +32,13 @@ class SmallRoomReverbAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    SmallRoomReverbAudioProcessor();
-    ~SmallRoomReverbAudioProcessor() override;
+    SmallRoomReverb51AudioProcessor();
+    ~SmallRoomReverb51AudioProcessor() override;
 
 	static const std::string paramsNames[];
 	static const std::string paramsUnitNames[];
 	
-	static const int MAX_CHANNELS = 2;
+	static const int MAX_CHANNELS = 6;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -80,7 +80,7 @@ public:
 
 private:	
 	//==============================================================================
-	SmallRoomReveb m_reverb[MAX_CHANNELS];
+	SmallRoomReverb m_reverb[MAX_CHANNELS];
 
 	std::atomic<float>* ERpredelayParameter = nullptr;
 	std::atomic<float>* ERsizeParameter = nullptr;
@@ -97,5 +97,7 @@ private:
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmallRoomReverbAudioProcessor)
+	std::atomic<float>* typeParameter = nullptr;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmallRoomReverb51AudioProcessor)
 };

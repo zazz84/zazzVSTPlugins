@@ -63,12 +63,23 @@ public:
 	AllPassFilterSimple() = default;
 	~AllPassFilterSimple() = default;
 
-	float process(float in)
+	inline float process(const float in) noexcept
 	{
 		const float delayOut = read();
-
 		write(in + 0.5f * delayOut);
-
 		return 0.5f * (delayOut - in);
+	};
+	inline void processReplace(float& in) noexcept
+	{
+		/*const float delayOut = read();
+		write(in + 0.5f * delayOut);
+		in =  0.5f * (delayOut - in);*/
+
+		// Same as code above but written differently
+		const float delayOut = 0.5f * read();
+		const float delayIn = in - delayOut;
+		write(delayIn);
+		in *= 0.5f;
+		in += delayOut;
 	};
 };

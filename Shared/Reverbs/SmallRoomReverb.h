@@ -22,33 +22,43 @@
 #include "../../../zazzVSTPlugins/Shared/Reverbs/RoomEarlyReflection.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
-class SmallRoomReveb
+class SmallRoomReverb
 {
-	SmallRoomReveb() = default;
-	~SmallRoomReveb() = default;
+public:
+	SmallRoomReverb() = default;
+	~SmallRoomReverb() = default;
 
 	static const int N_ALLPASSES = 6;
 	static const int BUFFER_MINIMUM_SIZE = 2;
 	static const int MAX_CHANNELS = 2;
 
 	static constexpr float ALLPASS_DELAY_TIMES_MS[N_ALLPASSES] =	{
-															6.35417f,
-															16.97917f,
-															23.62500f,
-															30.39583f,
-															39.68750f,
-															52.58333f
-														};
+																		6.35417f,
+																		16.97917f,
+																		23.62500f,
+																		30.39583f,
+																		39.68750f,
+																		52.58333f
+																	};
 
-	static constexpr float  ALLPASS_DELAY_WIDTH[3][N_ALLPASSES] = {
-															{ 0.9f, 0.0f, 0.9f, 0.0f, 0.9f, 0.0f }, 
-															{ 0.0f, 0.9f, 0.0f, 0.9f, 0.0f, 0.9f },
-															{ 0.6f, 0.1f, 0.6f, 0.1f, 0.6f, 0.1f }
-														};
+	static constexpr float G1 = 0.0f;
+	static constexpr float G2 = 0.4f;
+	static constexpr float G3 = 0.8f;
+	static constexpr float G4 = 0.45f;
+	static constexpr float G5 = 0.65f;
+	
+	static constexpr float  ALLPASS_DELAY_WIDTH[5][N_ALLPASSES] =	{
+																		{ G3, G2, G1, G3, G2, G1 },
+																		{ G1, G3, G2, G1, G3, G2 },
+																		{ G2, G1, G3, G2, G1, G3 },
+																		{ G4, G5, G1, G5, G4, G1 },
+																		{ G1, G4, G5, G1, G5, G4 }
+																	};
 
-	inline void init(const int sampleRate, const int channel)
+	inline void init(const int sampleRate, const int channel) noexcept
 	{
 		m_sampleRateMS = 0.001f * (float)sampleRate;
+		m_channel = channel;
 
 		for (int allpass = 0; allpass < N_ALLPASSES; allpass++)
 		{
@@ -66,26 +76,27 @@ class SmallRoomReveb
 
 		m_earlyReflections.init(size, channel);
 	}
-	inline void set(const float earlyReflectionsPredelay, const float earlyReflectionsSize, const float earlyReflectionsDamping, const float earlyReflectionsWidth, const float earlyReflectionsGain,
-					const float lateReflectionsPredelay, const float lateReflectionsSize, const float lateReflectionsDamping, const float lateReflectionsWidth, const float lateReflectionsGain )
+	inline void set(const float earlyReflectionsPredelay, const float earlyReflectionsMS, const float earlyReflectionsDamping, const float earlyReflectionsWidth, const float earlyReflectionsGain,
+					const float lateReflectionsPredelay, const float lateReflectionsSize, const float lateReflectionsDamping, const float lateReflectionsWidth, const float lateReflectionsGain ) noexcept
 	{
 		m_ERgain = earlyReflectionsGain;
 		m_LRgain = lateReflectionsGain * 7.94f;		// + 18dB gain compensation
 		
 		// Set early reflections
 		m_earlyReflections.set(	(int)(m_sampleRateMS * earlyReflectionsPredelay),
-								(int)(m_sampleRateMS * 60.0f * (0.1f + 0.9f * earlyReflectionsSize)),
-								earlyReflectionsGain * earlyReflectionsGain * earlyReflectionsGain);
+								(int)(m_sampleRateMS * earlyReflectionsMS),
+								earlyReflectionsWidth * earlyReflectionsWidth);
 
 		// Set late reflections
 		m_LRPredelaySize = 1 + (int)(m_sampleRateMS * lateReflectionsPredelay);
-		const auto APReflectionsTime = 0.05f + 0.95f * lateReflectionsSize;
-		const auto LRwidth = lateReflectionsWidth * lateReflectionsWidth * lateReflectionsWidth;
+		
+		const auto timeFactor = (0.05f + 0.95f * lateReflectionsSize) * m_sampleRateMS;
+		const auto width = lateReflectionsWidth * lateReflectionsWidth * lateReflectionsWidth;
 		auto& ALLPASS_DELAY_WIDTH_CHANNEL = ALLPASS_DELAY_WIDTH[m_channel];
 		
 		for (int allpass = 0; allpass < N_ALLPASSES; allpass++)
 		{
-			const int delay = BUFFER_MINIMUM_SIZE + (int)(APReflectionsTime * ALLPASS_DELAY_TIMES_MS[allpass] * m_sampleRateMS * (1.0f - ALLPASS_DELAY_WIDTH_CHANNEL[allpass] * LRwidth));
+			const int delay = BUFFER_MINIMUM_SIZE + (int)(timeFactor * ALLPASS_DELAY_TIMES_MS[allpass] * (1.0f - ALLPASS_DELAY_WIDTH_CHANNEL[allpass] * width));
 			m_allpass[allpass].set(delay);
 		}
 
@@ -108,13 +119,32 @@ class SmallRoomReveb
 		// Process serial allpass filters
 		float LROut = m_LRfilter.process(m_earlyReflections.readDelay(m_LRPredelaySize));
 
-		for (int allpass = 0; allpass < N_ALLPASSES; allpass++)
-		{
-			LROut = m_allpass[allpass].process(LROut);
-		}
+		m_allpass[0].processReplace(LROut);
+		m_allpass[1].processReplace(LROut);
+		m_allpass[2].processReplace(LROut);
+		m_allpass[3].processReplace(LROut);
+		m_allpass[4].processReplace(LROut);
+		m_allpass[5].processReplace(LROut);
 
 		//Out
-		const float out = m_ERgain * ERout + m_LRgain * LROut;
+		return m_ERgain * ERout + m_LRgain * LROut;
+	}
+	inline void release() noexcept
+	{
+		for (int allpass = 0; allpass < N_ALLPASSES; allpass++)
+		{
+			m_allpass[allpass].release();
+		}
+
+		m_earlyReflections.release();
+		m_ERfilter.release();
+		m_LRfilter.release();
+
+		m_sampleRateMS = 48.0f;
+		m_ERgain = 1.0f;
+		m_LRgain = 1.0f;
+		m_LRPredelaySize = 0;
+		m_channel = 0;
 	}
 
 private:
@@ -126,5 +156,5 @@ private:
 	float m_ERgain = 1.0f;
 	float m_LRgain = 1.0f;
 	int m_LRPredelaySize = 0;
-	int m_channel;
+	int m_channel = 0;
 };
