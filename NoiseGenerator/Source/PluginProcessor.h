@@ -62,6 +62,7 @@ private:
 	//==============================================================================
 	LinearCongruentialNoiseGenerator m_whiteNoiseGenerator;
 	VelvetNoiseGenerator m_velvetNoiseGenerator;
+	PinkNoiseGenerator m_pinkNoiseGenerator;
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* densityParameter = nullptr;

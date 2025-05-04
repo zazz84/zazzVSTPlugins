@@ -266,3 +266,51 @@ private:
 
 	float m_density = 0.5f;
 };
+
+//==============================================================================
+class PinkNoiseGenerator
+{
+public:
+	PinkNoiseGenerator() = default;
+	~PinkNoiseGenerator() = default;
+
+	static constexpr float AMPLITUDE = 0.250f;
+
+	inline void set(const long seed)
+	{
+		m_noiseGenerator.setSeed(seed);
+	}
+	inline float process()
+	{
+		// Based on Paul Kellet's "instrumentation grade" algorithm.
+
+		const float white = m_noiseGenerator.process11();
+
+		m_buf0 = 0.99886f * m_buf0 + 0.0555179f * white;
+		m_buf1 = 0.99332f * m_buf1 + 0.0750759f * white;
+		m_buf2 = 0.96900f * m_buf2 + 0.1538520f * white;
+		m_buf3 = 0.86650f * m_buf3 + 0.3104856f * white;
+		m_buf4 = 0.55000f * m_buf4 + 0.5329522f * white;
+		m_buf5 = -0.7616f * m_buf5 - 0.0168980f * white;
+		
+		const float pink = AMPLITUDE * (m_buf0 + m_buf1 + m_buf2 + m_buf3 + m_buf4 + m_buf5 + m_buf6 + white * 0.5362f);
+		
+		m_buf6 = white * 0.115926f;
+
+		return pink;
+	};
+	inline void release()
+	{
+
+	};
+
+private:
+	float m_buf0 = 0.0f;
+	float m_buf1 = 0.0f;
+	float m_buf2 = 0.0f;
+	float m_buf3 = 0.0f;
+	float m_buf4 = 0.0f;
+	float m_buf5 = 0.0f;
+	float m_buf6 = 0.0f;
+	LinearCongruentialNoiseGenerator m_noiseGenerator;
+};

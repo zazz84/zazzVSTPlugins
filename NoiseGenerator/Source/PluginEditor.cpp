@@ -6,7 +6,7 @@ NoiseGeneratorAudioProcessorEditor::NoiseGeneratorAudioProcessorEditor (NoiseGen
     : AudioProcessorEditor (&p),
 	audioProcessor (p),
 	valueTreeState(vts),
-	m_typeSlider	(vts, NoiseGeneratorAudioProcessor::paramsNames[0], NoiseGeneratorAudioProcessor::paramsUnitNames[0], NoiseGeneratorAudioProcessor::labelNames[0], { "White", "Velvet" }),
+	m_typeSlider	(vts, NoiseGeneratorAudioProcessor::paramsNames[0], NoiseGeneratorAudioProcessor::paramsUnitNames[0], NoiseGeneratorAudioProcessor::labelNames[0], { "White", "Velvet", "Pink" }),
 	m_densitySlider	(vts, NoiseGeneratorAudioProcessor::paramsNames[1], NoiseGeneratorAudioProcessor::paramsUnitNames[1], NoiseGeneratorAudioProcessor::labelNames[1]),
 	m_wetSlider		(vts, NoiseGeneratorAudioProcessor::paramsNames[2], NoiseGeneratorAudioProcessor::paramsUnitNames[2], NoiseGeneratorAudioProcessor::labelNames[2]),
 	m_drySlider		(vts, NoiseGeneratorAudioProcessor::paramsNames[3], NoiseGeneratorAudioProcessor::paramsUnitNames[3], NoiseGeneratorAudioProcessor::labelNames[3]),
@@ -47,6 +47,10 @@ NoiseGeneratorAudioProcessorEditor::NoiseGeneratorAudioProcessorEditor (NoiseGen
 		{
 			m_densitySlider.setVisible(true);
 		}
+		else if (type == 3)
+		{
+			m_densitySlider.setVisible(false);
+		}
 	};
 
 	// Handle plugin load
@@ -58,6 +62,10 @@ NoiseGeneratorAudioProcessorEditor::NoiseGeneratorAudioProcessorEditor (NoiseGen
 	else if (type == 2)
 	{
 		m_densitySlider.setVisible(true);
+	}
+	else if (type == 3)
+	{
+		m_densitySlider.setVisible(false);
 	}
 }
 

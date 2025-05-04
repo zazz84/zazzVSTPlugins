@@ -184,6 +184,15 @@ void NoiseGeneratorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 				channelBuffer[sample] = dry * in + wet * noise;
 			}
 		}
+		else if (type == 3)
+		{
+			for (int sample = 0; sample < samples; sample++)
+			{
+				const float in = channelBuffer[sample];
+				const float noise = m_pinkNoiseGenerator.process();
+				channelBuffer[sample] = dry * in + wet * noise;
+			}
+		}
 	}
 }
 
@@ -221,7 +230,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout NoiseGeneratorAudioProcessor
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,   2.0f,  1.0f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,   3.0f,  1.0f, 1.0f),   1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  70.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -60.0f,  12.0f,  1.0f, 1.0f), -24.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -60.0f,  12.0f,  1.0f, 1.0f), -60.0f));
