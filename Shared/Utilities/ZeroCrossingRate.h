@@ -8,13 +8,13 @@ public:
 	ZeroCrossingRate() = default;
 	~ZeroCrossingRate() = default;
 
-	inline void init(const int sampleRate)
+	inline void init(const int sampleRate, const float hightPassFrequency = 40.0f, const float lowPassFrequency = 440.0f)
 	{
 		m_hpFilter.init(sampleRate);
 		m_lpFilter.init(sampleRate);
 
-		m_hpFilter.setHighPass(40.0f, 0.707f);
-		m_lpFilter.setHighPass(440.0f, 0.707f);
+		m_hpFilter.setHighPass(hightPassFrequency, 0.707f);
+		m_lpFilter.setLowPass(lowPassFrequency, 0.707f);
 	};
 	inline int process(const float in)
 	{		
