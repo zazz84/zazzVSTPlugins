@@ -6,6 +6,7 @@
               pluginVST3Category="Reverb">
   <MAINGROUP id="sLcvyz" name="SmallRoomReverb51">
     <GROUP id="{FE9F1773-C5DF-D0D6-FC59-FADAE97CE5A0}" name="Source">
+      <FILE id="ArRhW1" name="Ambisonic.h" compile="0" resource="0" file="../Shared/Utilities/Ambisonic.h"/>
       <FILE id="DoxUhu" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="byN9zm" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>

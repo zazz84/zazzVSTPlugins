@@ -6,6 +6,7 @@
               pluginVST3Category="Surround">
   <MAINGROUP id="GqJ5fd" name="SurroundTo3ToSurround">
     <GROUP id="{0EC4090D-9685-29DA-8028-0429F100D1C8}" name="Source">
+      <FILE id="j2Subg" name="Ambisonic.h" compile="0" resource="0" file="../Shared/Utilities/Ambisonic.h"/>
       <FILE id="yBjHZl" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="ICQoUM" name="PluginProcessor.h" compile="0" resource="0"

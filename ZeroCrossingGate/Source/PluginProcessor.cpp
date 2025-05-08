@@ -111,8 +111,8 @@ void ZeroCrossingGateAudioProcessor::prepareToPlay (double sampleRate, int sampl
 {
 	const int sr = (int)sampleRate;
 
-	m_zeroCrossingRate[0].init(sr, 280.0f, 8000.0f);
-	m_zeroCrossingRate[1].init(sr, 280.0f, 8000.0f);
+	m_zeroCrossingRate[0].init(sr, 800.0f, 8000.0f);
+	m_zeroCrossingRate[1].init(sr, 800.0f, 8000.0f);
 	m_smoother[0].init(sr);
 	m_smoother[1].init(sr);
 	m_smoother[0].set(5.0f, 100.0f, 100.0f);

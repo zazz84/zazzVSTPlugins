@@ -21,6 +21,8 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Ambisonic.h"
+
 //==============================================================================
 class SurroundTo3ToSurroundAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
@@ -78,6 +80,7 @@ public:
 private:	
 	//==============================================================================
 
+	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SurroundTo3ToSurroundAudioProcessor)

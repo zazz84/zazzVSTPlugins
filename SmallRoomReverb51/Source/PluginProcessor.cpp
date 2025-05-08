@@ -18,6 +18,11 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <array>
+#include <functional>
+
+#include "../../../zazzVSTPlugins/Shared/Utilities/Ambisonic.h"
+
 //==============================================================================
 
 const std::string SmallRoomReverb51AudioProcessor::paramsNames[] =		{	"ER Predelay",	"ER Size", "ER Damping", "ER Width",	"LR Predelay", "LR Size",	"LR Damping",	"LR Width", "ER Volume",	"LR Volume",	"Mix",	"Volume", "Type" };
@@ -279,6 +284,129 @@ void SmallRoomReverb51AudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 			rightSurroundChannelBuffer[sample] = rightSurround - mix * (rightSurround - rightSurroundUpmix);
 		}
 	}
+	else if (type == 3)
+	{		
+		auto* leftChannelBuffer = buffer.getWritePointer(0);
+		auto* rightChannelBuffer = buffer.getWritePointer(1);
+		auto* centreChannelBuffer = buffer.getWritePointer(2);
+		auto* LFEChannelBuffer = buffer.getWritePointer(3);
+		auto* leftSurroundChannelBuffer = buffer.getWritePointer(4);
+		auto* rightSurroundChannelBuffer = buffer.getWritePointer(5);
+
+		auto& leftReverb = m_reverb[0];
+		auto& rightReverb = m_reverb[1];
+		auto& backReverb = m_reverb[2];
+
+		leftReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+			lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+		rightReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+			lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+		backReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+			lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			// Read 5.1
+			const float left = leftChannelBuffer[sample];
+			const float right = rightChannelBuffer[sample];
+			const float centre = centreChannelBuffer[sample];
+			const float leftSurround = leftSurroundChannelBuffer[sample];
+			const float rightSurround = rightSurroundChannelBuffer[sample];
+
+			// Downmix to FOA
+			float gain = 1.0f / sqrtf(5.0f);
+			Ambisonic::BFormat bFormat;
+
+			Ambisonic::encodeToAmbisonics2D(left,			Ambisonic::speakers50Deg[0], bFormat, gain);
+			Ambisonic::encodeToAmbisonics2D(right,			Ambisonic::speakers50Deg[1], bFormat, gain);
+			Ambisonic::encodeToAmbisonics2D(centre,			Ambisonic::speakers50Deg[2], bFormat, gain);
+			Ambisonic::encodeToAmbisonics2D(leftSurround,	Ambisonic::speakers50Deg[3], bFormat, gain);
+			Ambisonic::encodeToAmbisonics2D(rightSurround,	Ambisonic::speakers50Deg[4], bFormat, gain);
+
+			// Process
+			bFormat.W = leftReverb.process(bFormat.W);
+			bFormat.X = rightReverb.process(bFormat.X);
+			bFormat.Y = backReverb.process(bFormat.Y);
+
+			// Upmix to 5.1
+			const float leftUpmix			= Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[0]);
+			const float rightUpmix			= Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[1]);
+			const float centreUpmix			= Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[2]);
+			const float leftSurroundUpmix	= Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[3]);
+			const float rightSurroundUpmix	= Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[4]);
+
+			//Out		
+			leftChannelBuffer[sample] = left - mix * (left - leftUpmix);
+			rightChannelBuffer[sample] = right - mix * (right - rightUpmix);
+			centreChannelBuffer[sample] = centre - mix * (centre - centreUpmix);
+			leftSurroundChannelBuffer[sample] = leftSurround - mix * (leftSurround - leftSurroundUpmix);
+			rightSurroundChannelBuffer[sample] = rightSurround - mix * (rightSurround - rightSurroundUpmix);
+		}
+
+		buffer.applyGain(juce::Decibels::decibelsToGain(-8.0f));
+	}
+	else if (type == 4)
+	{
+	auto* leftChannelBuffer = buffer.getWritePointer(0);
+	auto* rightChannelBuffer = buffer.getWritePointer(1);
+	auto* centreChannelBuffer = buffer.getWritePointer(2);
+	auto* LFEChannelBuffer = buffer.getWritePointer(3);
+	auto* leftSurroundChannelBuffer = buffer.getWritePointer(4);
+	auto* rightSurroundChannelBuffer = buffer.getWritePointer(5);
+
+	auto& leftReverb = m_reverb[0];
+	auto& rightReverb = m_reverb[1];
+	auto& backReverb = m_reverb[2];
+
+	leftReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+		lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+	rightReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+		lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+	backReverb.set(earlyReflectionsPredelay, earlyReflectionsMS, earlyReflectionsDamping, earlyReflectionsWidth, earlyReflectionsGain,
+		lateReflectionsPredelay, lateReflectionsSize, lateReflectionsDamping, lateReflectionsWidth, lateReflectionsGain);
+
+	for (int sample = 0; sample < samples; sample++)
+	{
+		// Read 5.1
+		const float left = leftChannelBuffer[sample];
+		const float right = rightChannelBuffer[sample];
+		const float centre = centreChannelBuffer[sample];
+		const float leftSurround = leftSurroundChannelBuffer[sample];
+		const float rightSurround = rightSurroundChannelBuffer[sample];
+
+		// Downmix to FOA
+		float gain = 1.0f / sqrtf(5.0f);
+		Ambisonic::BFormat bFormat;
+
+		Ambisonic::encodeToAmbisonics2D(left, Ambisonic::speakers50Deg[0], bFormat, gain);
+		Ambisonic::encodeToAmbisonics2D(right, Ambisonic::speakers50Deg[1], bFormat, gain);
+		Ambisonic::encodeToAmbisonics2D(centre, Ambisonic::speakers50Deg[2], bFormat, gain);
+		Ambisonic::encodeToAmbisonics2D(leftSurround, Ambisonic::speakers50Deg[3], bFormat, gain);
+		Ambisonic::encodeToAmbisonics2D(rightSurround, Ambisonic::speakers50Deg[4], bFormat, gain);
+
+		// Process
+		const float W = bFormat.W;
+		bFormat.W = leftReverb.process(W);
+		bFormat.X = rightReverb.process(lateReflectionsWidth * W + (1.0f - lateReflectionsWidth) * bFormat.X);
+		bFormat.Y = backReverb.process(lateReflectionsWidth * W + (1.0f - lateReflectionsWidth) * bFormat.Y);
+
+		// Upmix to 5.1
+		const float leftUpmix = Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[0]);
+		const float rightUpmix = Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[1]);
+		const float centreUpmix = Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[2]);
+		const float leftSurroundUpmix = Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[3]);
+		const float rightSurroundUpmix = Ambisonic::decodeToSpeaker2D(bFormat, Ambisonic::speakers50Deg[4]);
+
+		//Out		
+		leftChannelBuffer[sample] = left - mix * (left - leftUpmix);
+		rightChannelBuffer[sample] = right - mix * (right - rightUpmix);
+		centreChannelBuffer[sample] = centre - mix * (centre - centreUpmix);
+		leftSurroundChannelBuffer[sample] = leftSurround - mix * (leftSurround - leftSurroundUpmix);
+		rightSurroundChannelBuffer[sample] = rightSurround - mix * (rightSurround - rightSurroundUpmix);
+	}
+
+	buffer.applyGain(juce::Decibels::decibelsToGain(-8.0f));
+	}
 
 	buffer.applyGain(gain);
 }
@@ -332,7 +460,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SmallRoomReverb51AudioProces
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>( -18.0f,  18.0f,  0.1f,  1.0f),   0.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 1.0f, 2.0f,  1.0f,  1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 1.0f, 4.0f,  1.0f,  1.0f), 1.0f));
 
 	return layout;
 }
