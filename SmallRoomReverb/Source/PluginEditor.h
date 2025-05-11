@@ -30,10 +30,10 @@ public:
     ~SmallRoomReverbAudioProcessorEditor() override;
 
 	// GUI setup
-	static const int N_SLIDERS = 12;
+	static const int N_SLIDERS = 14;
 	static const int SLIDERS[];
 	static const float COLUMN_OFFSET[];
-	static const int N_ROWS = 3;
+	static const int N_ROWS = 4;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;

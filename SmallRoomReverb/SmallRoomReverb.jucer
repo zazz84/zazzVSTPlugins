@@ -5,6 +5,17 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Reverb">
   <MAINGROUP id="OW3WNE" name="SmallRoomReverb">
     <GROUP id="{C8C9680F-2002-F82B-D7C4-0F0C199E24D7}" name="Source">
+      <FILE id="w6TcqV" name="Tank.h" compile="0" resource="0" file="../Shared/Reverbs/Tank.h"/>
+      <FILE id="x7QhDU" name="Difuser.h" compile="0" resource="0" file="../Shared/Reverbs/Difuser.h"/>
+      <FILE id="fDhhUC" name="SchroederReverb.h" compile="0" resource="0"
+            file="../Shared/Reverbs/SchroederReverb.h"/>
+      <FILE id="rSVAN7" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="Swqrnh" name="GriesingerPlateReverb.h" compile="0" resource="0"
+            file="../Shared/Reverbs/GriesingerPlateReverb.h"/>
+      <FILE id="AkpWcU" name="MoorerReverb.h" compile="0" resource="0" file="../Shared/Reverbs/MoorerReverb.h"/>
+      <FILE id="R3sN0m" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="JRmFis" name="CombFilter.h" compile="0" resource="0" file="../Shared/Delays/CombFilter.h"/>
       <FILE id="JNuyxo" name="AllPassFilter.h" compile="0" resource="0" file="../Shared/Delays/AllPassFilter.h"/>
       <FILE id="rGCulH" name="RoomEarlyReflection.h" compile="0" resource="0"
             file="../Shared/Reverbs/RoomEarlyReflection.h"/>

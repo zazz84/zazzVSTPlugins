@@ -21,6 +21,8 @@
 #include "../../../zazzVSTPlugins/Shared/Delays/AllPassFilter.h"
 #include "../../../zazzVSTPlugins/Shared/Reverbs/RoomEarlyReflection.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 class SmallRoomReverb
 {
@@ -28,11 +30,11 @@ public:
 	SmallRoomReverb() = default;
 	~SmallRoomReverb() = default;
 
-	static const int N_ALLPASSES = 6;
+	static const int N_ALLPASSES = 4;
 	static const int BUFFER_MINIMUM_SIZE = 2;
 	static const int MAX_CHANNELS = 2;
 
-	static constexpr float ALLPASS_DELAY_TIMES_MS[N_ALLPASSES] =	{
+	static constexpr float ALLPASS_DELAY_TIMES_MS[] =	{
 																		6.35417f,
 																		16.97917f,
 																		23.62500f,
@@ -47,7 +49,7 @@ public:
 	static constexpr float G4 = 0.45f;
 	static constexpr float G5 = 0.65f;
 	
-	static constexpr float  ALLPASS_DELAY_WIDTH[5][N_ALLPASSES] =	{
+	static constexpr float  ALLPASS_DELAY_WIDTH[5][6] =	{
 																		{ G3, G2, G1, G3, G2, G1 },
 																		{ G1, G3, G2, G1, G3, G2 },
 																		{ G2, G1, G3, G2, G1, G3 },
@@ -76,15 +78,18 @@ public:
 
 		m_earlyReflections.init(size, channel);
 	}
-	inline void set(const float earlyReflectionsPredelay, const float earlyReflectionsMS, const float earlyReflectionsDamping, const float earlyReflectionsWidth, const float earlyReflectionsGain,
+	inline void set(const float earlyReflectionsPredelay, const float earlyReflectionsSize, const float earlyReflectionsDamping, const float earlyReflectionsWidth, const float earlyReflectionsGain,
 					const float lateReflectionsPredelay, const float lateReflectionsSize, const float lateReflectionsDamping, const float lateReflectionsWidth, const float lateReflectionsGain ) noexcept
 	{
 		m_ERgain = earlyReflectionsGain;
-		m_LRgain = lateReflectionsGain * 7.94f;		// + 18dB gain compensation
+		const float LRgainCompensation = juce::Decibels::decibelsToGain(6.0f);
+		m_LRgain = lateReflectionsGain * LRgainCompensation;
 		
 		// Set early reflections
+		const int earlyReflectionSizeSamples = (int)(Math::remap(earlyReflectionsSize, 0.0f, 1.0f, 5.0f, 60.0f) * m_sampleRateMS);
+
 		m_earlyReflections.set(	(int)(m_sampleRateMS * earlyReflectionsPredelay),
-								(int)(m_sampleRateMS * earlyReflectionsMS),
+								earlyReflectionSizeSamples,
 								earlyReflectionsWidth * earlyReflectionsWidth);
 
 		// Set late reflections
@@ -106,10 +111,11 @@ public:
 		const auto ERDampingQ = 0.707f - ERdamping * 0.207;
 		m_ERfilter.set(ERDampingFrequency, ERDampingQ);
 
-		const auto LRdamping = sqrtf(lateReflectionsDamping);
+		/*const auto LRdamping = sqrtf(lateReflectionsDamping);
 		const auto LRDampingFrequency = 16000.0f - LRdamping * 14000.0f;
 		const auto LRDampingQ = 0.707f - LRdamping * 0.207;
-		m_LRfilter.set(LRDampingFrequency, LRDampingQ);
+		m_LRfilter.set(LRDampingFrequency, LRDampingQ);*/
+		m_LRfilter.setCoef(0.9f * lateReflectionsDamping);
 	}
 	inline float process(const float in) noexcept
 	{
@@ -119,12 +125,12 @@ public:
 		// Process serial allpass filters
 		float LROut = m_LRfilter.process(m_earlyReflections.readDelay(m_LRPredelaySize));
 
-		m_allpass[0].processReplace(LROut);
-		m_allpass[1].processReplace(LROut);
-		m_allpass[2].processReplace(LROut);
-		m_allpass[3].processReplace(LROut);
-		m_allpass[4].processReplace(LROut);
-		m_allpass[5].processReplace(LROut);
+		LROut = m_allpass[0].process(LROut);
+		LROut = m_allpass[1].process(LROut);
+		LROut = m_allpass[2].process(LROut);
+		LROut = m_allpass[3].process(LROut);
+		//LROut = m_allpass[4].process(LROut);
+		//LROut = m_allpass[5].process(LROut);
 
 		//Out
 		return m_ERgain * ERout + m_LRgain * LROut;
@@ -148,10 +154,10 @@ public:
 	}
 
 private:
-	AllPassFilterSimple m_allpass[N_ALLPASSES];
+	AllPassFilter2 m_allpass[N_ALLPASSES];
 	RoomEarlyReflectionsSimple m_earlyReflections;
 	LowPassBiquadFilter m_ERfilter;
-	LowPassBiquadFilter m_LRfilter;
+	OnePoleLowPassFilter m_LRfilter;
 	float m_sampleRateMS = 48.0f;
 	float m_ERgain = 1.0f;
 	float m_LRgain = 1.0f;

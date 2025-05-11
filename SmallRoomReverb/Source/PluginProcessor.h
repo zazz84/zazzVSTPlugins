@@ -21,7 +21,8 @@
 
 #include <JuceHeader.h>
 
-#include "../../../zazzVSTPlugins/Shared/Reverbs/SmallRoomReverb.h"
+#include "../../../zazzVSTPlugins/Shared/Reverbs/Difuser.h"
+#include "../../../zazzVSTPlugins/Shared/Reverbs/Tank.h"
 
 //==============================================================================
 class SmallRoomReverbAudioProcessor  : public juce::AudioProcessor
@@ -80,7 +81,8 @@ public:
 
 private:	
 	//==============================================================================
-	SmallRoomReveb m_reverb[MAX_CHANNELS];
+	Difuser m_difuser[MAX_CHANNELS];
+	Tank m_tank[MAX_CHANNELS];
 
 	std::atomic<float>* ERpredelayParameter = nullptr;
 	std::atomic<float>* ERsizeParameter = nullptr;
@@ -96,6 +98,9 @@ private:
 	std::atomic<float>* LRvolumeParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	std::atomic<float>* difuserTypeParameter = nullptr;
+	std::atomic<float>* tankTypeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmallRoomReverbAudioProcessor)
 };

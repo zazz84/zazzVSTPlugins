@@ -19,67 +19,70 @@
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 
-class AllPassFilter
+//==============================================================================
+//[1] https://ccrma.stanford.edu/~jos/Delay/Schroeder_Allpass_Filters.html
+//[2] https://www.earlevel.com/main/1997/01/19/a-bit-about-reverb/
+
+// In literature and scientific papers, you can encounter two different ways all pass filter is implemented. See [1] and [2]. But their output is identical.
+// When m_feedback > 0.0f, all except the first echo have positive sign. When m_feedback < 0.0f, echoes alternate between positive and negative sign, except the first echo
+
+class AllPassFilter : public CircularBuffer
 {
 public:
-	AllPassFilter() {};
+	AllPassFilter() = default;
+	~AllPassFilter() = default;
 
-	inline void init(const int size)
-	{ 
-		m_buffer.init(size);
-	};
-	inline void set(const float feedback, const int size) 
-	{ 
+	inline void set(const int size, const float feedback = 0.5f)
+	{
+		__super::set(size);
 		m_feedback = feedback;
-		m_buffer.set(size);
+	};
+	inline void setSize(const int size)
+	{
+		__super::set(size);
 	};
 	inline void setFeedback(const float feedback)
 	{
 		m_feedback = feedback;
-	}
-	float process(const float in) noexcept
-	{
-		const float delayOut = m_buffer.read();
-		m_buffer.write(in - m_feedback * delayOut);
-
-		return delayOut + m_feedback * in;
 	};
-	inline void release()
+	inline float process(const float in) noexcept
 	{
-		m_buffer.release();
-		m_feedback = 0.0f;
-	}
+		const float delayOut =  read();
+		const float delayIn = in + m_feedback * delayOut;
+		write(delayIn);
+		return delayOut - m_feedback * delayIn;
+	};
 
-private:
-	CircularBuffer m_buffer;
-	float m_feedback = 0.0f;
+protected:
+	float m_feedback = 0.5f;
 };
 
 //==============================================================================
+// [1] https://www.dsprelated.com/freebooks/pasp/Freeverb_Allpass_Approximation.html
+// [2] 1962_Schroeder_Natural Sounding Artificial Reverb.pdf
 
-class AllPassFilterSimple : public CircularBuffer
+// TODO
+class SchroederAllPassFilter : public CircularBuffer
+{
+	SchroederAllPassFilter() = default;
+	~SchroederAllPassFilter() = default;
+};
+
+//==============================================================================
+// Not a true all pass filter
+// Made by mistake because I am fucking idiot
+// More like comp filter with dry path controled by m_feedback
+
+class AllPassFilter2 : public AllPassFilter
 {
 public:
-	AllPassFilterSimple() = default;
-	~AllPassFilterSimple() = default;
+	AllPassFilter2() = default;
+	~AllPassFilter2() = default;
 
 	inline float process(const float in) noexcept
 	{
 		const float delayOut = read();
 		write(in + 0.5f * delayOut);
 		return 0.5f * (delayOut - in);
-	};
-	inline void processReplace(float& in) noexcept
-	{
-		/*const float delayOut = read();
-		write(in + 0.5f * delayOut);
-		in =  0.5f * (delayOut - in);*/
-
-		// Same as code above but written differently
-		const float delayOut = 0.5f * read();
-		const float delayIn = in - delayOut;
-		write(delayIn);
-		in *= 0.5f;
-		in += delayOut;
 	};
 };

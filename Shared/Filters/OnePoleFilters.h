@@ -31,7 +31,7 @@ public:
 		m_samplePeriod = 0.00002f;
 		m_sampleLast = 0.0f;
 		m_a0 = 1.0f;
-	}
+	};
 
 protected:
 	float m_samplePeriod = 0.00002f;
@@ -53,6 +53,10 @@ public:
 	inline void set(const float frequency) noexcept
 	{
 		m_a0 = frequency * M_PI * m_samplePeriod;
+	};
+	inline void setCoef(const float b1)
+	{
+		m_a0 = 1.0f - b1;
 	};
 	inline float process(const float sample) noexcept
 	{
