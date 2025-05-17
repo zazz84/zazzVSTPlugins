@@ -176,4 +176,9 @@ namespace Math
 	{
 		return 440.0f * std::pow(2.0f, (float)(midiNoteNumber - 69) / 12.0f);
 	}
+	//==============================================================================
+	__forceinline bool almostEquals(const float a, const float b, const float epsilon)
+	{
+		return fabsf(a - b) < epsilon;
+	}
 }

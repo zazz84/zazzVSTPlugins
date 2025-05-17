@@ -25,8 +25,8 @@ const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(5
 const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
 const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
 
-const int SmallRoomReverbAudioProcessorEditor::SLIDERS[] = { 4, 4, 4, 2 };
-const float SmallRoomReverbAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+const int SmallRoomReverbAudioProcessorEditor::SLIDERS[] = { 6, 6, 1, 4 };
+const float SmallRoomReverbAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f, 0.0f, 2.5f, 1.0f };
 
 //==============================================================================
 SmallRoomReverbAudioProcessorEditor::SmallRoomReverbAudioProcessorEditor (SmallRoomReverbAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)

@@ -5,6 +5,9 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Reverb">
   <MAINGROUP id="OW3WNE" name="SmallRoomReverb">
     <GROUP id="{C8C9680F-2002-F82B-D7C4-0F0C199E24D7}" name="Source">
+      <FILE id="WpkRHT" name="Random.h" compile="0" resource="0" file="../Shared/Utilities/Random.h"/>
+      <FILE id="fGDOdF" name="EarlyReflections.h" compile="0" resource="0"
+            file="../Shared/Reverbs/EarlyReflections.h"/>
       <FILE id="w6TcqV" name="Tank.h" compile="0" resource="0" file="../Shared/Reverbs/Tank.h"/>
       <FILE id="x7QhDU" name="Difuser.h" compile="0" resource="0" file="../Shared/Reverbs/Difuser.h"/>
       <FILE id="fDhhUC" name="SchroederReverb.h" compile="0" resource="0"

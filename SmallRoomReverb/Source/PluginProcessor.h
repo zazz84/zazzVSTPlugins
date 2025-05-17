@@ -21,6 +21,7 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/Reverbs/EarlyReflections.h"
 #include "../../../zazzVSTPlugins/Shared/Reverbs/Difuser.h"
 #include "../../../zazzVSTPlugins/Shared/Reverbs/Tank.h"
 
@@ -40,6 +41,8 @@ public:
 	static const std::string paramsUnitNames[];
 	
 	static const int MAX_CHANNELS = 2;
+	static constexpr float MAXIMUM_EARLY_REFLECTIONS_LENGHT_MS = 150.0f;
+	static constexpr float MAXIMUM_PREDELAY_EARLY_REFLECTIONS_MS = 10.0f;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -81,26 +84,32 @@ public:
 
 private:	
 	//==============================================================================
+	EarlyReflections m_earlyReflections[MAX_CHANNELS];
 	Difuser m_difuser[MAX_CHANNELS];
 	Tank m_tank[MAX_CHANNELS];
 
 	std::atomic<float>* ERpredelayParameter = nullptr;
-	std::atomic<float>* ERsizeParameter = nullptr;
+	std::atomic<float>* ERlenghtParameter = nullptr;
+	std::atomic<float>* ERdecayParameter = nullptr;
 	std::atomic<float>* ERdampingParameter = nullptr;
+	std::atomic<float>* ERdiffusionParameter = nullptr;
 	std::atomic<float>* ERwidthParameter = nullptr;
 
 	std::atomic<float>* LRpredelayParameter = nullptr;
+	std::atomic<float>* LRlenghtParameter = nullptr;
 	std::atomic<float>* LRsizeParameter = nullptr;
 	std::atomic<float>* LRdampingParameter = nullptr;
+	std::atomic<float>* LRdiffusionParameter = nullptr;
 	std::atomic<float>* LRwidthParameter = nullptr;
+
+	std::atomic<float>* LRtankTypeParameter = nullptr;
 
 	std::atomic<float>* ERvolumeParameter = nullptr;
 	std::atomic<float>* LRvolumeParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
-	std::atomic<float>* difuserTypeParameter = nullptr;
-	std::atomic<float>* tankTypeParameter = nullptr;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmallRoomReverbAudioProcessor)
 };

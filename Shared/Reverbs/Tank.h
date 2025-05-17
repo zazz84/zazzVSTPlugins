@@ -22,6 +22,36 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
+//==============================================================================
+struct TankParams
+{
+	enum Type
+	{
+		Schroeder,
+		Moorer,
+		Griesinger,
+		Zazz
+	};
+
+	float predelay = 0.0f;		// ms
+	float length = 0.0f;		// ms	
+	float size = 0.0f;			
+	float damping = 0.0f;
+	Type type = Type::Schroeder;
+	//int type = 0;
+
+	bool operator==(const TankParams& l) const
+	{
+		return	Math::almostEquals(predelay, l.predelay, 0.01f) &&
+				Math::almostEquals(length, l.length, 0.01f) &&
+				Math::almostEquals(size, l.size, 0.01f) &&
+				Math::almostEquals(damping, l.damping, 0.01f) &&
+				type == l.type;
+	};
+};
+
+//==============================================================================
+
 class Tank
 {
 public:
@@ -44,14 +74,6 @@ public:
 	// Gain compensation
 	static constexpr float GAIN_COMPENSATION_MIN[] = {  -6.1f,  -7.9f,  0.3f, -6.1f };
 	static constexpr float GAIN_COMPENSATION_MAX[] = { -10.2f, -10.8f, -4.0f, -8.2f };
-
-	enum Type
-	{
-		Schroeder,
-		Moorer,
-		Griesinger,
-		Zazz
-	};
 
 	inline void init(const int sampleRate)
 	{
@@ -82,49 +104,74 @@ public:
 		m_appPassFilter[2].setFeedback(0.65f);
 		m_appPassFilter[3].setFeedback(0.65f);
 	};
-	inline void set(const Type type, const float size, const float damping) noexcept
+	inline void set(TankParams& params) noexcept
 	{
-		m_type = type;
-		const int typeIdx = static_cast<int>(type);
-		const float rt60 = Math::remap(size, 0.0f, 1.0f, 0.1f, 3.0f);
+		if (m_params == params)
+		{
+			return;
+		}
+
+		m_params = params;
+
+		const int typeIdx = static_cast<int>(params.type);
+		const float rt60 = Math::remap(params.length, 0.0f, 1.0f, 0.1f, 3.0f);
 		const float sampleRate = 1000.0f * m_sampleRateMS;
+		
 
-		m_gainCompensation = juce::Decibels::decibelsToGain(Math::remap(size, 0.0f, 1.0f, GAIN_COMPENSATION_MIN[typeIdx], GAIN_COMPENSATION_MAX[typeIdx]));
+		m_gainCompensation = juce::Decibels::decibelsToGain(Math::remap(params.length, 0.0f, 1.0f, GAIN_COMPENSATION_MIN[typeIdx], GAIN_COMPENSATION_MAX[typeIdx]));
 
-		if (m_type == Type::Schroeder)
+		if (params.type == TankParams::Type::Schroeder)
 		{	
+			const float sizeFactor = 0.25f + params.size * 0.75f;
+
 			for (int i = 0; i < 4; i++)
 			{
-				const int size = (int)(SCHROEDER_COMP_FILTER_DELAY_TIME_MS[i] * m_sampleRateMS);
+				const int size = (int)(SCHROEDER_COMP_FILTER_DELAY_TIME_MS[i] * m_sampleRateMS * sizeFactor);
 				m_combFilter[i].setSize(size);
 				m_combFilter[i].setDamping(0.0f);
 				m_combFilter[i].setTime(rt60, sampleRate);
 			}
 		}
-		else if (m_type == Type::Moorer)
+		else if (params.type == TankParams::Type::Moorer)
 		{
+			const float sizeFactor = 0.25f + params.size * 0.75f;
+
 			for (int i = 0; i < 6; i++)
 			{
-				const int size = (int)(MOORER_COMB_FILTER_DELAY_TIME_MS[i] * m_sampleRateMS);
+				const int size = (int)(MOORER_COMB_FILTER_DELAY_TIME_MS[i] * m_sampleRateMS * sizeFactor);
 				m_combFilter[i].setSize(size);
-				m_combFilter[i].setDamping(0.9f * damping);
+				m_combFilter[i].setDamping(0.9f * params.damping);
 				m_combFilter[i].setTime(rt60, sampleRate);
 			}
 		}
-		else if (m_type == Type::Griesinger)
+		else if (params.type == TankParams::Type::Griesinger)
 		{
-			m_decay = Math::remap(size, 0.0f, 1.0f, juce::Decibels::decibelsToGain(-60.0f), juce::Decibels::decibelsToGain(-3.0f));
+			m_decay = Math::remap(params.length, 0.0f, 1.0f, juce::Decibels::decibelsToGain(-60.0f), juce::Decibels::decibelsToGain(-3.0f));
 
-			m_dampingFilter[0].setCoef(0.9f * damping);
-			m_dampingFilter[1].setCoef(0.9f * damping);
+			const float sizeFactor = 0.1f + params.size * 0.9f;
+
+			m_appPassFilter[0].set((int)(GREISINGER_ALLPASS_DELAY_TIME_MS[0] * m_sampleRateMS * sizeFactor));
+			m_appPassFilter[1].set((int)(GREISINGER_ALLPASS_DELAY_TIME_MS[1] * m_sampleRateMS * sizeFactor));
+			m_appPassFilter[2].set((int)(GREISINGER_ALLPASS_DELAY_TIME_MS[2] * m_sampleRateMS * sizeFactor));
+			m_appPassFilter[3].set((int)(GREISINGER_ALLPASS_DELAY_TIME_MS[3] * m_sampleRateMS * sizeFactor));
+
+			m_delayLine[0].set((int)(GREISINGER_DELAY_TIME_MS[0] * m_sampleRateMS * sizeFactor));
+			m_delayLine[1].set((int)(GREISINGER_DELAY_TIME_MS[1] * m_sampleRateMS * sizeFactor));
+			m_delayLine[2].set((int)(GREISINGER_DELAY_TIME_MS[2] * m_sampleRateMS * sizeFactor));
+			m_delayLine[3].set((int)(GREISINGER_DELAY_TIME_MS[3] * m_sampleRateMS * sizeFactor));
+
+			m_dampingFilter[0].setCoef(0.9f * params.damping);
+			m_dampingFilter[1].setCoef(0.9f * params.damping);
 		}
-		else if (m_type == Type::Zazz)
+		else if (params.type == TankParams::Type::Zazz)
 		{
+			const float sizeFactor = 0.2f + params.size * 0.8f;
+
 			for (int i = 0; i < 4; i++)
 			{
-				const int size = (int)(ZAZZ_COMB_FILTER_DELA_TIMEY_MS[i] * m_sampleRateMS);
+				const int size = (int)(ZAZZ_COMB_FILTER_DELA_TIMEY_MS[i] * m_sampleRateMS * sizeFactor);
 				m_combFilter[i].setSize(size);
-				m_combFilter[i].setDamping(0.9f * damping);
+				m_combFilter[i].setDamping(0.9f * params.damping);
 				m_combFilter[i].setTime(rt60, sampleRate);
 			}
 		}
@@ -133,21 +180,21 @@ public:
 	{
 		float out = 0.0f;
 		
-		if (m_type == Type::Schroeder)
+		if (m_params.type == TankParams::Type::Schroeder)
 		{
 			for (int i = 0; i < 4; i++)
 			{
 				out += m_combFilter[i].process(in);
 			}
 		}
-		else if (m_type == Type::Moorer)
+		else if (m_params.type == TankParams::Type::Moorer)
 		{
 			for (int i = 0; i < 6; i++)
 			{
 				out += m_combFilter[i].process(in);
 			}
 		}
-		else if (m_type == Type::Griesinger)
+		else if (m_params.type == TankParams::Type::Griesinger)
 		{
 			// Left tank
 			float leftTankOut = in + m_decay * m_delayLine[3].read();
@@ -175,17 +222,19 @@ public:
 
 			m_delayLine[3].write(rightTankOut);
 
+			const float sizeFactor = 0.3f + m_params.size * 0.7f;
+
 			//Taps
 			// Note: Reading from buffers for left channel, but using delay times for right channel. Seem it produces more smooth reverberation with less noticable echoes.
-			out  = m_delayLine[2].readDelay(		(int)(GREISINGER_TAP_RIGHT_TIME_MS[0] * m_sampleRateMS));
-			out += m_delayLine[2].readDelay(		(int)(GREISINGER_TAP_RIGHT_TIME_MS[1] * m_sampleRateMS));
-			out -= m_appPassFilter[3].readDelay(	(int)(GREISINGER_TAP_RIGHT_TIME_MS[2] * m_sampleRateMS));
-			out += m_delayLine[3].readDelay(		(int)(GREISINGER_TAP_RIGHT_TIME_MS[3] * m_sampleRateMS));
-			out -= m_delayLine[0].readDelay(		(int)(GREISINGER_TAP_RIGHT_TIME_MS[4] * m_sampleRateMS));
-			out -= m_appPassFilter[1].readDelay(	(int)(GREISINGER_TAP_RIGHT_TIME_MS[5] * m_sampleRateMS));
-			out -= m_delayLine[1].readDelay(		(int)(GREISINGER_TAP_RIGHT_TIME_MS[6] * m_sampleRateMS));
+			out  = m_delayLine[2].readDelay(		(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[0] * m_sampleRateMS));
+			out += m_delayLine[2].readDelay(		(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[1] * m_sampleRateMS));
+			out -= m_appPassFilter[3].readDelay(	(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[2] * m_sampleRateMS));
+			out += m_delayLine[3].readDelay(		(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[3] * m_sampleRateMS));
+			out -= m_delayLine[0].readDelay(		(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[4] * m_sampleRateMS));
+			out -= m_appPassFilter[1].readDelay(	(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[5] * m_sampleRateMS));
+			out -= m_delayLine[1].readDelay(		(int)(sizeFactor * GREISINGER_TAP_RIGHT_TIME_MS[6] * m_sampleRateMS));
 		}
-		else if (m_type == Type::Zazz)
+		else if (m_params.type == TankParams::Type::Zazz)
 		{
 			for (int i = 0; i < 4; i++)
 			{
@@ -213,8 +262,6 @@ public:
 
 		m_sampleRateMS = 48.0f;
 		m_decay = 0.5f;
-
-		m_type = Type::Schroeder;
 	};
 
 private:
@@ -222,10 +269,10 @@ private:
 	AllPassFilter m_appPassFilter[4];
 	CircularBuffer m_delayLine[4];
 	OnePoleLowPassFilter m_dampingFilter[2];
+
+	TankParams m_params = {};
 	
 	float m_sampleRateMS = 48.0f;
 	float m_decay = 0.5f;
 	float m_gainCompensation;
-
-	Type m_type = Type::Schroeder;
 };

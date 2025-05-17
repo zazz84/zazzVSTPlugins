@@ -19,6 +19,27 @@
 
 #include "../../../zazzVSTPlugins/Shared/Delays/AllPassFilter.h"
 
+ //==============================================================================
+struct DifuserParams
+{
+	enum Type
+	{
+		Schroeder,
+		Moorer,
+		Griesinger,
+		Zazz
+	};
+
+	float width = 0.0f;	
+	Type type = Type::Schroeder;
+
+	bool operator==(const DifuserParams& l) const
+	{
+		return	Math::almostEquals(width, l.width, 0.01f) &&
+				type == l.type;
+	};
+};
+
 class Difuser
 {
 public:
@@ -30,8 +51,10 @@ public:
 	static constexpr float ALLPASS_FILTER_DELAY_TIME_MS[4][4] = { 
 																	{ 3.15f, 5.79f,  0.00f,  0.00f },
 																	{ 6.96f, 0.00f,  0.00f,  0.00f },
-																	{ 4.77f, 3.59f, 12.73f,  9.30f },
-																	{ 3.09f, 3.79f,  8.96f, 11.83f }
+																	//{ 4.77f, 3.59f, 12.73f,  9.30f },
+																	{ 6.16f, 3.58f, 12.72f,  9.29f },
+																	//{ 3.09f, 3.79f,  8.96f, 11.83f }
+																	{ 3.69f, 5.39f, 10.06f, 11.83f }
 																};
 
 	static constexpr float ALLPASS_FILTER_FEEDBACK[4][4] = {
@@ -41,18 +64,18 @@ public:
 																{ 0.70f, 0.70f, 0.65f, 0.65f }
 	};
 
+	static constexpr float ALLPASS_FILTER_DELAY_TIME_MULTIPLIER[5][4] = {
+																			{  0.00f,  0.00f,  0.00f,  0.00f },
+																			{  0.05f, -0.05f,  0.01f, -0.01f },
+																			{  0.01f,  0.04f, -0.06f, -0.01f },
+																			{ -0.01f,  0.00f,  0.03f, -0.07f },
+																			{  0.92f,  0.01f, -0.01f,  0.02f },
+																		};
+
 	static constexpr float ALLPASS_FILTER_DELAY_TIME_MAX_MS[] = {	  6.96f, 5.79f, 12.73f, 11.83f };
 	static constexpr int ALLPASS_FILTER_COUNT[] = { 2, 1, 4, 4 };
 
-	enum Type
-	{
-		Schroeder,
-		Moorer,
-		Griesinger,
-		Zazz
-	};
-
-	inline void init(const int sampleRate)
+	inline void init(const int sampleRate, const int channel = 0)
 	{
 		m_sampleRateMS = 0.001f * (float)sampleRate;
 
@@ -60,16 +83,30 @@ public:
 		{
 			m_allPassFilter[i].init((int)(ALLPASS_FILTER_DELAY_TIME_MAX_MS[i] * m_sampleRateMS));
 		}
+
+		m_channel = channel;
+
 	}
-	inline void set(const Type type) noexcept
+	inline void set(DifuserParams& params) noexcept
 	{
-		const int typeIdx = static_cast<int>(type);
+		if (m_params == params)
+		{
+			return;
+		}
+
+		m_params = params;
+
+		const int typeIdx = static_cast<int>(params.type);
 		m_allPassFilterCount = ALLPASS_FILTER_COUNT[typeIdx];
+		auto& ALLPASS_FILTER_DELAY_TIME_MULTIPLIER_CHANNEL = ALLPASS_FILTER_DELAY_TIME_MULTIPLIER[m_channel];
+		auto& ALLPASS_FILTER_DELAY_TIME_MS_TYPE = ALLPASS_FILTER_DELAY_TIME_MS[typeIdx];
+		auto& ALLPASS_FILTER_FEEDBACK_TYPE = ALLPASS_FILTER_FEEDBACK[typeIdx];
 
 		for (int i = 0; i < m_allPassFilterCount; i++)
 		{
-			m_allPassFilter[i].set((int)(ALLPASS_FILTER_DELAY_TIME_MS[typeIdx][i] * m_sampleRateMS));
-			m_allPassFilter[i].setFeedback(ALLPASS_FILTER_FEEDBACK[typeIdx][i]);
+			const float widthFactor = 1.0f + params.width * ALLPASS_FILTER_DELAY_TIME_MULTIPLIER_CHANNEL[i];
+			m_allPassFilter[i].set((int)(widthFactor * ALLPASS_FILTER_DELAY_TIME_MS_TYPE[i] * m_sampleRateMS));
+			m_allPassFilter[i].setFeedback(ALLPASS_FILTER_FEEDBACK_TYPE[i]);
 		}
 	}
 	inline float process(const float in) noexcept
@@ -93,6 +130,10 @@ public:
 
 private:
 	AllPassFilter m_allPassFilter[MAX_ALLPASS_FILTER_COUNT];
+
+	DifuserParams m_params;
+
 	float m_sampleRateMS;
 	int m_allPassFilterCount = 0;
+	int m_channel = 0;
 };

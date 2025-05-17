@@ -1,153 +1,146 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
-#include <immintrin.h>
-#include <vector>
-#include <math.h>
-
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
-#include "../../../zazzVSTPlugins/Shared/Utilities/Math3D.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Delays/AllPassFilter.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
-
-#define M_PI  3.14159268f
-#define SPEED_OF_SOUND 343.0f
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Random.h"
 
 //==============================================================================
-class RoomEarlyReflections : public CircularBuffer
+struct EarlyReflectionsParams
 {
-public:
-	RoomEarlyReflections() {};
+	float predelay = 0.0f;		// ms
+	float length = 0.0f;		// ms
+	float decay = 0.0f;			// dB
+	float diffusion = 0.0f;
+	float damping = 0.0f;
+	float width = 0.0f;
 
-	static constexpr float delayTimesFactor[] = {	0.3580f,	0.4617f,	0.5753f,	0.5975f,
-													0.9555f,	0.7481f,	1.0000f};
-	static constexpr float delayGains[] = {			0.5968f,	0.5228f,	0.4540f,	0.4421f,
-													0.2996f,	0.3718f,	0.2871f};
-	static const int N_DELAY_LINES = 7;
-
-	void init(int size, int sampleRate)
+	bool operator==(const EarlyReflectionsParams& l) const
 	{
-		__super::init(size);
-
-		const int sampleRateHalf = sampleRate / 2;
-		m_maximumFilterFrequency = (sampleRateHalf < 18000) ? (float)sampleRateHalf : 18000.0f;
-
-		for (auto filter : m_filter)
-		{
-			filter.init(sampleRate);
-		}
+		return	Math::almostEquals(predelay, l.predelay, 0.01f) &&
+				Math::almostEquals(length, l.length, 0.01f) &&
+				Math::almostEquals(decay, l.decay, 0.01f) &&
+				Math::almostEquals(diffusion, l.diffusion, 0.01f) &&
+				Math::almostEquals(damping, l.damping, 0.01f) &&
+				Math::almostEquals(width, l.width, 0.01f);
 	};
-	void setDamping(float damping) 
-	{	
-		const float frequency2 = m_maximumFilterFrequency - 500.0f;
-
-		for (int i = 0; i < N_DELAY_LINES; i++)
-		{
-			const float frequency = m_maximumFilterFrequency - damping * delayTimesFactor[i] * frequency2;
-			m_filter[i].setLowPass(frequency, 0.7f);
-		}
-		
-		m_damping = damping;
-	};
-	float process(float in)
-	{
-		writeSample(in);
-	
-		const auto size = getSize();
-		float out = 0.0f;
-
-		for (int i = 0; i < N_DELAY_LINES; i++)
-		{
-			const float delayLineOut = delayGains[i] * readDelay((int)(size * delayTimesFactor[i]));
-			out += m_filter[i].processDF1(delayLineOut);
-		}
-
-		return out;
-	};	
-
-private:
-	float m_damping = 0.0f;
-	float m_maximumFilterFrequency = 18000.0f;
-	BiquadFilter m_filter[N_DELAY_LINES];
 };
 
 //==============================================================================
-class FibonacciSphereEarlyReflections : CircularBuffer
+class EarlyReflections : public CircularBuffer
 {
 public:
-	FibonacciSphereEarlyReflections() {};
+	EarlyReflections() = default;
+	~EarlyReflections() = default;
 
-	void init(float maximumDimension, int sampleRate, int reflectionsCountMax)
-	{	
-		m_sampleRate = sampleRate;	
-		m_maximumDelayTime =  2.0f * maximumDimension * std::sqrtf(3.0f) / SPEED_OF_SOUND;
-		
-		const int maximumDelayTimeSamples = (int)(m_maximumDelayTime * sampleRate);
-		__super::init(maximumDelayTimeSamples);
+	static const int DELAY_LINE_COUNT_MAX = 20;
+	static const int DELAY_LINE_LENGHT_MAX_MS = 160;
 
-		m_gains.resize(reflectionsCountMax);
-		m_delayTimesSamples.resize(reflectionsCountMax);
-
-		m_dampingFilters.resize(reflectionsCountMax);
-
-		const int sampleRateHalf = sampleRate / 2;
-		m_maximumFilterFrequency = (sampleRateHalf < 18000) ? (float)sampleRateHalf : 18000.0f;
-
-		for (int i = 0; i < reflectionsCountMax; i++)
-		{
-			m_dampingFilters[i].init(sampleRate);
-		}
-
-	};
-	void set(float roomLenght, float roomWidth, float roomHeightMax, float damping, Point3D listenerPosition, int reflectionsCount)
+	inline void init(const int sampleRate, const int channel)
 	{
-		m_reflectionsCount = reflectionsCount;
-		std::vector<float> distances;
-		distances.resize(reflectionsCount);
+		m_sampleRate = sampleRate;
+		m_channel = channel;
+		
+		// Set delay line
+		const int size = DELAY_LINE_LENGHT_MAX_MS * sampleRate;
+		__super::init(size);
 
-		Math3D::GetDistances(distances, roomLenght, roomWidth, roomHeightMax, listenerPosition, reflectionsCount);
+		// Set dissution all-pass filters
+		m_allPassFilter[0].init((int)(0.0021f * (float)sampleRate));
+		m_allPassFilter[1].init((int)(0.0032f * (float)sampleRate));
 
-		const float frequency2 = m_maximumFilterFrequency - 500.0f;
-
-		for (int i = 0; i < reflectionsCount; i++)
+		// Set damping filters
+		for (int i = 0; i < m_delayLineCount; i++)
 		{
-			// Set reflections times in samples
-			const float distance = 2.0f * distances[i];
-			const float time = distance / SPEED_OF_SOUND;
-			m_delayTimesSamples[i] = (int)(m_sampleRate * time);
+			m_dampingFilter[i].init(sampleRate);
+		}
+	};
+	inline void set(EarlyReflectionsParams& params) noexcept
+	{	
+		if (m_params == params)
+		{
+			return;
+		}
+		
+		m_params = params;
+		
+		// Setup
+		LinearCongruentialRandom01 randomChannel1 = {};
+		randomChannel1.set(4L);
 
-			// Set reflections gains
-			constexpr auto a = 10.0f;
-			m_gains[i] = a / (distance + a);
+		LinearCongruentialRandom01 randomCurrentChannel = {};
+		randomCurrentChannel.set((long)(m_channel + 1) + 16L);
+
+		m_delayLineCount = Math::remap(params.length, 0.0f, 100.0f, 0.5f * DELAY_LINE_COUNT_MAX, DELAY_LINE_COUNT_MAX);
+		const float stepSize = params.length / m_delayLineCount;
+		const float randomRange = 0.85f * stepSize;
+		const float predelaySamples = 0.001f * params.predelay * (float)m_sampleRate;
+
+		const float stepGain = params.decay / (float)m_delayLineCount;
+
+		for (int i = 0; i < m_delayLineCount; i++)
+		{
+			// Set delay times
+			const float offsetChannel1 = randomRange * (2.0f * randomChannel1.process() - 1.0f);
+			const float offsetCurrentChannel = randomRange * (2.0f * randomCurrentChannel.process() - 1.0f);
+			const float offset = (1.0f - params.width) * offsetChannel1 + params.width * offsetCurrentChannel;
+			
+			const float delayTime = (float)(i + 1) * stepSize + offset;
+			const int delayTimeSamples = (int)(0.001f * delayTime * (float)m_sampleRate);
+			
+			m_delayTimeSamples[i] = predelaySamples + delayTimeSamples;
+
+			// Set gains
+			const float gain = juce::Decibels::decibelsToGain(i * stepGain);
+			m_delayLineGain[i] = gain;
 
 			// Set filters
-			// TODO: Find better way to calculate filter frequency
-			const float distanceFactor = 0.15f * damping;
-			const float frequencyFactor = std::fminf(1.0f, distanceFactor * distance);
-			const float frequency = m_maximumFilterFrequency - damping * frequencyFactor * frequency2;
-			m_dampingFilters[i].set(frequency);
+			m_dampingFilter[i].setCoef(0.8f * params.damping + (0.2f * i / m_delayLineCount));
 		}
 	};
-	float process(float sample)
+	inline float process(const float in) noexcept
 	{
+		// Handle diffusion
+		const float diffused = m_allPassFilter[0].process(m_allPassFilter[1].process(in));	
+		write(m_params.diffusion * diffused + (1.0f - m_params.diffusion) * in);
+
+		// Read all delay tabs
 		float out = 0.0f;
-
-		writeSample(sample);
-
-		for (int i = 0; i < m_reflectionsCount; i++)
+		for (int i = 0; i < m_delayLineCount; i++)
 		{
-			out += m_gains[i] * m_dampingFilters[i].process(readDelay(m_delayTimesSamples[i]));
+			out += m_delayLineGain[i] * m_dampingFilter[i].process(readDelay(m_delayTimeSamples[i]));
 		}
-		
+
 		return out;
 	};
 
 private:
-	std::vector<OnePoleLowPassFilter> m_dampingFilters;
-	std::vector<float> m_gains = {};
-	std::vector<int> m_delayTimesSamples = {};
-	float m_maximumDelayTime = 0.0f;
-	float m_maximumFilterFrequency = 0.0f;
+	OnePoleLowPassFilter m_dampingFilter[DELAY_LINE_COUNT_MAX];
+	int m_delayTimeSamples[DELAY_LINE_COUNT_MAX];
+	float m_delayLineGain[DELAY_LINE_COUNT_MAX];
+	AllPassFilter m_allPassFilter[2];
+	
+	EarlyReflectionsParams m_params = {};
+	
 	int m_sampleRate = 48000;
-	int m_reflectionsCount = 0;
-	int m_reflectionsCountMax = 0;
+	int m_delayLineCount = 0;
+	int m_channel = 0;
 };

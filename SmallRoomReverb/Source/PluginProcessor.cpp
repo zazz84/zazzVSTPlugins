@@ -20,8 +20,53 @@
 
 //==============================================================================
 
-const std::string SmallRoomReverbAudioProcessor::paramsNames[] =		{	"ER Predelay",	"ER Size", "ER Damping",	"ER Width",	"LR Predelay", "LR Size",	"LR Damping",	"LR Width", "ER Volume",	"LR Volume",	"Mix",	"Volume", "Difuser Type", "Tank Type" };
-const std::string SmallRoomReverbAudioProcessor::paramsUnitNames[] =	{	" ms",			" ms",		"",				" %",			" ms",			"",			"",				" %",		" dB",			" dB",			" %",	" dB", "", "" };
+const std::string SmallRoomReverbAudioProcessor::paramsNames[] =
+										{ 
+											"ER Predelay",
+											"ER Lenght",
+											"ER Decay", 
+											"ER Damping",	
+											"ER Diffusion",
+											"ER Width",
+
+											"LR Predelay", 
+											"LR Lenght",
+											"LR Size",
+											"LR Damping",
+											"LR Diffusion",
+											"LR Width",
+											
+											"LR Tank Type",
+
+											"ER Volume",
+											"LR Volume",
+											"Mix",
+											"Volume"
+										};
+const std::string SmallRoomReverbAudioProcessor::paramsUnitNames[] =
+										{
+											" ms",
+											"",
+											" dB",
+											"",
+											"",
+											" %",
+
+											" ms",
+											"",
+											"",
+											"",
+											"",
+											" %",
+
+											"",
+
+											" dB",
+											" dB",
+											" %",
+											" dB"
+										};
+
 
 //==============================================================================
 SmallRoomReverbAudioProcessor::SmallRoomReverbAudioProcessor()
@@ -36,23 +81,26 @@ SmallRoomReverbAudioProcessor::SmallRoomReverbAudioProcessor()
                        )
 #endif
 {	
-	ERpredelayParameter = apvts.getRawParameterValue(paramsNames[0]);
-	ERsizeParameter = apvts.getRawParameterValue(paramsNames[1]);
-	ERdampingParameter = apvts.getRawParameterValue(paramsNames[2]);
-	ERwidthParameter = apvts.getRawParameterValue(paramsNames[3]);
+	ERpredelayParameter		= apvts.getRawParameterValue(paramsNames[0]);
+	ERlenghtParameter		= apvts.getRawParameterValue(paramsNames[1]);
+	ERdecayParameter		= apvts.getRawParameterValue(paramsNames[2]);
+	ERdampingParameter		= apvts.getRawParameterValue(paramsNames[3]);
+	ERdiffusionParameter	= apvts.getRawParameterValue(paramsNames[4]);
+	ERwidthParameter		= apvts.getRawParameterValue(paramsNames[5]);
 
-	LRpredelayParameter = apvts.getRawParameterValue(paramsNames[4]);
-	LRsizeParameter = apvts.getRawParameterValue(paramsNames[5]);
-	LRdampingParameter = apvts.getRawParameterValue(paramsNames[6]);
-	LRwidthParameter = apvts.getRawParameterValue(paramsNames[7]);
+	LRpredelayParameter		= apvts.getRawParameterValue(paramsNames[6]);
+	LRlenghtParameter		= apvts.getRawParameterValue(paramsNames[7]);
+	LRsizeParameter			= apvts.getRawParameterValue(paramsNames[8]);
+	LRdampingParameter		= apvts.getRawParameterValue(paramsNames[9]);
+	LRdiffusionParameter	= apvts.getRawParameterValue(paramsNames[10]);
+	LRwidthParameter		= apvts.getRawParameterValue(paramsNames[11]);
 
-	ERvolumeParameter = apvts.getRawParameterValue(paramsNames[8]);
-	LRvolumeParameter = apvts.getRawParameterValue(paramsNames[9]);
-	mixParameter = apvts.getRawParameterValue(paramsNames[10]);
-	volumeParameter = apvts.getRawParameterValue(paramsNames[11]);
+	LRtankTypeParameter		= apvts.getRawParameterValue(paramsNames[12]);
 
-	difuserTypeParameter = apvts.getRawParameterValue(paramsNames[12]);
-	tankTypeParameter = apvts.getRawParameterValue(paramsNames[13]);
+	ERvolumeParameter		= apvts.getRawParameterValue(paramsNames[13]);
+	LRvolumeParameter		= apvts.getRawParameterValue(paramsNames[14]);
+	mixParameter			= apvts.getRawParameterValue(paramsNames[15]);
+	volumeParameter			= apvts.getRawParameterValue(paramsNames[16]);
 }
 
 SmallRoomReverbAudioProcessor::~SmallRoomReverbAudioProcessor()
@@ -126,8 +174,11 @@ void SmallRoomReverbAudioProcessor::prepareToPlay (double sampleRate, int sample
 {
 	const int sr = (int)sampleRate;
 
-	m_difuser[0].init(sr);
-	m_difuser[1].init(sr);
+	m_earlyReflections[0].init(sr, 0);
+	m_earlyReflections[1].init(sr, 1);	
+	
+	m_difuser[0].init(sr, 0);
+	m_difuser[1].init(sr, 1);
 
 	m_tank[0].init(sr);
 	m_tank[1].init(sr);
@@ -135,6 +186,9 @@ void SmallRoomReverbAudioProcessor::prepareToPlay (double sampleRate, int sample
 
 void SmallRoomReverbAudioProcessor::releaseResources()
 {
+	m_earlyReflections[0].release();
+	m_earlyReflections[1].release();
+
 	m_difuser[0].release();
 	m_difuser[1].release();
 
@@ -169,25 +223,33 @@ bool SmallRoomReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 #endif
 
 void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
-{
+{	
 	// Get params
-	const auto earlyReflectionsPredelay = ERpredelayParameter->load();
-	const auto earlyReflectionsSize = ERsizeParameter->load();
-	const auto earlyReflectionsDamping = ERdampingParameter->load();
-	const auto earlyReflectionsWidth = 0.01f * ERwidthParameter->load();
-	const auto earlyReflectionsGain = juce::Decibels::decibelsToGain(ERvolumeParameter->load());
+	EarlyReflectionsParams earlyReflectionsParams = {};
+	earlyReflectionsParams.predelay		= Math::remap(ERpredelayParameter->load(), 0.0f, 1.0f, 0.0f, MAXIMUM_PREDELAY_EARLY_REFLECTIONS_MS);
+	earlyReflectionsParams.length		= Math::remap(ERlenghtParameter->load(), 0.0f, 1.0f, 20.0f, MAXIMUM_EARLY_REFLECTIONS_LENGHT_MS);
+	earlyReflectionsParams.decay		= ERdecayParameter->load();
+	earlyReflectionsParams.diffusion	= ERdiffusionParameter->load();
+	earlyReflectionsParams.damping		= ERdampingParameter->load();
+	earlyReflectionsParams.width		= 0.01f * ERwidthParameter->load();
+	
+	DifuserParams difuserParams = {};
+	difuserParams.type					= static_cast<DifuserParams::Type>((int)LRtankTypeParameter->load() - 1);
+	difuserParams.width					= 0.01f * LRwidthParameter->load();
 
-	const auto lateReflectionsPredelay = LRpredelayParameter->load();
-	const auto lateReflectionsSize = LRsizeParameter->load();
-	const auto lateReflectionsDamping = LRdampingParameter->load();
-	const auto lateReflectionsWidth = 0.01f * LRwidthParameter->load();
-	const auto lateReflectionsGain = juce::Decibels::decibelsToGain(LRvolumeParameter->load());
+	TankParams tankParams = {};
+	tankParams.predelay					= LRpredelayParameter->load();
+	tankParams.length					= LRlenghtParameter->load();
+	tankParams.size						= LRsizeParameter->load();
+	tankParams.damping					= LRdampingParameter->load();
+	tankParams.type						= static_cast<TankParams::Type>   ((int)LRtankTypeParameter->load() - 1);
 
-	const auto mix = 0.01f * mixParameter->load();
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
-
-	const auto difuserType = static_cast<Difuser::Type>((int)difuserTypeParameter->load() - 1);
-	const auto tankType =    static_cast<Tank::Type>   ((int)tankTypeParameter->load() - 1);
+	const auto earlyReflectionsGain		= juce::Decibels::decibelsToGain(ERvolumeParameter->load());
+	const auto lateReflectionsGain		= juce::Decibels::decibelsToGain(LRvolumeParameter->load());
+	const auto lateReflectionsDiffusion = LRdiffusionParameter->load();
+	const auto lateReflectionsPredelaySamples = (int)(tankParams.predelay * 0.001f * (float)getSampleRate());
+	const auto mix						= 0.01f * mixParameter->load();
+	const auto gain						= juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
@@ -199,10 +261,13 @@ void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
+		auto& earlyReflections = m_earlyReflections[channel];
 		auto& difuser = m_difuser[channel];
 		auto& tank = m_tank[channel];
-		difuser.set(difuserType);
-		tank.set(tankType, lateReflectionsSize, lateReflectionsDamping);
+		
+		earlyReflections.set(earlyReflectionsParams);
+		difuser.set(difuserParams);
+		tank.set(tankParams);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -210,9 +275,13 @@ void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 			const float in = channelBuffer[sample];
 
 			// Process reverb
-			float out = difuser.process(in);
+			const float ERout = earlyReflections.process(in);
 
-			out = tank.process(out);
+			float LRout = difuser.process(earlyReflections.readDelay(lateReflectionsPredelaySamples));
+
+			LRout = tank.process((1.0f - lateReflectionsDiffusion) * in + lateReflectionsDiffusion * LRout);
+
+			const float out = earlyReflectionsGain * ERout + lateReflectionsGain * LRout;
 
 			//Out
 			channelBuffer[sample] = in - mix * (in - out);
@@ -256,23 +325,26 @@ juce::AudioProcessorValueTreeState::ParameterLayout SmallRoomReverbAudioProcesso
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f,  10.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   0.0f, MAXIMUM_PREDELAY_EARLY_REFLECTIONS_MS,  0.1f, 1.0f),  0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -30.0f,   0.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 1.0f,  0.01f, 1.0f),  1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f, 100.0f, 1.0f, 1.0f),  50.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f,  80.0f,  0.1f, 1.0f),  0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(   0.0f,  80.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9], NormalisableRange<float>(   0.0f,   1.0f, 0.01f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f, 1.0f,  0.01f, 1.0f),  1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 50.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[8], paramsNames[8],   NormalisableRange<float>( -60.0f,   0.0f,  0.1f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[9], paramsNames[9],   NormalisableRange<float>( -60.0f,   0.0f,  0.1f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[10], paramsNames[10], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[11], paramsNames[11], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>(   1.0f,   4.0f,  1.0f, 1.0f),  1.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[12], paramsNames[12], NormalisableRange<float>( 1.0f,  4.0f,  1.0f,  1.0f),   1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>( 1.0f,  4.0f,  1.0f,  1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[13], paramsNames[13], NormalisableRange<float>( -60.0f,   0.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[14], paramsNames[14], NormalisableRange<float>( -60.0f,   0.0f,  0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[15], paramsNames[15], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[16], paramsNames[16], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),   0.0f));
 
 	return layout;
 }
