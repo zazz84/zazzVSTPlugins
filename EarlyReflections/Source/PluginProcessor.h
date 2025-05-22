@@ -34,6 +34,7 @@ public:
     ~EarlyRefections1AudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
 
@@ -88,7 +89,6 @@ private:
 	std::atomic<float>* m_diffusionParameter = nullptr;
 	std::atomic<float>* m_widthParameter = nullptr;
 
-	std::atomic<float>* LRm_volumeParameter = nullptr;
 	std::atomic<float>* m_mixParameter = nullptr;
 	std::atomic<float>* m_volumeParameter = nullptr;
 

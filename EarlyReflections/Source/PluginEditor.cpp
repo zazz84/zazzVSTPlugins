@@ -18,42 +18,51 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
-const juce::Colour ZazzLookAndFeel::BACKGROUND_COLOR	= juce::Colour::fromRGB(90, 90, 100);
-const juce::Colour ZazzLookAndFeel::KNOB_COLOR			= juce::Colour::fromRGB(70, 70, 80);
-const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR	= juce::Colour::fromRGB(50, 50, 60);
-const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT		= juce::Colour::fromRGB(55, 140, 255);
-const juce::Colour ZazzLookAndFeel::MAIN_COLOR			= juce::Colour::fromRGB(240, 240, 255);
-
-const int EarlyRefections1AudioProcessorEditor::SLIDERS[] = { N_SLIDERS };
-const float EarlyRefections1AudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
 
 //==============================================================================
 EarlyRefections1AudioProcessorEditor::EarlyRefections1AudioProcessorEditor (EarlyRefections1AudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState(vts)
+    : AudioProcessorEditor (&p),
+	audioProcessor (p),
+	valueTreeState(vts),
+	m_predelaySlider(vts,	EarlyRefections1AudioProcessor::paramsNames[0], EarlyRefections1AudioProcessor::paramsUnitNames[0], EarlyRefections1AudioProcessor::labelNames[0]),
+	m_lenghtSlider(vts,		EarlyRefections1AudioProcessor::paramsNames[1], EarlyRefections1AudioProcessor::paramsUnitNames[1], EarlyRefections1AudioProcessor::labelNames[1]),
+	m_decaySlider(vts,		EarlyRefections1AudioProcessor::paramsNames[2], EarlyRefections1AudioProcessor::paramsUnitNames[2], EarlyRefections1AudioProcessor::labelNames[2]),
+	m_dampingSlider(vts,	EarlyRefections1AudioProcessor::paramsNames[3], EarlyRefections1AudioProcessor::paramsUnitNames[3], EarlyRefections1AudioProcessor::labelNames[3]),
+	m_diffusionSlider(vts,	EarlyRefections1AudioProcessor::paramsNames[4], EarlyRefections1AudioProcessor::paramsUnitNames[4], EarlyRefections1AudioProcessor::labelNames[4]),
+	m_widthSlider(vts,		EarlyRefections1AudioProcessor::paramsNames[5], EarlyRefections1AudioProcessor::paramsUnitNames[5], EarlyRefections1AudioProcessor::labelNames[5]),
+	m_mixSlider(vts,		EarlyRefections1AudioProcessor::paramsNames[6], EarlyRefections1AudioProcessor::paramsUnitNames[6], EarlyRefections1AudioProcessor::labelNames[6]),
+	m_volumeSlider(vts,		EarlyRefections1AudioProcessor::paramsNames[7], EarlyRefections1AudioProcessor::paramsUnitNames[7], EarlyRefections1AudioProcessor::labelNames[7]),
+	m_pluginLabel("zazz::EarlyReflections1")
 {	
-	// Plugin name
-	m_pluginName.setText("EarlyRefections1", juce::dontSendNotification);
-	m_pluginName.setFont(juce::Font(ZazzLookAndFeel::NAME_FONT_SIZE));
-	m_pluginName.setJustificationType(juce::Justification::centred);
-	addAndMakeVisible(m_pluginName);
-	
-	// Lables and sliders
-	for (int i = 0; i < N_SLIDERS; i++)
+	addAndMakeVisible(m_pluginLabel);
+
+	addAndMakeVisible(m_predelaySlider);
+	addAndMakeVisible(m_lenghtSlider);
+	addAndMakeVisible(m_decaySlider);
+	addAndMakeVisible(m_dampingSlider);
+	addAndMakeVisible(m_diffusionSlider);
+	addAndMakeVisible(m_widthSlider);
+	addAndMakeVisible(m_mixSlider);
+	addAndMakeVisible(m_volumeSlider);
+
+	m_mixSlider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Dots);
+	m_volumeSlider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Dots);
+
+	setResizable(true, true);
+
+	const int canvasWidth = CANVAS_WIDTH * 30;
+	const int canvasHeight = CANVAS_HEIGHT * 30;
+
+	setSize(canvasWidth, canvasHeight);
+
+	if (auto* constrainer = getConstrainer())
 	{
-		auto& label = m_labels[i];
-		auto& slider = m_sliders[i];
-		const std::string text = EarlyRefections1AudioProcessor::paramsNames[i];
-		const std::string unit = EarlyRefections1AudioProcessor::paramsUnitNames[i];
+		constexpr int minScale = 50;		// percentage
+		constexpr int maxScale = 200;		// percentage
 
-		createSliderWithLabel(slider, label, text, unit);
-		addAndMakeVisible(label);
-		addAndMakeVisible(slider);
-
-		m_sliderAttachment[i].reset(new SliderAttachment(valueTreeState, text, slider));
+		constrainer->setFixedAspectRatio((double)canvasWidth / (double)canvasHeight);
+		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
-
-	createCanvas(*this, SLIDERS, N_ROWS);
 }
 
 EarlyRefections1AudioProcessorEditor::~EarlyRefections1AudioProcessorEditor()
@@ -63,10 +72,53 @@ EarlyRefections1AudioProcessorEditor::~EarlyRefections1AudioProcessorEditor()
 //==============================================================================
 void EarlyRefections1AudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
+	g.fillAll(darkColor);
 }
 
 void EarlyRefections1AudioProcessorEditor::resized()
 {
-	resize(*this, m_sliders, m_labels, SLIDERS, COLUMN_OFFSET, N_ROWS, m_pluginName);
+	const int width = getWidth();
+	const int height = getHeight();
+
+	const int pixelSize = width / CANVAS_WIDTH;
+	const int pixelSize2 = pixelSize + pixelSize;
+	const int pixelSize3 = pixelSize2 + pixelSize;
+	const int pixelSize4 = pixelSize3 + pixelSize;
+
+	// Set size
+	m_pluginLabel.setSize(width, pixelSize2);
+
+	m_predelaySlider.setSize(pixelSize3, pixelSize4);
+	m_lenghtSlider.setSize(pixelSize3, pixelSize4);
+	m_decaySlider.setSize(pixelSize3, pixelSize4);
+	m_dampingSlider.setSize(pixelSize3, pixelSize4);
+	m_diffusionSlider.setSize(pixelSize3, pixelSize4);
+	m_widthSlider.setSize(pixelSize3, pixelSize4);
+	m_mixSlider.setSize(pixelSize3, pixelSize4);
+	m_volumeSlider.setSize(pixelSize3, pixelSize4);
+
+	//Set position
+	const int row1 = 0;
+	const int row2 = pixelSize2;
+
+	const int column1 = 0;
+	const int column2 = pixelSize;
+	const int column3 = column2 + pixelSize3;
+	const int column4 = column3 + pixelSize3;
+	const int column5 = column4 + pixelSize3;
+	const int column6 = column5 + pixelSize3;
+	const int column7 = column6 + pixelSize3;
+	const int column8 = column7 + pixelSize3 + pixelSize;
+	const int column9 = column8 + pixelSize3;
+
+	m_pluginLabel.setTopLeftPosition(column1, row1);
+
+	m_predelaySlider.setTopLeftPosition	(column2, row2);
+	m_lenghtSlider.setTopLeftPosition	(column3, row2);
+	m_decaySlider.setTopLeftPosition	(column4, row2);
+	m_dampingSlider.setTopLeftPosition	(column5, row2);
+	m_diffusionSlider.setTopLeftPosition(column6, row2);
+	m_widthSlider.setTopLeftPosition	(column7, row2);
+	m_mixSlider.setTopLeftPosition		(column8, row2);
+	m_volumeSlider.setTopLeftPosition	(column9, row2);
 }

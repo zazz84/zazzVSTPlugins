@@ -22,12 +22,24 @@
 
 const std::string EarlyRefections1AudioProcessor::paramsNames[] =
 											{
-												"ER Predelay",
-												"ER Lenght",
-												"ER Decay",
-												"ER Damping",
-												"ER Diffusion",
-												"ER Width",
+												"Predelay",
+												"Lenght",
+												"Decay",
+												"Damping",
+												"Diffusion",
+												"Width",
+
+												"Mix",
+												"Volume"
+											};
+const std::string EarlyRefections1AudioProcessor::labelNames[] =
+											{
+												"Predelay",
+												"Lenght",
+												"Decay",
+												"Damping",
+												"Diffusion",
+												"Width",
 
 												"Mix",
 												"Volume"
@@ -264,7 +276,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout EarlyRefections1AudioProcess
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(0.0f, 100.0f, 1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(-18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[7], paramsNames[7], NormalisableRange<float>(-18.0f, 18.0f, 1.0f, 1.0f), 0.0f));
 
 	return layout;
 }
