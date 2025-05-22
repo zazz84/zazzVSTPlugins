@@ -224,24 +224,60 @@ bool SmallRoomReverbAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 
 void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {	
-	// Get params
+	auto size = LRsizeParameter->load();
+	size *= size;
+	auto width = 0.01f * LRwidthParameter->load();
+	width *= width;
+
 	EarlyReflectionsParams earlyReflectionsParams = {};
+	earlyReflectionsParams.predelay		= Math::remap(size, 0.0f, 1.0f,  0.0f, MAXIMUM_PREDELAY_EARLY_REFLECTIONS_MS);
+	earlyReflectionsParams.length		= Math::remap(size, 0.0f, 1.0f, 30.0f, MAXIMUM_EARLY_REFLECTIONS_LENGHT_MS);
+	earlyReflectionsParams.decay		= Math::remap(size, 0.0f, 1.0f, -7.0f, -9.0f);
+	earlyReflectionsParams.diffusion	= Math::remap(size, 0.0f, 1.0f,  0.1f,  1.0f);
+	earlyReflectionsParams.damping		= Math::remap(size, 0.0f, 1.0f,  0.0f,  0.0f);
+	earlyReflectionsParams.width		= 0.1f * width;
+
+	DifuserParams difuserParams = {};
+	difuserParams.type					= static_cast<DifuserParams::Type>((int)LRtankTypeParameter->load() - 1);
+	difuserParams.width					= Math::remap(size, 0.0f, 1.0f, 1.0f, 0.4f) * width;
+	difuserParams.size					= Math::remap(size, 0.0f, 1.0f, 0.2f, 1.0f);
+
+	TankParams tankParams = {};
+	tankParams.predelay					= Math::remap(size, 0.0f, 1.0f, 0.0f, 35.0f);
+	tankParams.length					= Math::remap(size, 0.0f, 1.0f, 0.1f,  1.0f);
+	tankParams.size						= Math::remap(size, 0.0f, 1.0f, 0.2f,  1.0f);
+	tankParams.damping					= Math::remap(size, 0.0f, 0.5f, 0.8f,  0.3f);
+	tankParams.type						= static_cast<TankParams::Type>   ((int)LRtankTypeParameter->load() - 1);
+
+	const auto earlyReflectionsGain		= juce::Decibels::decibelsToGain(ERvolumeParameter->load() + Math::remap(size, 0.0f, 1.0f, -6.3f, -8.5f));
+	const auto lateReflectionsGain		= juce::Decibels::decibelsToGain(LRvolumeParameter->load());
+	const auto lateReflectionsDiffusion = Math::remap(size, 0.0f, 1.0f, 0.3f, 1.0f);
+	const auto lateReflectionsPredelaySamples = (int)(tankParams.predelay * 0.001f * (float)getSampleRate());
+	const auto mix						= 0.01f * mixParameter->load();
+	const auto gain						= juce::Decibels::decibelsToGain(volumeParameter->load());
+
+
+
+	// Get params
+	/*EarlyReflectionsParams earlyReflectionsParams = {};
 	earlyReflectionsParams.predelay		= Math::remap(ERpredelayParameter->load(), 0.0f, 1.0f, 0.0f, MAXIMUM_PREDELAY_EARLY_REFLECTIONS_MS);
 	earlyReflectionsParams.length		= Math::remap(ERlenghtParameter->load(), 0.0f, 1.0f, 20.0f, MAXIMUM_EARLY_REFLECTIONS_LENGHT_MS);
 	earlyReflectionsParams.decay		= ERdecayParameter->load();
 	earlyReflectionsParams.diffusion	= ERdiffusionParameter->load();
 	earlyReflectionsParams.damping		= ERdampingParameter->load();
-	earlyReflectionsParams.width		= 0.01f * ERwidthParameter->load();
+	earlyReflectionsParams.width		= 0.01f * ERwidthParameter->load();*/
 	
-	DifuserParams difuserParams = {};
+	/*DifuserParams difuserParams = {};
 	difuserParams.type					= static_cast<DifuserParams::Type>((int)LRtankTypeParameter->load() - 1);
 	difuserParams.width					= 0.01f * LRwidthParameter->load();
+	difuserParams.size					= LRsizeParameter->load();
 
 	TankParams tankParams = {};
 	tankParams.predelay					= LRpredelayParameter->load();
 	tankParams.length					= LRlenghtParameter->load();
 	tankParams.size						= LRsizeParameter->load();
 	tankParams.damping					= LRdampingParameter->load();
+	tankParams.width					= difuserParams.width;
 	tankParams.type						= static_cast<TankParams::Type>   ((int)LRtankTypeParameter->load() - 1);
 
 	const auto earlyReflectionsGain		= juce::Decibels::decibelsToGain(ERvolumeParameter->load());
@@ -249,7 +285,7 @@ void SmallRoomReverbAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	const auto lateReflectionsDiffusion = LRdiffusionParameter->load();
 	const auto lateReflectionsPredelaySamples = (int)(tankParams.predelay * 0.001f * (float)getSampleRate());
 	const auto mix						= 0.01f * mixParameter->load();
-	const auto gain						= juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto gain						= juce::Decibels::decibelsToGain(volumeParameter->load());*/
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();

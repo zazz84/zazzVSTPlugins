@@ -18,6 +18,7 @@
 #pragma once
 
 #include "../../../zazzVSTPlugins/Shared/Delays/AllPassFilter.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
  //==============================================================================
 struct DifuserParams
@@ -31,6 +32,7 @@ struct DifuserParams
 	};
 
 	float width = 0.0f;	
+	float size = 0.0f;	
 	Type type = Type::Schroeder;
 
 	bool operator==(const DifuserParams& l) const
@@ -51,10 +53,8 @@ public:
 	static constexpr float ALLPASS_FILTER_DELAY_TIME_MS[4][4] = { 
 																	{ 3.15f, 5.79f,  0.00f,  0.00f },
 																	{ 6.96f, 0.00f,  0.00f,  0.00f },
-																	//{ 4.77f, 3.59f, 12.73f,  9.30f },
-																	{ 6.16f, 3.58f, 12.72f,  9.29f },
-																	//{ 3.09f, 3.79f,  8.96f, 11.83f }
-																	{ 3.69f, 5.39f, 10.06f, 11.83f }
+																	{ 4.77f, 3.59f, 12.73f,  9.30f },
+																	{ 3.09f, 3.79f,  8.96f, 11.83f }
 																};
 
 	static constexpr float ALLPASS_FILTER_FEEDBACK[4][4] = {
@@ -66,10 +66,10 @@ public:
 
 	static constexpr float ALLPASS_FILTER_DELAY_TIME_MULTIPLIER[5][4] = {
 																			{  0.00f,  0.00f,  0.00f,  0.00f },
-																			{  0.05f, -0.05f,  0.01f, -0.01f },
-																			{  0.01f,  0.04f, -0.06f, -0.01f },
-																			{ -0.01f,  0.00f,  0.03f, -0.07f },
-																			{  0.92f,  0.01f, -0.01f,  0.02f },
+																			{  0.10f, -0.10f,  0.06f, -0.06f },
+																			{  0.02f,  0.08f, -0.12f, -0.02f },
+																			{ -0.02f,  0.00f,  0.03f, -0.14f },
+																			{  0.16f,  0.02f, -0.03f,  0.04f },
 																		};
 
 	static constexpr float ALLPASS_FILTER_DELAY_TIME_MAX_MS[] = {	  6.96f, 5.79f, 12.73f, 11.83f };
@@ -89,10 +89,10 @@ public:
 	}
 	inline void set(DifuserParams& params) noexcept
 	{
-		if (m_params == params)
+		/*if (m_params == params)
 		{
 			return;
-		}
+		}*/
 
 		m_params = params;
 
@@ -104,7 +104,7 @@ public:
 
 		for (int i = 0; i < m_allPassFilterCount; i++)
 		{
-			const float widthFactor = 1.0f + params.width * ALLPASS_FILTER_DELAY_TIME_MULTIPLIER_CHANNEL[i];
+			const float widthFactor = 1.0f * params.width * ALLPASS_FILTER_DELAY_TIME_MULTIPLIER_CHANNEL[i];
 			m_allPassFilter[i].set((int)(widthFactor * ALLPASS_FILTER_DELAY_TIME_MS_TYPE[i] * m_sampleRateMS));
 			m_allPassFilter[i].setFeedback(ALLPASS_FILTER_FEEDBACK_TYPE[i]);
 		}

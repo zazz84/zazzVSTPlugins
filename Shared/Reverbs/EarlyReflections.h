@@ -51,8 +51,8 @@ public:
 	EarlyReflections() = default;
 	~EarlyReflections() = default;
 
-	static const int DELAY_LINE_COUNT_MAX = 20;
-	static const int DELAY_LINE_LENGHT_MAX_MS = 160;
+	static const int DELAY_LINE_COUNT_MAX = 16;
+	static const int DELAY_LINE_LENGHT_MAX_MS = 180;
 
 	inline void init(const int sampleRate, const int channel)
 	{
@@ -89,7 +89,7 @@ public:
 		LinearCongruentialRandom01 randomCurrentChannel = {};
 		randomCurrentChannel.set((long)(m_channel + 1) + 16L);
 
-		m_delayLineCount = Math::remap(params.length, 0.0f, 100.0f, 0.5f * DELAY_LINE_COUNT_MAX, DELAY_LINE_COUNT_MAX);
+		m_delayLineCount = Math::remap(params.length, 0.0f, 100.0f, 0.5f * (float)DELAY_LINE_COUNT_MAX, (float)DELAY_LINE_COUNT_MAX);
 		const float stepSize = params.length / m_delayLineCount;
 		const float randomRange = 0.85f * stepSize;
 		const float predelaySamples = 0.001f * params.predelay * (float)m_sampleRate;

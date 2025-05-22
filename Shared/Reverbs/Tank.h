@@ -37,6 +37,7 @@ struct TankParams
 	float length = 0.0f;		// ms	
 	float size = 0.0f;			
 	float damping = 0.0f;
+	float width = 0.0f;
 	Type type = Type::Schroeder;
 	//int type = 0;
 
@@ -60,10 +61,10 @@ public:
 
 	// Comb filter setup
 	static const int COMB_FILTER_COUNT = 6;
-	static constexpr float SCHROEDER_COMP_FILTER_DELAY_TIME_MS[] =	{ 30.14f, 34.64f, 39.72f,  45.89f };
-	static constexpr float MOORER_COMB_FILTER_DELAY_TIME_MS[] =		{ 39.86f, 44.19f, 47.91f,  51.99f, 55.94f, 60.02f };
-	static constexpr float ZAZZ_COMB_FILTER_DELA_TIMEY_MS[] =		{ 42.11f, 67.23f, 84.15f, 102.15f };
-	static constexpr float COMB_FILTER_DELAY_TIME_MAX_MS[] =		{ 42.11f, 67.23f, 84.15f, 102.15f, 55.94f, 60.02f };
+	static constexpr float SCHROEDER_COMP_FILTER_DELAY_TIME_MS[] =	{ 30.14f, 34.64f, 39.72f, 45.89f };
+	static constexpr float MOORER_COMB_FILTER_DELAY_TIME_MS[] =		{ 39.86f, 44.19f, 47.91f, 51.99f, 55.94f, 60.02f };
+	static constexpr float ZAZZ_COMB_FILTER_DELA_TIMEY_MS[] =		{ 30.07f, 48.02f, 60.10f, 72.96f };
+	static constexpr float COMB_FILTER_DELAY_TIME_MAX_MS[] =		{ 39.86f, 48.02f, 60.10f, 72.96f, 55.94f, 60.02f };
 
 	// Other
 	static constexpr float GREISINGER_ALLPASS_DELAY_TIME_MS[] = {  22.5799f,  60.4818f,  30.5097f,  89.2443f };
@@ -72,8 +73,8 @@ public:
 	static constexpr float GREISINGER_TAP_RIGHT_TIME_MS[] =		{  11.8612f, 121.8709f,  41.2621f,  89.8155f, 70.9318f, 11.9284f,  4.0657f };
 
 	// Gain compensation
-	static constexpr float GAIN_COMPENSATION_MIN[] = {  -6.1f,  -7.9f,  0.3f, -6.1f };
-	static constexpr float GAIN_COMPENSATION_MAX[] = { -10.2f, -10.8f, -4.0f, -8.2f };
+	static constexpr float GAIN_COMPENSATION_MIN[] = {  -6.1f,  -7.9f,  3.1f, -5.3f };
+	static constexpr float GAIN_COMPENSATION_MAX[] = { -10.2f, -10.8f, -6.1f, -11.7f };
 
 	inline void init(const int sampleRate)
 	{
