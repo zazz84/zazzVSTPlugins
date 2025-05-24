@@ -40,7 +40,7 @@ public:
     static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
-	static constexpr float MAXIMUM_DISTANCE = 600.0f;
+	static constexpr float MAXIMUM_DISTANCE = 1000.0f;
 	static constexpr float SPEED_OF_SOUND = 343.0f;
 
     //==============================================================================
@@ -85,10 +85,15 @@ private:
 	//==============================================================================
 	CircularBuffer m_delayLine[N_CHANNELS];
 
+	OnePoleLowPassFilter m_absorbtionFilter[N_CHANNELS];
+	
 	OnePoleLowPassFilter m_panSmoother;
-	OnePoleLowPassFilter m_delaySmoother;
+	OnePoleLowPassFilter m_distanceSmoother;
+
 
 	std::atomic<float>* m_panParameter = nullptr;
+	std::atomic<float>* m_attenuation = nullptr;
+	std::atomic<float>* m_absorbtion = nullptr;
 	std::atomic<float>* m_distanceParameter = nullptr;
 	std::atomic<float>* m_volumeParameter = nullptr;
 

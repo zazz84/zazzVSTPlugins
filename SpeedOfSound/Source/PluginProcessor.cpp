@@ -20,22 +20,44 @@
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
+namespace
+{
+	__forceinline float getAttenuationFactor(const float attenuation)
+	{
+		const float A = 19944.0f;
+		const float B = 0.0546f;
+		return A * std::exp(-B * attenuation);
+	};
+
+	__forceinline float getAbsorbtionFrequency(const float distance, const float absorbtion)
+	{
+		const auto d = distance * Math::remap(absorbtion, 0.0f, 400.0f, 0.0f, 4.0f);
+		return std::sqrtf(Math::remap(d, 0.0f, 1000.0f, 0.0f, 0.99f));
+	}
+}
+
 //==============================================================================
 
 const std::string SpeedOfSoundAudioProcessor::paramsNames[] =
 												{ 
 													"Pan", 
+													"Attenuation", 
+													"Absorbtion", 
 													"Distance", 
 													"Volume" 
 												};
 const std::string SpeedOfSoundAudioProcessor::labelNames[] =
 												{
 													"Pan",
+													"Attenuation",
+													"Absorbtion",
 													"Distance",
 													"Volume"
 												};
 const std::string SpeedOfSoundAudioProcessor::paramsUnitNames[] =
 												{
+													" %",
+													" %",
 													" %",
 													" m",
 													" dB"
@@ -55,8 +77,10 @@ SpeedOfSoundAudioProcessor::SpeedOfSoundAudioProcessor()
 #endif
 {
 	m_panParameter		= apvts.getRawParameterValue(paramsNames[0]);
-	m_distanceParameter = apvts.getRawParameterValue(paramsNames[1]);
-	m_volumeParameter   = apvts.getRawParameterValue(paramsNames[2]);
+	m_attenuation		= apvts.getRawParameterValue(paramsNames[1]);
+	m_absorbtion		= apvts.getRawParameterValue(paramsNames[2]);
+	m_distanceParameter = apvts.getRawParameterValue(paramsNames[3]);
+	m_volumeParameter   = apvts.getRawParameterValue(paramsNames[4]);
 }
 
 SpeedOfSoundAudioProcessor::~SpeedOfSoundAudioProcessor()
@@ -135,10 +159,13 @@ void SpeedOfSoundAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
 	const int sr = (int)sampleRate;
 	m_panSmoother.init(sr);
-	m_delaySmoother.init(sr);
+	m_distanceSmoother.init(sr);
 
-	m_panSmoother.set(3.0f);
-	m_delaySmoother.set(6.0f);
+	m_panSmoother.set(2.0f);
+	m_distanceSmoother.set(6.0f);
+
+	m_absorbtionFilter[0].init(sr);
+	m_absorbtionFilter[1].init(sr);
 }
 
 void SpeedOfSoundAudioProcessor::releaseResources()
@@ -147,7 +174,10 @@ void SpeedOfSoundAudioProcessor::releaseResources()
 	m_delayLine[1].release();
 
 	m_panSmoother.release();
-	m_delaySmoother.release();
+	m_distanceSmoother.release();
+
+	m_absorbtionFilter[0].release();
+	m_absorbtionFilter[1].release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -180,6 +210,8 @@ void SpeedOfSoundAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 {
 	// Get params
 	const auto pan = Math::remap(m_panParameter->load(), -100.0f, 100.0f, 0.0f, 2.0f);
+	const auto attenuation = m_attenuation->load();
+	const auto absorbtion = m_absorbtion->load();
 	const auto distance = m_distanceParameter->load();
 	const auto gain = juce::Decibels::decibelsToGain(m_volumeParameter->load());
 
@@ -188,7 +220,7 @@ void SpeedOfSoundAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 	const auto samples = buffer.getNumSamples();
 	const auto sampleRate = (float)getSampleRate();
 
-	const auto delaySize = sampleRate * distance / SPEED_OF_SOUND;
+	const auto delaySizeFactor = sampleRate / SPEED_OF_SOUND;
 
 	if (channels == 1)
 	{
@@ -201,9 +233,14 @@ void SpeedOfSoundAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 			const auto in = channelBuffer[sample];
 
 			// Delay
-			m_delayLine[0].write(in);
-			const auto delaySizeSmooth = m_delaySmoother.process(delaySize);
-			const auto out = m_delayLine[0].readDelayLinearInterpolation(delaySizeSmooth);
+			const auto distanceSmooth = m_distanceSmoother.process(distance);
+			const auto attenuationGain = Math::getAmplitudeAttenuation(distanceSmooth, getAttenuationFactor(attenuation), 1.0f);
+
+			m_absorbtionFilter[0].setCoef(getAbsorbtionFrequency(distanceSmooth, absorbtion));
+
+			m_delayLine[0].write(m_absorbtionFilter[0].process(attenuationGain * in));
+			
+			const auto out = m_delayLine[0].readDelayTriLinearInterpolation(distanceSmooth * delaySizeFactor);
 
 			//Out
 			channelBuffer[sample] = out;
@@ -223,13 +260,18 @@ void SpeedOfSoundAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
 
 			// Delay
+			const auto distanceSmooth = m_distanceSmoother.process(distance);
+			const auto attenuationGain = Math::getAmplitudeAttenuation(distanceSmooth, getAttenuationFactor(attenuation), 1.0f);
 			const auto panSmooth = m_panSmoother.process(pan);
-			m_delayLine[0].write(inLeft * (2.0f - panSmooth));
-			m_delayLine[1].write(inRight * panSmooth);
 
-			const auto delaySizeSmooth = m_delaySmoother.process(delaySize);
-			const auto outLeft = m_delayLine[0].readDelayLinearInterpolation(delaySizeSmooth);
-			const auto outRight = m_delayLine[1].readDelayLinearInterpolation(delaySizeSmooth);
+			m_absorbtionFilter[0].setCoef(getAbsorbtionFrequency(distanceSmooth, absorbtion));
+			m_absorbtionFilter[1].setCoef(getAbsorbtionFrequency(distanceSmooth, absorbtion));
+
+			m_delayLine[0].write(m_absorbtionFilter[0].process(attenuationGain * inLeft * (2.0f - panSmooth)));
+			m_delayLine[1].write(m_absorbtionFilter[1].process(attenuationGain * inRight * panSmooth));
+
+			const auto outLeft = m_delayLine[0].readDelayTriLinearInterpolation(distanceSmooth * delaySizeFactor);
+			const auto outRight = m_delayLine[1].readDelayTriLinearInterpolation(distanceSmooth * delaySizeFactor);
 
 			//Out
 			channelBufferLeft[sample] = outLeft;
@@ -290,8 +332,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpeedOfSoundAudioProcessor::
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -100.0f,           100.0f, 1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(    0.0f, MAXIMUM_DISTANCE, 1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(  -18.0f,            18.0f, 0.1f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(    0.0f,           200.0f, 1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(    0.0f,           400.0f, 1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(    0.0f, MAXIMUM_DISTANCE, 1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(  -18.0f,            18.0f, 0.1f, 1.0f),   0.0f));
 
 	return layout;
 }

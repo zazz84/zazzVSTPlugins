@@ -29,7 +29,7 @@ public:
     SpeedOfSoundAudioProcessorEditor (SpeedOfSoundAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~SpeedOfSoundAudioProcessorEditor() override;
 
-	static const int CANVAS_WIDTH = 1 + 3 + 3 + 3 + 1;
+	static const int CANVAS_WIDTH = 1 + 3 + 3 + 3 + 3 + 3 + 1;
 	static const int CANVAS_HEIGHT = 2 + 4 + 1;
 	
 	//==============================================================================
@@ -47,6 +47,8 @@ protected:
 	PluginNameComponent m_pluginLabel;
 
 	ModernRotarySlider m_panSlider;
+	ModernRotarySlider m_attenuationSlider;
+	ModernRotarySlider m_absorbtionSlider;
 	ModernRotarySlider m_distanceSlider;
 	ModernRotarySlider m_volumeSlider;
 

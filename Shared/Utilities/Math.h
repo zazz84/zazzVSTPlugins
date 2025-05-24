@@ -181,4 +181,16 @@ namespace Math
 	{
 		return fabsf(a - b) < epsilon;
 	}
+	//==============================================================================
+	__forceinline float getAmplitudeAttenuation(const float distance, const float factor, const float innerRange)
+	{
+		if (distance <= innerRange)
+		{
+			return 1.0f;
+		}
+		else
+		{
+			return factor / (distance - innerRange + factor);
+		}
+	}
 }

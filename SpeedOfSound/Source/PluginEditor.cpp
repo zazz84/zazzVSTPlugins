@@ -23,14 +23,18 @@ SpeedOfSoundAudioProcessorEditor::SpeedOfSoundAudioProcessorEditor (SpeedOfSound
     : AudioProcessorEditor (&p),
 	audioProcessor (p),
 	valueTreeState(vts),
-	m_panSlider(vts,		SpeedOfSoundAudioProcessor::paramsNames[0], SpeedOfSoundAudioProcessor::paramsUnitNames[0], SpeedOfSoundAudioProcessor::labelNames[0]),
-	m_distanceSlider(vts,	SpeedOfSoundAudioProcessor::paramsNames[1], SpeedOfSoundAudioProcessor::paramsUnitNames[1], SpeedOfSoundAudioProcessor::labelNames[1]),
-	m_volumeSlider(vts,		SpeedOfSoundAudioProcessor::paramsNames[2], SpeedOfSoundAudioProcessor::paramsUnitNames[2], SpeedOfSoundAudioProcessor::labelNames[2]),
+	m_panSlider(vts,			SpeedOfSoundAudioProcessor::paramsNames[0], SpeedOfSoundAudioProcessor::paramsUnitNames[0], SpeedOfSoundAudioProcessor::labelNames[0]),
+	m_attenuationSlider(vts,	SpeedOfSoundAudioProcessor::paramsNames[1], SpeedOfSoundAudioProcessor::paramsUnitNames[1], SpeedOfSoundAudioProcessor::labelNames[1]),
+	m_absorbtionSlider(vts,		SpeedOfSoundAudioProcessor::paramsNames[2], SpeedOfSoundAudioProcessor::paramsUnitNames[2], SpeedOfSoundAudioProcessor::labelNames[2]),
+	m_distanceSlider(vts,		SpeedOfSoundAudioProcessor::paramsNames[3], SpeedOfSoundAudioProcessor::paramsUnitNames[3], SpeedOfSoundAudioProcessor::labelNames[3]),
+	m_volumeSlider(vts,			SpeedOfSoundAudioProcessor::paramsNames[4], SpeedOfSoundAudioProcessor::paramsUnitNames[4], SpeedOfSoundAudioProcessor::labelNames[4]),
 	m_pluginLabel("zazz::SpeedOfSound")
 {	
 	addAndMakeVisible(m_pluginLabel);
 
 	addAndMakeVisible(m_panSlider);
+	addAndMakeVisible(m_attenuationSlider);
+	addAndMakeVisible(m_absorbtionSlider);
 	addAndMakeVisible(m_distanceSlider);
 	addAndMakeVisible(m_volumeSlider);
 
@@ -75,6 +79,8 @@ void SpeedOfSoundAudioProcessorEditor::resized()
 	m_pluginLabel.setSize(width, pixelSize2);
 
 	m_panSlider.setSize(pixelSize3, pixelSize4);
+	m_attenuationSlider.setSize(pixelSize3, pixelSize4);
+	m_absorbtionSlider.setSize(pixelSize3, pixelSize4);
 	m_distanceSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
@@ -86,10 +92,14 @@ void SpeedOfSoundAudioProcessorEditor::resized()
 	const int column2 = pixelSize;
 	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize3;
+	const int column5 = column4 + pixelSize3;
+	const int column6 = column5 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
-	m_panSlider.setTopLeftPosition		(column2, row2);
-	m_distanceSlider.setTopLeftPosition	(column3, row2);
-	m_volumeSlider.setTopLeftPosition	(column4, row2);
+	m_panSlider.setTopLeftPosition			(column2, row2);
+	m_attenuationSlider.setTopLeftPosition	(column3, row2);
+	m_absorbtionSlider.setTopLeftPosition	(column4, row2);
+	m_distanceSlider.setTopLeftPosition		(column5, row2);
+	m_volumeSlider.setTopLeftPosition		(column6, row2);
 }

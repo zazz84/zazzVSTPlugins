@@ -76,7 +76,7 @@ public:
 		const float younger = m_buffer[iYounger];
 		const float older = m_buffer[iOlder];
 
-		return older + weight * (younger - older);
+		return younger + weight * (older - younger);
 	}
 	// https://yehar.com/blog/wp-content/uploads/2009/08/deip.pdf
 	float readDelayTriLinearInterpolation(const float sample)
@@ -85,10 +85,15 @@ public:
 		const int readIdx = m_head - sampleTrunc;
 		const float weight = sample - sampleTrunc;
 
-		const int idx1 = (readIdx - 1) & m_bitMask;
+		/*const int idx1 = (readIdx - 1) & m_bitMask;
 		const int idx2 = readIdx & m_bitMask;
 		const int idx3 = (readIdx + 1) & m_bitMask;
-		const int idx4 = (readIdx + 2) & m_bitMask;
+		const int idx4 = (readIdx + 2) & m_bitMask;*/
+
+		const int idx4 = (readIdx - 1) & m_bitMask;
+		const int idx3 = readIdx & m_bitMask;
+		const int idx2 = (readIdx + 1) & m_bitMask;
+		const int idx1 = (readIdx + 2) & m_bitMask;
 
 		const float yz1 = m_buffer[idx1];
 		const float y0 = m_buffer[idx2];
