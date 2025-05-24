@@ -83,7 +83,7 @@ private:
 	EarlyReflections m_earlyReflections[N_CHANNELS];
 
 	std::atomic<float>* m_predelayParameter = nullptr;
-	std::atomic<float>* m_lenghtParameter = nullptr;
+	std::atomic<float>* m_lengthParameter = nullptr;
 	std::atomic<float>* m_decayParameter = nullptr;
 	std::atomic<float>* m_dampingParameter = nullptr;
 	std::atomic<float>* m_diffusionParameter = nullptr;

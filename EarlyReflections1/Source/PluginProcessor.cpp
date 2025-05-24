@@ -23,7 +23,7 @@
 const std::string EarlyRefections1AudioProcessor::paramsNames[] =
 											{
 												"Predelay",
-												"Lenght",
+												"Length",
 												"Decay",
 												"Damping",
 												"Diffusion",
@@ -35,7 +35,7 @@ const std::string EarlyRefections1AudioProcessor::paramsNames[] =
 const std::string EarlyRefections1AudioProcessor::labelNames[] =
 											{
 												"Predelay",
-												"Lenght",
+												"Length",
 												"Decay",
 												"Damping",
 												"Diffusion",
@@ -71,7 +71,7 @@ EarlyRefections1AudioProcessor::EarlyRefections1AudioProcessor()
 #endif
 {
 	m_predelayParameter = apvts.getRawParameterValue(paramsNames[0]);
-	m_lenghtParameter = apvts.getRawParameterValue(paramsNames[1]);
+	m_lengthParameter = apvts.getRawParameterValue(paramsNames[1]);
 	m_decayParameter = apvts.getRawParameterValue(paramsNames[2]);
 	m_dampingParameter = apvts.getRawParameterValue(paramsNames[3]);
 	m_diffusionParameter = apvts.getRawParameterValue(paramsNames[4]);
@@ -196,7 +196,7 @@ void EarlyRefections1AudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	// Get params
 	EarlyReflectionsParams earlyReflectionsParams = {};
 	earlyReflectionsParams.predelay		= m_predelayParameter->load();
-	earlyReflectionsParams.length		= m_lenghtParameter->load();
+	earlyReflectionsParams.length		= m_lengthParameter->load();
 	earlyReflectionsParams.decay		= -m_decayParameter->load();
 	earlyReflectionsParams.diffusion	= 0.01f * m_diffusionParameter->load();
 	earlyReflectionsParams.damping		= 0.01f * m_dampingParameter->load();
