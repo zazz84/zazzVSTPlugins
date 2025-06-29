@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="P88DoS" name="CombFilter" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="Pg0b44" name="ManualFlanger" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Delay"
-              version="1.1.0">
-  <MAINGROUP id="Y7xaGw" name="CombFilter">
-    <GROUP id="{44300FCD-8FE1-52AE-9DC3-23FC75D1A288}" name="Source">
-      <FILE id="IQz5U7" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="eHODMd" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="TxxMoG" name="CircularBuffers.h" compile="0" resource="0"
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Modulation">
+  <MAINGROUP id="RQTRuo" name="ManualFlanger">
+    <GROUP id="{2695B3AB-F338-341D-2DA2-0C4BE8A6051E}" name="Source">
+      <FILE id="ijD2bO" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="EJobaU" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
+      <FILE id="fG77MZ" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
-      <FILE id="V6Zest" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
-      <FILE id="GkcFHF" name="PluginProcessor.cpp" compile="1" resource="0"
+      <FILE id="fShm2z" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="cdOhH1" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="JNGHuM" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="lRcXrS" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="RXopFk" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="uxM3xP" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="eGjeYY" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="yqrnjH" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="DciKv1" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="WgFOId" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
