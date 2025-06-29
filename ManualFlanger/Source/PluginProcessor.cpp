@@ -155,7 +155,7 @@ void ManualFlangerAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 		m_highPassFilter[channel].init(sr);
 		m_lowPassFilter[channel].init(sr);
 		m_frequencySmoother[channel].init(sr);
-		m_frequencySmoother[channel].set(4.0f);
+		m_frequencySmoother[channel].set(10.0f);
 	}
 }
 
@@ -206,7 +206,6 @@ void ManualFlangerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 	const auto dry = 1.0f - wet;
 	const auto sampleRate = static_cast<float>(getSampleRate());
 	const auto delaySamples = frequencyToSamples(frequency, sampleRate);
-	constexpr auto q = 0.7f;
 
 	for (int channel = 0; channel < channels; channel++)
 	{
@@ -218,8 +217,8 @@ void ManualFlangerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 		auto& delayLine = m_delayLine[channel];
 		auto& frequencySmoother = m_frequencySmoother[channel];
 
-		highPassFilter.setHighPass(highPassFrequency, q);
-		lowPassFilter.setLowPass(lowPassFrequency, q);
+		highPassFilter.setHighPass(highPassFrequency, 1.0f);
+		lowPassFilter.setLowPass(lowPassFrequency, 0.4f);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -228,7 +227,7 @@ void ManualFlangerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer
 
 			// Handle delay line
 			const float delaySamplesSmooth = frequencySmoother.process(delaySamples);
-			const float delayLineOut = delayLine.readDelayLinearInterpolation(delaySamplesSmooth);
+			const float delayLineOut = delayLine.readDelayTriLinearInterpolation(delaySamplesSmooth);
 			delayLine.write(in + feedback * delayLineOut);
 		
 			//Out
