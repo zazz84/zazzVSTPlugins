@@ -1,13 +1,31 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
+#include <array>
+
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
-#include "../../../zazzVSTPlugins/Shared/Dynamics/RMS.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/LinkwitzRileyFilter.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/AllPassFilters.h"
+
+#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/AudioBuffer.h"
 
 //==============================================================================
-class EnvelopeClonerAudioProcessor  : public juce::AudioProcessor
+class TransientEnhancerAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -15,15 +33,16 @@ class EnvelopeClonerAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    EnvelopeClonerAudioProcessor();
-    ~EnvelopeClonerAudioProcessor() override;
+    TransientEnhancerAudioProcessor();
+    ~TransientEnhancerAudioProcessor() override;
 
 	static const std::string paramsNames[];
-	static const std::string labelNames[];
+    static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
-	static const int N_CHANNLES = 2;
-	static const float ENVELOPE_MINIMUM;
-	static const float RATIO_LIMIT;
+    static const int N_CHANNELS = 2;
+
+	static constexpr double MAX_PLUGIN_DELAY = 0.25;	//Seconds
+	static constexpr float MAX_PITCH = 24.0;			//Seconds
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -55,18 +74,6 @@ public:
     void changeProgramName (int index, const juce::String& newName) override;
 
     //==============================================================================
-	inline void getMaxGain(float& low, float& mid, float& high)
-	{
-		low = m_maxGainLow;
-		mid =  m_maxGainMid;
-		high = m_maxGainHigh;
-
-		m_maxGainLow = 0.0f;
-		m_maxGainMid = 0.0f;
-		m_maxGainHigh = 0.0f;
-	}
-	
-	//==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
@@ -77,32 +84,21 @@ public:
 
 private:	
 	//==============================================================================
-    std::atomic<float>* dynamicsParameter = nullptr;
-    std::atomic<float>* spectrumParameter = nullptr;
-    std::atomic<float>* attackParameter = nullptr;
-    std::atomic<float>* releaseParameter = nullptr;
-    std::atomic<float>* mixParameter = nullptr;
-    std::atomic<float>* volumeParameter = nullptr;
+	CircularBuffer m_buffer[2];
+	AudioBuffer m_transientBuffer[2];
+	
+	std::atomic<float>* m_thresholdParameter = nullptr;
+	std::atomic<float>* m_cooldownParameter = nullptr;
+	std::atomic<float>* m_pitchParameter = nullptr;
+	std::atomic<float>* m_delayParameter = nullptr;
+	std::atomic<float>* m_amountParameter = nullptr;
+	std::atomic<float>* m_volumeParameter = nullptr;
 
-	LinkwitzRileyFilter m_lowMidFilter[N_CHANNLES] = {};
-	LinkwitzRileyFilter m_midHighFilter[N_CHANNLES] = {};
-    FirstOrderAllPass m_allPassFilter[N_CHANNLES] = {};
+	long m_samplesToRead[2];
+	long m_delaySamples[2];
+	int m_latencySamples = 0;
 
-	LinkwitzRileyFilter m_lowMidFilterSC[N_CHANNLES] = {};
-	LinkwitzRileyFilter m_midHighFilterSC[N_CHANNLES] = {};
-    FirstOrderAllPass m_allPassFilterSC[N_CHANNLES] = {};
+	juce::AudioParameterBool* m_soloButtonParameter = nullptr;
 
-	RMS m_rmsFullSpectrum[N_CHANNLES];
-	RMS m_rmsFullSpectrumSC[N_CHANNLES];
-
-	RMS m_rmsBands[N_CHANNLES][3] = {};
-	RMS m_rmsBandsSC[N_CHANNLES][3] = {};
-
-	BranchingEnvelopeFollower<float> m_envelopeDetection[N_CHANNLES][3] = {};
-
-	float m_maxGainLow = 0.0f;
-	float m_maxGainMid = 0.0f;
-	float m_maxGainHigh = 0.0f;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (EnvelopeClonerAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TransientEnhancerAudioProcessor)
 };

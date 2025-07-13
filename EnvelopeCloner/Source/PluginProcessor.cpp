@@ -11,7 +11,9 @@
 
 //==============================================================================
 
-const std::string EnvelopeClonerAudioProcessor::paramsNames[] = { "Dynamics", "Spectrum", "Attack", "Release", "Mix", "Volume" };
+const std::string EnvelopeClonerAudioProcessor::paramsNames[] =		{ "Dynamics", "Spectrum", "Attack", "Release", "Mix", "Volume" };
+const std::string EnvelopeClonerAudioProcessor::labelNames[] =		{ "Dynamics", "Spectrum", "Attack", "Release", "Mix", "Volume" };
+const std::string EnvelopeClonerAudioProcessor::paramsUnitNames[] = { "", "", " ms", " ms", "", " dB" };
 const float EnvelopeClonerAudioProcessor::ENVELOPE_MINIMUM = 0.0001f;
 const float EnvelopeClonerAudioProcessor::RATIO_LIMIT = juce::Decibels::decibelsToGain(24.0f);
 
@@ -126,40 +128,51 @@ void EnvelopeClonerAudioProcessor::prepareToPlay (double sampleRate, int samples
 	const float midCrossOverFrequency = 440.0f;
 	const float highCrossOverFrequency = 3000.0f;
 
-	m_lowMidFilter[0].setFrequency(midCrossOverFrequency);
-	m_lowMidFilter[1].setFrequency(midCrossOverFrequency);
-	m_midHighFilter[0].setFrequency(highCrossOverFrequency);
-	m_midHighFilter[1].setFrequency(highCrossOverFrequency);
-	m_allPassFilter[0].setFrequency(highCrossOverFrequency);
-	m_allPassFilter[1].setFrequency(highCrossOverFrequency);
+	m_lowMidFilter[0].set(midCrossOverFrequency);
+	m_lowMidFilter[1].set(midCrossOverFrequency);
+	m_midHighFilter[0].set(highCrossOverFrequency);
+	m_midHighFilter[1].set(highCrossOverFrequency);
+	m_allPassFilter[0].set(highCrossOverFrequency);
+	m_allPassFilter[1].set(highCrossOverFrequency);
 
-	m_lowMidFilterSC[0].setFrequency(midCrossOverFrequency);
-	m_lowMidFilterSC[1].setFrequency(midCrossOverFrequency);
-	m_midHighFilterSC[0].setFrequency(highCrossOverFrequency);
-	m_midHighFilterSC[1].setFrequency(highCrossOverFrequency);
-	m_allPassFilterSC[0].setFrequency(highCrossOverFrequency);
-	m_allPassFilterSC[1].setFrequency(highCrossOverFrequency);
+	m_lowMidFilterSC[0].set(midCrossOverFrequency);
+	m_lowMidFilterSC[1].set(midCrossOverFrequency);
+	m_midHighFilterSC[0].set(highCrossOverFrequency);
+	m_midHighFilterSC[1].set(highCrossOverFrequency);
+	m_allPassFilterSC[0].set(highCrossOverFrequency);
+	m_allPassFilterSC[1].set(highCrossOverFrequency);
 
-	// Set envelope followers
+	const int rmsSizeFull = static_cast<int>(0.010 * sampleRate);
+	const int rmsSizeHigh = static_cast<int>(0.03 * sampleRate);
+	const int rmsSizeMid = static_cast<int>(0.005 * sampleRate);
+	const int rmsSizeLow = static_cast<int>(0.010 * sampleRate);
 
+	m_rmsFullSpectrum[0].init(rmsSizeFull);
+	m_rmsFullSpectrum[1].init(rmsSizeFull);
+	m_rmsFullSpectrumSC[0].init(rmsSizeFull);
+	m_rmsFullSpectrumSC[1].init(rmsSizeFull);
+
+	m_rmsBands[0][0].init(rmsSizeLow);
+	m_rmsBands[0][1].init(rmsSizeLow);
+	m_rmsBands[0][2].init(rmsSizeMid);
+	m_rmsBands[1][0].init(rmsSizeMid);
+	m_rmsBands[1][1].init(rmsSizeHigh);
+	m_rmsBands[1][2].init(rmsSizeHigh);
+
+	m_rmsBandsSC[0][0].init(rmsSizeLow);
+	m_rmsBandsSC[0][1].init(rmsSizeLow);
+	m_rmsBandsSC[0][2].init(rmsSizeMid);
+	m_rmsBandsSC[1][0].init(rmsSizeMid);
+	m_rmsBandsSC[1][1].init(rmsSizeHigh);
+	m_rmsBandsSC[1][2].init(rmsSizeHigh);
+
+	// Envelope smoothers
 	m_envelopeDetection[0][0].init(sr);
 	m_envelopeDetection[0][1].init(sr);
 	m_envelopeDetection[0][2].init(sr);
 	m_envelopeDetection[1][0].init(sr);
 	m_envelopeDetection[1][1].init(sr);
 	m_envelopeDetection[1][2].init(sr);
-
-	m_envelopeDetectionSC[0][0].init(sr);
-	m_envelopeDetectionSC[0][1].init(sr);
-	m_envelopeDetectionSC[0][2].init(sr);
-	m_envelopeDetectionSC[1][0].init(sr);
-	m_envelopeDetectionSC[1][1].init(sr);
-	m_envelopeDetectionSC[1][2].init(sr);
-
-	m_envelopeDetectionFullSpectrum[0].init(sr);
-	m_envelopeDetectionFullSpectrum[1].init(sr);
-	m_envelopeDetectionFullSpectrumSC[0].init(sr);
-	m_envelopeDetectionFullSpectrumSC[1].init(sr);
 }
 
 void EnvelopeClonerAudioProcessor::releaseResources()
@@ -230,28 +243,27 @@ void EnvelopeClonerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 		auto& midHighFilterSC = m_midHighFilterSC[channel];
 		auto& allPassFilterSC = m_allPassFilterSC[channel];
 
-		// Envelopes
-		auto& envelopeDetectionFullSpectrum = m_envelopeDetectionFullSpectrum[channel];
-		auto& envelopeDetectionFullSpectrumSC = m_envelopeDetectionFullSpectrumSC[channel];
-
+		// Envelopes smoothers
 		auto& envelopeDetectionLow = m_envelopeDetection[channel][0];
 		auto& envelopeDetectionMid = m_envelopeDetection[channel][1];
 		auto& envelopeDetectionHigh = m_envelopeDetection[channel][2];
 
-		auto& envelopeDetectionLowSC = m_envelopeDetectionSC[channel][0];
-		auto& envelopeDetectionMidSC = m_envelopeDetectionSC[channel][1];
-		auto& envelopeDetectionHighSC = m_envelopeDetectionSC[channel][2];
+		envelopeDetectionLow.set(attack, release);
+		envelopeDetectionMid.set(attack, release);
+		envelopeDetectionHigh.set(attack, release);
 
-		envelopeDetectionFullSpectrum.setCoef(attack, release);
-		envelopeDetectionFullSpectrumSC.setCoef(attack, release);
+		// RMS
+		auto& rmsFullSpectrum = m_rmsFullSpectrum[channel];
+		auto& rmsFullSpectrumSC = m_rmsFullSpectrumSC[channel];
 
-		envelopeDetectionLow.setCoef(attack, release);
-		envelopeDetectionMid.setCoef(attack, release);
-		envelopeDetectionHigh.setCoef(attack, release);
+		auto& rmsLow = m_rmsBands[channel][0];
+		auto& rmsMid = m_rmsBands[channel][1];
+		auto& rmsHigh = m_rmsBands[channel][2];
 
-		envelopeDetectionLowSC.setCoef(attack, release);
-		envelopeDetectionMidSC.setCoef(attack, release);
-		envelopeDetectionHighSC.setCoef(attack, release);
+		auto& rmsLowSC = m_rmsBandsSC[channel][0];
+		auto& rmsMidSC = m_rmsBandsSC[channel][1];
+		auto& rmsHighSC = m_rmsBandsSC[channel][2];
+
 ;
 		// Buffers
 		auto mainChannelBuffer = mainBuffer.getWritePointer(channel);
@@ -263,11 +275,10 @@ void EnvelopeClonerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 			const float in = mainChannelBuffer[sample];
 			const float inSC = sideChainChannelBuffer[sample];
 
-			// Output envelope calculation
-			const float inEnvelope = envelopeDetectionFullSpectrum.process(in);
-			const float scEnvelope = envelopeDetectionFullSpectrumSC.process(inSC);
-			
-			const float gainRatio = fminf(RATIO_LIMIT, (inEnvelope > ENVELOPE_MINIMUM) ? scEnvelope / inEnvelope : 0.0f);
+			const float inRMS = rmsFullSpectrum.process(in);
+			const float scRMS = rmsFullSpectrumSC.process(inSC);
+
+			const float gainRatio = fminf(RATIO_LIMIT, (inRMS > ENVELOPE_MINIMUM) ? scRMS / inRMS : 0.0f);
 
 			// Apply gain adjustment to spectrum
 			const float gainRatioAdjusted = (gainRatio > 1.0f) ? 1.0f + ((gainRatio - 1.0f) * dynamics) : 1.0f - ((1.0f - gainRatio) * dynamics);
@@ -286,13 +297,13 @@ void EnvelopeClonerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 			const float lowAllPassSC = allPassFilterSC.process(lowSC);
 
 			// Get envelope
-			float lowEnvelope = envelopeDetectionLow.process(lowAllPass);
-			float midEnvelope = envelopeDetectionMid.process(mid);
-			float highEnvelope = envelopeDetectionHigh.process(high);
+			float lowEnvelope = rmsLow.process(lowAllPass);
+			float midEnvelope = rmsMid.process(mid);
+			float highEnvelope = rmsHigh.process(high);
 
-			float lowEnvelopeSC = envelopeDetectionLowSC.process(lowAllPassSC);
-			float midEnvelopeSC = envelopeDetectionMidSC.process(midSC);
-			float highEnvelopeSC = envelopeDetectionHighSC.process(highSC);
+			float lowEnvelopeSC = rmsLowSC.process(lowAllPassSC);
+			float midEnvelopeSC = rmsMidSC.process(midSC);
+			float highEnvelopeSC = rmsHighSC.process(highSC);
 
 			// Normalized envelopes
 			const float inEnvelopeAverage = (lowEnvelope + midEnvelope + highEnvelope) / 3.0f;
@@ -321,7 +332,31 @@ void EnvelopeClonerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 			spectrumCompensationHighAdjusted *= gainRatioAdjusted;
 
 			// Output
-			const float out = lowAllPass * spectrumCompensationLowAdjusted + mid * spectrumCompensationMidAdjusted + high * spectrumCompensationHighAdjusted;
+			const float lowGainSmooth = envelopeDetectionLow.process(spectrumCompensationLowAdjusted);
+			const float midGainSmooth = envelopeDetectionMid.process(spectrumCompensationMidAdjusted);
+			const float highGainSmooth = envelopeDetectionHigh.process(spectrumCompensationHighAdjusted);
+
+			// Handle data for gain meters
+			const float lowGainSmoothdB = juce::Decibels::gainToDecibels(lowGainSmooth);
+			const float midGainSmoothdB = juce::Decibels::gainToDecibels(midGainSmooth);
+			const float highGainSmoothdB = juce::Decibels::gainToDecibels(highGainSmooth);
+
+			if (std::fabsf(lowGainSmoothdB) > std::fabsf(m_maxGainLow))
+			{
+				m_maxGainLow = lowGainSmoothdB;
+			}
+
+			if (std::fabsf(midGainSmoothdB) > std::fabsf(m_maxGainMid))
+			{
+				m_maxGainMid = midGainSmoothdB;
+			}
+
+			if (std::fabsf(highGainSmoothdB) > std::fabsf(m_maxGainHigh))
+			{
+				m_maxGainHigh = highGainSmoothdB;
+			}
+
+			const float out = lowAllPass * lowGainSmooth + mid * midGainSmooth + high * highGainSmooth;
 			// TO DO: Investigate volume spikes. EDIT: Should be better now
 			mainChannelBuffer[sample] = fmaxf(-1.0f, fminf(volume * ((1.0f - mix) * in + mix * out), 1.0f));
 		}
@@ -364,8 +399,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout EnvelopeClonerAudioProcessor
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(0.1f, 10.0f, 0.1f, 0.7f), 0.1f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(0.1f, 50.0f, 0.1f, 0.7f), 5.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(0.1f, 100.0f, 0.1f, 0.7f), 0.1f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(1.0f, 300.0f, 0.1f, 0.7f), 50.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(0.0f, 1.0f, 0.01f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(-12.0f, 12.0f, 0.1f, 1.0f), 0.0f));
 

@@ -521,7 +521,7 @@ public:
 
 	float getValue()
 	{
-		return m_slider.getValue();
+		return (float)m_slider.getValue();
 	}
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
