@@ -20,6 +20,7 @@
 //==============================================================================
 
 const std::string ClipperAudioProcessor::paramsNames[] = { "Type", "Threshold", "Mix", "Volume" };
+const std::string ClipperAudioProcessor::labelNames[] =  { "Type", "Threshold", "Mix", "Volume" };
 const std::string ClipperAudioProcessor::paramsUnitNames[] = { "", " dB", " %", " dB" };
 
 //==============================================================================

@@ -17,6 +17,7 @@ public:
     ~ClipperAudioProcessor() override;
 
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
 
     //==============================================================================
