@@ -24,8 +24,6 @@
 
 // Using Butterworth q coeficients
 
-
-
 //==============================================================================
 class SecondOrderLowPassFilter
 {
@@ -68,6 +66,36 @@ public:
 	{
 		m_filter1.setHighPass(frequency, 0.540f);
 		m_filter2.setHighPass(frequency, 1.310f);
+	};
+	inline float process(const float in)
+	{
+		return m_filter1.processDF1(m_filter2.processDF1(in));
+	};
+	inline void release()
+	{
+		m_filter1.release();
+		m_filter2.release();
+	};
+
+private:
+	BiquadFilter m_filter1, m_filter2;
+};
+
+//==============================================================================
+class ForthOrderLowPassFilter
+{
+public:
+	ForthOrderLowPassFilter() {};
+
+	inline void init(const int sampleRate)
+	{
+		m_filter1.init(sampleRate);
+		m_filter2.init(sampleRate);
+	};
+	inline void set(const float frequency)
+	{
+		m_filter1.setLowPass(frequency, 0.540f);
+		m_filter2.setLowPass(frequency, 1.310f);
 	};
 	inline float process(const float in)
 	{

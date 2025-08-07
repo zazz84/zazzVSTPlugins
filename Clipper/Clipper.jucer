@@ -6,6 +6,8 @@
               version="1.1.0">
   <MAINGROUP id="JXcsE0" name="Clipper">
     <GROUP id="{3D17F8D1-E590-C7DF-1F49-0BE25336F6DB}" name="Source">
+      <FILE id="RpRTav" name="GainReductionMeterComponent.h" compile="0"
+            resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
       <FILE id="IWN3Qt" name="ModernRotarySlider.h" compile="0" resource="0"
             file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="C0qNcH" name="PluginNameComponent.h" compile="0" resource="0"

@@ -3,6 +3,8 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/Clippers.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Oversampling.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/AudioBuffer.h"
 
 //==============================================================================
 class ClipperAudioProcessor  : public juce::AudioProcessor
@@ -50,6 +52,18 @@ public:
     void changeProgramName (int index, const juce::String& newName) override;
 
     //==============================================================================
+	float getPeakReductiondB()
+	{
+		const float inputMaxdB = juce::Decibels::gainToDecibels(m_inputMax);
+		const float outputMaxdB = juce::Decibels::gainToDecibels(m_outputMax);
+
+		m_inputMax = 0.0f;
+		m_outputMax = 0.0f;
+
+		return inputMaxdB - outputMaxdB;
+	}
+	
+	//==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
@@ -57,15 +71,21 @@ public:
 	static APVTS::ParameterLayout createParameterLayout();
 
 	APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
+	std::atomic<bool> m_guiIsOpen{ false };
 
 private:	
-	//==============================================================================
+	//==============================================================================	
 	SlopeClipper m_slopeClipper[2];
+
+	float m_lastSample[2];
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* thresholdParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	float m_inputMax = 0.0f;
+	float m_outputMax = 0.0f;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ClipperAudioProcessor)
 };

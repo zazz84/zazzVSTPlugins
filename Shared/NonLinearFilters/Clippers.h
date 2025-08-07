@@ -142,7 +142,6 @@ public:
 };
 
 //==============================================================================
-
 class SlopeClipper
 {
 public:
@@ -151,16 +150,17 @@ public:
 
 	inline void init(const int sampleRate)
 	{
-		constexpr float ratioDefault = 0.15f * 48000.0f;
+		constexpr float ratioDefault = 0.5f * 48000.0f;
 		m_ratio = ratioDefault / (float)sampleRate;
 	}
 	inline float process(const float in, const float threshold)
 	{
+		const float thresholdAdjusted = 0.5f * threshold;
 		const float out = m_inLast;
 
 		if (in > 0.0f)
 		{
-			if (in > threshold)
+			if (in > thresholdAdjusted)
 			{
 				m_inLast += (threshold - m_inLast) * m_ratio;
 			}
@@ -171,7 +171,7 @@ public:
 		}
 		else
 		{
-			if (in < -threshold)
+			if (in < -thresholdAdjusted)
 			{
 				m_inLast += (-threshold - m_inLast) * m_ratio;
 			}

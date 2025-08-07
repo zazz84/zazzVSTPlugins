@@ -14,7 +14,7 @@
     for (int sample = 0; sample < samples; sample++){                               \
         float& in = channelBuffer[sample];                                          \
         const float out = CLIPPER(in, threshold);                                   \
-        in = mixIn * in + mixOut * out;												\
+        in = dry * in + wet * out;												\
     }
 
 //==============================================================================
@@ -153,14 +153,24 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 	// Get params
 	const auto type      = typeParameter->load();
 	const auto threshold = juce::Decibels::decibelsToGain(thresholdParameter->load());
-	const auto mix       = 0.01f * mixParameter->load();
-	const auto volume    = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto wet       = 0.01f * mixParameter->load();
+	const auto gain     = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto mixIn = (1.0f - mix) * volume;
-	const auto mixOut = mix * volume;
+	const auto dry = 1.0f - wet;
+	const auto guiIsOpen = m_guiIsOpen.load();
+
+	// Get input maximum
+	if (guiIsOpen)
+	{
+		const float inputMax = std::fabsf(buffer.getMagnitude(0, samples));
+		if (inputMax > m_inputMax)
+		{
+			m_inputMax = inputMax;
+		}
+	}
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
@@ -168,6 +178,7 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
+				
 		if (type == 1)
 		{
 			PROCESS_CLIPPER(Clippers::HardClip)
@@ -178,10 +189,10 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			{
 				float& in = channelBuffer[sample];
 				const float out = slopeClipper.process(in, threshold);
-				in = mixIn * in + mixOut * out;
+				in = dry * in + wet * out;
 			}
 		}
-		else if(type == 3)
+		else if (type == 3)
 		{
 			PROCESS_CLIPPER(Clippers::SoftClip)
 		}
@@ -198,6 +209,19 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			PROCESS_CLIPPER(Clippers::ABS)
 		}
 	}
+
+	// Get output maximum
+	if (guiIsOpen)
+	{
+		const float outputMax = std::fabsf(buffer.getMagnitude(0, samples));
+		if (outputMax > m_outputMax)
+		{
+			m_outputMax = outputMax;
+		}
+	}
+
+	// Apply volume
+	buffer.applyGain(gain);
 }
 
 //==============================================================================
@@ -238,6 +262,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout ClipperAudioProcessor::creat
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -60.0f,   0.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
+
+	layout.add(std::make_unique<juce::AudioParameterBool>("OS", "OS", true));
 
 	return layout;
 }

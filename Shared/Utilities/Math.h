@@ -120,6 +120,21 @@ namespace Math
 	}
 
 	//==============================================================================
+	// fast log aproximation for input (0.0f, 1.0f)
+	// -45dB = 0 gain
+	inline float gainTodBAprox(const float x)
+	{
+		return 5.0f - (5.0f / (x + 0.1f));
+	}
+
+	//==============================================================================
+	// Aproximation for dB > 0
+	inline float dBToGainAprox(float dB)
+	{
+		return 1.0f + 0.02 * dB * dB;
+	}
+
+	//==============================================================================
 	inline float remap(float value, float inMin, float inMax, float outMin, float outMax)
 	{
 		if (value <= inMin)
