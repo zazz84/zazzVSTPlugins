@@ -23,8 +23,8 @@
 
 //==============================================================================
 
-const std::string RadioRackAudioProcessor::paramsNames[] =		{ "Threshold", "Compression", "Drive", "Slip", "Type", "Resonance", "Size", "Volume" };
-const std::string RadioRackAudioProcessor::labelNames[] =		{ "Threshold", "Compression", "Drive", "Slip", "Type", "Resonance", "Size", "Volume" };
+const std::string RadioRackAudioProcessor::paramsNames[] =		{ "Threshold", "Compression", "Drive", "Split", "Type", "Resonance", "Size", "Volume" };
+const std::string RadioRackAudioProcessor::labelNames[] =		{ "Threshold", "Compression", "Drive", "Split", "Type", "Resonance", "Size", "Volume" };
 const std::string RadioRackAudioProcessor::paramsUnitNames[] =	{ " dB",       " %",          " dB",  " %",    "",     " %",        " %",   " dB" };
 
 //==============================================================================
@@ -187,6 +187,8 @@ bool RadioRackAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts
 
 void RadioRackAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
 	const auto drive					= Math::dBToGain(m_gainParameter->load());
 	const auto gateThresholddB			= m_thresholdParameter->load();
