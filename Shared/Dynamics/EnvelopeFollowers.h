@@ -88,6 +88,23 @@ public:
 
 //==============================================================================
 template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+class BranchingEnvelopeFollowerUnsafe : public BaseEnvelopeFollower<T>
+{
+public:
+	BranchingEnvelopeFollowerUnsafe() = default;
+	~BranchingEnvelopeFollowerUnsafe() = default;
+
+	// in has to be > 0.0f
+	T process(T in)
+	{
+		const T coef = (in > m_outLast) ? m_attackCoef : m_releaseCoef;
+		return m_outLast = in + coef * (m_outLast - in);
+	};
+};
+
+
+//==============================================================================
+template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
 class DecoupeledEnvelopeFollower : public BaseEnvelopeFollower<T>
 {
 public:

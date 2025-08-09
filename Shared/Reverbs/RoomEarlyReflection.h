@@ -139,6 +139,60 @@ private:
 	int m_channel = 0;
 };
 
+class RadioRackEarlyReflections : public CircularBuffer
+{
+public:
+	RadioRackEarlyReflections() = default;
+	~RadioRackEarlyReflections() = default;
+
+	static constexpr float delayTimesFactor[] = { 0.0002f,	0.1615f,	0.3384f,	0.3730f,
+												  0.9307f,	0.6067f,	1.0000f };
+
+	static const int N_DELAY_LINES = 7;
+
+	inline void set(const int predelaySize, const int reflectionsSize, const float attenuationdB) noexcept
+	{
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			// Delay
+			const float delayFactor = delayTimesFactor[i];
+			const int s = (int)(predelaySize + reflectionsSize * delayFactor);
+			m_delaySize[i] = s;
+
+			// Attenuation
+			const float gain = juce::Decibels::decibelsToGain(delayFactor * attenuationdB);
+			m_delayGain[i] = gain;
+		}
+	};
+	inline float process(const float in) noexcept
+	{
+		write(in);
+
+		float out = 0.0f;
+
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			out += m_delayGain[i] * readDelay(m_delaySize[i]);
+		}
+
+		return out;
+	};
+	inline void release()
+	{
+		__super::release();
+
+		for (int i = 0; i < N_DELAY_LINES; i++)
+		{
+			m_delaySize[i] = 0;
+			m_delayGain[i] = 0.0f;
+		}
+	}
+
+private:
+	float m_delayGain[N_DELAY_LINES];
+	int m_delaySize[N_DELAY_LINES];
+};
+
 class RoomEarlyReflectionsSimple : public CircularBuffer
 {
 public:

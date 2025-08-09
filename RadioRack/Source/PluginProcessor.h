@@ -85,12 +85,12 @@ public:
 private:	
 	//==============================================================================
 	SmallSpeakerSimulation m_spekaerSimulation[N_CHANNELS];
-	RoomEarlyReflections m_earlyReflections[N_CHANNELS];
+	RadioRackEarlyReflections m_earlyReflections[N_CHANNELS];
 	ForthOrderHighPassFilter m_inputHighPass[N_CHANNELS];
 	ForthOrderLowPassFilter m_inputLowPass[N_CHANNELS];
 	
-	BranchingEnvelopeFollower<float> m_gateEnvelope[N_CHANNELS];
-	BranchingEnvelopeFollower<float> m_compressorEnvelope[N_CHANNELS];
+	BranchingEnvelopeFollowerUnsafe<float> m_gateEnvelope[N_CHANNELS];
+	BranchingEnvelopeFollowerUnsafe<float> m_compressorEnvelope[N_CHANNELS];
 
 	std::atomic<float>* m_thresholdParameter = nullptr;
 	std::atomic<float>* m_compressionParameter = nullptr;

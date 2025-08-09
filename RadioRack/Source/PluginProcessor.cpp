@@ -121,6 +121,11 @@ void RadioRackAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 {
 	const int sr = (int)sampleRate;
 
+	// Resonance
+	const int predelaySize = (int)(1.0 * 0.001 * sampleRate);
+	const int reflectionsSize = (int)(11.0 * 0.001 * sampleRate);
+	const int size = predelaySize + reflectionsSize;
+
 	for (int channel = 0; channel < N_CHANNELS; channel++)
 	{
 		m_gateEnvelope[channel].init(sr);
@@ -137,17 +142,10 @@ void RadioRackAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 
 		m_inputHighPass[channel].set(300.0f);
 		m_inputLowPass[channel].set(3600.0f);
+
+		m_earlyReflections[channel].init(size);
+		m_earlyReflections[channel].set(predelaySize, reflectionsSize, -10.0f);
 	}
-
-	// Resonance
-	const int predelaySize = (int)(1.0 * 0.001 * sampleRate);
-	const int reflectionsSize = (int)(11.0 * 0.001 * sampleRate);
-	const int size = predelaySize + reflectionsSize;
-	m_earlyReflections[0].init(size, sr, 0);
-	m_earlyReflections[1].init(size, sr, 1);
-
-	m_earlyReflections[0].set(0.3f, predelaySize, reflectionsSize, 0.0f, -10.0f);
-	m_earlyReflections[1].set(0.3f, predelaySize, reflectionsSize, 0.0f, -10.0f);
 }
 
 void RadioRackAudioProcessor::releaseResources()
@@ -210,7 +208,7 @@ void RadioRackAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto compressorGainCompensation = Math::dBToGain(24.0f);
+	const auto compressorGainCompensation = Math::dBToGain(24.0f) * compressionWet;			// Inlcudes compressor wetness
 	const auto distortionGainCompensation = drive > 0.0f ? fmaxf(1.0f / drive, Math::dBToGain(-18.0f)) : 1.0f / drive;
 
 	for (int channel = 0; channel < channels; channel++)
@@ -249,13 +247,13 @@ void RadioRackAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 				if (out > 0.0f)
 				{
 					out += splitOffset;
+					outAbs = out;
 				}
 				else
 				{
 					out -= splitOffset;
+					outAbs += splitOffset;
 				}
-
-				outAbs += splitOffset;
 			}
 
 			// Limiter/Compressor
@@ -271,7 +269,7 @@ void RadioRackAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 			const float gainReductionGain = 1.0f / Math::dBToGainAprox(gainReductiondB);
 			 
 			// Reciprocal waveshaper
-			out = drive * gateGain * ((gainReductionGain * compressionWet * out * compressorGainCompensation + compressionDry * out));
+			out = drive * gateGain * (out * (gainReductionGain * compressorGainCompensation + compressionDry));
 			out = out / (1.0f + Math::fabsf(out));
 			out *= distortionGainCompensation;											// apply oposite gain as gain reduction
 
@@ -282,11 +280,9 @@ void RadioRackAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, ju
 			out = speakerSimulation.process(out);
 		
 			//Out
-			channelBuffer[sample] = out;
+			channelBuffer[sample] = gain * out;
 		}
 	}
-
-	buffer.applyGain(gain);
 }
 
 //==============================================================================
