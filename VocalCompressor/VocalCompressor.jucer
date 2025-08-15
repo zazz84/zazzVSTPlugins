@@ -3,7 +3,7 @@
 <JUCERPROJECT id="yQS6t9" name="VocalCompressor" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
-              version="1.1.1">
+              version="1.1.2">
   <MAINGROUP id="DfrvpD" name="VocalCompressor">
     <GROUP id="{190B883E-1575-A4A9-02D8-5B272923ADDD}" name="GUI">
       <FILE id="t0r38Y" name="GainReductionMeterComponent.h" compile="0"

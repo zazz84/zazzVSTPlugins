@@ -175,6 +175,48 @@ public:
 			return inDrive / (1.0f - (inDrive / negativeLimit));
 		}
 	}
+
+	// Slip
+	inline static float Split(float in, const float threshold, const float split)
+	{
+		const float magnitude = std::copysign(split, in);					// Add sign to split
+		const float mask = static_cast<float>(std::fabs(in) > threshold);   // 1.0f or 0.0f
+		return in + magnitude * mask;
+	}
+
+	/*
+	#include <immintrin.h>
+	#include <cstddef>
+
+	void processBuffer_SSE(const float* in, float* out, std::size_t n)
+	{
+		const __m128 signMask  = _mm_set1_ps(-0.0f); // sign bit mask
+		const __m128 absMask   = _mm_castsi128_ps(_mm_set1_epi32(0x7fffffff));
+		const __m128 thresh    = _mm_set1_ps(0.001f);
+		const __m128 plusPoint1= _mm_set1_ps(0.1f);
+
+		std::size_t i = 0;
+		const std::size_t Vec = 4;
+
+		for (; i + Vec <= n; i += Vec)
+		{
+			__m128 x   = _mm_loadu_ps(in + i);
+			__m128 ax  = _mm_and_ps(x, absMask);                // |x|
+			__m128 mask= _mm_cmpgt_ps(ax, thresh);              // compare
+			__m128 sign= _mm_and_ps(x, signMask);               // extract sign
+			__m128 mag = _mm_or_ps(plusPoint1, sign);           // copysign(0.1, x)
+			__m128 addTerm = _mm_and_ps(mag, mask);             // zero where false
+			__m128 y = _mm_add_ps(x, addTerm);
+			_mm_storeu_ps(out + i, y);
+		}
+
+		// tail
+		for (; i < n; ++i)
+		{
+			float mag = std::copysign(0.1f, in[i]);
+			out[i] = (std::fabs(in[i]) > 0.001f) ? (in[i] + mag) : in[i];
+		}
+	}*/
 };
 
 class  ARRYWaveShaper

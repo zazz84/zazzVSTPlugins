@@ -9,13 +9,15 @@ WaveshaperAudioProcessorEditor::WaveshaperAudioProcessorEditor (WaveshaperAudioP
 	m_typeSlider	(vts, WaveshaperAudioProcessor::paramsNames[0], WaveshaperAudioProcessor::paramsUnitNames[0], WaveshaperAudioProcessor::labelNames[0], { "Tanh", "Reciprocal", "Exponential" }),
 	m_gainSlider	(vts, WaveshaperAudioProcessor::paramsNames[1], WaveshaperAudioProcessor::paramsUnitNames[1], WaveshaperAudioProcessor::labelNames[1]),
 	m_colorSlider	(vts, WaveshaperAudioProcessor::paramsNames[2], WaveshaperAudioProcessor::paramsUnitNames[2], WaveshaperAudioProcessor::labelNames[2]),
-	m_mixSlider		(vts, WaveshaperAudioProcessor::paramsNames[3], WaveshaperAudioProcessor::paramsUnitNames[3], WaveshaperAudioProcessor::labelNames[3]),
-	m_volumeSlider	(vts, WaveshaperAudioProcessor::paramsNames[4], WaveshaperAudioProcessor::paramsUnitNames[4], WaveshaperAudioProcessor::labelNames[4]),
+	m_splitSlider	(vts, WaveshaperAudioProcessor::paramsNames[3], WaveshaperAudioProcessor::paramsUnitNames[3], WaveshaperAudioProcessor::labelNames[3]),
+	m_mixSlider		(vts, WaveshaperAudioProcessor::paramsNames[4], WaveshaperAudioProcessor::paramsUnitNames[4], WaveshaperAudioProcessor::labelNames[4]),
+	m_volumeSlider	(vts, WaveshaperAudioProcessor::paramsNames[5], WaveshaperAudioProcessor::paramsUnitNames[5], WaveshaperAudioProcessor::labelNames[5]),
 	m_pluginLabel("zazz::Waveshaper")
 {	
 	addAndMakeVisible(m_typeSlider);
 	addAndMakeVisible(m_gainSlider);
 	addAndMakeVisible(m_colorSlider);
+	addAndMakeVisible(m_splitSlider);
 	addAndMakeVisible(m_mixSlider);
 	addAndMakeVisible(m_volumeSlider);
 
@@ -64,6 +66,7 @@ void WaveshaperAudioProcessorEditor::resized()
 	m_typeSlider.setSize(pixelSize3, pixelSize4);
 	m_gainSlider.setSize(pixelSize3, pixelSize4);
 	m_colorSlider.setSize(pixelSize3, pixelSize4);
+	m_splitSlider.setSize(pixelSize3, pixelSize4);
 	m_mixSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
@@ -76,15 +79,15 @@ void WaveshaperAudioProcessorEditor::resized()
 	const int column2 = pixelSize;
 	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize3;
-	const int column25 = column2 + pixelSize15;
-	const int column35 = column3 + pixelSize15;
+	const int column5 = column4 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
 	m_typeSlider.setTopLeftPosition(column2, row2);
 	m_gainSlider.setTopLeftPosition(column3, row2);
 	m_colorSlider.setTopLeftPosition(column4, row2);
+	m_splitSlider.setTopLeftPosition(column5, row2);
 
-	m_mixSlider.setTopLeftPosition(column25, row3);
-	m_volumeSlider.setTopLeftPosition(column35, row3);
+	m_mixSlider.setTopLeftPosition(column3, row3);
+	m_volumeSlider.setTopLeftPosition(column4, row3);
 }

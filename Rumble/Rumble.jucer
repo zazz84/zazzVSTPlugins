@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="cOssNO" name="Clipper" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="mn0wzw" name="Rumble" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
-              version="1.1.1">
-  <MAINGROUP id="JXcsE0" name="Clipper">
-    <GROUP id="{3D17F8D1-E590-C7DF-1F49-0BE25336F6DB}" name="Source">
-      <FILE id="KVtNjN" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
-      <FILE id="uq76By" name="Helpers.h" compile="0" resource="0" file="../Shared/Utilities/Helpers.h"/>
-      <FILE id="RpRTav" name="GainReductionMeterComponent.h" compile="0"
-            resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
-      <FILE id="IWN3Qt" name="ModernRotarySlider.h" compile="0" resource="0"
-            file="../Shared/GUI/ModernRotarySlider.h"/>
-      <FILE id="C0qNcH" name="PluginNameComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/PluginNameComponent.h"/>
-      <FILE id="TCKYEK" name="TextModernRotarySlide.h" compile="0" resource="0"
-            file="../Shared/GUI/TextModernRotarySlide.h"/>
-      <FILE id="gLFJLD" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
-      <FILE id="GREmxT" name="PluginProcessor.cpp" compile="1" resource="0"
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Pitch Shift">
+  <MAINGROUP id="UA1sDy" name="Rumble">
+    <GROUP id="{51826CCC-1773-FD66-B6E7-3657A2A5FD10}" name="Source">
+      <FILE id="eHEEii" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="r5bp1e" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="YPBX56" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="ck8koI" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="L0gVMF" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="ymNgOD" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="ty65vO" name="CircularBuffers.h" compile="0" resource="0"
+            file="../Shared/Utilities/CircularBuffers.h"/>
+      <FILE id="vDnRik" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -45,9 +35,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="Clipper" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Rumble" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="Clipper" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="Rumble" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

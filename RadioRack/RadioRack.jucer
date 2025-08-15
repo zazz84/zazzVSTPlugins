@@ -2,7 +2,8 @@
 
 <JUCERPROJECT id="TfBvmg" name="RadioRack" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyWebsite="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion">
+              pluginFormats="buildVST3" pluginVST3Category="Distortion" companyName="zazz"
+              version="1.0.1">
   <MAINGROUP id="FcZV3X" name="RadioRack">
     <GROUP id="{5B67CC81-D22C-D6CA-A5D4-5316D51FDA04}" name="Source">
       <FILE id="vLTF1H" name="HighOrderBiquadFilter.h" compile="0" resource="0"

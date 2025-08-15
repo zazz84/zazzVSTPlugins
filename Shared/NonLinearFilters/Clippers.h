@@ -27,71 +27,27 @@ class Clippers
 {
 
 public:
-	/*inline static float minss(float a, float b)
-	{
-		// Branchless SSE min.
-		_mm_store_ss(&a, _mm_min_ss(_mm_set_ss(a), _mm_set_ss(b)));
-		return a;
-	}
-
-	inline static float maxss(float a, float b)
-	{
-		// Branchless SSE max.
-		_mm_store_ss(&a, _mm_max_ss(_mm_set_ss(a), _mm_set_ss(b)));
-		return a;
-	}
-
-	inline static float clamp(float val, float minval, float maxval)
-	{
-		// Branchless SSE clamp.
-		// return minss( maxss(val,minval), maxval );
-
-		_mm_store_ss(&val, _mm_min_ss(_mm_max_ss(_mm_set_ss(val), _mm_set_ss(minval)), _mm_set_ss(maxval)));
-		return val;
-	}*/
-
-	inline static float clamp(float val, float minval, float maxval)
-	{
-		const float t = val < minval ? minval : val;
-		return t > maxval ? maxval : t;
-	}
-
 	inline static float HardClip(const float in, const float threshold)
 	{
-		/*if (in > threshold)
-		{
-			return threshold;
-		}
-		else if (in < -threshold)
-		{
-			return -threshold;
-		}
-		else
-		{
-			return in;
-		}*/
-		
-		//return std::clamp(in, -threshold, threshold);
-		return Clippers::clamp(in, -threshold, threshold);
+		return Math::clamp(in, -threshold, threshold);
 	}
 
 	inline static float SoftClip(const float in, float const threshold)
 	{
 		const float thresholdHalf = 0.5f * threshold;
-		const float sign = in > 0.0f ? 1.0f : -1.0f;
-		const float inAbs = in * sign;
+		const float inAbs = fabsf(in);
 
 		if (inAbs < thresholdHalf)
 		{
-			return sign * inAbs;
+			return std::copysignf(inAbs, in);
 		}
 		else if (inAbs < threshold + thresholdHalf)
 		{
-			return sign * 0.5f * (inAbs + thresholdHalf);
+			return std::copysignf(0.5f * (inAbs + thresholdHalf), in);
 		}
 		else
 		{
-			return sign * threshold;
+			return std::copysignf(threshold, in);
 		}
 	}
 
@@ -103,32 +59,23 @@ public:
 		}
 		else
 		{
-			return std::fabsf(std::fabsf(std::fmodf(in - threshold, 4.0f * threshold)) - 2.0f * threshold) - threshold;
+			const float range = 4.0f * threshold;
+
+			float mod = in - threshold;
+			mod -= range * std::floor(mod / range);
+
+			return fabsf(mod - 2.0f * threshold) - threshold;
 		}
 	}
 
 	inline static float HalfWave(const float in, float const threshold)
 	{
-		/*if (in < 0.0f)
-		{
-			return 0.0f;
-		}
-		else if (in < threshold)
-		{
-			return in;
-		}
-		else
-		{
-			return threshold;
-		}*/
-
-		//return std::clamp(in, 0.0f, threshold);
-		return Clippers::clamp(in, 0.0f, threshold);
+		return Math::clamp(in, 0.0f, threshold);
 	}
 
 	inline static float ABS(const float in, const float threshold)
 	{
-		const float inAbs = std::fabsf(in);
+		const float inAbs = fabsf(in);
 
 		if (inAbs < threshold)
 		{
