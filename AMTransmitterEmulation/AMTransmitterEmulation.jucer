@@ -3,11 +3,9 @@
 <JUCERPROJECT id="E6FMNG" name="AMTransmitterEmulation" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
               jucerFormatVersion="1" companyName="zazz" pluginFormats="buildVST3"
-              pluginVST3Category="Fx">
+              pluginVST3Category="Fx" version="1.0.1">
   <MAINGROUP id="cdM2R2" name="AMTransmitterEmulation">
     <GROUP id="{E8BA59CA-D41A-533E-7672-6C8EC01DA7C3}" name="Source">
-      <FILE id="QlL2eW" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="OSoYEv" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="T4QvcM" name="HighOrderBiquadFilter.h" compile="0" resource="0"
             file="../Shared/Filters/HighOrderBiquadFilter.h"/>

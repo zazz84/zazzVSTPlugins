@@ -17,44 +17,43 @@
 
 #pragma once
 
-#include <cmath>
+#include "../../../zazzVSTPlugins/Shared/Oscillators/SinOscillator.h"
+#include "../../../zazzVSTPlugins/Shared/Oscillators/SawOscillator.h"
 
-#define M_PI 3.14159265358979f
-
-class SinOscillator
+class SinSawOscillator
 {
 public:
-	SinOscillator() = default;
-	~SinOscillator() = default;
+	SinSawOscillator() = default;
+	~SinSawOscillator() = default;
 
 	inline void init(const int sampleRate)
 	{
-		m_sampleRate = sampleRate;
+		m_sinOscillator.init(sampleRate);
+		m_sawOscillator.init(sampleRate);
 	}
-	inline void set(float frequency)
+	inline void set(float frequency, float ratio)
 	{
-		m_step =  (2.0f * M_PI) * frequency / (float)m_sampleRate;
+		m_sinOscillator.set(frequency);
+		m_sawOscillator.set(frequency);
+
+		m_ratio = ratio;
 	}
 	inline float process()
 	{
-		m_phase += m_step;
-		
-		if (m_phase >= (2.0f * M_PI))
-		{
-			m_phase -= (2.0f * M_PI);
-		}
+		const float sin = m_sinOscillator.process();
+		const float saw = m_sawOscillator.process();
 
-		return std::sinf(m_phase);
+		return sin * (1.0f - m_ratio) + saw * m_ratio;
 	}
 	inline void release()
 	{
-		m_sampleRate = 48000;
-		m_step = 0.0f;
-		m_phase = 0.0f;
+		m_sinOscillator.release();
+		m_sawOscillator.release();
+		m_ratio = 0.0f;
 	};
-	
+
 private:
-	int m_sampleRate = 48000;
-	float m_step = 0.0f;
-	float m_phase = 0.0f;
+	SinOscillator m_sinOscillator;
+	SawOscillator m_sawOscillator;
+	float m_ratio = 0.0f;
 };

@@ -18,7 +18,7 @@
     for (int sample = 0; sample < samples; sample++) {                              \
         float& in = channelBuffer[sample];                                          \
 		float out = preFilter.processDF1(gain * in);                                \
-        out = WAVESHAPER(out, drive);												\
+        out = WAVESHAPER(out, drive, asymetry);										\
 		out = postFilter.processDF1(out);											\
         in = volume * ((1.0f - mix) * in + mix * out);								\
     }
@@ -26,18 +26,18 @@
 #define PROCESS_WAVESHAPER_SPLIT(WAVESHAPER)										\
     for (int sample = 0; sample < samples; sample++) {                              \
         float& in = channelBuffer[sample];                                          \
-		float out = Waveshapers::Split(in, splitThreshold, split);			        \
+		float out = Waveshapers::Split2(in, splitThreshold, split);			        \
 		out = preFilter.processDF1(gain * out);										\
-        out = WAVESHAPER(out, drive);												\
+        out = WAVESHAPER(out, drive, asymetry);										\
 		out = postFilter.processDF1(out);											\
         in = volume * ((1.0f - mix) * in + mix * out);								\
     }
 
 //==============================================================================
 
-const std::string WaveshaperAudioProcessor::paramsNames[] = { "Type", "Gain", "Color", "Split", "Mix", "Volume" };
-const std::string WaveshaperAudioProcessor::labelNames[]  = { "Type", "Gain", "Color", "Split", "Mix", "Volume" };
-const std::string WaveshaperAudioProcessor::paramsUnitNames[] = { "", " dB", "", " dB", " %", "dB" };
+const std::string WaveshaperAudioProcessor::paramsNames[] = { "Type", "Gain", "Color", "Split", "Asymetry", "Mix", "Volume" };
+const std::string WaveshaperAudioProcessor::labelNames[]  = { "Type", "Gain", "Color", "Split", "Asymetry", "Mix", "Volume" };
+const std::string WaveshaperAudioProcessor::paramsUnitNames[] = { "", " dB", "", " dB", " %", " %", "dB" };
 
 //==============================================================================
 WaveshaperAudioProcessor::WaveshaperAudioProcessor()
@@ -52,12 +52,13 @@ WaveshaperAudioProcessor::WaveshaperAudioProcessor()
                        )
 #endif
 {
-	typeParameter   = apvts.getRawParameterValue(paramsNames[0]);
-	gainParameter   = apvts.getRawParameterValue(paramsNames[1]);
-	colorParameter  = apvts.getRawParameterValue(paramsNames[2]);
-	splitParameter  = apvts.getRawParameterValue(paramsNames[3]);
-	mixParameter    = apvts.getRawParameterValue(paramsNames[4]);
-	volumeParameter = apvts.getRawParameterValue(paramsNames[5]);
+	typeParameter		= apvts.getRawParameterValue(paramsNames[0]);
+	gainParameter		= apvts.getRawParameterValue(paramsNames[1]);
+	colorParameter		= apvts.getRawParameterValue(paramsNames[2]);
+	splitParameter		= apvts.getRawParameterValue(paramsNames[3]);
+	asymetryParameter	= apvts.getRawParameterValue(paramsNames[4]);
+	mixParameter		= apvts.getRawParameterValue(paramsNames[5]);
+	volumeParameter		= apvts.getRawParameterValue(paramsNames[6]);
 }
 
 WaveshaperAudioProcessor::~WaveshaperAudioProcessor()
@@ -176,6 +177,7 @@ void WaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const auto gain = type != 3 ? juce::Decibels::decibelsToGain(gainParameter->load()) : juce::Decibels::decibelsToGain(gainParameter->load() - 6.0f);
 	const auto color  = 18.0f * 0.01f * colorParameter->load();
 	const auto splitdB  = splitParameter->load();
+	const auto asymetry  = 0.01f * asymetryParameter->load();
 	const auto mix    = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
@@ -183,9 +185,9 @@ void WaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
 	const auto split = juce::Decibels::decibelsToGain(splitdB);
-	const auto splitThreshold = juce::Decibels::decibelsToGain(-80.0f);
+	const auto splitThreshold = juce::Decibels::decibelsToGain(-40.0f);
 
-	if (splitdB < -59.5f)
+	if (splitdB < -39.5f)
 	{
 		for (int channel = 0; channel < channels; ++channel)
 		{
@@ -311,9 +313,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout WaveshaperAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(    1.0f,   3.0f,  1.0f, 1.0f),   1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(  -60.0f,   0.0f,  1.0f, 1.0f), -80.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(  -40.0f,   0.0f,  1.0f, 1.0f), -40.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));
 
 	return layout;
 }

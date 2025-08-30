@@ -6,6 +6,7 @@
 
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/HighOrderBiquadFilter.h"
 
 //==============================================================================
@@ -67,6 +68,7 @@ private:
 	std::array<BiquadFilter, N_CHANNELS> m_tuningFilter;
 	std::array<DecoupeledEnvelopeFollower<float>, N_CHANNELS> m_diodeDetector;
 	std::array<EighthOrderHighPassFilter, N_CHANNELS> m_dcFilter;
+	std::array<OnePoleLowPassFilter, N_CHANNELS> m_tuningFrequencySmoother;
 
 	std::atomic<float>* tuningFrequencyParameter = nullptr;
 	std::atomic<float>* recoveryParameter = nullptr;

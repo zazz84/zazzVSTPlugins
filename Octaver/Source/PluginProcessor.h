@@ -1,11 +1,34 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
+#include <array>
+
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+
+#include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRate.h"
+#include "../../../zazzVSTPlugins/Shared/Oscillators/SinSawOscillator.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/NoiseGate.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 
 //==============================================================================
-class WaveshaperAudioProcessor  : public juce::AudioProcessor
+class OctaverAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -13,12 +36,28 @@ class WaveshaperAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    WaveshaperAudioProcessor();
-    ~WaveshaperAudioProcessor() override;
+    OctaverAudioProcessor();
+    ~OctaverAudioProcessor() override;
+
+	enum Parameters
+	{
+		NoiseGateThreshold,
+		NoiseGateSpeed,
+		EvnelopeSpeed,
+		FrequencyMin,
+		FrequencyMax,
+		Speed,
+		Pitch,
+		Shape,
+		Volume,
+		DirectVolume,
+		COUNT
+	};
 
 	static const std::string paramsNames[];
-	static const std::string labelNames[];
+    static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
+    static const int N_CHANNELS = 2;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -60,16 +99,13 @@ public:
 
 private:	
 	//==============================================================================
-	BiquadFilter m_preFilter[2];
-	BiquadFilter m_postFilter[2];
+	ZeroCrossingRate m_zeroCrossingRate;
+	NoiseGate m_noiseGate;
+	SinSawOscillator m_oscilator;
+	OnePoleLowPassFilter m_frequencySmoother;
+	BranchingEnvelopeFollower<float> m_inputEnvelope;
 
-	std::atomic<float>* typeParameter = nullptr;
-	std::atomic<float>* gainParameter = nullptr;
-	std::atomic<float>* colorParameter = nullptr;
-	std::atomic<float>* splitParameter = nullptr;
-	std::atomic<float>* asymetryParameter = nullptr;
-	std::atomic<float>* mixParameter = nullptr;
-	std::atomic<float>* volumeParameter = nullptr;
+	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveshaperAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (OctaverAudioProcessor)
 };

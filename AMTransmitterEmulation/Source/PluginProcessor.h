@@ -67,6 +67,7 @@ private:
 	std::array<EighthOrderHighPassFilter, N_CHANNELS> m_outputFilter;
 
 	std::atomic<float>* modulationDepthParameter = nullptr;
+	std::atomic<float>* tuneFrequencyParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AMTransmitterEmulationAudioProcessor)

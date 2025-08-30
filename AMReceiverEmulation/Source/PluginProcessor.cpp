@@ -116,6 +116,12 @@ void AMReceiverEmulationAudioProcessor::prepareToPlay (double sampleRate, int sa
 
 	m_dcFilter[0].set(100.0f);
 	m_dcFilter[1].set(100.0f);
+
+	m_tuningFrequencySmoother[0].init(sr);
+	m_tuningFrequencySmoother[1].init(sr);
+
+	m_tuningFrequencySmoother[0].set(2.0f);
+	m_tuningFrequencySmoother[1].set(2.0f);
 }
 
 void AMReceiverEmulationAudioProcessor::releaseResources()
@@ -173,7 +179,8 @@ void AMReceiverEmulationAudioProcessor::processBlock (juce::AudioBuffer<float>& 
 		auto& tuningFilter = m_tuningFilter[channel];
 		auto& diodeDetector = m_diodeDetector[channel];
 		auto& dcFilter = m_dcFilter[channel];
-		tuningFilter.setBandPassSkirtGain(tuningFrequency, 20.0f);
+		auto& tuningFrequencySmoother = m_tuningFrequencySmoother[channel];
+
 		diodeDetector.set(0.0f, recovery);
 
 		for (int sample = 0; sample < samples; sample++)
@@ -182,6 +189,8 @@ void AMReceiverEmulationAudioProcessor::processBlock (juce::AudioBuffer<float>& 
 			float out = channelBuffer[sample];
 
 			// Filter
+			const float tuningFrequencySmooth = tuningFrequencySmoother.process(tuningFrequency);
+			tuningFilter.setBandPassSkirtGain(tuningFrequencySmooth, 20.0f);
 			out = tuningFilter.processDF1(out);
 
 			// Detect

@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="ZjzOrt" name="AMReceiverEmulation" projectType="audioplug"
-              useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" companyName="zazz" pluginFormats="buildVST3"
-              version="1.0.1">
-  <MAINGROUP id="AUtUa6" name="AMReceiverEmulation">
-    <GROUP id="{8446357F-B420-956A-7537-4FC2E9AEA877}" name="Source">
-      <FILE id="IJC8Jd" name="OnePoleFilters.h" compile="0" resource="0"
-            file="../Shared/Filters/OnePoleFilters.h"/>
-      <FILE id="ClbYRT" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="er00HS" name="HighOrderBiquadFilter.h" compile="0" resource="0"
-            file="../Shared/Filters/HighOrderBiquadFilter.h"/>
-      <FILE id="gUihJ4" name="EnvelopeFollowers.h" compile="0" resource="0"
+<JUCERPROJECT id="Dszy5u" name="Octaver" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Pitch Shift">
+  <MAINGROUP id="HS9KMV" name="Octaver">
+    <GROUP id="{E35AF673-77C5-DC05-5FCD-900FEFF0F012}" name="Source">
+      <FILE id="aTdOHh" name="GroupLabelComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/GroupLabelComponent.h"/>
+      <FILE id="xDTfmd" name="EnvelopeFollowers.h" compile="0" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
-      <FILE id="xhMJBA" name="PluginProcessor.cpp" compile="1" resource="0"
+      <FILE id="sBGsHd" name="SinSawOscillator.h" compile="0" resource="0"
+            file="../Shared/Oscillators/SinSawOscillator.h"/>
+      <FILE id="LVOSXt" name="SawOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SawOscillator.h"/>
+      <FILE id="IuR9JT" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="hnm5lV" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="jVIv5r" name="ZeroCrossingRate.h" compile="0" resource="0"
+            file="../Shared/Utilities/ZeroCrossingRate.h"/>
+      <FILE id="evobVg" name="SinOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SinOscillator.h"/>
+      <FILE id="rhAHlJ" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="fGv4lZ" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="bLxQPP" name="NoiseGate.h" compile="0" resource="0" file="../Shared/Dynamics/NoiseGate.h"/>
+      <FILE id="XhPpbw" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="rOC09m" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="MvnstW" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="fZTkHR" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="c2Wk7u" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="NUKgt3" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="G1gbih" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
-      <FILE id="FdYoE0" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="CXhFGN" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -45,9 +51,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="AMReceiverEmulation" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Octaver" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="AMReceiverEmulation" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="Octaver" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

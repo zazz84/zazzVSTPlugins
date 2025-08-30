@@ -131,7 +131,7 @@ namespace Math
 	// Aproximation for dB > 0
 	inline float dBToGainAprox(float dB)
 	{
-		return 1.0f + 0.02 * dB * dB;
+		return 1.0f + 0.02f * dB * dB;
 	}
 
 	//==============================================================================

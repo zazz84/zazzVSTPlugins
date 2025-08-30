@@ -2,9 +2,15 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
+/*const juce::Colour ZazzLookAndFeel::LIGHT_COLOUR  = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
 const juce::Colour ZazzLookAndFeel::MEDIUM_COLOUR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
-const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::DARK_COLOUR   = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);*/
+
+const juce::Colour ZazzLookAndFeel::BACKGROUND_COLOR = juce::Colour::fromHSV(0.75f, 0.25f, 0.6f, 1.0f);
+const juce::Colour ZazzLookAndFeel::KNOB_COLOR = juce::Colour::fromHSV(0.75f, 0.25f, 0.5f, 1.0f);
+const juce::Colour ZazzLookAndFeel::KNOB_OUTLINE_COLOR = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::KNOB_HIGHLIGHT = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
+const juce::Colour ZazzLookAndFeel::MAIN_COLOR = juce::Colour::fromHSV(0.75f, 0.25f, 0.4f, 1.0f);
 
 const int AMReceiverEmulationAudioProcessorEditor::SLIDERS[] = { 3 };
 const float AMReceiverEmulationAudioProcessorEditor::COLUMN_OFFSET[] = { 0.0f };
@@ -44,7 +50,7 @@ AMReceiverEmulationAudioProcessorEditor::~AMReceiverEmulationAudioProcessorEdito
 //==============================================================================
 void AMReceiverEmulationAudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll(ZazzLookAndFeel::LIGHT_COLOUR);
+	g.fillAll(ZazzLookAndFeel::BACKGROUND_COLOR);
 }
 
 void AMReceiverEmulationAudioProcessorEditor::resized()

@@ -13,8 +13,8 @@
 
 //==============================================================================
 
-const std::string AMTransmitterEmulationAudioProcessor::paramsNames[] = { "Modulation Depth", "Volume" };
-const std::string AMTransmitterEmulationAudioProcessor::paramsUnitNames[] = { " dB", " dB" };
+const std::string AMTransmitterEmulationAudioProcessor::paramsNames[] = { "Modulation Depth", "Frequency",  "Volume" };
+const std::string AMTransmitterEmulationAudioProcessor::paramsUnitNames[] = { " dB", " Hz", " dB" };
 
 //==============================================================================
 AMTransmitterEmulationAudioProcessor::AMTransmitterEmulationAudioProcessor()
@@ -30,7 +30,8 @@ AMTransmitterEmulationAudioProcessor::AMTransmitterEmulationAudioProcessor()
 #endif
 {
 	modulationDepthParameter    = apvts.getRawParameterValue(paramsNames[0]);
-	volumeParameter				= apvts.getRawParameterValue(paramsNames[1]);
+	tuneFrequencyParameter		= apvts.getRawParameterValue(paramsNames[1]);
+	volumeParameter				= apvts.getRawParameterValue(paramsNames[2]);
 }
 
 AMTransmitterEmulationAudioProcessor::~AMTransmitterEmulationAudioProcessor()
@@ -150,6 +151,7 @@ void AMTransmitterEmulationAudioProcessor::processBlock (juce::AudioBuffer<float
 {
 	// Get params
 	const auto modulationGain = juce::Decibels::decibelsToGain(modulationDepthParameter->load());
+	const auto tuneFrequency = juce::Decibels::decibelsToGain(tuneFrequencyParameter->load());
 	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
@@ -157,7 +159,7 @@ void AMTransmitterEmulationAudioProcessor::processBlock (juce::AudioBuffer<float
 	const auto samples = buffer.getNumSamples();
 	const auto sampleRate = (float)getSampleRate();
 	const auto sampleRateHalf = 0.5f * sampleRate;
-	const auto carrierFrequency = 0.8f * sampleRateHalf;
+	const auto carrierFrequency = (0.8f * sampleRateHalf) + tuneFrequency;
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
@@ -223,7 +225,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout AMTransmitterEmulationAudioP
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),  0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -10000.0f,  10000.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),  0.0f));
 
 	return layout;
 }

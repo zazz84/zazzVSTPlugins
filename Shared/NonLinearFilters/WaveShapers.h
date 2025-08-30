@@ -21,6 +21,7 @@
 #include <math.h>
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 // Waveshapers are gain compensated, so all methods produce more or less the same amount of distortion for the same input
 // Note: Tanh, Atan, Sin, SinAproximation, ARRY and ReciprocalQuadratic sound very similar
@@ -49,10 +50,32 @@ public:
 		}
 	}
 
+	inline static float Tanh(const float in, const float drive, const float asymetry)
+	{
+		// Branchless remap
+		float asymNorm = (in > 0.0f) ? -std::fminf(0.0f, asymetry) : std::fmaxf(0.0f, asymetry);
+		float asymGain = 1.0f - 0.5f * asymNorm;
+
+		float driveIn = asymGain * drive * in;
+
+		// Rational tanh approx
+		float d2 = driveIn * driveIn;
+		float y = driveIn * (27.0f + d2) / (27.0f + 9.0f * d2);
+
+		// Clamp branchlessly
+		return std::clamp(y, -1.0f, 1.0f);
+	}
+
 	inline static float Reciprocal(float in, float drive)
 	{
 		const float drive2in = 1.4f * drive * in;
 		return drive2in / (1.0f + std::fabsf(drive2in));
+	}
+
+	inline static float Reciprocal(const float in, const float drive, const float asymetry)
+	{
+		const float driveIn = 1.4f * drive * in;
+		return driveIn / (1.0f + std::fabsf(driveIn + asymetry));
 	}
 
 	inline static float Atan(float in, float drive)
@@ -154,9 +177,21 @@ public:
 	{
 		const float driveAdjusted = 0.4f + std::expf(-0.6f * drive);
 		const float inAbs = std::fabsf(in);
-		const float sign = (in > 0.0f) ? 1.0f : -1.0f;
+		return std::copysign(std::powf(inAbs, driveAdjusted), in);
+	}
 
-		return sign * std::powf(inAbs, driveAdjusted);
+	inline static float Exponential(float in, float drive, const float asymetry)
+	{
+		float driveAdjusted = 0.5f + std::expf(-0.6f * drive);
+
+		const float asym = in > 0.0f ? -std::fminf(0.0f, asymetry) : std::fmaxf(0.0f, asymetry);
+
+		driveAdjusted = Math::remap(asym, 0.0f, 1.0f, driveAdjusted, 1.0f);
+
+		const float inAbs = std::fabsf(in);
+		const float out = std::copysign(std::powf(inAbs, driveAdjusted), in);
+
+		return Tanh(out, 1.0f, 0.0f);
 	}
 
 	// Not gain normalized to the rest of the waveshapers
@@ -217,6 +252,24 @@ public:
 			out[i] = (std::fabs(in[i]) > 0.001f) ? (in[i] + mag) : in[i];
 		}
 	}*/
+
+	inline static float Split2(float in, const float threshold, const float split)
+	{
+		const float inAbs = fabsf(in);
+
+		if (inAbs < threshold)
+		{
+			return in;
+		}
+		else if (inAbs < 1.0f)
+		{
+			return std::copysignf(1.0f + ((1.0f - split) * (inAbs - 1.0f)), in);
+		}
+		else
+		{
+			return in;
+		}
+	}
 };
 
 class  ARRYWaveShaper
