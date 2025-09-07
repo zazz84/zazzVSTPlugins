@@ -23,6 +23,7 @@
 //==============================================================================
 
 const std::string SmallSpeakerSimulatorAudioProcessor::paramsNames[] = { "Type", "Tune", "Resonance", "Mix", "Volume" };
+const std::string SmallSpeakerSimulatorAudioProcessor::labelNames[] = { "Type", "Tune", "Resonance", "Mix", "Volume" };
 const std::string SmallSpeakerSimulatorAudioProcessor::paramsUnitNames[] = { "", "", " %", " %", "dB" };
 
 //==============================================================================
@@ -179,8 +180,8 @@ void SmallSpeakerSimulatorAudioProcessor::processBlock (juce::AudioBuffer<float>
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const float dry = 1.0f - wet;
-	const float resonanceDry = 1.0f - resonanceWet;
+	const auto dry = 1.0f - wet;
+	const auto resonanceDry = 1.0f - resonanceWet;
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
@@ -245,7 +246,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SmallSpeakerSimulatorAudioPr
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 1.0f, 9.0f, 1.0f, 1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 1.0f, 12.0f, 1.0f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( 50.0f, 200.0f, 1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 100.0f));
