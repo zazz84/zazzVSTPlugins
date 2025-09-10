@@ -1,7 +1,26 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <JuceHeader.h>
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/TubeEmulation.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 
 //==============================================================================
 class TubePreampAudioProcessor  : public juce::AudioProcessor
@@ -15,8 +34,11 @@ public:
     TubePreampAudioProcessor();
     ~TubePreampAudioProcessor() override;
 
-	static const int N_STAGES = 16;
+	static const int N_CHANNELS = 2;
+	static const int N_STAGES = 8;
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
+	static const std::string paramsUnitNames[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -58,13 +80,13 @@ public:
 
 private:	
 	//==============================================================================
+	TubeEmulation m_tubeEmulation[N_CHANNELS][N_STAGES];
+	BiquadFilter m_preFilter[N_STAGES];
+	BiquadFilter m_postFilter[N_STAGES];
+	BranchingEnvelopeFollower<float> m_envelopeFollower[N_STAGES];
 
-	std::atomic<float>* driveParameter = nullptr;
-	std::atomic<float>* stagesParameter = nullptr;
-	std::atomic<float>* mixParameter = nullptr;
-	std::atomic<float>* volumeParameter = nullptr;
-
-	TubeEmulation m_tubeEmulation[2][N_STAGES];
+	std::atomic<float>* m_driveParameter = nullptr;
+	std::atomic<float>* m_volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TubePreampAudioProcessor)
 };

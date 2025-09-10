@@ -11,7 +11,9 @@
 
 //==============================================================================
 
-const std::string MultiAllPassAudioProcessor::paramsNames[] = { "Frequency", "Style", "Intensity", "Volume" };
+const std::string MultiAllPassAudioProcessor::paramsNames[] =		{ "Frequency", "Style", "Intensity", "Volume" };
+const std::string MultiAllPassAudioProcessor::labelNames[] =		{ "Frequency", "Style", "Intensity", "Volume" };
+const std::string MultiAllPassAudioProcessor::paramsUnitNames[] =	{ " Hz",		"",		"",			 " dB" };
 
 //==============================================================================
 MultiAllPassAudioProcessor::MultiAllPassAudioProcessor()
@@ -30,9 +32,6 @@ MultiAllPassAudioProcessor::MultiAllPassAudioProcessor()
 	styleParameter     = apvts.getRawParameterValue(paramsNames[1]);
 	intensityParameter = apvts.getRawParameterValue(paramsNames[2]);
 	volumeParameter    = apvts.getRawParameterValue(paramsNames[3]);
-
-	button1Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Button1"));
-	button2Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Button2"));
 }
 
 MultiAllPassAudioProcessor::~MultiAllPassAudioProcessor()
@@ -106,15 +105,14 @@ void MultiAllPassAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
 	const int sr = (int)(sampleRate);
 
-	for (int i = 0; i < N_ALL_PASS_FO * 2; i++)
-	{
-		m_firstOrderAllPass[i].init(sr);
-	}
+	m_secondOrderAllPassMulti[0].init(sr);
+	m_secondOrderAllPassMulti[1].init(sr);
 
-	for (int i = 0; i < N_ALL_PASS_SO * 2; i++)
-	{
-		m_secondOrderAllPass[i].init(sr);
-	}
+	m_frequencySmoother.init(sr);
+	m_styleSmoother.init(sr);
+
+	m_frequencySmoother.set(2.0f);
+	m_styleSmoother.set(2.0f);
 }
 
 void MultiAllPassAudioProcessor::releaseResources()
@@ -150,77 +148,59 @@ bool MultiAllPassAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 
 void MultiAllPassAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-	// Buttons
-	const auto button1 = button1Parameter->get();
-	const auto button2 = button2Parameter->get();
-
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
-	const auto frequency = frequencyParameter->load();
-	const auto style = (button1) ? (frequency - (frequency - FREQUENCY_MIN) * styleParameter->load()) : (0.01f + styleParameter->load() * 2.0f);
+	const auto frequency = std::fminf((float)(getSampleRate() * (0.5 * 0.9)), frequencyParameter->load());
+	const auto style = 0.01f + 2.0f * std::powf(0.01f * styleParameter->load(), 2.0f);
 	const auto intensity = intensityParameter->load();
-	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const int channels = getTotalNumOutputChannels();
 	const int samples = buffer.getNumSamples();
 
-	for (int channel = 0; channel < channels; ++channel)
+	if (channels == 1)
 	{
 		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
+		auto* channelBuffer = buffer.getWritePointer(0);
 
-		if (button1 == true)
+		auto& secondOrderAllPass = m_secondOrderAllPassMulti[0];
+		
+		for (int sample = 0; sample < samples; sample++)
 		{
-			const float frequencyMel = FrequencyToMel(frequency);
-			const float styleMel = FrequencyToMel(style);
-			const int count = int(intensity * N_ALL_PASS_FO);
-			const float stepMel = (styleMel - frequencyMel) / count;
+			const float in = channelBuffer[sample];
 
-			for (int i = 0; i < count; i++)
-			{
-				m_firstOrderAllPass[channel * N_ALL_PASS_FO + i].setFrequency(MelToFrequency(frequencyMel + i * stepMel));
-			}
+			const float frequencySmooth = m_frequencySmoother.process(frequency);
+			const float styleSmooth = m_styleSmoother.process(style);
 
-			for (int sample = 0; sample < samples; ++sample)
-			{
-				// Get input
-				const float in = channelBuffer[sample];
+			secondOrderAllPass.set(frequencySmooth, styleSmooth, intensity);
 
-				float inAllPass = in;
-
-				for (int i = 0; i < count; i++)
-				{
-					inAllPass = m_firstOrderAllPass[channel * N_ALL_PASS_FO + i].process(inAllPass);
-				}
-
-				// Apply volume, mix and send to output
-				channelBuffer[sample] = volume * inAllPass;
-			}
+			channelBuffer[sample] = gain * secondOrderAllPass.process(in);
 		}
-		else
+	}
+	else
+	{
+		// Channel pointers
+		auto* channelBufferLeft = buffer.getWritePointer(0);
+		auto* channelBufferRight = buffer.getWritePointer(1);
+
+		auto& secondOrderAllPassLeft = m_secondOrderAllPassMulti[0];
+		auto& secondOrderAllPassRight = m_secondOrderAllPassMulti[1];
+
+		for (int sample = 0; sample < samples; sample++)
 		{
-			const int count = int(intensity * N_ALL_PASS_SO);
+			const float inLeft = channelBufferLeft[sample];
+			const float inRight = channelBufferRight[sample];
 
-			for (int i = 0; i < count; i++)
-			{
-				m_secondOrderAllPass[channel * N_ALL_PASS_SO + i].setFrequency(frequency, style);
-			}
+			const float frequencySmooth = m_frequencySmoother.process(frequency);
+			const float styleSmooth = m_styleSmoother.process(style);
 
-			for (int sample = 0; sample < samples; ++sample)
-			{
-				// Get input
-				const float in = channelBuffer[sample];
+			secondOrderAllPassLeft.set(frequencySmooth, styleSmooth, intensity);
+			secondOrderAllPassRight.set(frequencySmooth, styleSmooth, intensity);
 
-				float inAllPass = in;
-
-				for (int i = 0; i < count; i++)
-				{
-					inAllPass = m_secondOrderAllPass[channel * N_ALL_PASS_SO + i].process(inAllPass);
-				}
-
-				// Apply volume, mix and send to output
-				channelBuffer[sample] = volume * inAllPass;
-			}
+			channelBufferLeft[sample] = gain * secondOrderAllPassLeft.process(inLeft);
+			channelBufferRight[sample] = gain * secondOrderAllPassRight.process(inRight);
 		}
 	}
 }
@@ -260,8 +240,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiAllPassAudioProcessor::
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( FREQUENCY_MIN, FREQUENCY_MAX,  1.0f, 0.3f), 500.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(          0.0f,          1.0f, 0.01f, 1.0f),   0.5f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(          0.0f,          1.0,  0.01f, 1.0f),   0.5f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(          0.0f,        100.0f,  1.0f, 1.0f),  50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(          1.0f, N_ALL_PASS_SO,  1.0f, 1.0f),  25.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(        -12.0f,         12.0f,  0.1f, 1.0f),   0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("Button1", "Button1", true));

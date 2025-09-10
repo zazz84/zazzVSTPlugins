@@ -1,17 +1,30 @@
 /*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+
 //==============================================================================
 
-const std::string TubePreampAudioProcessor::paramsNames[] = { "Drive", "Stages", "Mix", "Volume" };
+const std::string TubePreampAudioProcessor::paramsNames[] = { "Drive", "Volume" };
+const std::string TubePreampAudioProcessor::labelNames[] = { "Drive", "Volume" };
+const std::string TubePreampAudioProcessor::paramsUnitNames[] = { " dB", " dB" };
 
 //==============================================================================
 TubePreampAudioProcessor::TubePreampAudioProcessor()
@@ -26,10 +39,8 @@ TubePreampAudioProcessor::TubePreampAudioProcessor()
                        )
 #endif
 {
-	driveParameter     = apvts.getRawParameterValue(paramsNames[0]);
-	stagesParameter    = apvts.getRawParameterValue(paramsNames[1]);
-	mixParameter       = apvts.getRawParameterValue(paramsNames[2]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[3]);
+	m_driveParameter     = apvts.getRawParameterValue(paramsNames[0]);
+	m_volumeParameter    = apvts.getRawParameterValue(paramsNames[1]);
 }
 
 TubePreampAudioProcessor::~TubePreampAudioProcessor()
@@ -102,13 +113,24 @@ void TubePreampAudioProcessor::changeProgramName (int index, const juce::String&
 void TubePreampAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = int(sampleRate);
+	
+	const float frequency = std::fminf(19000.0f, (0.5f * 0.9f) * (float)sampleRate);
 
-	for (int channel = 0; channel < 2; channel++)
+	for (int channel = 0; channel < N_CHANNELS; channel++)
 	{
 		for (int stage = 0; stage < N_STAGES; stage++)
 		{
 			m_tubeEmulation[channel][stage].init(sr);
 		}
+
+		m_preFilter[channel].init(sr);
+		m_postFilter[channel].init(sr);
+
+		m_preFilter[channel].setHighPass(20.0f, 0.9f);
+		m_postFilter[channel].setLowPass(frequency, 0.9f);
+
+		m_envelopeFollower[channel].init(sr);
+		m_envelopeFollower[channel].set(10.0f, 100.0f);
 	}
 }
 
@@ -145,39 +167,50 @@ bool TubePreampAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 
 void TubePreampAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
-	const auto drive = driveParameter->load();
-	const auto stages = stagesParameter->load();
-	const auto mix = mixParameter->load();
-	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto drivedB = m_driveParameter->load();
+	const auto drive = juce::Decibels::decibelsToGain(drivedB);
+	const auto volume = juce::Decibels::decibelsToGain(m_volumeParameter->load());
 
 	// Mics constants
-	const auto mixInverse = 1.0f - mix;
-	const auto drivePerStage = drive / stages;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const float drivePerStagedB = drivedB / (float)N_STAGES;
+	const float drivePerStage = juce::Decibels::decibelsToGain(drivePerStagedB);
 
-	for (int channel = 0; channel < channels; ++channel)
+	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		for (int stage = 0; stage < stages; stage++)
-		{
-			 m_tubeEmulation[channel][stage].set(drivePerStage);
-		}
+		auto& tubeEmulation = m_tubeEmulation[channel];
+		auto& preFilter = m_preFilter[channel];
+		auto& postFilter = m_postFilter[channel];
+		auto& envelopeFollower = m_envelopeFollower[channel];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
+			// Get input
 			const float in = channelBuffer[sample];
-			
+
 			float out = in;
-			for (int stage = 0; stage < stages; stage++)
-			{
-				out = m_tubeEmulation[channel][stage].process(out);
-			}
+
+			const float envelope = envelopeFollower.process(drive * in);
+
+			const float bias = Math::remap(envelope, 0.1f, 0.6f, 0.00f, 0.15f);
+
+			out = tubeEmulation[0].process(drivePerStage * out + bias);
+			out = tubeEmulation[1].process(drivePerStage * out - bias);
+			out = tubeEmulation[2].process(drivePerStage * out + bias);
+			out = tubeEmulation[3].process(drivePerStage * out - bias);
+			out = tubeEmulation[4].process(drivePerStage * out + bias);
+			out = tubeEmulation[5].process(drivePerStage * out - bias);
+			out = tubeEmulation[6].process(drivePerStage * out + bias);
+			out = tubeEmulation[7].process(drivePerStage * out - bias);
 			
-			channelBuffer[sample] = volume * (mixInverse * in + mix * out);
+			channelBuffer[sample] = volume * postFilter.processDF1(preFilter.processDF1(out));
 		}
 	}
 }
@@ -217,9 +250,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout TubePreampAudioProcessor::cr
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f, 18.0f, 0.1f,  1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, (float)N_STAGES, 1.0f,  1.0f), 2.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f,  1.0f, 0.01f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f, 18.0f, 0.1f,  1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f, 18.0f, 0.1f,  1.0f), 0.0f));
 
 	return layout;
 }

@@ -2,19 +2,18 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
-class MultiAllPassAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class MultiAllPassAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     MultiAllPassAudioProcessorEditor (MultiAllPassAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~MultiAllPassAudioProcessorEditor() override;
 
-	// GUI setup
-	static const int N_SLIDERS = 4;
-	static const int TYPE_BUTTON_GROUP = 1;
+	static const int CANVAS_WIDTH = 1 + 4 * 3 + 1;
+	static const int CANVAS_HEIGHT = 2 + 4 + 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -28,19 +27,16 @@ private:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	juce::Label m_labels[N_SLIDERS] = {};
-	juce::Slider m_sliders[N_SLIDERS] = {};
-	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+	PluginNameComponent m_pluginLabel;
 
-	juce::Label automationTLabel;
-	juce::Label smoothingTypeLabel;
-	juce::Label detectionTypeLabel;
+	ModernRotarySlider m_frequencySlider;
+	ModernRotarySlider m_styleSlider;
+	ModernRotarySlider m_intensitySlider;
+	ModernRotarySlider m_volumeSlider;
 
-	juce::TextButton type1Button{ "1" };
-	juce::TextButton type2Button{ "2" };
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button1Attachment;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button2Attachment;
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiAllPassAudioProcessorEditor)
 };

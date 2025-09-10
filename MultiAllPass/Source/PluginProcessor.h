@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Filters/AllPassFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 
 //==============================================================================
 class MultiAllPassAudioProcessor  : public juce::AudioProcessor
@@ -15,11 +16,13 @@ public:
     MultiAllPassAudioProcessor();
     ~MultiAllPassAudioProcessor() override;
 
-	static const int N_ALL_PASS_FO = 100;
 	static const int N_ALL_PASS_SO = 50;
-	static const int FREQUENCY_MIN = 20;
-	static const int FREQUENCY_MAX = 20000;
+	static const int FREQUENCY_MIN = 40;
+	static const int FREQUENCY_MAX = 18000;
+	static const int N_CHANNELS = 2;
 	static const std::string paramsNames[];
+	static const std::string labelNames[];
+	static const std::string paramsUnitNames[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -54,15 +57,6 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-	inline float FrequencyToMel(float frequency)
-	{
-		return 2595.0f * log10f(1.0f + frequency / 700.0f);
-	}
-	inline float MelToFrequency(float mel)
-	{
-		return 700.0f * (powf(10.0f, mel / 2595.0f) - 1.0f);
-	}
-
 	using APVTS = juce::AudioProcessorValueTreeState;
 	static APVTS::ParameterLayout createParameterLayout();
 
@@ -70,17 +64,15 @@ public:
 
 private:	
 	//==============================================================================
+	SecondOrderAllPassMulti m_secondOrderAllPassMulti[N_CHANNELS] = {};
 
+	OnePoleLowPassFilter m_frequencySmoother;
+	OnePoleLowPassFilter m_styleSmoother;
+	
 	std::atomic<float>* frequencyParameter = nullptr;
 	std::atomic<float>* styleParameter = nullptr;
 	std::atomic<float>* intensityParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
-
-	juce::AudioParameterBool* button1Parameter = nullptr;
-	juce::AudioParameterBool* button2Parameter = nullptr;
-
-	FirstOrderAllPass m_firstOrderAllPass[N_ALL_PASS_FO * 2] = {};
-	SecondOrderAllPass m_secondOrderAllPass[N_ALL_PASS_SO * 2] = {};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiAllPassAudioProcessor)
 };

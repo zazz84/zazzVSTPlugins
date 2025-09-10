@@ -2,17 +2,17 @@
 
 <JUCERPROJECT id="qWJU3b" name="MultiAllPass" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildVST3" companyName="zazz">
+              pluginFormats="buildVST3" companyName="zazz" version="1.1.0">
   <MAINGROUP id="VP3aAM" name="MultiAllPass">
     <GROUP id="{473F39D3-BC99-0F4C-B304-770E0D855410}" name="Source">
-      <FILE id="kGUc1Y" name="AllPassFilters .cpp" compile="1" resource="0"
-            file="../Shared/Filters/AllPassFilters .cpp"/>
+      <FILE id="fbrd4E" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="sTsdhy" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="YJMVUm" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="tT1HuT" name="AllPassFilters.h" compile="0" resource="0"
             file="../Shared/Filters/AllPassFilters.h"/>
-      <FILE id="bzzBxa" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="CF27Pw" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="jYALQC" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="xKQ9kt" name="PluginProcessor.h" compile="0" resource="0"

@@ -221,7 +221,7 @@ public:
 		b2 = 1.0f + alpha;
 		a0 = b2;
 		a1 = b1;
-		a2 = 1.0f - alpha;
+		a2 = b0;
 		
 		normalize();
 	}

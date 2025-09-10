@@ -2,12 +2,15 @@
 
 <JUCERPROJECT id="i3TTnC" name="TubePreamp" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
+              version="1.2.0">
   <MAINGROUP id="gAV9Un" name="TubePreamp">
     <GROUP id="{F320680C-B086-EF7F-9E4F-400CC5B75939}" name="Source">
+      <FILE id="qofFBN" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="CdsixZ" name="EnvelopeFollowers.h" compile="0" resource="0"
+            file="../Shared/Dynamics/EnvelopeFollowers.h"/>
+      <FILE id="aT2Zpg" name="TubeEmulation.h" compile="0" resource="0" file="../Shared/NonLinearFilters/TubeEmulation.h"/>
       <FILE id="i2wFhv" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
-      <FILE id="XgHgFv" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="ARqKsY" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="c8VBOB" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -15,6 +18,10 @@
             file="Source/PluginProcessor.h"/>
       <FILE id="TL1TZx" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
+      <FILE id="mMn07e" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="FqmqFd" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
       <FILE id="oBDijA" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
