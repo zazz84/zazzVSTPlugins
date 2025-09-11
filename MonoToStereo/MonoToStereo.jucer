@@ -2,26 +2,25 @@
 
 <JUCERPROJECT id="hp3Dvc" name="MonoToStereo" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Spatial"
+              version="1.1.0">
   <MAINGROUP id="U155NE" name="MonoToStereo">
     <GROUP id="{58E2F63A-3F56-16DE-1A12-ACD3EDD8B2B5}" name="Source">
       <FILE id="gRFJDc" name="SinOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SinOscillator.h"/>
-      <FILE id="Pb12yH" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="z9TmC2" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="YHey2a" name="OnePoleFilters.h" compile="0" resource="0"
             file="../Shared/Filters/OnePoleFilters.h"/>
       <FILE id="JkeJ4j" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="dovGQh" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
-      <FILE id="XTnNeS" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="XOofA2" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="CUf5hJ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="MObOFA" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
+      <FILE id="mrdkxC" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="V0QDcl" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
       <FILE id="hZzpli" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="taIhNC" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>

@@ -14,6 +14,7 @@
 //==============================================================================
 
 const std::string MonoToStereoAudioProcessor::paramsNames[] = { "Delay", "Width", "Color", "Modulation", "Volume" };
+const std::string MonoToStereoAudioProcessor::labelNames[] =  { "Delay", "Width", "Color", "Modulation", "Volume" };
 const std::string MonoToStereoAudioProcessor::paramsUnitNames[] = { " ms", " %", " %", " %", " dB" };
 const float MonoToStereoAudioProcessor::MINIMUM_DELAY_TIME_MS = 1.0f;
 const float MonoToStereoAudioProcessor::MAXIMUM_DELAY_TIME_MS = 30.0f;
