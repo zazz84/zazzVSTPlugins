@@ -6,7 +6,7 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Oscillators/SinOscillator.h"
-
+#include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
 
 //==============================================================================
 class MonoToStereoAudioProcessor  : public juce::AudioProcessor
@@ -19,6 +19,20 @@ public:
     //==============================================================================
     MonoToStereoAudioProcessor();
     ~MonoToStereoAudioProcessor() override;
+
+	enum ParamsName
+	{
+		Delay,
+		Width,
+		Color,
+		HP,
+		Dynamic,
+		DynamicSpeed,
+		ModulationDepth,
+		ModulationSpeed,
+		Volume,
+		COUNT
+	};
 
 	static const std::string paramsNames[];
 	static const std::string labelNames[];
@@ -68,18 +82,37 @@ public:
 
 	APVTS apvts{ *this, nullptr, "Parameters", createParameterLayout() };
 
+	float getStereoWidth()
+	{
+		const auto mid = m_envelopeMid.process(0.0f);
+		const auto side = m_envelopeSide.process(0.0f);
+			
+		const float stereoWidth = 0.5f * side / (mid + 1e-6);		
+		return stereoWidth;
+	}
+
 private:	
 	//==============================================================================
 	CircularBuffer m_buffer;
 	SinOscillator m_oscillator;
 	BiquadFilter m_colorFilter;
+	BiquadFilter m_HPFilter;
+	BranchingEnvelopeFollowerUnsafe<float> m_envelopeSlow;
+	BranchingEnvelopeFollowerUnsafe<float> m_envelopeFast;
+	BranchingEnvelopeFollowerUnsafe<float> m_envelopeMid;
+	BranchingEnvelopeFollowerUnsafe<float> m_envelopeSide;
 	OnePoleLowPassFilter m_delayTimeSmoother;
 	OnePoleLowPassFilter m_modulationSmoother;
+	OnePoleLowPassFilter m_wetSmoother;
 
 	std::atomic<float>* delayParameter = nullptr;
 	std::atomic<float>* widthParameter = nullptr;
 	std::atomic<float>* colorParameter = nullptr;
-	std::atomic<float>* modulationParameter = nullptr;
+	std::atomic<float>* HPParameter = nullptr;
+	std::atomic<float>* dynamicParameter = nullptr;
+	std::atomic<float>* dynamicSpeedParameter = nullptr;
+	std::atomic<float>* modulationDepthParameter = nullptr;
+	std::atomic<float>* modulationSpeedParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MonoToStereoAudioProcessor)

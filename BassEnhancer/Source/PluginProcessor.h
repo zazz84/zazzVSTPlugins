@@ -21,6 +21,7 @@
 
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/HighOrderBiquadFilter.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/LinkwitzRileyFilter.h"
 
 //==============================================================================
@@ -35,8 +36,18 @@ public:
 	BassEnhancerAudioProcessor();
 	~BassEnhancerAudioProcessor() override;
 
+	enum Param
+	{
+		Frequency,
+		Amount,
+		Drive,
+		Volume,
+		COUNT
+	};
+
 	static const std::string paramsNames[];
-	static const std::string paramsUnitNames[];
+	static const std::string labelsNames[];
+	static const std::string unitsNames[];
 	static const int N_CHANNELS = 2;
 
 	//==============================================================================
@@ -79,15 +90,10 @@ public:
 
 private:
 	//==============================================================================
-	std::array<BiquadFilter, N_CHANNELS> m_lowShelfFilter;
-	std::array<BiquadFilter, N_CHANNELS> m_lowShelfFilter2;
-	std::array<BiquadFilter, N_CHANNELS> m_peakFilter;
-	std::array<LinkwitzRileyFilter, N_CHANNELS> m_splitFilter;
+	std::array<ForthOrderLowPassFilter, N_CHANNELS> m_lowPassFilter;
+	std::array<ForthOrderHighPassFilter, N_CHANNELS> m_highPassFilter;
 
-	std::atomic<float>* frequencyParameter = nullptr;
-	std::atomic<float>* amountParameter = nullptr;
-	std::atomic<float>* driveParameter = nullptr;
-	std::atomic<float>* volumeParameter = nullptr;
+	std::array <std::atomic<float>*, Param::COUNT> m_parameters;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BassEnhancerAudioProcessor)
 };

@@ -19,22 +19,19 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
-class BassEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class BassEnhancerAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     BassEnhancerAudioProcessorEditor (BassEnhancerAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~BassEnhancerAudioProcessorEditor() override;
 
-	// GUI setup
-	static const int N_SLIDERS = 4;
-	static const int SLIDERS[];
-	static const float COLUMN_OFFSET[];
-	static const int N_ROWS = 1;
-	
+	static const int CANVAS_WIDTH = 1 + 4 * 3 + 1;
+	static const int CANVAS_HEIGHT = 2 + 4 + 1;
+
 	//==============================================================================
 	void paint (juce::Graphics&) override;
     void resized() override;
@@ -45,12 +42,18 @@ public:
 protected:
     BassEnhancerAudioProcessor& audioProcessor;
 
+	PluginNameComponent m_pluginLabel;
+
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	juce::Label m_pluginName;
-	juce::Label m_labels[N_SLIDERS] = {};
-	juce::Slider m_sliders[N_SLIDERS] = {};
-	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+	ModernRotarySlider m_frequencySlider;
+	ModernRotarySlider m_amountSlider;
+	ModernRotarySlider m_driveSlider;
+	ModernRotarySlider m_volumeSlider;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BassEnhancerAudioProcessorEditor)
 };

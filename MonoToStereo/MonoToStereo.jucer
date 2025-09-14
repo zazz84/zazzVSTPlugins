@@ -6,6 +6,12 @@
               version="1.1.0">
   <MAINGROUP id="U155NE" name="MonoToStereo">
     <GROUP id="{58E2F63A-3F56-16DE-1A12-ACD3EDD8B2B5}" name="Source">
+      <FILE id="BQCIYO" name="GroupLabelComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/GroupLabelComponent.h"/>
+      <FILE id="rOgjHG" name="StereoWidthMeterComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/StereoWidthMeterComponent.h"/>
+      <FILE id="rSw6Ha" name="EnvelopeFollowers.h" compile="0" resource="0"
+            file="../Shared/Dynamics/EnvelopeFollowers.h"/>
       <FILE id="gRFJDc" name="SinOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SinOscillator.h"/>
       <FILE id="z9TmC2" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="YHey2a" name="OnePoleFilters.h" compile="0" resource="0"

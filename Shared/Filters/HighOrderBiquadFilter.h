@@ -67,6 +67,11 @@ public:
 		m_filter1.setHighPass(frequency, 0.540f);
 		m_filter2.setHighPass(frequency, 1.310f);
 	};
+	inline void set(const float frequency, const float qFactor)
+	{
+		m_filter1.setHighPass(frequency, qFactor * 0.540f);
+		m_filter2.setHighPass(frequency, qFactor * 1.310f);
+	};
 	inline float process(const float in)
 	{
 		return m_filter1.processDF1(m_filter2.processDF1(in));
@@ -96,6 +101,11 @@ public:
 	{
 		m_filter1.setLowPass(frequency, 0.540f);
 		m_filter2.setLowPass(frequency, 1.310f);
+	};
+	inline void set(const float frequency, const float qFactor)
+	{
+		m_filter1.setLowPass(frequency, qFactor * 0.540f);
+		m_filter2.setLowPass(frequency, qFactor * 1.310f);
 	};
 	inline float process(const float in)
 	{

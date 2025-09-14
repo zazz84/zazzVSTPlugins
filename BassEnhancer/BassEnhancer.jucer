@@ -3,20 +3,20 @@
 <JUCERPROJECT id="j9hffh" name="BassEnhancer" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
-              version="1.1.0">
+              version="1.2.0">
   <MAINGROUP id="R1AzZN" name="BassEnhancer">
     <GROUP id="{D8352F7E-3FED-F62A-1F0E-9C5A87CF0AEB}" name="Source">
+      <FILE id="Ockrdl" name="HighOrderBiquadFilter.h" compile="0" resource="0"
+            file="../Shared/Filters/HighOrderBiquadFilter.h"/>
+      <FILE id="cfGjur" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="hPu36S" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
       <FILE id="wOhs6n" name="LinkwitzRileyFilter.h" compile="0" resource="0"
             file="../Shared/Filters/LinkwitzRileyFilter.h"/>
       <FILE id="N51VUe" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
       <FILE id="neAofy" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
-      <FILE id="TqJU8P" name="BiquadFilters.cpp" compile="1" resource="0"
-            file="../Shared/Filters/BiquadFilters.cpp"/>
       <FILE id="FdO0QH" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="poLZrF" name="ZazzAudioProcessorEditor.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzAudioProcessorEditor.h"/>
-      <FILE id="awycqp" name="ZazzLookAndFeel.h" compile="0" resource="0"
-            file="../Shared/GUI/ZazzLookAndFeel.h"/>
       <FILE id="TN9Tdd" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="gaAGfB" name="PluginProcessor.h" compile="0" resource="0"

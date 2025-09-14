@@ -26,7 +26,8 @@
 //==============================================================================
 
 const std::string BassEnhancerAudioProcessor::paramsNames[] = { "Frequency", "Amount", "Drive", "Volume" };
-const std::string BassEnhancerAudioProcessor::paramsUnitNames[] = { "Hz", "%", " %", "dB" };
+const std::string BassEnhancerAudioProcessor::labelsNames[] = { "Frequency", "Amount", "Drive", "Volume" };
+const std::string BassEnhancerAudioProcessor::unitsNames[]  = { "Hz", "%", " %", "dB" };
 
 //==============================================================================
 BassEnhancerAudioProcessor::BassEnhancerAudioProcessor()
@@ -41,10 +42,10 @@ BassEnhancerAudioProcessor::BassEnhancerAudioProcessor()
 	)
 #endif
 {
-	frequencyParameter	= apvts.getRawParameterValue(paramsNames[0]);
-	amountParameter		= apvts.getRawParameterValue(paramsNames[1]);
-	driveParameter		= apvts.getRawParameterValue(paramsNames[2]);
-	volumeParameter		= apvts.getRawParameterValue(paramsNames[3]);
+	for (unsigned int i = 0u; i < Param::COUNT; i++)
+	{
+		m_parameters[i] = apvts.getRawParameterValue(paramsNames[i]);
+	}
 }
 
 BassEnhancerAudioProcessor::~BassEnhancerAudioProcessor()
@@ -118,17 +119,11 @@ void BassEnhancerAudioProcessor::prepareToPlay(double sampleRate, int samplesPer
 {
 	const int sr = (int)sampleRate;
 
-	m_peakFilter[0].init(sr);
-	m_peakFilter[1].init(sr);
+	m_lowPassFilter[0].init(sr);
+	m_lowPassFilter[1].init(sr);
 
-	m_lowShelfFilter[0].init(sr);
-	m_lowShelfFilter[1].init(sr);
-
-	m_lowShelfFilter2[0].init(sr);
-	m_lowShelfFilter2[1].init(sr);
-
-	m_splitFilter[0].init(sr);
-	m_splitFilter[1].init(sr);
+	m_highPassFilter[0].init(sr);
+	m_highPassFilter[1].init(sr);
 }
 
 void BassEnhancerAudioProcessor::releaseResources()
@@ -167,32 +162,34 @@ void BassEnhancerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, 
 	juce::ScopedNoDenormals noDenormals;
 
 	// Get params
-	const auto frequency = frequencyParameter->load();
-	const auto amount = 0.01f * amountParameter->load();
-	const auto drive = 0.01f * driveParameter->load();
-	const auto gain = Math::dBToGain(volumeParameter->load());
+	const auto frequency = m_parameters[Param::Frequency]->load();
+	const auto amount = 0.01f * m_parameters[Param::Amount]->load();
+	const auto drive = 0.01f * m_parameters[Param::Drive]->load();
+	const auto gain = Math::dBToGain(m_parameters[Param::Volume]->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
 	const auto driveDry = 1.0f - drive;
+	const auto driveWet = 0.18f * drive;
 
 	for (int channel = 0; channel < channels; ++channel)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		//Filters references
-		auto& lowShelfFilter = m_lowShelfFilter[channel];
-		auto& lowShelfFilter2 = m_lowShelfFilter2[channel];
-		auto& peakFilter = m_peakFilter[channel];
-		auto& splitFilter = m_splitFilter[channel];
+		// Filters
+		auto& lowPassFilter = m_lowPassFilter[channel];
+		auto& highPassFilter = m_highPassFilter[channel];
 
-		//Set filters
-		lowShelfFilter.setLowShelf(2.0f * frequency, 0.5f, 36.0f * amount);
-		lowShelfFilter2.setLowShelf(0.35f * frequency, 0.5f, -36.0f * amount);
-		peakFilter.setPeak(0.35f * frequency, 1.0f, -18.0f * amount);
-		splitFilter.set(2.0f * frequency);
+		// Set filters
+		const float q1 = 1.7f;
+		const float q2 = 1.0f;
+		const float f1 = frequency / std::sqrtf(1.0f - 1.0f / (4.0f * q1 * q1));			// Calculate resonat frequency for LP filter
+		const float f2 = 0.5f * frequency * std::sqrtf((2.0f - 1.0f / (q2 * q2)) / 2.0f);	// Calculate resonat frequency for HP filter
+
+		lowPassFilter.set	(f1, q1);
+		highPassFilter.set	(f2, q2);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
@@ -200,23 +197,14 @@ void BassEnhancerAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, 
 			const float in = channelBuffer[sample];
 
 			// Saturate
-			float lowSplit = splitFilter.processLP(in);
-			const float highSplit = splitFilter.processHP(in);
-			lowSplit = driveDry * lowSplit + 0.125f * drive * std::atanf(8.0f * lowSplit);
-			const float saturated = lowSplit + highSplit;
+			const float lowEnd = highPassFilter.process(8.0f * amount * lowPassFilter.process(in));
+			const float lowEndSaturated = driveDry * lowEnd + driveWet * Waveshapers::Tanh(lowEnd, 8.0f, 0.7f);
 
-			// Handle low end boost
-			float low = saturated;
-			low = lowShelfFilter.processDF1(low);
-			low = lowShelfFilter2.processDF1(low);
-			low = peakFilter.processDF1(low);
-
-			// Out
-			channelBuffer[sample] = saturated + low;
+			channelBuffer[sample] = in + lowEndSaturated;
 		}
 	}
 
-	buffer.applyGain(0.5f * gain);
+	buffer.applyGain(gain);
 }
 
 //==============================================================================

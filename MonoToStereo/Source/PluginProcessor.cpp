@@ -13,9 +13,9 @@
 
 //==============================================================================
 
-const std::string MonoToStereoAudioProcessor::paramsNames[] = { "Delay", "Width", "Color", "Modulation", "Volume" };
-const std::string MonoToStereoAudioProcessor::labelNames[] =  { "Delay", "Width", "Color", "Modulation", "Volume" };
-const std::string MonoToStereoAudioProcessor::paramsUnitNames[] = { " ms", " %", " %", " %", " dB" };
+const std::string MonoToStereoAudioProcessor::paramsNames[] =		{ "Delay", "Width", "LS/HS", "HP",  "DynamicAmount", "DynamicSpeed", "Depth", "ModulationSpeed", "Volume" };
+const std::string MonoToStereoAudioProcessor::labelNames[] =		{ "Delay", "Width", "LS/HS", "HP",  "Amount",		 "Speed",        "Depth", "Speed",           "Volume" };
+const std::string MonoToStereoAudioProcessor::paramsUnitNames[] =	{ " ms",   " %",    " %",    " Hz", " %",            " %",           " %",    " Hz",             " dB" };
 const float MonoToStereoAudioProcessor::MINIMUM_DELAY_TIME_MS = 1.0f;
 const float MonoToStereoAudioProcessor::MAXIMUM_DELAY_TIME_MS = 30.0f;
 const float MonoToStereoAudioProcessor::MINIMUM_MODULATION_FREQUENCY = 0.1f;
@@ -35,11 +35,15 @@ MonoToStereoAudioProcessor::MonoToStereoAudioProcessor()
                        )
 #endif
 {
-	delayParameter		= apvts.getRawParameterValue(paramsNames[0]);
-	widthParameter		= apvts.getRawParameterValue(paramsNames[1]);
-	colorParameter		= apvts.getRawParameterValue(paramsNames[2]);
-	modulationParameter	= apvts.getRawParameterValue(paramsNames[3]);
-	volumeParameter		= apvts.getRawParameterValue(paramsNames[4]);
+	delayParameter				= apvts.getRawParameterValue(paramsNames[ParamsName::Delay]);
+	widthParameter				= apvts.getRawParameterValue(paramsNames[ParamsName::Width]);
+	colorParameter				= apvts.getRawParameterValue(paramsNames[ParamsName::Color]);
+	HPParameter					= apvts.getRawParameterValue(paramsNames[ParamsName::HP]);
+	dynamicParameter			= apvts.getRawParameterValue(paramsNames[ParamsName::Dynamic]);
+	dynamicSpeedParameter		= apvts.getRawParameterValue(paramsNames[ParamsName::DynamicSpeed]);
+	modulationDepthParameter	= apvts.getRawParameterValue(paramsNames[ParamsName::ModulationDepth]);
+	modulationSpeedParameter	= apvts.getRawParameterValue(paramsNames[ParamsName::ModulationSpeed]);
+	volumeParameter				= apvts.getRawParameterValue(paramsNames[ParamsName::Volume]);
 }
 
 MonoToStereoAudioProcessor::~MonoToStereoAudioProcessor()
@@ -117,13 +121,27 @@ void MonoToStereoAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 
 	m_modulationSmoother.init(sr);
 	m_modulationSmoother.set(2.0f);
+	m_wetSmoother.init(sr);
+	m_wetSmoother.set(20.0f);
 
 	const int samples = static_cast<int>(static_cast<double>(MAXIMUM_DELAY_TIME_MS) * 0.001 * sampleRate);
 	m_buffer.init(samples);
 
 	m_colorFilter.init(sr);
+	m_HPFilter.init(sr);
 
 	m_oscillator.init(sr);
+
+	m_envelopeSlow.init(sr);
+	m_envelopeSlow.set(50, 200.0f);
+
+	m_envelopeFast.init(sr);
+	m_envelopeFast.set(1.0f, 40.0f);
+
+	m_envelopeMid.init(sr);
+	m_envelopeMid.set(0.3f, 40.0f);
+	m_envelopeSide.init(sr);
+	m_envelopeSide.set(0.3f, 40.0f);
 }
 
 void MonoToStereoAudioProcessor::releaseResources()
@@ -171,52 +189,105 @@ void MonoToStereoAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 	
 	// Get params
 	const auto delayTime = delayParameter->load();
-	const auto mix = MAXIMUM_WET * sqrtf(0.01f * widthParameter->load());
+	const auto width = MAXIMUM_WET * sqrtf(0.01f * widthParameter->load());
 	const auto color = 0.01f * colorParameter->load();
-	const auto modulation = 0.01f * modulationParameter->load();
-	const auto gainCompensation = mix * 12.0f * color;
+	const auto hpFrequency = HPParameter->load();
+	const auto dynamic = 0.01f * dynamicParameter->load();
+	const auto dynamicSpeed = 0.01f * dynamicSpeedParameter->load();
+	const auto modulationDepth = 0.01f * modulationDepthParameter->load();
+	const auto modulationSpeed = modulationSpeedParameter->load();
+	const auto gainCompensation = width * 12.0f * std::fabsf(color);
 	const auto gain = Math::dBToGain(volumeParameter->load() + gainCompensation);
 
 	// Mics constants
 	const auto sampleRateMS = static_cast<float>(0.001 * getSampleRate());
 	const auto samples = buffer.getNumSamples();
 
+	// Set dynamic speed
+	m_envelopeSlow.set(50.0f + (1.0f - dynamicSpeed) * 950.0f, 200.0f);
+
 	// Left and right channel read pointers
 	auto* leftChannel = buffer.getWritePointer(0);
 	auto* rightChannel = buffer.getWritePointer(1);
 
 	// Set color filter
-	m_colorFilter.setLowShelf(800.0f, 0.707f, -12.0f * color);
-
-	for (int sample = 0; sample < samples; ++sample)
+	if (color > 0.0f)
 	{
+		m_colorFilter.setLowShelf(800.0f, 0.707f, -12.0f * color);
+	}
+	else
+	{
+		m_colorFilter.setHighShelf(2000.0f, 0.707f, 12.0f * color);
+	}
+
+	m_HPFilter.setHighPass(hpFrequency, 0.707f);
+
+	for (int sample = 0; sample < samples; sample++)
+	{
+		// Get inputs
+		const float inLeft = leftChannel[sample];
+		const float inRight = rightChannel[sample];
+		const float inSum = inLeft + inRight;
+		
 		// Get delayed sample
 		const auto delayTimeSmooth = m_delayTimeSmoother.process(delayTime);
 		const auto delaySamples = static_cast<int>(delayTimeSmooth * sampleRateMS);
-		const auto delayedSample = m_colorFilter.processDF1(m_buffer.readDelay(delaySamples));
+		const auto delayedSample = m_HPFilter.processDF1(m_colorFilter.processDF1(m_buffer.readDelay(delaySamples)));
 
-		// Handle modulation
-		const auto modulationSmooth = m_modulationSmoother.process(modulation);
-		const auto modulationFrequency = Math::remap(modulationSmooth, 0.0f, 1.0f, MINIMUM_MODULATION_FREQUENCY, MAXIMUM_MODULATION_FREQUENCY);
-		m_oscillator.set(modulationFrequency);
+		// Handle dynamic width
+		const float envelopeIn = std::fabsf(inSum);
+		// Add 1e-6 to avoid division by 0. Envelope output is alway > 0
+		const float envelopeSlow = 1e-6f + m_envelopeSlow.process(envelopeIn);
+		const float envelopeFast = m_envelopeFast.process(envelopeIn);
+
+		const float difference = envelopeFast / envelopeSlow;
+		const float differencedB = Math::gainTodB(difference);
+
+		constexpr float LIMIT_DB = 12.0f;
+
+		float wD = 0.0f;		
+		if (dynamic > 0.0f)
+		{
+			wD = Math::remap(differencedB, 0.0f, LIMIT_DB, 0.0f, 1.0f);
+		}
+		else
+		{
+			wD = Math::remap(differencedB, 0.0f, LIMIT_DB, 1.0f, 0.0f);
+		}
+
+		// MAYBE???
+		// TODO: Better remaping of wD to width
+		wD = std::sqrtf(wD);
+
+		const float dynamicAbs = std::fabsf(dynamic);
+		const float widthDynamic = dynamicAbs * wD * width + (1.0f - dynamicAbs) * width;
+		
+		// Handle modulationDepth
+		const auto modulationDepthSmooth = m_modulationSmoother.process(modulationDepth);
+		m_oscillator.set(modulationSpeed);
 		const auto oscilator = m_oscillator.process();
-		const auto wetModulation = (0.5f * 0.5f * MAXIMUM_WET) * oscilator * modulationSmooth;		// Maximum modulation is 50% of width range
-
-		// Get wet modulater
-		const auto wetModulated = Math::clamp(mix + wetModulation, 0.0f, MAXIMUM_WET);
+		const auto wetModulated = modulationSpeed > 0.0f ? widthDynamic * (1.0f - 0.5f * (oscilator + 1.0f) * modulationDepthSmooth) : widthDynamic;
+		// Smooth because there were some artefacts when dynamic mode (-100%)
+		const auto wetModulatedSmooth = m_wetSmoother.process(wetModulated);
 		
 		// Store current sample
-		const float inLeft = leftChannel[sample];
-		const float inRight = rightChannel[sample];	
-		m_buffer.write(inLeft + inRight);
+		m_buffer.write(inSum);
 
 		// Calculate output
-		const float out = gain * wetModulated * delayedSample;
-		const float dry = gain * (1.0f - wetModulated);
+		const float outWet = gain * wetModulatedSmooth * delayedSample;
+		const float dry = gain * (1.0f - wetModulatedSmooth);
 
 		// Apply wer/dry
-		leftChannel[sample] = dry * inLeft + out;
-		rightChannel[sample] = dry * inRight - out;
+		const auto outLeft  = dry * inLeft + outWet;
+		const auto outRight = dry * inRight - outWet;
+
+		leftChannel[sample] = outLeft;
+		rightChannel[sample] = outRight;
+
+		// Update stereo width envelopes
+		m_envelopeMid.process(outLeft + outRight);
+		m_envelopeSide.process(outLeft - outRight);
+
 	}
 }
 
@@ -254,11 +325,15 @@ juce::AudioProcessorValueTreeState::ParameterLayout MonoToStereoAudioProcessor::
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( MINIMUM_DELAY_TIME_MS, MAXIMUM_DELAY_TIME_MS, 0.1f, 0.7f), 10.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 50.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::Delay],				paramsNames[ParamsName::Delay],				NormalisableRange<float>( MINIMUM_DELAY_TIME_MS, MAXIMUM_DELAY_TIME_MS, 0.1f, 0.7f), 10.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::Width],				paramsNames[ParamsName::Width],				NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::Color],				paramsNames[ParamsName::Color],				NormalisableRange<float>(-100.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::HP],					paramsNames[ParamsName::HP],				NormalisableRange<float>(  20.0f, 440.0f,  1.0f, 1.0f), 20.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::Dynamic],			paramsNames[ParamsName::Dynamic],			NormalisableRange<float>(-100.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::DynamicSpeed],		paramsNames[ParamsName::DynamicSpeed],		NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::ModulationDepth],	paramsNames[ParamsName::ModulationDepth],	NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::ModulationSpeed],	paramsNames[ParamsName::ModulationSpeed],	NormalisableRange<float>(   0.0f,  10.0f, 0.01f, 0.5f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[ParamsName::Volume],				paramsNames[ParamsName::Volume],			NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),  0.0f));
 
 	return layout;
 }
