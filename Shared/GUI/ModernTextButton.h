@@ -48,8 +48,10 @@ public:
 		const auto width = getWidth();
 		const auto height = getHeight();
 
-		m_textButton.setSize(width, height);
-		m_textButton.setTopLeftPosition(0, 0);
+		const auto border = height * m_border / 100;
+
+		m_textButton.setSize(width - border - border, height - border - border);
+		m_textButton.setTopLeftPosition(border, border);
 	}
 
 	inline void resized() override
@@ -57,8 +59,20 @@ public:
 		const auto width = getWidth();
 		const auto height = getHeight();
 
-		m_textButton.setSize(width, height);
-		m_textButton.setTopLeftPosition(0, 0);
+		const auto border = height * m_border / 100;
+
+		m_textButton.setSize(width - border - border, height - border - border);
+		m_textButton.setTopLeftPosition(border, border);
+	}
+
+	void setRadioGroupId(int newGroupId)
+	{
+		m_textButton.setRadioGroupId(newGroupId);
+	}
+
+	void setBorder(int border)
+	{
+		m_border = border;
 	}
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
@@ -66,6 +80,8 @@ public:
 
 	juce::TextButton m_textButton;
 	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> m_textButtonAttachment;
+
+	int m_border = 0; // [0, 100] percentage
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
