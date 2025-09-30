@@ -274,6 +274,8 @@ public:
 	};
 	inline void release() noexcept
 	{
+		reset();
+
 		a0 = 0.0f;
 		a1 = 0.0f;
 		a2 = 0.0f;
@@ -282,13 +284,16 @@ public:
 		b1 = 0.0f;
 		b2 = 0.0f;
 
+		m_samplePeriod = 2.08e-5f;
+	};
+	// Resets samples history
+	inline void reset() noexcept
+	{
 		x1 = 0.0f;
 		x2 = 0.0f;
 
 		y1 = 0.0f;
 		y2 = 0.0f;
-
-		m_samplePeriod = 2.08e-5f;
 	};
 
 	std::function<void(const float, const float, const float)> set;

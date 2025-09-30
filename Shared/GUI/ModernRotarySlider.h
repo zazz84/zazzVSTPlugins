@@ -351,7 +351,6 @@ public:
 class ModernRotarySlider : public juce::Component, public juce::Slider::Listener
 {
 public:
-
 	ModernRotarySlider(juce::AudioProcessorValueTreeState& vts, const std::string name, const std::string unit, const std::string label) : valueTreeState(vts), m_name(name), m_unit(unit), m_label(label)
 	{
 		// Use custom lookAndFeel
