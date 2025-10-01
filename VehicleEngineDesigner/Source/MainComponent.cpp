@@ -4,31 +4,29 @@
 MainComponent::MainComponent()
 {
 	addAndMakeVisible(waveformDisplaySource);
+	addAndMakeVisible(waveformDisplayOutput);
 	
 	// Labels
+	//
+	addAndMakeVisible(m_sourceFileNameLabel);
+	m_sourceFileNameLabel.setText("--- empty ---", juce::dontSendNotification);
+	m_sourceFileNameLabel.setJustificationType(juce::Justification::centred);
+
+	addAndMakeVisible(m_regionLenghtMedianLabel);
+	m_regionLenghtMedianLabel.setText("", juce::dontSendNotification);
+	m_regionLenghtMedianLabel.setJustificationType(juce::Justification::centred);
+	
 	//
 	addAndMakeVisible(m_detectedFrequencySlider);
 	m_detectedFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_detectedFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_detectedFrequencySlider.setRange(1.0, 1000.0, 1.0);   // min, max, step
+	m_detectedFrequencySlider.setRange(2.0, 200.0, 1.0);   // min, max, step
 	m_detectedFrequencySlider.setValue(50.0);              // initial value
 
 	addAndMakeVisible(m_detectedFrequencyLabel);
 	m_detectedFrequencyLabel.setText("Detected frequency", juce::dontSendNotification);
 
 	m_detectedFrequencyLabel.attachToComponent(&m_detectedFrequencySlider, true);
-
-	//
-	addAndMakeVisible(m_regionLenghtSlider);
-	m_regionLenghtSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_regionLenghtSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_regionLenghtSlider.setRange(0.0, 5000.0, 1.0);        // min, max, step
-	m_regionLenghtSlider.setValue(0.0);                     // initial value
-
-	addAndMakeVisible(m_regionLenghtLabel);
-	m_regionLenghtLabel.setText("Region Lenght", juce::dontSendNotification);
-	
-	m_regionLenghtLabel.attachToComponent(&m_regionLenghtSlider, true);
 
 	//
 	addAndMakeVisible(m_regionOffsetLenghtSlider);
@@ -69,18 +67,16 @@ MainComponent::MainComponent()
 
 	// Buttons
 	addAndMakeVisible(&m_openSourceButton);
-	m_openSourceButton.setButtonText("Open...");
+	m_openSourceButton.setButtonText("Open");
 	m_openSourceButton.onClick = [this] { openSourceButtonClicked(); };
 
 	addAndMakeVisible(&m_detectFrequencyButton);
-	m_detectFrequencyButton.setButtonText("Detect Freqeuncy");
+	m_detectFrequencyButton.setButtonText("Detect Frequency");
 	m_detectFrequencyButton.onClick = [this] { detectFrequencyButtonClicked(); };
-	m_detectFrequencyButton.setEnabled(false);
 
 	addAndMakeVisible(&m_detectRegionsButton);
 	m_detectRegionsButton.setButtonText("Detect Regions");
 	m_detectRegionsButton.onClick = [this] { detectRegionsButtonClicked(); };
-	m_detectRegionsButton.setEnabled(false);
 
 	addAndMakeVisible(&m_generateButton);
 	m_generateButton.setButtonText("Generate");
@@ -94,17 +90,21 @@ MainComponent::MainComponent()
 	addAndMakeVisible(&m_playButton);
 	m_playButton.setButtonText("Play");
 	m_playButton.onClick = [this] { playSourceButtonClicked(); };
-	m_playButton.setEnabled(false);
 
-	addAndMakeVisible(&m_stopButton);
-	m_stopButton.setButtonText("Stop");
-	m_stopButton.onClick = [this] { stopSourceButtonClicked(); };
-	m_stopButton.setEnabled(false);
+	addAndMakeVisible(&m_sourceButton);
+	m_sourceButton.setButtonText("Source");
+	m_sourceButton.onClick = [this] { sourceButtonClicked(); };
 
+	// Combo boxes
+	//
+	m_detectionTypeComboBox.addItem("Default", 1);
+	m_detectionTypeComboBox.addItem("Frequency limit", 2);
+	m_detectionTypeComboBox.setSelectedId(1);
+	addAndMakeVisible(m_detectionTypeComboBox);
+	
 	setSize(1600, 900);
 
-	formatManager.registerBasicFormats();       // [1]
-	m_transportSource.addChangeListener(this);   // [2]
+	m_formatManager.registerBasicFormats();       // [1]
 
 	setAudioChannels(0, 2);
 }
@@ -118,25 +118,44 @@ MainComponent::~MainComponent()
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-	m_transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-	if (readerSource.get() == nullptr)
+	if (m_sourceState == TransportState::Playing)
 	{
-		bufferToFill.clearActiveBufferRegion();
-		return;
-	}
+		auto& buffer = m_sourceType == SourceType::Source ? m_bufferSource : m_bufferOutput;
 
-	m_transportSource.getNextAudioBlock(bufferToFill);
+		auto numInputChannels = buffer.getNumChannels();
+		auto numOutputChannels = bufferToFill.buffer->getNumChannels();
+		auto outputSamplesRemaining = bufferToFill.numSamples;
+		auto outputSamplesOffset = bufferToFill.startSample;
+		
+		while (outputSamplesRemaining > 0)
+		{
+			auto bufferSamplesRemaining = buffer.getNumSamples() - m_playbackIndex;
+			auto samplesThisTime = juce::jmin(outputSamplesRemaining, bufferSamplesRemaining);
+			
+			for (auto channel = 0; channel < numOutputChannels; ++channel)
+			{
+				bufferToFill.buffer->copyFrom(channel, outputSamplesOffset, buffer, channel % numInputChannels, m_playbackIndex, samplesThisTime);
+			}
+			
+			outputSamplesRemaining -= samplesThisTime;
+			outputSamplesOffset += samplesThisTime;
+			m_playbackIndex += samplesThisTime; //
+			
+			if (m_playbackIndex >= buffer.getNumSamples())
+			{
+				TransportState::Stopped;
+				m_playbackIndex = 0;
+			}
+		}
+	}
 }
 
 void MainComponent::releaseResources()
 {
-	m_transportSource.releaseResources();
-	//m_bufferSource.clear();
-	//m_bufferOutput.clear();
 }
 
 //==============================================================================
@@ -147,31 +166,38 @@ void MainComponent::paint (juce::Graphics& g)
 
 	updateValidZeroCrossingIdx();
 
+	// Draw regions background
+	juce::Rectangle<float> rectangle(10.0f, 540.0f, (float)(getWidth() - 20), 160.0f);
+	g.setColour(juce::Colours::black);
+	g.fillRect(rectangle);
+
 	drawRegions(g);
 }
 
 void MainComponent::resized()
 {
-	const int row1 = 10;
-	const int row2 = row1 + 30 + 10;
-	const int row3 = row2 + 30;
-	const int row4 = row3 + 30 + 10;
-	const int row5 = row4 + 30;
-	const int row6 = row5 + 30;
-	const int row7 = row6 + 30;
-	const int row8 = row7 + 30 + 10;
-	const int row9 = row8 + 30;
-	const int row10 = row9 + 30 + 10;
-	const int row11 = row10 + 30;
-	const int row12 = row11 + 30;
+	const int EXTRA_SPACE = 20;
+	const int ROW_HEIGHT = 30;
+	const int pixelHeight = 20;
+	const int pixelHeight8 = 8 * pixelHeight;
+
+	const int row1 = EXTRA_SPACE;
+	const int row2 = row1 + ROW_HEIGHT + EXTRA_SPACE;
+	const int row3 = row2 + ROW_HEIGHT + EXTRA_SPACE;
+	const int row4 = row3 + ROW_HEIGHT;
+	const int row5 = row4 + ROW_HEIGHT + EXTRA_SPACE;
+	const int row6 = row5 + ROW_HEIGHT + EXTRA_SPACE;
+	const int row7 = row6 + ROW_HEIGHT + EXTRA_SPACE;
+	const int row8 = row7 + ROW_HEIGHT + EXTRA_SPACE;
+	const int row9 = row8 + ROW_HEIGHT + pixelHeight8;
+	const int row10 = row9 + ROW_HEIGHT + pixelHeight8;
 
 	const int width = getWidth();
 	
 	const int pixelWidth = 300;
 	const int pixelWidth2 = pixelWidth + pixelWidth;
+	const int pixelWidth3 = pixelWidth2 + pixelWidth;
 	const int pixelWidth4 = pixelWidth2 + pixelWidth2;
-
-	const int pixelHeight = 20;
 
 	const int column1 = (getWidth() / 2) - 600;
 	const int column2 = column1 + 300;
@@ -179,29 +205,38 @@ void MainComponent::resized()
 	const int column4 = column3 + 300;
 	
 	//
-	m_openSourceButton.setBounds			(column1, row1, pixelWidth4, pixelHeight);
+	m_openSourceButton.setBounds			(column1, row1, pixelWidth, pixelHeight);
+	m_sourceFileNameLabel.setBounds			(column2, row1, pixelWidth3, pixelHeight);
 	
-	m_detectFrequencyButton.setBounds		(column1, row2, pixelWidth4, pixelHeight);
-	m_detectedFrequencySlider.setBounds		(column2, row3, pixelWidth2, pixelHeight);
+	m_detectFrequencyButton.setBounds		(column1, row2, pixelWidth, pixelHeight);
+	m_detectedFrequencySlider.setBounds		(column4, row2, pixelWidth, pixelHeight);
 	
-	m_detectRegionsButton.setBounds			(column1, row4, pixelWidth4, pixelHeight);
-	m_regionLenghtSlider.setBounds			(column2, row5, pixelWidth2, pixelHeight);
-	m_regionOffsetLenghtSlider.setBounds	(column2, row6, pixelWidth2, pixelHeight);
+	m_detectRegionsButton.setBounds			(column1, row3, pixelWidth, pixelHeight);	
+	m_detectionTypeComboBox.setBounds		(column2, row3, pixelWidth, pixelHeight);
+	m_regionOffsetLenghtSlider.setBounds	(column4, row3, pixelWidth, pixelHeight);
 	
-	m_regionsCountLabel.setBounds			(column2, row7, pixelWidth, pixelHeight);
-	m_validRegionsCountLabel.setBounds		(column3, row7, pixelWidth, pixelHeight);
+	m_regionsCountLabel.setBounds			(column2, row4, pixelWidth, pixelHeight);
+	m_validRegionsCountLabel.setBounds		(column3, row4, pixelWidth, pixelHeight);
+	m_regionLenghtMedianLabel.setBounds		(column4, row4, pixelWidth, pixelHeight);
 	
-	m_regionLenghtExportSlider.setBounds	(column2, row8, pixelWidth2, pixelHeight);
-	m_generateButton.setBounds				(column1, row9, pixelWidth4, pixelHeight);
-	m_saveButton.setBounds					(column1, row10, pixelWidth4, pixelHeight);
+	m_generateButton.setBounds				(column1, row5, pixelWidth, pixelHeight);
+	m_regionLenghtExportSlider.setBounds	(column4, row5, pixelWidth, pixelHeight);
+	
+	m_saveButton.setBounds					(column1, row6, pixelWidth4, pixelHeight);
 
 	// Play buttons
-	m_playButton.setBounds					(column2, row11, pixelWidth, pixelHeight);
-	m_stopButton.setBounds					(column3, row11, pixelWidth, pixelHeight);
-
+	m_sourceButton.setBounds				(column2, row7, pixelWidth, pixelHeight);
+	m_playButton.setBounds					(column3, row7, pixelWidth, pixelHeight);
 	
-	// Waveform
-	juce::Rectangle rectangle = getLocalBounds();
-	rectangle.removeFromTop(450);
+	// Waveform source
+	juce::Rectangle<int> rectangle;
+	rectangle.setBounds(10, row8, getWidth() - 20, pixelHeight8);
 	waveformDisplaySource.setBounds(rectangle);
+
+	// Regions
+
+
+	// Waveform output
+	rectangle.setBounds(10, row10, getWidth() - 20, pixelHeight8);
+	waveformDisplayOutput.setBounds(rectangle);
 }

@@ -31,14 +31,26 @@ public:
 
 	static const int N_CHANNELS = 2;
 
+	enum Type
+	{
+		Default,
+		Frequency	// Limit minimum distance between zero crossings based on frequency
+	};
+
 	void init(const int sampleRate)
 	{
 		m_filter.init(sampleRate);
+		m_sampleRate = sampleRate;
 	}
 	void set(const float frequency, const int searchRange)
 	{
-		m_filter.setBandPassPeakGain(frequency, 0.707f);
+		m_filter.setBandPassPeakGain(frequency, 2.0f);
+		m_frequency = frequency;
 		m_searchRange = searchRange;
+	}
+	void setType(const int type)
+	{
+		m_type = static_cast<Type>(type - 1);
 	}
 	void process(const juce::AudioBuffer<float>& audioBuffer, std::vector<int>& regions)
 	{
@@ -70,27 +82,53 @@ public:
 		m_filter.reset();
 		
 		std::vector<int> m_zeroCrossingEstimatedIdx;
-
-		m_zeroCrossingEstimatedIdx.push_back(0);
-
 		auto* bufferSum = sumAudioBuffer.getWritePointer(0);
 
-		float inLast = m_filter.processDF1(bufferSum[0]);
-
-		for (int sample = 1; sample < samples; sample++)
+		if (m_type == Type::Default)
 		{
-			float in = bufferSum[sample];
-			in = m_filter.processDF1(in);
+			m_zeroCrossingEstimatedIdx.push_back(0);
 
-			if (inLast < 0.0f && in >= 0.0f)
+			float inLast = m_filter.processDF1(bufferSum[0]);
+
+			for (int sample = 1; sample < samples; sample++)
 			{
-				m_zeroCrossingEstimatedIdx.push_back(sample);
+				float in = bufferSum[sample];
+				in = m_filter.processDF1(in);
+
+				if (inLast < 0.0f && in >= 0.0f)
+				{
+					m_zeroCrossingEstimatedIdx.push_back(sample);
+				}
+
+				inLast = in;
 			}
 
-			inLast = in;
+			m_zeroCrossingEstimatedIdx.push_back(samples);
 		}
+		else if (m_type == Type::Frequency)
+		{
+			// Calculate minimum zero crossing distance
+			const int minDistance = (int)(0.8f * (float)m_sampleRate / m_frequency);
 
-		m_zeroCrossingEstimatedIdx.push_back(samples);
+			m_zeroCrossingEstimatedIdx.push_back(0);
+
+			float inLast = m_filter.processDF1(bufferSum[0]);
+
+			for (int sample = 1; sample < samples; sample++)
+			{
+				float in = bufferSum[sample];
+				in = m_filter.processDF1(in);
+
+				if (inLast < 0.0f && in >= 0.0f && sample - m_zeroCrossingEstimatedIdx.back() > minDistance)
+				{
+					m_zeroCrossingEstimatedIdx.push_back(sample);
+				}
+
+				inLast = in;
+			}
+
+			m_zeroCrossingEstimatedIdx.push_back(samples);
+		}
 
 		// Final zero corssing found in unfiltered signal
 		regions.resize(m_zeroCrossingEstimatedIdx.size());
@@ -112,6 +150,7 @@ public:
 
 				if (inLast < 0.0f && in >= 0.0f)
 				{
+					// Find closes sample to estimated zero crossing
 					if (std::abs(m_zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(m_zeroCrossingEstimatedIdx[segmentId] - closestIndex))
 					{
 						closestIndex = sample;
@@ -138,5 +177,8 @@ public:
 
 private:
 	BiquadFilter m_filter;
+	float m_frequency = 20.0f;
+	int m_sampleRate = 48000;
 	int m_searchRange = 100;
+	Type m_type = Type::Default;
 };

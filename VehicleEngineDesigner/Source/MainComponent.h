@@ -10,80 +10,6 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRateOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 
-//==============================================================================
-class BufferPositionableAudioSource : public juce::PositionableAudioSource
-{
-public:
-	BufferPositionableAudioSource(const juce::AudioBuffer<float>& bufferToUse,
-		bool shouldLoop = false)
-		: buffer(bufferToUse), looping(shouldLoop)
-	{
-	}
-
-	void prepareToPlay(int /*samplesPerBlockExpected*/, double /*sampleRate*/) override
-	{
-		currentPosition = 0;
-	}
-
-	void releaseResources() override {}
-
-	void getNextAudioBlock(const juce::AudioSourceChannelInfo& info) override
-	{
-		auto totalSamples = buffer.getNumSamples();
-		auto samplesNeeded = info.numSamples;
-		auto samplesCopied = 0;
-
-		while (samplesNeeded > 0)
-		{
-			if (currentPosition >= totalSamples)
-			{
-				if (looping)
-					currentPosition = 0;
-				else
-				{
-					info.buffer->clear(info.startSample + samplesCopied, samplesNeeded);
-					return;
-				}
-			}
-
-			auto samplesAvailable = totalSamples - currentPosition;
-			auto toCopy = std::min(samplesAvailable, samplesNeeded);
-
-			for (int ch = 0; ch < info.buffer->getNumChannels(); ++ch)
-			{
-				if (ch < buffer.getNumChannels())
-					info.buffer->copyFrom(ch, info.startSample + samplesCopied,
-						buffer, ch, currentPosition, toCopy);
-				else
-					info.buffer->clear(ch, info.startSample + samplesCopied, toCopy);
-			}
-
-			currentPosition += toCopy;
-			samplesCopied += toCopy;
-			samplesNeeded -= toCopy;
-		}
-	}
-
-	void setNextReadPosition(juce::int64 newPosition) override
-	{
-		currentPosition = (int)juce::jlimit((juce::int64)0,
-			(juce::int64) buffer.getNumSamples(),
-			newPosition);
-	}
-
-	juce::int64 getNextReadPosition() const override { return currentPosition; }
-
-	juce::int64 getTotalLength() const override { return buffer.getNumSamples(); }
-
-	bool isLooping() const override { return looping; }
-
-	void setLooping(bool shouldLoop) { looping = shouldLoop; }
-
-private:
-	const juce::AudioBuffer<float>& buffer;
-	int currentPosition{ 0 };
-	bool looping{ false };
-};
 
 //==============================================================================
 /*
@@ -108,13 +34,6 @@ public:
 
 	void changeListenerCallback(juce::ChangeBroadcaster* source) override
 	{
-		if (source == &m_transportSource)
-		{
-			if (m_transportSource.isPlaying())
-				changeState(Playing);
-			else
-				changeState(Stopped);
-		}
 	}
 
 private:
@@ -126,35 +45,11 @@ private:
 		Stopping
 	};
 
-	void changeState(TransportState newState)
+	enum SourceType
 	{
-		if (m_sourceState != newState)
-		{
-			m_sourceState = newState;
-
-			switch (m_sourceState)
-			{
-			case Stopped:                           
-				m_stopButton.setEnabled(false);
-				m_playButton.setEnabled(true);
-				m_transportSource.setPosition(0.0);
-				break;
-
-			case Starting:
-				m_playButton.setEnabled(false);
-				m_transportSource.start();
-				break;
-
-			case Playing:
-				m_stopButton.setEnabled(true);
-				break;
-
-			case Stopping:
-				m_transportSource.stop();
-				break;
-			}
-		}
-	}
+		Source,
+		Output
+	};
 
 	void openSourceButtonClicked()
 	{
@@ -167,42 +62,58 @@ private:
 
 				if (file != juce::File{})                                               
 				{
-					auto* reader = formatManager.createReaderFor(file);                 
+					auto* reader = m_formatManager.createReaderFor(file);                 
 
 					if (reader != nullptr)
-					{
-						auto newSource = std::make_unique<juce::AudioFormatReaderSource>(reader, true); 
-						m_transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-						m_playButton.setEnabled(true);                                                      
-						m_sampleRate = (int)reader->sampleRate;
-						readerSource.reset(newSource.release());                                         
+					{                                                  
+						m_sampleRate = (int)reader->sampleRate;                                        
 
 						// Create audio buffer
 						m_bufferSource.setSize((int)reader->numChannels, (int)reader->lengthInSamples);				
 						reader->read(&m_bufferSource, 0, (int)reader->lengthInSamples, 0, true, true);
-						m_bufferSourceMax = m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
 
-						m_detectFrequencyButton.setEnabled(true);
+						// Draw waveform
+						if (m_bufferSource.getNumSamples() != 0)
+						{
+							const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
+							waveformDisplaySource.setVerticalZoom(verticalZoom);
+							waveformDisplaySource.setAudioBuffer(m_bufferSource);
+						}
+
+						m_sourceFileNameLabel.setText(file.getFileName(), juce::dontSendNotification);
 					}
-
-					waveformDisplaySource.loadFile(file);
 				}
 			});
 	}
 
 	void playSourceButtonClicked()
-	{		
-		changeState(Starting);
-	}
-
-	void stopSourceButtonClicked()
 	{
-		changeState(Stopping);
+		if (m_sourceState == TransportState::Stopped)
+		{
+			if (m_sourceType == SourceType::Source && m_bufferSource.getNumSamples() != 0 || m_sourceType == SourceType::Output && m_bufferOutput.getNumSamples() != 0)
+			{
+				m_sourceState = TransportState::Playing;
+				m_playButton.setButtonText("Stop");
+			}
+		}
+		else if (m_sourceState == TransportState::Playing)
+		{
+			m_sourceState = TransportState::Stopped;
+			m_playButton.setButtonText("Play");
+			m_playbackIndex = 0;
+		}
 	}
 
 	void generateButtonClicked()
 	{
 		generateOutput();
+
+		if (m_bufferOutput.getNumSamples() != 0)
+		{
+			const float verticalZoom = 1.0f / m_bufferOutput.getMagnitude(0, m_bufferOutput.getNumSamples());
+			waveformDisplayOutput.setVerticalZoom(verticalZoom);
+			waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
+		}
 	}
 
 	void saveButtonClicked()
@@ -257,25 +168,26 @@ private:
 
 	void detectFrequencyButtonClicked()
 	{
+		if (m_bufferSource.getNumSamples() == 0)
+		{
+			return;
+		}
+		
 		ZeroCrossingRateOffline zeroCrossingRateOffline{};
 		zeroCrossingRateOffline.init(m_sampleRate);
-		zeroCrossingRateOffline.set(30, 80);
+		zeroCrossingRateOffline.set(2, 200);
 
 		m_detectedFrequency = 1.0f / zeroCrossingRateOffline.process(m_bufferSource);
 
-		// Dislay detected frequency
-		//m_detectedFrequencySlider.setText("Detected frequency: " + juce::String(m_detectedFrequency, 0) + " Hz", juce::dontSendNotification);
 		m_detectedFrequencySlider.setValue(m_detectedFrequency);
-
-		// Enable detect regions button
-		m_detectRegionsButton.setEnabled(true);
 	}
 
 	void detectRegionsButtonClicked()
-	{
+	{		
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
 		zeroCrossing.set(m_detectedFrequencySlider.getValue(), 100);
+		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
 
 		zeroCrossing.process(m_bufferSource, m_regions);
 		
@@ -290,11 +202,25 @@ private:
 			diff[i] = m_regions[i + 1] - m_regions[i];
 		}
 
-		const int median = getMedian(diff);
+		m_regionLenghtMedian = getMedian(diff);
 
-		m_regionLenghtSlider.setValue((float)median);
+		m_regionLenghtMedianLabel.setText("Region Lenght Median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);
 
 		repaint();
+	}
+
+	void sourceButtonClicked()
+	{
+		if (m_sourceType == SourceType::Source)
+		{
+			m_sourceButton.setButtonText("Output");
+			m_sourceType = SourceType::Output;
+		}
+		else if (m_sourceType == SourceType::Output)
+		{
+			m_sourceButton.setButtonText("Source");
+			m_sourceType = SourceType::Source;
+		}
 	}
 
 	//==========================================================================
@@ -302,13 +228,12 @@ private:
 	{
 		// Resample
 		const int regionsCount = m_validRegionsIdx.size();
-		const int regionLenght = (int)m_regionLenghtSlider.getValue();
 		const int regionLenghtExport = (int)m_regionLenghtExportSlider.getValue();
 		const int regionOffset = (int)m_regionOffsetLenghtSlider.getValue();
-		//const int regionLenght = 1000;
+		const int size = regionsCount * regionLenghtExport;
 
 		// Prepare out buffer
-		m_bufferOutput.setSize(m_bufferSource.getNumChannels(), regionsCount * regionLenghtExport);
+		m_bufferOutput.setSize(m_bufferSource.getNumChannels(), size);
 		m_bufferOutput.clear();
 
 		// TODO: Handling for stereo
@@ -329,6 +254,13 @@ private:
 			for (int i = 0; i < regionLenghtExport; i++)
 			{							
 				// TODO: Add linear interpolation
+				/*const int l = segmentStartIndex + (int)sourceIndex;
+				const int r = std::min(l + 1, size - 1);
+				const float d = sourceIndex - (int)sourceIndex;
+
+				const float out = pBufferSource[l] * (1.0f - d) + pBufferSource[r] * d;
+				pBufferOut[outIndex] = out;*/
+
 				pBufferOut[outIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
 
 				sourceIndex += indexIncrement;
@@ -346,10 +278,9 @@ private:
 		
 		m_validRegionsIdx.clear();
 
-		const int regionMedian = (int)m_regionLenghtSlider.getValue();
 		const int regionOffset = (int)m_regionOffsetLenghtSlider.getValue();
-		const int leftThreshold = regionMedian - regionOffset;
-		const int rightThreshold = regionMedian + regionOffset;
+		const int leftThreshold = m_regionLenghtMedian - regionOffset;
+		const int rightThreshold = m_regionLenghtMedian + regionOffset;
 
 		m_validRegionsIdx.push_back(0);
 
@@ -375,14 +306,12 @@ private:
 			return;
 		}
 
-		g.setColour(juce::Colours::red);
-
 		const int samples = m_bufferSource.getNumSamples();
-		const int width = getWidth();
+		const int width = getWidth() - 20;
 		const float factor = (float)width / (float)samples;
 
-		const int top = 350;																	  
-		const int bottom = 450;
+		const int top = 540;																	  
+		const int bottom = top + 160;
 
 		// Draw all regions
 		g.setColour(juce::Colours::red);
@@ -391,17 +320,17 @@ private:
 		{
 			const int x = factor * m_regions[region];                    
 														      
-			g.drawLine((float)x, (float)top, (float)x, (float)bottom, 1.0f);
+			g.drawLine((float)x + 10.0f, (float)top, (float)x + 10.0f, (float)bottom, 1.0f);
 		}
 		
 		// Draw valid regions
-		g.setColour(juce::Colours::green);
+		g.setColour(juce::Colours::whitesmoke);
 
 		for (int id = 0; id < m_validRegionsIdx.size() - 1; id++)
 		{
 			const int x = factor * m_regions[m_validRegionsIdx[id]];											
 
-			g.drawLine((float)x, (float)top, (float)x, (float)bottom, 3.0f);
+			g.drawLine((float)x + 10.0f, (float)top, (float)x + 10.0f, (float)bottom, 3.0f);
 		}
 	}
 
@@ -431,20 +360,25 @@ private:
 	juce::TextButton m_saveButton;
 
 	juce::TextButton m_playButton;
-	juce::TextButton m_stopButton;
+	juce::TextButton m_sourceButton;
 
+	// Sliders
 	juce::Slider m_detectedFrequencySlider;
-	juce::Slider m_regionLenghtSlider;
 	juce::Slider m_regionOffsetLenghtSlider;
 	juce::Slider m_regionLenghtExportSlider;
 	
+	// Labels
+	juce::Label m_sourceFileNameLabel;
 	juce::Label m_detectedFrequencyLabel;
-	juce::Label m_regionLenghtLabel;
+	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionOffsetLenghtLabel;
 	juce::Label m_regionLenghtExportLabel;
 	
 	juce::Label m_regionsCountLabel;
 	juce::Label m_validRegionsCountLabel;
+
+	// Combo boxes
+	juce::ComboBox m_detectionTypeComboBox;
 
 	//! Stores zero crossing points in source audio buffer
 	std::vector<int> m_regions{};
@@ -454,26 +388,23 @@ private:
 
 	std::unique_ptr<juce::FileChooser> chooser;
 
-	juce::AudioFormatManager formatManager;
-	std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
-	juce::AudioTransportSource m_transportSource;
+	juce::AudioFormatManager m_formatManager;
 	
 	juce::AudioBuffer<float> m_bufferSource;
-
 	juce::AudioBuffer<float> m_bufferOutput;
-	
-	TransportState m_sourceState = TransportState::Stopped;
-	int m_playbackIndex = 0;
-	
-	int m_sampleRate = 48000;
 
-	float m_bufferSourceMax = 0.0f;
+	WaveformComponent waveformDisplaySource;
+	WaveformComponent waveformDisplayOutput;
+
 	float m_detectedFrequency = 0.0f;
-	int m_greenRegionsCount = 0;
-	
-	WaveformDisplayComponent waveformDisplaySource;
-	WaveformDisplayComponent waveformDisplayOutput;
 
+	TransportState m_sourceState = TransportState::Stopped;
+	SourceType m_sourceType = SourceType::Source;
+
+	int m_regionLenghtMedian = 0;
+	int m_playbackIndex = 0;
+	int m_sampleRate = 48000;
+	
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
