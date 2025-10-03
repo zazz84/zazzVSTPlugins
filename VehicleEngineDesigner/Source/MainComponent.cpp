@@ -5,6 +5,7 @@ MainComponent::MainComponent()
 {
 	addAndMakeVisible(waveformDisplaySource);
 	addAndMakeVisible(waveformDisplayOutput);
+	addAndMakeVisible(m_regionsComponent);
 	
 	// Labels
 	//
@@ -42,6 +43,7 @@ MainComponent::MainComponent()
 
 	m_regionOffsetLenghtSlider.onValueChange = [this]()
 	{
+		updateValidZeroCrossingIdx();
 		repaint(); // triggers MyComponent::paint()
 	};
 
@@ -64,6 +66,27 @@ MainComponent::MainComponent()
 	//
 	addAndMakeVisible(m_validRegionsCountLabel);
 	m_validRegionsCountLabel.setJustificationType(juce::Justification::centred);
+
+	// Zoom	
+	addAndMakeVisible(m_zoomRegionLeft);
+	m_zoomRegionLeft.setEditable(true, true, false);  // user can click & type
+	m_zoomRegionLeft.setJustificationType(juce::Justification::centred);
+	m_zoomRegionLeft.setText("-1", juce::dontSendNotification);
+
+	m_zoomRegionLeft.onTextChange = [this]
+	{
+		setHorizontalZoom();
+	};
+
+	addAndMakeVisible(m_zoomRegionRight);
+	m_zoomRegionRight.setEditable(true, true, false);  // user can click & type
+	m_zoomRegionRight.setJustificationType(juce::Justification::centred);
+	m_zoomRegionRight.setText("-1", juce::dontSendNotification);
+
+	m_zoomRegionRight.onTextChange = [this]
+	{
+		setHorizontalZoom();
+	};
 
 	// Buttons
 	addAndMakeVisible(&m_openSourceButton);
@@ -98,7 +121,8 @@ MainComponent::MainComponent()
 	// Combo boxes
 	//
 	m_detectionTypeComboBox.addItem("Default", 1);
-	m_detectionTypeComboBox.addItem("Frequency limit", 2);
+	m_detectionTypeComboBox.addItem("Filter", 2);
+	m_detectionTypeComboBox.addItem("Frequency limit", 3);
 	m_detectionTypeComboBox.setSelectedId(1);
 	addAndMakeVisible(m_detectionTypeComboBox);
 	
@@ -161,17 +185,7 @@ void MainComponent::releaseResources()
 //==============================================================================
 void MainComponent::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-	updateValidZeroCrossingIdx();
-
-	// Draw regions background
-	juce::Rectangle<float> rectangle(10.0f, 540.0f, (float)(getWidth() - 20), 160.0f);
-	g.setColour(juce::Colours::black);
-	g.fillRect(rectangle);
-
-	drawRegions(g);
 }
 
 void MainComponent::resized()
@@ -225,18 +239,19 @@ void MainComponent::resized()
 	m_saveButton.setBounds					(column1, row6, pixelWidth4, pixelHeight);
 
 	// Play buttons
-	m_sourceButton.setBounds				(column2, row7, pixelWidth, pixelHeight);
-	m_playButton.setBounds					(column3, row7, pixelWidth, pixelHeight);
+	m_sourceButton.setBounds				(column1, row7, pixelWidth, pixelHeight);
+	m_playButton.setBounds					(column2, row7, pixelWidth, pixelHeight);
+
+	// Zoom
+	m_zoomRegionLeft.setBounds				(column3, row7, pixelWidth, pixelHeight);
+	m_zoomRegionRight.setBounds				(column4, row7, pixelWidth, pixelHeight);
 	
 	// Waveform source
-	juce::Rectangle<int> rectangle;
-	rectangle.setBounds(10, row8, getWidth() - 20, pixelHeight8);
-	waveformDisplaySource.setBounds(rectangle);
+	waveformDisplaySource.setBounds			(10, row8, getWidth() - 20, pixelHeight8);
 
 	// Regions
-
+	m_regionsComponent.setBounds			(10, row9, getWidth() - 20, pixelHeight8);
 
 	// Waveform output
-	rectangle.setBounds(10, row10, getWidth() - 20, pixelHeight8);
-	waveformDisplayOutput.setBounds(rectangle);
+	waveformDisplayOutput.setBounds			(10, row10, getWidth() - 20, pixelHeight8);
 }

@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <JuceHeader.h>
 
 class WaveformDisplayComponent : public juce::Component, private juce::ChangeListener
@@ -89,12 +91,20 @@ public:
 	void setAudioBuffer(const juce::AudioBuffer<float>& buffer)
 	{
 		audioBuffer = buffer;
+		m_rightIndex = buffer.getNumSamples();
 		repaint();
 	}
 
 	void setVerticalZoom(const float verticalZoom)
 	{
 		m_verticalZoom = verticalZoom;
+	}
+
+	void setHorizontalZoom(const int leftIndex, const int rightIndex)
+	{
+		m_leftIndex = leftIndex;
+		m_rightIndex = rightIndex;
+		repaint();
 	}
 
 	void paint(juce::Graphics& g) override
@@ -108,7 +118,10 @@ public:
 		auto width = getWidth();
 		auto height = getHeight();
 
-		int numSamples = audioBuffer.getNumSamples();
+		// Draw zero line
+		g.drawLine(0.0f, height / 2, width, height / 2, 1.0f);
+
+		//int numSamples = audioBuffer.getNumSamples();
 		auto* channelData = audioBuffer.getReadPointer(0); // take first channel
 
 		juce::Path path;
@@ -121,7 +134,8 @@ public:
 		for (int x = 0; x < width; ++x)
 		{
 			// Find sample corresponding to this pixel (nearest-neighbour downsampling)
-			auto sampleIndex = juce::jmap<int>(x, 0, width, 0, numSamples - 1);
+			//auto sampleIndex = juce::jmap<int>(x, 0, width, 0, numSamples - 1);
+			auto sampleIndex = juce::jmap<int>(x, 0, width, m_leftIndex, m_rightIndex - 1);
 			float level = channelData[sampleIndex];
 
 			// Map sample value (-1..1) to vertical pixel position
@@ -136,4 +150,84 @@ public:
 private:
 	juce::AudioBuffer<float> audioBuffer;
 	float m_verticalZoom = 1.0f;
+
+	int m_leftIndex = 0;
+	int m_rightIndex = 0;
+};
+
+//==============================================================================
+class RegionsComponent : public juce::Component
+{
+public:
+	RegionsComponent() {}
+
+	void set(const std::vector<int> regions, const std::vector<int> validRegionsIdx)
+	{
+		m_regions = regions;
+		m_validRegionsIdx = validRegionsIdx;
+		repaint();
+	}
+
+	void setHorizontalZoom(const int leftIndex, const int rightIndex)
+	{
+		m_leftIndex = leftIndex;
+		m_rightIndex = rightIndex;
+		repaint();
+	}
+
+	void paint(juce::Graphics& g) override
+	{
+		g.fillAll(juce::Colours::black);
+		g.setColour(juce::Colours::whitesmoke);
+
+		if (m_regions.size() == 0)
+		{
+			return;
+		}
+
+		jassert(m_leftIndex >= 0 && m_leftIndex < m_regions.size());
+		jassert(m_rightIndex >= 0 && m_rightIndex < m_regions.size());
+
+		const int samplesOffst = m_regions[m_leftIndex];
+		const int samples = m_regions[m_rightIndex] - samplesOffst;
+		const int width = getWidth();
+		const int regionsCount = m_rightIndex - m_leftIndex;
+		const float factor = (float)width / (float)samples;
+		const int bottom = getHeight();
+
+		// Draw all regions
+		g.setColour(juce::Colours::red);
+
+		for (int region = m_leftIndex; region <= m_rightIndex; region++)
+		{
+			const int x = factor * (m_regions[region] - samplesOffst);
+
+			g.drawLine((float)x, 0.0f, (float)x, (float)bottom, 1.0f);
+		}
+
+		// Draw valid regions
+		g.setColour(juce::Colours::whitesmoke);
+
+		for (int id = 0; id < m_validRegionsIdx.size(); id++)
+		{
+			const int region = m_validRegionsIdx[id];
+			
+			if (region >= m_leftIndex && region <= m_rightIndex)
+			{
+				const int x = factor * (m_regions[region] - samplesOffst);
+
+				g.drawLine((float)x, 0.0f, (float)x, (float)bottom, 3.0f);
+			}
+		}
+
+		// Draw last line
+		g.drawLine((float)width, 0.0f, (float)width, (float)bottom, 3.0f);
+	}
+
+private:
+	std::vector<int> m_regions;
+	std::vector<int> m_validRegionsIdx;
+	
+	int m_leftIndex = 0;
+	int m_rightIndex = 0;
 };

@@ -51,6 +51,12 @@ private:
 		Output
 	};
 
+	enum InterpolationType
+	{
+		Point,
+		Linear
+	};
+
 	void openSourceButtonClicked()
 	{
 		chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav");
@@ -78,6 +84,8 @@ private:
 							const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
 							waveformDisplaySource.setVerticalZoom(verticalZoom);
 							waveformDisplaySource.setAudioBuffer(m_bufferSource);
+
+							//m_regionsComponent.setHorizontalZoom(m_zoomRegionLeft.getText().getIntValue(), m_zoomRegionRight.getText().getIntValue());
 						}
 
 						m_sourceFileNameLabel.setText(file.getFileName(), juce::dontSendNotification);
@@ -182,6 +190,55 @@ private:
 		m_detectedFrequencySlider.setValue(m_detectedFrequency);
 	}
 
+	void updateValidZeroCrossingIdx()
+	{
+		if (m_regions.empty())
+		{
+			return;
+		}
+
+		m_validRegionsIdx.clear();
+
+		const int regionOffset = (int)m_regionOffsetLenghtSlider.getValue();
+		const int leftThreshold = m_regionLenghtMedian - regionOffset;
+		const int rightThreshold = m_regionLenghtMedian + regionOffset;
+
+		m_validRegionsIdx.push_back(0);
+
+		for (int region = 1; region < m_regions.size() - 1; region++)
+		{
+			const int regionLenght = m_regions[region + 1] - m_regions[region];
+
+			if (regionLenght < leftThreshold || leftThreshold > rightThreshold)
+			{
+				continue;
+			}
+
+			m_validRegionsIdx.push_back(region);
+		}
+
+		m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)m_validRegionsIdx.size(), 0), juce::dontSendNotification);
+
+		// Handle regions component
+		int leftRegion = m_zoomRegionLeft.getText().getIntValue();
+		int rightRegion = m_zoomRegionRight.getText().getIntValue();
+
+		if (leftRegion >= m_regions.size())
+		{
+			leftRegion = 0;
+			m_zoomRegionLeft.setText("0", juce::dontSendNotification);
+		}
+
+		if (rightRegion >= m_regions.size())
+		{
+			rightRegion = m_regions.size() - 1;
+			m_zoomRegionRight.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
+		}
+
+		m_regionsComponent.setHorizontalZoom(leftRegion, rightRegion);
+		m_regionsComponent.set(m_regions, m_validRegionsIdx);
+	}
+
 	void detectRegionsButtonClicked()
 	{		
 		ZeroCrossingOffline zeroCrossing{};
@@ -191,7 +248,7 @@ private:
 
 		zeroCrossing.process(m_bufferSource, m_regions);
 		
-		m_regionsCountLabel.setText("Regions count: " + juce::String((float)m_regions.size(), 0), juce::dontSendNotification);
+		m_regionsCountLabel.setText("Regions count: " + juce::String((float)m_regions.size() - 1, 0), juce::dontSendNotification);
 
 		// Get median
 		std::vector<int> diff{};
@@ -204,7 +261,28 @@ private:
 
 		m_regionLenghtMedian = getMedian(diff);
 
-		m_regionLenghtMedianLabel.setText("Region Lenght Median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);
+		m_regionLenghtMedianLabel.setText("Region Lenght Median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);	
+
+		updateValidZeroCrossingIdx();
+
+		// Handle regions component
+		int leftRegion = m_zoomRegionLeft.getText().getIntValue();
+		int rightRegion = m_zoomRegionRight.getText().getIntValue();
+		
+		if (leftRegion == -1)
+		{
+			leftRegion = 0;
+			m_zoomRegionLeft.setText("0", juce::dontSendNotification);
+		}
+
+		if (rightRegion == -1)
+		{
+			rightRegion = m_regions.size() - 1;
+			m_zoomRegionRight.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
+		}
+
+		m_regionsComponent.setHorizontalZoom(leftRegion, rightRegion);
+		m_regionsComponent.set(m_regions, m_validRegionsIdx);
 
 		repaint();
 	}
@@ -224,6 +302,25 @@ private:
 	}
 
 	//==========================================================================
+	void setHorizontalZoom()
+	{
+		const int leftRegion = m_zoomRegionLeft.getText().getIntValue();
+		const int rightRegion = m_zoomRegionRight.getText().getIntValue();
+
+		const int regionsIndexMax = m_regions.size() - 1;
+
+		if (leftRegion == -1 || leftRegion > regionsIndexMax || rightRegion == -1 | rightRegion > regionsIndexMax)
+		{
+			return;
+		}
+		
+		const int leftIndex = m_regions[leftRegion];
+		const int rightIndex = m_regions[rightRegion];
+
+		waveformDisplaySource.setHorizontalZoom(leftIndex, rightIndex);
+		m_regionsComponent.setHorizontalZoom(leftRegion, rightRegion);
+	}
+	
 	void generateOutput()
 	{
 		// Resample
@@ -231,6 +328,7 @@ private:
 		const int regionLenghtExport = (int)m_regionLenghtExportSlider.getValue();
 		const int regionOffset = (int)m_regionOffsetLenghtSlider.getValue();
 		const int size = regionsCount * regionLenghtExport;
+		const int sourceSize = m_bufferSource.getNumSamples();
 
 		// Prepare out buffer
 		m_bufferOutput.setSize(m_bufferSource.getNumChannels(), size);
@@ -253,51 +351,32 @@ private:
 
 			for (int i = 0; i < regionLenghtExport; i++)
 			{							
-				// TODO: Add linear interpolation
-				/*const int l = segmentStartIndex + (int)sourceIndex;
-				const int r = std::min(l + 1, size - 1);
-				const float d = sourceIndex - (int)sourceIndex;
+				if (m_interpolationType == InterpolationType::Point)
+				{
+					pBufferOut[outIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
+				}
+				else if (m_interpolationType == InterpolationType::Linear)
+				{
+					const int indexLeft = segmentStartIndex + (int)sourceIndex;
+					const int indexRight = indexLeft + 1;
 
-				const float out = pBufferSource[l] * (1.0f - d) + pBufferSource[r] * d;
-				pBufferOut[outIndex] = out;*/
+					const float valueLeft = pBufferSource[indexLeft];
+					const float valueRight = pBufferSource[indexRight];
 
-				pBufferOut[outIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
+					const float delta = sourceIndex - std::floor(sourceIndex);
+					const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
 
+					pBufferOut[outIndex] = interpolated;
+
+				}
+				
 				sourceIndex += indexIncrement;
 				outIndex++;
 			}
 		}
 	}
 
-	void updateValidZeroCrossingIdx()
-	{
-		if (m_regions.empty())
-		{
-			return;
-		}
-		
-		m_validRegionsIdx.clear();
-
-		const int regionOffset = (int)m_regionOffsetLenghtSlider.getValue();
-		const int leftThreshold = m_regionLenghtMedian - regionOffset;
-		const int rightThreshold = m_regionLenghtMedian + regionOffset;
-
-		m_validRegionsIdx.push_back(0);
-
-		for (int region = 1; region < m_regions.size() - 1; region++)
-		{	
-			const int regionLenght = m_regions[region + 1] - m_regions[region];
-
-			if (regionLenght < leftThreshold || leftThreshold > rightThreshold)
-			{
-				continue;
-			}
-
-			m_validRegionsIdx.push_back(region);
-		}
-
-		m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)m_validRegionsIdx.size(), 0), juce::dontSendNotification);
-	}
+	
 
 	void drawRegions(juce::Graphics& g)
 	{
@@ -377,6 +456,9 @@ private:
 	juce::Label m_regionsCountLabel;
 	juce::Label m_validRegionsCountLabel;
 
+	juce::Label m_zoomRegionLeft;
+	juce::Label m_zoomRegionRight;
+
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;
 
@@ -395,11 +477,13 @@ private:
 
 	WaveformComponent waveformDisplaySource;
 	WaveformComponent waveformDisplayOutput;
+	RegionsComponent m_regionsComponent;
 
 	float m_detectedFrequency = 0.0f;
 
 	TransportState m_sourceState = TransportState::Stopped;
 	SourceType m_sourceType = SourceType::Source;
+	InterpolationType m_interpolationType = InterpolationType::Point;
 
 	int m_regionLenghtMedian = 0;
 	int m_playbackIndex = 0;

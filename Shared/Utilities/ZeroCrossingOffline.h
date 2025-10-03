@@ -34,6 +34,7 @@ public:
 	enum Type
 	{
 		Default,
+		Filter,
 		Frequency	// Limit minimum distance between zero crossings based on frequency
 	};
 
@@ -81,12 +82,32 @@ public:
 		// Estimated zero crossing extracted from filtered signal
 		m_filter.reset();
 		
-		std::vector<int> m_zeroCrossingEstimatedIdx;
+		std::vector<int> zeroCrossingEstimatedIdx;
 		auto* bufferSum = sumAudioBuffer.getWritePointer(0);
 
 		if (m_type == Type::Default)
 		{
-			m_zeroCrossingEstimatedIdx.push_back(0);
+			zeroCrossingEstimatedIdx.push_back(0);
+
+			float inLast = bufferSum[0];
+
+			for (int sample = 1; sample < samples; sample++)
+			{
+				const float in = bufferSum[sample];
+
+				if (inLast < 0.0f && in >= 0.0f)
+				{
+					zeroCrossingEstimatedIdx.push_back(sample);
+				}
+
+				inLast = in;
+			}
+
+			zeroCrossingEstimatedIdx.push_back(samples);
+		}
+		else if (m_type == Type::Filter)
+		{
+			zeroCrossingEstimatedIdx.push_back(0);
 
 			float inLast = m_filter.processDF1(bufferSum[0]);
 
@@ -97,20 +118,20 @@ public:
 
 				if (inLast < 0.0f && in >= 0.0f)
 				{
-					m_zeroCrossingEstimatedIdx.push_back(sample);
+					zeroCrossingEstimatedIdx.push_back(sample);
 				}
 
 				inLast = in;
 			}
 
-			m_zeroCrossingEstimatedIdx.push_back(samples);
+			zeroCrossingEstimatedIdx.push_back(samples);
 		}
 		else if (m_type == Type::Frequency)
 		{
 			// Calculate minimum zero crossing distance
 			const int minDistance = (int)(0.8f * (float)m_sampleRate / m_frequency);
 
-			m_zeroCrossingEstimatedIdx.push_back(0);
+			zeroCrossingEstimatedIdx.push_back(0);
 
 			float inLast = m_filter.processDF1(bufferSum[0]);
 
@@ -119,27 +140,39 @@ public:
 				float in = bufferSum[sample];
 				in = m_filter.processDF1(in);
 
-				if (inLast < 0.0f && in >= 0.0f && sample - m_zeroCrossingEstimatedIdx.back() > minDistance)
+				if (inLast < 0.0f && in >= 0.0f && sample - zeroCrossingEstimatedIdx.back() > minDistance)
 				{
-					m_zeroCrossingEstimatedIdx.push_back(sample);
+					zeroCrossingEstimatedIdx.push_back(sample);
 				}
 
 				inLast = in;
 			}
 
-			m_zeroCrossingEstimatedIdx.push_back(samples);
+			zeroCrossingEstimatedIdx.push_back(samples);
 		}
 
+		// Remove false positive first and last
+		const int testRangeHalf = m_searchRange / 2;
+
+		if (zeroCrossingEstimatedIdx[1] - testRangeHalf <= 0)
+		{
+			zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.begin() + 1);
+		}
+
+		if (zeroCrossingEstimatedIdx[zeroCrossingEstimatedIdx.size() - 2] + testRangeHalf >= samples)
+		{
+			zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.end() - 1);
+		}
+		
 		// Final zero corssing found in unfiltered signal
-		regions.resize(m_zeroCrossingEstimatedIdx.size());
+		regions.resize(zeroCrossingEstimatedIdx.size());
 
 		regions[0] = 0;
 
 		for (int segmentId = 1; segmentId < regions.size() - 1; segmentId++)
-		{
-			const int testRangeHalf = m_searchRange / 2;
-			const int sampleStart = std::max(0, m_zeroCrossingEstimatedIdx[segmentId] - testRangeHalf);
-			const int sampleEnd = m_zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
+		{			
+			const int sampleStart = zeroCrossingEstimatedIdx[segmentId] - testRangeHalf;		
+			const int sampleEnd = zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
 
 			float inLast = bufferSum[sampleStart - 1];
 			int closestIndex = sampleStart;
@@ -151,7 +184,7 @@ public:
 				if (inLast < 0.0f && in >= 0.0f)
 				{
 					// Find closes sample to estimated zero crossing
-					if (std::abs(m_zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(m_zeroCrossingEstimatedIdx[segmentId] - closestIndex))
+					if (std::abs(zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(zeroCrossingEstimatedIdx[segmentId] - closestIndex))
 					{
 						closestIndex = sample;
 					}
@@ -164,15 +197,6 @@ public:
 		}
 
 		regions[regions.size() - 1] = samples;
-
-		// Debug
-		std::vector<int> m_zeroCrossingDiff;
-		m_zeroCrossingDiff.resize(regions.size());
-
-		for (int segmentId = 0; segmentId < regions.size(); segmentId++)
-		{
-			m_zeroCrossingDiff[segmentId] = regions[segmentId] - m_zeroCrossingEstimatedIdx[segmentId];
-		}
 	}
 
 private:
