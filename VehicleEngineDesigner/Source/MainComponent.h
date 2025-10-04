@@ -7,6 +7,8 @@
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRateOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 
@@ -22,6 +24,9 @@ public:
     //==============================================================================
     MainComponent();
     ~MainComponent() override;
+
+	static const int CANVAS_WIDTH = 1 + 15 + 1 + 15 + 1;
+	static const int CANVAS_HEIGHT = 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 9 + 1 + 9 + 1 + 1 + 1;
 
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
@@ -57,6 +62,7 @@ private:
 		Linear
 	};
 
+	//==========================================================================
 	void openSourceButtonClicked()
 	{
 		chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav");
@@ -82,8 +88,8 @@ private:
 						if (m_bufferSource.getNumSamples() != 0)
 						{
 							const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
-							waveformDisplaySource.setVerticalZoom(verticalZoom);
-							waveformDisplaySource.setAudioBuffer(m_bufferSource);
+							m_waveformDisplaySource.setVerticalZoom(verticalZoom);
+							m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
 
 							//m_regionsComponent.setHorizontalZoom(m_zoomRegionLeft.getText().getIntValue(), m_zoomRegionRight.getText().getIntValue());
 						}
@@ -94,6 +100,7 @@ private:
 			});
 	}
 
+	//==========================================================================
 	void playSourceButtonClicked()
 	{
 		if (m_sourceState == TransportState::Stopped)
@@ -112,18 +119,13 @@ private:
 		}
 	}
 
+	//==========================================================================
 	void generateButtonClicked()
 	{
 		generateOutput();
-
-		if (m_bufferOutput.getNumSamples() != 0)
-		{
-			const float verticalZoom = 1.0f / m_bufferOutput.getMagnitude(0, m_bufferOutput.getNumSamples());
-			waveformDisplayOutput.setVerticalZoom(verticalZoom);
-			waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
-		}
 	}
 
+	//==========================================================================
 	void saveButtonClicked()
 	{
 		// Choose input file first (blocking for simplicity)
@@ -174,6 +176,7 @@ private:
 			});
 	}
 
+	//==========================================================================
 	void detectFrequencyButtonClicked()
 	{
 		if (m_bufferSource.getNumSamples() == 0)
@@ -190,6 +193,7 @@ private:
 		m_detectedFrequencySlider.setValue(m_detectedFrequency);
 	}
 
+	//==========================================================================
 	void updateValidZeroCrossingIdx()
 	{
 		if (m_regions.empty())
@@ -235,15 +239,16 @@ private:
 			m_zoomRegionRight.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
 		}
 
-		m_regionsComponent.setHorizontalZoom(leftRegion, rightRegion);
-		m_regionsComponent.set(m_regions, m_validRegionsIdx);
+		m_waveformDisplaySource.setRegions(m_regions, m_validRegionsIdx);
+		m_waveformDisplaySource.setHorizontalZoom(leftRegion, rightRegion);
 	}
 
+	//==========================================================================
 	void detectRegionsButtonClicked()
 	{		
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
-		zeroCrossing.set(m_detectedFrequencySlider.getValue(), 100);
+		zeroCrossing.set(m_detectedFrequencySlider.getValue(), 200);
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
 
 		zeroCrossing.process(m_bufferSource, m_regions);
@@ -261,7 +266,22 @@ private:
 
 		m_regionLenghtMedian = getMedian(diff);
 
-		m_regionLenghtMedianLabel.setText("Region Lenght Median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);	
+		m_regionLenghtMedianLabel.setText("Region Lenght Median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);
+
+		m_regionLenghtExportSlider.setValue(m_regionLenghtMedian);
+
+		// Handle max zero crossing
+		float maxZeroCrossing = 0.0f;
+		auto* channelData = m_bufferSource.getReadPointer(0);
+
+		for (int i = 0; i < m_regions.size(); i++)
+		{
+			const float value = channelData[m_regions[i]];
+			
+			maxZeroCrossing = std::fmaxf(maxZeroCrossing, value);
+		}
+
+		m_maxZeroCrossingGainLabel.setText("Maximum Zero Crossing [dB]: " + juce::String((float)juce::Decibels::gainToDecibels(maxZeroCrossing), 1), juce::dontSendNotification);
 
 		updateValidZeroCrossingIdx();
 
@@ -281,12 +301,13 @@ private:
 			m_zoomRegionRight.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
 		}
 
-		m_regionsComponent.setHorizontalZoom(leftRegion, rightRegion);
-		m_regionsComponent.set(m_regions, m_validRegionsIdx);
+		m_waveformDisplaySource.setRegions(m_regions, m_validRegionsIdx);
+		m_waveformDisplaySource.setHorizontalZoom(leftRegion, rightRegion);
 
 		repaint();
 	}
 
+	//==========================================================================
 	void sourceButtonClicked()
 	{
 		if (m_sourceType == SourceType::Source)
@@ -314,13 +335,11 @@ private:
 			return;
 		}
 		
-		const int leftIndex = m_regions[leftRegion];
-		const int rightIndex = m_regions[rightRegion];
-
-		waveformDisplaySource.setHorizontalZoom(leftIndex, rightIndex);
-		m_regionsComponent.setHorizontalZoom(leftRegion, rightRegion);
+		m_waveformDisplaySource.setHorizontalZoom(leftRegion, rightRegion);
+		m_waveformDisplayOutput.setHorizontalZoom(leftRegion, rightRegion);
 	}
-	
+
+	//==========================================================================
 	void generateOutput()
 	{
 		// Resample
@@ -358,7 +377,7 @@ private:
 				else if (m_interpolationType == InterpolationType::Linear)
 				{
 					const int indexLeft = segmentStartIndex + (int)sourceIndex;
-					const int indexRight = indexLeft + 1;
+					const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
 
 					const float valueLeft = pBufferSource[indexLeft];
 					const float valueRight = pBufferSource[indexRight];
@@ -374,45 +393,32 @@ private:
 				outIndex++;
 			}
 		}
-	}
 
-	
-
-	void drawRegions(juce::Graphics& g)
-	{
-		if (m_regions.size() == 0)
+		if (m_bufferOutput.getNumSamples() != 0)
 		{
-			return;
-		}
+			const float verticalZoom = 1.0f / m_bufferOutput.getMagnitude(0, m_bufferOutput.getNumSamples());
+			m_waveformDisplayOutput.setVerticalZoom(verticalZoom);
 
-		const int samples = m_bufferSource.getNumSamples();
-		const int width = getWidth() - 20;
-		const float factor = (float)width / (float)samples;
+			std::vector<int> regionsExport;
+			std::vector<int> validRegionExportIdx;
+			regionsExport.resize(regionLenghtExport);
+			validRegionExportIdx.resize(regionLenghtExport);
 
-		const int top = 540;																	  
-		const int bottom = top + 160;
+			int value = 0;
+			for (int i = 0; i < regionLenghtExport; i++)
+			{
+				regionsExport[i] = value;
+				validRegionExportIdx[i] = i;
+				value += regionLenghtExport;
+			}
 
-		// Draw all regions
-		g.setColour(juce::Colours::red);
-
-		for (int region = 0; region < m_regions.size() - 1; region++)
-		{
-			const int x = factor * m_regions[region];                    
-														      
-			g.drawLine((float)x + 10.0f, (float)top, (float)x + 10.0f, (float)bottom, 1.0f);
-		}
-		
-		// Draw valid regions
-		g.setColour(juce::Colours::whitesmoke);
-
-		for (int id = 0; id < m_validRegionsIdx.size() - 1; id++)
-		{
-			const int x = factor * m_regions[m_validRegionsIdx[id]];											
-
-			g.drawLine((float)x + 10.0f, (float)top, (float)x + 10.0f, (float)bottom, 3.0f);
+			m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
+			m_waveformDisplayOutput.setRegions(regionsExport, validRegionExportIdx);
+			m_waveformDisplayOutput.setHorizontalZoom(m_zoomRegionLeft.getText().getIntValue(), m_zoomRegionRight.getText().getIntValue());
 		}
 	}
 
+	//==========================================================================
 	int getMedian(std::vector<int> input)
 	{
 		if (input.empty())
@@ -441,6 +447,9 @@ private:
 	juce::TextButton m_playButton;
 	juce::TextButton m_sourceButton;
 
+	juce::TextButton m_scrollLeft;
+	juce::TextButton m_scrollRight;
+
 	// Sliders
 	juce::Slider m_detectedFrequencySlider;
 	juce::Slider m_regionOffsetLenghtSlider;
@@ -448,16 +457,29 @@ private:
 	
 	// Labels
 	juce::Label m_sourceFileNameLabel;
+
 	juce::Label m_detectedFrequencyLabel;
+
 	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionOffsetLenghtLabel;
 	juce::Label m_regionLenghtExportLabel;
 	
 	juce::Label m_regionsCountLabel;
 	juce::Label m_validRegionsCountLabel;
+	juce::Label m_maxZeroCrossingGainLabel;
 
 	juce::Label m_zoomRegionLeft;
 	juce::Label m_zoomRegionRight;
+
+	PluginNameComponent m_pluginNameComponent{ "zazz::VehicleEngineDesigner" };
+
+	GroupLabelComponent m_sourceGroupLableComponent{ "Source" };
+	GroupLabelComponent m_regionGroupLableComponent{ "Regions Detection" };
+	GroupLabelComponent m_exportGroupLableComponent{ "Output" };
+	GroupLabelComponent m_playbackGroupLableComponent{ "Playback" };
+	GroupLabelComponent m_sourceWaveformGroupLableComponent{ "Source" };
+	GroupLabelComponent m_outputWaveformGroupLableComponent{ "Output" };
+	GroupLabelComponent m_zoomGroupLableComponent{ "Zoom" };
 
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;
@@ -475,20 +497,23 @@ private:
 	juce::AudioBuffer<float> m_bufferSource;
 	juce::AudioBuffer<float> m_bufferOutput;
 
-	WaveformComponent waveformDisplaySource;
-	WaveformComponent waveformDisplayOutput;
-	RegionsComponent m_regionsComponent;
+	WaveformDisplayComponent m_waveformDisplaySource;
+	WaveformDisplayComponent m_waveformDisplayOutput;
 
 	float m_detectedFrequency = 0.0f;
 
 	TransportState m_sourceState = TransportState::Stopped;
 	SourceType m_sourceType = SourceType::Source;
-	InterpolationType m_interpolationType = InterpolationType::Point;
+	InterpolationType m_interpolationType = InterpolationType::Linear;
 
 	int m_regionLenghtMedian = 0;
 	int m_playbackIndex = 0;
 	int m_sampleRate = 48000;
-	
 
+	// Colors
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
+	
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

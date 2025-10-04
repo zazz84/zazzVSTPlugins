@@ -89,18 +89,49 @@ public:
 		{
 			zeroCrossingEstimatedIdx.push_back(0);
 
+			// Dont allow zero crosing too often
+			int sinceLast = 100;
+
+			const float threshold = juce::Decibels::decibelsToGain(-20.0f);
+
+			bool wasPositive = false;
+			bool wasNegative = false;
+
 			float inLast = bufferSum[0];
 
 			for (int sample = 1; sample < samples; sample++)
 			{
 				const float in = bufferSum[sample];
 
-				if (inLast < 0.0f && in >= 0.0f)
+				if (in > threshold)
 				{
-					zeroCrossingEstimatedIdx.push_back(sample);
+					wasPositive = true;
+				}
+
+				if (in < -threshold)
+				{
+					wasNegative = true;
+				}
+
+				if (inLast < 0.0f && in >= 0.0f && sinceLast > 100 && wasPositive && wasNegative)
+				{
+					// Choose sample closer to 0
+					if (std::fabsf(inLast) > std::fabsf(in))
+					{
+						zeroCrossingEstimatedIdx.push_back(sample);
+					}
+					else
+					{
+						zeroCrossingEstimatedIdx.push_back(sample - 1);
+					}
+										
+					wasPositive = false;
+					wasNegative = false;
+					sinceLast = 0;
 				}
 
 				inLast = in;
+				sinceLast++;
 			}
 
 			zeroCrossingEstimatedIdx.push_back(samples);
@@ -164,6 +195,8 @@ public:
 			zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.end() - 1);
 		}
 		
+		//regions = zeroCrossingEstimatedIdx;
+
 		// Final zero corssing found in unfiltered signal
 		regions.resize(zeroCrossingEstimatedIdx.size());
 
@@ -197,6 +230,15 @@ public:
 		}
 
 		regions[regions.size() - 1] = samples;
+
+		//Debug
+		/*std::vector<int> diff;
+		diff.resize(zeroCrossingEstimatedIdx.size());
+
+		for (int segmentId = 0; segmentId < regions.size(); segmentId++)
+		{
+			diff[segmentId] = zeroCrossingEstimatedIdx[segmentId] - regions[segmentId];
+		}*/
 	}
 
 private:
