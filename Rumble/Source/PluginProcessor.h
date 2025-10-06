@@ -22,6 +22,7 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
 class RumbleAudioProcessor  : public juce::AudioProcessor
@@ -41,7 +42,7 @@ public:
     static const int N_CHANNELS = 2;
 
 	static constexpr float MAX_LENGHT_MS = 2000.0f;
-	static constexpr float MAX_PITCH = 24.0f;
+	static constexpr float MAX_PITCH = 48.0f;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -84,16 +85,17 @@ public:
 private:	
 	//==============================================================================
 	CircularBuffer m_buffer[2];
+	BiquadFilter m_filter[2];
 	
 	std::atomic<float>* m_thresholdParameter = nullptr;
 	std::atomic<float>* m_lenghtParameter = nullptr;
 	std::atomic<float>* m_pitchParameter = nullptr;
-	std::atomic<float>* m_delayParameter = nullptr;
+	std::atomic<float>* m_filterParameter = nullptr;
 	std::atomic<float>* m_amountParameter = nullptr;
 	std::atomic<float>* m_volumeParameter = nullptr;
 
 	long m_samplesToRead[2];
-	long m_delaySamples[2];
+	float m_delaySamples[2];
 
 	juce::AudioParameterBool* m_soloButtonParameter = nullptr;
 

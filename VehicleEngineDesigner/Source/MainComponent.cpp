@@ -24,19 +24,47 @@ MainComponent::MainComponent()
 
 	addAndMakeVisible(m_regionLenghtMedianLabel);
 	m_regionLenghtMedianLabel.setText("", juce::dontSendNotification);
-	m_regionLenghtMedianLabel.setJustificationType(juce::Justification::centred);
+	m_regionLenghtMedianLabel.setJustificationType(juce::Justification::centred);	
+	
+	addAndMakeVisible(m_regionLengthDiffLabel);
+	m_regionLengthDiffLabel.setText("", juce::dontSendNotification);
+	m_regionLengthDiffLabel.setJustificationType(juce::Justification::centred);
 	
 	//
 	addAndMakeVisible(m_detectedFrequencySlider);
 	m_detectedFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_detectedFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_detectedFrequencySlider.setRange(2.0, 200.0, 1.0);   // min, max, step
+	m_detectedFrequencySlider.setRange(2.0, 200.0, 0.1);   // min, max, step
 	m_detectedFrequencySlider.setValue(50.0);              // initial value
 
 	addAndMakeVisible(m_detectedFrequencyLabel);
-	m_detectedFrequencyLabel.setText("Frequency", juce::dontSendNotification);
+	m_detectedFrequencyLabel.setText("Filter Freq", juce::dontSendNotification);
 
 	m_detectedFrequencyLabel.attachToComponent(&m_detectedFrequencySlider, true);
+
+	//
+	addAndMakeVisible(m_thresholdSlider);
+	m_thresholdSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_thresholdSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_thresholdSlider.setRange(-60.0, 0.0, 1.0); 
+	m_thresholdSlider.setValue(-60.0);
+
+	addAndMakeVisible(m_thresholdLabel);
+	m_thresholdLabel.setText("Threshold", juce::dontSendNotification);
+
+	m_thresholdLabel.attachToComponent(&m_thresholdSlider, true);
+
+	//
+	addAndMakeVisible(m_maximumFrequencySlider);
+	m_maximumFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_maximumFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_maximumFrequencySlider.setRange( 2.0, 200.0, 0.1);
+	m_maximumFrequencySlider.setValue( 200.0);
+
+	addAndMakeVisible(m_maximumFrequencyLabel);
+	m_maximumFrequencyLabel.setText("Max Freq", juce::dontSendNotification);
+
+	m_maximumFrequencyLabel.attachToComponent(&m_maximumFrequencySlider, true);
 
 	//
 	//addAndMakeVisible(m_regionOffsetLenghtSlider);
@@ -234,7 +262,6 @@ MainComponent::MainComponent()
 	//
 	m_detectionTypeComboBox.addItem("Default", 1);
 	m_detectionTypeComboBox.addItem("Filter", 2);
-	m_detectionTypeComboBox.addItem("Frequency limit", 3);
 	m_detectionTypeComboBox.setSelectedId(1);
 	addAndMakeVisible(m_detectionTypeComboBox);
 	
@@ -371,12 +398,15 @@ void MainComponent::resized()
 	m_detectRegionsButton.setSize(pixelSize3, pixelSize);
 	m_detectionTypeComboBox.setSize(pixelSize3, pixelSize);
 	m_detectedFrequencySlider.setSize(pixelSize6, pixelSize);
+	m_thresholdSlider.setSize(pixelSize6, pixelSize);
+	m_maximumFrequencySlider.setSize(pixelSize6, pixelSize);
 	//m_detectFrequencyButton.setSize(pixelSize3, pixelSize);
 	 
-	m_regionsCountLabel.setSize(pixelSize15, pixelSize);
+	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
 	//m_validRegionsCountLabel.setSize(pixelSize15, pixelSize);
-	m_regionLenghtMedianLabel.setSize(pixelSize15, pixelSize);
-	m_maxZeroCrossingGainLabel.setSize(pixelSize15, pixelSize);
+	m_regionLenghtMedianLabel.setSize(pixelSize6, pixelSize);
+	m_regionLengthDiffLabel.setSize(pixelSize6, pixelSize);
+	m_maxZeroCrossingGainLabel.setSize(pixelSize6, pixelSize);
 
 	m_generateButton.setSize(pixelSize3, pixelSize);
 	m_regionLenghtExportSlider.setSize(pixelSize6, pixelSize);
@@ -411,13 +441,17 @@ void MainComponent::resized()
 
 	m_detectRegionsButton.setTopLeftPosition(column8, row3);
 	m_detectionTypeComboBox.setTopLeftPosition(column9, row3);
-	m_detectedFrequencySlider.setTopLeftPosition(column11, row3);
+
+	m_thresholdSlider.setTopLeftPosition(column11, row3);
+	m_maximumFrequencySlider.setTopLeftPosition(column11, row4);
 	//m_detectFrequencyButton.setTopLeftPosition(column12, row3);
+	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
 
 	m_regionsCountLabel.setTopLeftPosition(column8, row4);
 	//m_validRegionsCountLabel.setTopLeftPosition(column8, row5);
 	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row5);
-	m_maxZeroCrossingGainLabel.setTopLeftPosition(column8, row6);
+	m_regionLengthDiffLabel.setTopLeftPosition(column8, row6);
+	m_maxZeroCrossingGainLabel.setTopLeftPosition(column8, row7);
 
 	m_generateButton.setTopLeftPosition(column2, row9);
 	m_regionLenghtExportSlider.setTopLeftPosition(column4, row9);

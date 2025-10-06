@@ -35,7 +35,6 @@ public:
 	{
 		Default,
 		Filter,
-		Frequency	// Limit minimum distance between zero crossings based on frequency
 	};
 
 	void init(const int sampleRate)
@@ -43,11 +42,14 @@ public:
 		m_filter.init(sampleRate);
 		m_sampleRate = sampleRate;
 	}
-	void set(const float frequency, const int searchRange)
+	void set(const float frequency, const int searchRange, const float threshold, const float maximumFrequency)
 	{
-		m_filter.setBandPassPeakGain(frequency, 2.0f);
+		//m_filter.setBandPassPeakGain(frequency, 2.0f);
+		m_filter.setLowPass(frequency, 4.0f);
 		m_frequency = frequency;
 		m_searchRange = searchRange;
+		m_threshold = threshold;
+		m_maximumFrequency = maximumFrequency;
 	}
 	void setType(const int type)
 	{
@@ -84,103 +86,58 @@ public:
 		
 		std::vector<int> zeroCrossingEstimatedIdx;
 		auto* bufferSum = sumAudioBuffer.getWritePointer(0);
+		
+		// Dont allow zero crosing too often
+		int sinceLast = 0;
+		const int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
+			
+		bool wasPositive = false;
+		bool wasNegative = false;
+	
+		zeroCrossingEstimatedIdx.push_back(0);
+		float inLast = bufferSum[0];
 
-		if (m_type == Type::Default)
+		for (int sample = 1; sample < samples; sample++)
 		{
-			zeroCrossingEstimatedIdx.push_back(0);
+			float in = bufferSum[sample];
 
-			// Dont allow zero crosing too often
-			int sinceLast = 100;
-
-			const float threshold = juce::Decibels::decibelsToGain(-20.0f);
-
-			bool wasPositive = false;
-			bool wasNegative = false;
-
-			float inLast = bufferSum[0];
-
-			for (int sample = 1; sample < samples; sample++)
+			if (m_type == Type::Filter)
 			{
-				const float in = bufferSum[sample];
+				in = m_filter.processDF1(in);
+			}
 
-				if (in > threshold)
+			if (in > m_threshold)
+			{
+				wasPositive = true;
+			}
+
+			if (in < -m_threshold)
+			{
+				wasNegative = true;
+			}
+
+			if (inLast < 0.0f && in >= 0.0f && sinceLast > SINCE_LAST_MIN && wasPositive && wasNegative)
+			{
+				// Choose sample closer to 0
+				if (std::fabsf(inLast) > std::fabsf(in))
 				{
-					wasPositive = true;
+					zeroCrossingEstimatedIdx.push_back(sample);
 				}
-
-				if (in < -threshold)
+				else
 				{
-					wasNegative = true;
+					zeroCrossingEstimatedIdx.push_back(sample - 1);
 				}
-
-				if (inLast < 0.0f && in >= 0.0f && sinceLast > 100 && wasPositive && wasNegative)
-				{
-					// Choose sample closer to 0
-					if (std::fabsf(inLast) > std::fabsf(in))
-					{
-						zeroCrossingEstimatedIdx.push_back(sample);
-					}
-					else
-					{
-						zeroCrossingEstimatedIdx.push_back(sample - 1);
-					}
 										
-					wasPositive = false;
-					wasNegative = false;
-					sinceLast = 0;
-				}
-
-				inLast = in;
-				sinceLast++;
+				wasPositive = false;
+				wasNegative = false;
+				sinceLast = 0;
 			}
 
-			zeroCrossingEstimatedIdx.push_back(samples);
+			inLast = in;
+			sinceLast++;
 		}
-		else if (m_type == Type::Filter)
-		{
-			zeroCrossingEstimatedIdx.push_back(0);
 
-			float inLast = m_filter.processDF1(bufferSum[0]);
-
-			for (int sample = 1; sample < samples; sample++)
-			{
-				float in = bufferSum[sample];
-				in = m_filter.processDF1(in);
-
-				if (inLast < 0.0f && in >= 0.0f)
-				{
-					zeroCrossingEstimatedIdx.push_back(sample);
-				}
-
-				inLast = in;
-			}
-
-			zeroCrossingEstimatedIdx.push_back(samples);
-		}
-		else if (m_type == Type::Frequency)
-		{
-			// Calculate minimum zero crossing distance
-			const int minDistance = (int)(0.8f * (float)m_sampleRate / m_frequency);
-
-			zeroCrossingEstimatedIdx.push_back(0);
-
-			float inLast = m_filter.processDF1(bufferSum[0]);
-
-			for (int sample = 1; sample < samples; sample++)
-			{
-				float in = bufferSum[sample];
-				in = m_filter.processDF1(in);
-
-				if (inLast < 0.0f && in >= 0.0f && sample - zeroCrossingEstimatedIdx.back() > minDistance)
-				{
-					zeroCrossingEstimatedIdx.push_back(sample);
-				}
-
-				inLast = in;
-			}
-
-			zeroCrossingEstimatedIdx.push_back(samples);
-		}
+		zeroCrossingEstimatedIdx.push_back(samples);
 
 		// Remove false positive first and last
 		const int testRangeHalf = m_searchRange / 2;
@@ -195,55 +152,116 @@ public:
 			zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.end() - 1);
 		}
 		
-		//regions = zeroCrossingEstimatedIdx;
 
-		// Final zero corssing found in unfiltered signal
+		// Handle final zero crossing
 		regions.resize(zeroCrossingEstimatedIdx.size());
 
-		regions[0] = 0;
+		if (m_type == Type::Default)
+		{
+			regions = zeroCrossingEstimatedIdx;
+		}
+		else
+		{
+			// Final zero corssing with smaller amplitude
+			regions[0] = 0;
 
-		for (int segmentId = 1; segmentId < regions.size() - 1; segmentId++)
-		{			
-			const int sampleStart = zeroCrossingEstimatedIdx[segmentId] - testRangeHalf;		
-			const int sampleEnd = zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
-
-			float inLast = bufferSum[sampleStart - 1];
-			int closestIndex = sampleStart;
-
-			for (int sample = sampleStart; sample < sampleEnd; sample++)
+			for (int segmentId = 1; segmentId < regions.size() - 1; segmentId++)
 			{
-				const float in = bufferSum[sample];
+				const int sampleStart = zeroCrossingEstimatedIdx[segmentId] - testRangeHalf;
+				const int sampleEnd = zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
 
-				if (inLast < 0.0f && in >= 0.0f)
+				float inLast = bufferSum[sampleStart - 1];
+				int closestIndex = sampleStart;
+
+				for (int sample = sampleStart; sample < sampleEnd; sample++)
 				{
-					// Find closes sample to estimated zero crossing
-					if (std::abs(zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(zeroCrossingEstimatedIdx[segmentId] - closestIndex))
+					const float in = bufferSum[sample];
+
+					if (inLast < 0.0f && in >= 0.0f)
 					{
-						closestIndex = sample;
+						// Find closes sample to estimated zero crossing
+						if (std::abs(zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(zeroCrossingEstimatedIdx[segmentId] - closestIndex))
+						{
+							closestIndex = sample;
+						}
+					}
+
+					inLast = in;
+				}
+
+				regions[segmentId] = closestIndex;
+			}
+
+			regions[regions.size() - 1] = samples;
+
+			// Try to find better zero crossings by comparing region length to its median
+			std::vector<int> diff;
+			diff.resize(regions.size() - 1);
+
+			for (int segmentId = 0; segmentId < regions.size() - 1; segmentId++)
+			{
+				diff[segmentId] = regions[segmentId + 1] - regions[segmentId];
+			}
+
+			const int median = getMedian(diff);
+
+			for (int i = 0; i < regions.size() - 2; i++)
+			{
+				const int currentCrossing = regions[i + 1];
+				const int size = currentCrossing - regions[i];
+				const int idealZeroCrossing = regions[i] + median;
+				const int diff = std::abs(median - size);
+
+				int indexLeft = idealZeroCrossing - diff;
+				for (int j = idealZeroCrossing - diff; j < idealZeroCrossing; j++)
+				{
+					if (bufferSum[j - 1] < 0.0f && bufferSum[j] >= 0.0f)
+					{
+						indexLeft = j;
 					}
 				}
 
-				inLast = in;
+				int indexRight = idealZeroCrossing + diff;
+				for (int j = idealZeroCrossing + diff; j >= idealZeroCrossing; j--)
+				{
+					if (bufferSum[j - 1] < 0.0f && bufferSum[j] >= 0.0f)
+					{
+						indexRight = j;
+					}
+				}
+
+				const int betterIndex = idealZeroCrossing - indexLeft < indexRight - idealZeroCrossing ? indexLeft : indexRight;
+				const int diffBetter = std::abs(idealZeroCrossing - betterIndex);
+
+				if (diffBetter < diff)
+				{
+					regions[i + 1] = betterIndex;
+				}
 			}
-
-			regions[segmentId] = closestIndex;
 		}
-
-		regions[regions.size() - 1] = samples;
-
-		//Debug
-		/*std::vector<int> diff;
-		diff.resize(zeroCrossingEstimatedIdx.size());
-
-		for (int segmentId = 0; segmentId < regions.size(); segmentId++)
-		{
-			diff[segmentId] = zeroCrossingEstimatedIdx[segmentId] - regions[segmentId];
-		}*/
 	}
 
 private:
+	int getMedian(std::vector<int> input)
+	{
+		if (input.empty())
+		{
+			return 0;
+		}
+
+		std::sort(input.begin(), input.end());
+		size_t n = input.size();
+
+		if (n % 2 == 1) // odd number of elements
+			return input[n / 2];
+		else // even number of elements
+			return (input[n / 2 - 1] + input[n / 2]) / 2;
+	}
+
 	BiquadFilter m_filter;
 	float m_frequency = 20.0f;
+	float m_maximumFrequency = 200.0f;
+	float m_threshold = -60.0f;
 	int m_sampleRate = 48000;
 	int m_searchRange = 100;
 	Type m_type = Type::Default;

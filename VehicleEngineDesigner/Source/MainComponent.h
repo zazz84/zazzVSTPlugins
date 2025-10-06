@@ -248,12 +248,12 @@ private:
 	{		
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
-		zeroCrossing.set(m_detectedFrequencySlider.getValue(), 200);
+		zeroCrossing.set(m_detectedFrequencySlider.getValue(), 100, juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), m_maximumFrequencySlider.getValue());
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
 
 		zeroCrossing.process(m_bufferSource, m_regions);
 		
-		m_regionsCountLabel.setText("Regions count: " + juce::String((float)m_regions.size() - 1, 0), juce::dontSendNotification);
+		m_regionsCountLabel.setText("Count: " + juce::String((float)m_regions.size() - 1, 0), juce::dontSendNotification);
 
 		// Get median
 		std::vector<int> diff{};
@@ -266,7 +266,21 @@ private:
 
 		m_regionLenghtMedian = getMedian(diff);
 
-		m_regionLenghtMedianLabel.setText("Region Lenght Median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);
+		m_regionLenghtMedianLabel.setText("Lenght median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);
+
+		int maxDiff = 0;
+
+		for (int i = 0; i < diff.size() - 1; i++)
+		{
+			const int medianDiff = std::abs(m_regionLenghtMedian - diff[i]);
+
+			if (medianDiff > maxDiff)
+			{
+				maxDiff = medianDiff;
+			}
+		}
+
+		m_regionLengthDiffLabel.setText("Max median diff: " + juce::String((float)maxDiff, 0), juce::dontSendNotification);
 
 		m_regionLenghtExportSlider.setValue(m_regionLenghtMedian);
 
@@ -281,7 +295,7 @@ private:
 			maxZeroCrossing = std::fmaxf(maxZeroCrossing, value);
 		}
 
-		m_maxZeroCrossingGainLabel.setText("Maximum Zero Crossing [dB]: " + juce::String((float)juce::Decibels::gainToDecibels(maxZeroCrossing), 1), juce::dontSendNotification);
+		m_maxZeroCrossingGainLabel.setText("Max. zero crossing: " + juce::String((float)juce::Decibels::gainToDecibels(maxZeroCrossing), 1), juce::dontSendNotification);
 
 		updateValidZeroCrossingIdx();
 
@@ -452,6 +466,8 @@ private:
 
 	// Sliders
 	juce::Slider m_detectedFrequencySlider;
+	juce::Slider m_thresholdSlider;
+	juce::Slider m_maximumFrequencySlider;
 	juce::Slider m_regionOffsetLenghtSlider;
 	juce::Slider m_regionLenghtExportSlider;
 	
@@ -459,8 +475,11 @@ private:
 	juce::Label m_sourceFileNameLabel;
 
 	juce::Label m_detectedFrequencyLabel;
+	juce::Label m_thresholdLabel;
+	juce::Label m_maximumFrequencyLabel;
 
 	juce::Label m_regionLenghtMedianLabel;
+	juce::Label m_regionLengthDiffLabel;
 	juce::Label m_regionOffsetLenghtLabel;
 	juce::Label m_regionLenghtExportLabel;
 	

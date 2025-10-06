@@ -18,11 +18,12 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 //==============================================================================
 
-const std::string RumbleAudioProcessor::paramsNames[] = { "Threshold", "Lenght", "Pitch", "Delay", "Amount", "Volume" };
-const std::string RumbleAudioProcessor::labelNames[] = { "Threshold", "Lenght", "Pitch", "Delay", "Amount", "Volume" };
-const std::string RumbleAudioProcessor::paramsUnitNames[] = { " dB", " ms", " st", " ms", " dB", " dB" };
+const std::string RumbleAudioProcessor::paramsNames[] = { "Threshold", "Lenght", "Pitch", "Filter", "Amount", "Volume" };
+const std::string RumbleAudioProcessor::labelNames[] = { "Threshold", "Lenght", "Pitch", "Filter", "Amount", "Volume" };
+const std::string RumbleAudioProcessor::paramsUnitNames[] = { " dB", " ms", " st", " Hz", " dB", " dB" };
 
 //==============================================================================
 RumbleAudioProcessor::RumbleAudioProcessor()
@@ -40,7 +41,7 @@ RumbleAudioProcessor::RumbleAudioProcessor()
 	m_thresholdParameter    = apvts.getRawParameterValue(paramsNames[0]);
 	m_lenghtParameter		= apvts.getRawParameterValue(paramsNames[1]);
 	m_pitchParameter		= apvts.getRawParameterValue(paramsNames[2]);
-	m_delayParameter		= apvts.getRawParameterValue(paramsNames[3]);
+	m_filterParameter		= apvts.getRawParameterValue(paramsNames[3]);
 	m_amountParameter	    = apvts.getRawParameterValue(paramsNames[4]);
 	m_volumeParameter	    = apvts.getRawParameterValue(paramsNames[5]);
 
@@ -121,6 +122,9 @@ void RumbleAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 	m_buffer[0].init(size);
 	m_buffer[1].init(size);
 
+	m_filter[0].init(size);
+	m_filter[1].init(size);
+
 	m_samplesToRead[0] = -480000L;
 	m_samplesToRead[1] = -480000L;
 	m_delaySamples[0] = -480000L;
@@ -172,19 +176,20 @@ void RumbleAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 	
 	// Get params
 	const auto threshold = juce::Decibels::decibelsToGain(m_thresholdParameter->load());
-	const auto cooldown = (long)(0.001f * m_lenghtParameter->load() * sampleRate);
+	const auto envelopeLength = (long)(0.001f * m_lenghtParameter->load() * sampleRate);
 	const auto pitch = m_pitchParameter->load();
-	const auto delayTimeMS = m_delayParameter->load();
+	const auto frequency = m_filterParameter->load();
 	const auto ammount = juce::Decibels::decibelsToGain(m_amountParameter->load());
 	const auto gain = juce::Decibels::decibelsToGain(m_volumeParameter->load());
 
 	// Get buttons
-	const auto solo = m_soloButtonParameter->get();
+	const auto noSolo = 1.0f - (float)m_soloButtonParameter->get();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto step = pitch > 0.0f ? 1.0f + pitch / MAX_PITCH : 1.0f + 0.5f * pitch / MAX_PITCH;
+	const auto step = 1.0f - powf(2.0f, pitch / 12.0f);
+	const auto fadeLength = envelopeLength / 2L;
 
 	for (int channel = 0; channel < channels; channel++)
 	{
@@ -192,63 +197,55 @@ void RumbleAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
 		auto& buffer = m_buffer[channel];
-		auto& transientBuffer = m_transientBuffer[channel];
 		auto& samplesToRead = m_samplesToRead[channel];
 		auto& delaySamples = m_delaySamples[channel];
+		auto& filter = m_filter[channel];
+
+		filter.setLowPass(frequency, 0.707f);
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
 			const float in = channelBuffer[sample];
-			buffer.write(in);
 
-			const float bufferOut = buffer.read();
-			float transientOut = 0.0f;
-
-			// Handle transient
-			delaySamples--;
-			
-			if (delaySamples < 0L)
+			// Trigger
+			if (in > threshold && samplesToRead <= 0L)
 			{
+				delaySamples = 5;
+				samplesToRead = envelopeLength;
+			}
+
+			// Read buffer
+			float out = 0.0f;
+			
+			if (samplesToRead > 0)
+			{
+				buffer.write(in);
+
+				out = filter.processDF1(buffer.readDelayTriLinearInterpolation(delaySamples));
+
+				float gain = 1.0;
+
+				// Apply fade in
+				if (samplesToRead > envelopeLength - 100L)
+				{
+					gain = Math::remap((float)samplesToRead, envelopeLength - 100L, envelopeLength, 1.0f, 0.0f);
+				}
+
+				// Apply fade out
+				if (samplesToRead < fadeLength)
+				{
+					gain = Math::remap((float)samplesToRead, 0.0f, (float)fadeLength, 0.0f, 1.0f);
+				}
+
+				out *= gain;
+
+				delaySamples += step;
 				samplesToRead--;
 			}
-			
-			if (samplesToRead >= 0L)
-			{
-				transientOut = ammount * transientBuffer.m_buffer[samplesToRead];
-			}
-			else if (samplesToRead < -cooldown)
-			{
-				if (bufferOut > threshold)
-				{
-					float delay = 0.0f;
-					samplesToRead = (long)((float)m_latencySamples / step) - 1L;
 
-					for (long i = 0L; i < samplesToRead; i++)
-					{
-						transientBuffer.m_buffer[i] = buffer.readDelayTriLinearInterpolation(delay);
-						delay += step;
-					}
-
-					delaySamples = (long)(delayTimeMS * 0.001f * sampleRate);
-
-					// Add attack and release
-					// NOTE: Data sored in the buffer in reverse
-					transientBuffer.applyAttack(0, (int)samplesToRead / 3);
-					transientBuffer.applyRelease((int)samplesToRead - (int)samplesToRead / 20, (int)samplesToRead - 1);
-				}
-			}
-		
-			//Out
-			if (solo)
-			{
-				channelBuffer[sample] = transientOut;
-			}
-			else
-			{
-				channelBuffer[sample] = bufferOut + transientOut;
-			}
-		}
+			channelBuffer[sample] = noSolo * in + ammount * out;
+		}	
 	}
 
 	buffer.applyGain(gain);
@@ -291,7 +288,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout RumbleAudioProcessor::create
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -36.0f,    0.0f,  0.1f, 1.0f), -12.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  50.0f, MAX_LENGHT_MS,  1.0f, 0.7f), 500.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -MAX_PITCH, 0.0f,  0.1f, 1.0f),  -12.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   0.0f,  200.0f,  1.0f, 1.0f),   0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(   20.0f, 10000.0f,  1.0f, 0.4f), 10000.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,   18.0f,  0.1f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f,   18.0f,  0.1f, 1.0f),   0.0f));
 
