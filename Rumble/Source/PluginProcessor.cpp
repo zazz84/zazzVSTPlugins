@@ -119,28 +119,28 @@ void RumbleAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock
 {
 	const int size = (int)((float)sampleRate * 0.001f * MAX_LENGHT_MS);
 	
-	m_buffer[0].init(size);
-	m_buffer[1].init(size);
+	m_attactSamples = (long)(0.005 * sampleRate);
+
+	m_size = size;
+	const int size2 = size + size;
+
+	m_buffer = new float[size2];
+	memset(m_buffer, 0, size2 * sizeof(float));
+	
+	m_writteIndex[0] = (long)(size2 - 1);
+	m_writteIndex[1] = (long)(size2 - 1);
 
 	m_filter[0].init(size);
 	m_filter[1].init(size);
-
-	m_samplesToRead[0] = -480000L;
-	m_samplesToRead[1] = -480000L;
-	m_delaySamples[0] = -480000L;
-	m_delaySamples[1] = -480000L;
-
-	for (int channel = 0; channel < N_CHANNELS; channel++)
-	{
-
-	}
-
 }
 
 void RumbleAudioProcessor::releaseResources()
 {
-	m_buffer[0].release();
-	m_buffer[1].release();
+	if (m_buffer != nullptr)
+	{
+		delete[] m_buffer;
+		m_buffer = nullptr;
+	}
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -188,17 +188,17 @@ void RumbleAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto step = 1.0f - powf(2.0f, pitch / 12.0f);
-	const auto fadeLength = envelopeLength / 2L;
+	const auto step = powf(2.0f, pitch / 12.0f);
+	const auto fadeOutStart = envelopeLength / 2L;
 
 	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		auto& buffer = m_buffer[channel];
-		auto& samplesToRead = m_samplesToRead[channel];
-		auto& delaySamples = m_delaySamples[channel];
+		float* buffer = m_buffer + (channel * m_size);
+		auto& writteIndex = m_writteIndex[channel];
+		auto& readIndex = m_readIndex[channel];
 		auto& filter = m_filter[channel];
 
 		filter.setLowPass(frequency, 0.707f);
@@ -209,43 +209,67 @@ void RumbleAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce:
 			const float in = channelBuffer[sample];
 
 			// Trigger
-			if (in > threshold && samplesToRead <= 0L)
+			if (in > threshold && writteIndex >= envelopeLength)
 			{
-				delaySamples = 5;
-				samplesToRead = envelopeLength;
+				readIndex = 0L;
+				writteIndex = 0L;
 			}
 
 			// Read buffer
 			float out = 0.0f;
 			
-			if (samplesToRead > 0)
+			if (writteIndex < envelopeLength)
 			{
-				buffer.write(in);
+				buffer[writteIndex] = in;
 
-				out = filter.processDF1(buffer.readDelayTriLinearInterpolation(delaySamples));
+				// Linear interpolation
+				const int readIndexTrunc = (int)(readIndex);
+				const float weight = readIndex - (float)readIndexTrunc;
 
-				float gain = 1.0;
+				out = (1.0f - weight) * buffer[readIndexTrunc] + weight * buffer[readIndexTrunc + 1];							
+				out = filter.processDF1(out);
+
+				// Trilinear
+				/*const int readIndexTrunc = (int)(readIndex);
+				const float weight = readIndex - (float)readIndexTrunc;
+
+				const float yz1 = buffer[readIndexTrunc - 1];
+				const float y0 = buffer[readIndexTrunc];
+				const float y1 = buffer[readIndexTrunc + 1];
+				const float y2 = buffer[readIndexTrunc + 2];
+
+				// 4-point, 2nd-order Watte tri-linear (x-form)
+				float ym1py2 = yz1 + y2;
+				float c0 = y0;
+				float c1 = (3.0f / 2.0f) * y1 - (1.0f / 2.0f) * (y0 + ym1py2);
+				float c2 = (1.0f / 2.0f) * (ym1py2 - y0 - y1);
+
+				out = (c2 * weight + c1) * weight + c0;				
+				out = filter.processDF1(out);*/
+
+				float gain = 1.0f;
 
 				// Apply fade in
-				if (samplesToRead > envelopeLength - 100L)
+				if (writteIndex < m_attactSamples)
 				{
-					gain = Math::remap((float)samplesToRead, envelopeLength - 100L, envelopeLength, 1.0f, 0.0f);
+					gain = Math::remap(writteIndex, 0.0f, m_attactSamples, 0.0f, 1.0f);
 				}
 
 				// Apply fade out
-				if (samplesToRead < fadeLength)
+				if (writteIndex > fadeOutStart)
 				{
-					gain = Math::remap((float)samplesToRead, 0.0f, (float)fadeLength, 0.0f, 1.0f);
+					gain = Math::remap((float)writteIndex, (float)fadeOutStart, (float)envelopeLength, 1.0f, 0.0f);
+					gain *= gain;
 				}
 
 				out *= gain;
 
-				delaySamples += step;
-				samplesToRead--;
+				readIndex += step;
+				writteIndex++;
 			}
 
 			channelBuffer[sample] = noSolo * in + ammount * out;
-		}	
+		}
 	}
 
 	buffer.applyGain(gain);

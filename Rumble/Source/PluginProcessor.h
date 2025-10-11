@@ -21,7 +21,6 @@
 
 #include <JuceHeader.h>
 
-#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 
 //==============================================================================
@@ -84,7 +83,7 @@ public:
 
 private:	
 	//==============================================================================
-	CircularBuffer m_buffer[2];
+	float* m_buffer;
 	BiquadFilter m_filter[2];
 	
 	std::atomic<float>* m_thresholdParameter = nullptr;
@@ -94,8 +93,11 @@ private:
 	std::atomic<float>* m_amountParameter = nullptr;
 	std::atomic<float>* m_volumeParameter = nullptr;
 
-	long m_samplesToRead[2];
-	float m_delaySamples[2];
+	long m_writteIndex[2] = { 0L, 0L };
+	float m_readIndex[2] = { 0.0f , 0.0f };
+
+	long m_attactSamples = 0L;
+	int m_size = 0;
 
 	juce::AudioParameterBool* m_soloButtonParameter = nullptr;
 

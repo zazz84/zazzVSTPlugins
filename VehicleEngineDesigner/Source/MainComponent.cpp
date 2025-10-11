@@ -109,80 +109,111 @@ MainComponent::MainComponent()
 	m_maxZeroCrossingGainLabel.setJustificationType(juce::Justification::centred);
 
 	// Zoom	
-	addAndMakeVisible(m_zoomRegionLeft);
-	m_zoomRegionLeft.setEditable(true, true, false);  // user can click & type
-	m_zoomRegionLeft.setJustificationType(juce::Justification::centred);
-	m_zoomRegionLeft.setText("-1", juce::dontSendNotification);
+	addAndMakeVisible(m_zoomRegionLeftLabel);
+	m_zoomRegionLeftLabel.setEditable(true, true, false);  // user can click & type
+	m_zoomRegionLeftLabel.setJustificationType(juce::Justification::centred);
+	m_zoomRegionLeftLabel.setText("-1", juce::dontSendNotification);
 
-	m_zoomRegionLeft.onTextChange = [this]
+	m_zoomRegionLeftLabel.onTextChange = [this]
 	{	
 		// Reset to invalid when not regions are detected
 		if (m_regions.size() == 0)
 		{
-			m_zoomRegionLeft.setText("-1", juce::dontSendNotification);
+			m_zoomRegionLeftLabel.setText("-1", juce::dontSendNotification);
 			return;
 		}
 		
-		const int leftRegion = m_zoomRegionLeft.getText().getIntValue();
+		const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
 		const int regionsMax = m_regions.size() - 1;
 
 		if (leftRegion < 0 || leftRegion > regionsMax)
 		{
-			m_zoomRegionLeft.setText("0", juce::dontSendNotification);
+			m_zoomRegionLeftLabel.setText("0", juce::dontSendNotification);
 		}
 
 		// Limit if large than right region
-		const int rightRegion = m_zoomRegionRight.getText().getIntValue();
+		const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
 
 		if (leftRegion >= rightRegion)
 		{
-			m_zoomRegionLeft.setText(juce::String((float)(std::max(0, rightRegion - 1)), 0), juce::dontSendNotification);
+			m_zoomRegionLeftLabel.setText(juce::String((float)(std::max(0, rightRegion - 1)), 0), juce::dontSendNotification);
 		}
 
 		setHorizontalZoom();
 	};
 
-	addAndMakeVisible(m_zoomRegionRight);
-	m_zoomRegionRight.setEditable(true, true, false);  // user can click & type
-	m_zoomRegionRight.setJustificationType(juce::Justification::centred);
-	m_zoomRegionRight.setText("-1", juce::dontSendNotification);
+	addAndMakeVisible(m_zoomRegionRightLabel);
+	m_zoomRegionRightLabel.setEditable(true, true, false);  // user can click & type
+	m_zoomRegionRightLabel.setJustificationType(juce::Justification::centred);
+	m_zoomRegionRightLabel.setText("-1", juce::dontSendNotification);
 
-	m_zoomRegionRight.onTextChange = [this]
+	m_zoomRegionRightLabel.onTextChange = [this]
 	{
 		// Reset to invalid when not regions are detected
 		if (m_regions.size() == 0)
 		{
-			m_zoomRegionRight.setText("-1", juce::dontSendNotification);
+			m_zoomRegionRightLabel.setText("-1", juce::dontSendNotification);
 			return;
 		}
 
-		const int rightRegion = m_zoomRegionRight.getText().getIntValue();
+		const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
 		const int regionsMax = m_regions.size() - 1;
 
 		if (rightRegion < 0 || rightRegion > regionsMax)
 		{
-			m_zoomRegionRight.setText(juce::String((float)(regionsMax)), juce::dontSendNotification);
+			m_zoomRegionRightLabel.setText(juce::String((float)(regionsMax)), juce::dontSendNotification);
 		}
 
 		// Limit if large than right region
-		const int leftRegion = m_zoomRegionLeft.getText().getIntValue();
+		const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
 
 		if (leftRegion >= rightRegion)
 		{
-			m_zoomRegionRight.setText(juce::String((float)(std::min(regionsMax, leftRegion + 1)), 0), juce::dontSendNotification);
+			m_zoomRegionRightLabel.setText(juce::String((float)(std::min(regionsMax, leftRegion + 1)), 0), juce::dontSendNotification);
 		}
 
 		setHorizontalZoom();
 	};
+
+	// Export sliders
+	addAndMakeVisible(m_exportRegionLeftSlider);
+	m_exportRegionLeftSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_exportRegionLeftSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_exportRegionLeftSlider.setRange(0.0, 200.0, 1.0);
+	m_exportRegionLeftSlider.setValue(0.0);
+
+	addAndMakeVisible(m_exportRegionLeftLabel);
+	m_exportRegionLeftLabel.setText("Reg Left", juce::dontSendNotification);
+	m_exportRegionLeftLabel.attachToComponent(&m_exportRegionLeftSlider, true);
+
+	addAndMakeVisible(m_exportRegionRightSlider);
+	m_exportRegionRightSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_exportRegionRightSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_exportRegionRightSlider.setRange(0.0, 200.0, 1.0);
+	m_exportRegionRightSlider.setValue(0.0);
+
+	addAndMakeVisible(m_exportRegionRightLabel);
+	m_exportRegionRightLabel.setText("Reg Right", juce::dontSendNotification);
+	m_exportRegionRightLabel.attachToComponent(&m_exportRegionRightSlider, true);
+
+	addAndMakeVisible(m_exportRegionCountSlider);
+	m_exportRegionCountSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_exportRegionCountSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_exportRegionCountSlider.setRange(0.0, 200.0, 1.0);
+	m_exportRegionCountSlider.setValue(0.0);
+
+	addAndMakeVisible(m_exportRegionCountLabel);
+	m_exportRegionCountLabel.setText("Reg Count", juce::dontSendNotification);
+	m_exportRegionCountLabel.attachToComponent(&m_exportRegionCountSlider, true);
 
 	// Scroll buttons
 	addAndMakeVisible(&m_scrollLeft);
 	m_scrollLeft.setButtonText("<");
 	m_scrollLeft.onClick = [this]
 	{ 
-		int zoomLeft = m_zoomRegionLeft.getText().getIntValue();
-		int zoomRight = m_zoomRegionRight.getText().getIntValue();
-		const bool regionsIsEmpty = m_zoomRegionRight.getText().isEmpty();
+		int zoomLeft = m_zoomRegionLeftLabel.getText().getIntValue();
+		int zoomRight = m_zoomRegionRightLabel.getText().getIntValue();
+		const bool regionsIsEmpty = m_zoomRegionRightLabel.getText().isEmpty();
 		const int regionsMax = m_regions.size() - 1;
 
 		if (zoomLeft > zoomRight || zoomLeft == -1 || zoomRight == -1 || regionsMax == 0 || regionsIsEmpty)
@@ -196,8 +227,8 @@ MainComponent::MainComponent()
 		zoomLeft -= size;
 		zoomRight -= size;
 
-		m_zoomRegionLeft.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
-		m_zoomRegionRight.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
+		m_zoomRegionLeftLabel.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
+		m_zoomRegionRightLabel.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
 
 		setHorizontalZoom();
 	};
@@ -206,9 +237,9 @@ MainComponent::MainComponent()
 	m_scrollRight.setButtonText(">");
 	m_scrollRight.onClick = [this]
 	{
-		int zoomLeft = m_zoomRegionLeft.getText().getIntValue();
-		int zoomRight = m_zoomRegionRight.getText().getIntValue();
-		const bool regionsIsEmpty = m_zoomRegionRight.getText().isEmpty();
+		int zoomLeft = m_zoomRegionLeftLabel.getText().getIntValue();
+		int zoomRight = m_zoomRegionRightLabel.getText().getIntValue();
+		const bool regionsIsEmpty = m_zoomRegionRightLabel.getText().isEmpty();
 		const int regionsMax = m_regions.size() - 1;
 
 		if (zoomLeft > zoomRight || zoomLeft == -1 || zoomRight == -1 || regionsMax == 0 || regionsIsEmpty)
@@ -222,8 +253,8 @@ MainComponent::MainComponent()
 		zoomRight += size;
 		zoomLeft += size;
 
-		m_zoomRegionLeft.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
-		m_zoomRegionRight.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
+		m_zoomRegionLeftLabel.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
+		m_zoomRegionRightLabel.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
 
 		setHorizontalZoom();
 	};
@@ -264,6 +295,11 @@ MainComponent::MainComponent()
 	m_detectionTypeComboBox.addItem("Filter", 2);
 	m_detectionTypeComboBox.setSelectedId(1);
 	addAndMakeVisible(m_detectionTypeComboBox);
+
+	m_generationTypeComboBox.addItem("Flat", 1);
+	m_generationTypeComboBox.addItem("Random Regions", 2);
+	m_generationTypeComboBox.setSelectedId(1);
+	addAndMakeVisible(m_generationTypeComboBox);
 	
 	// Canvas size
 	const int canvasWidth = CANVAS_WIDTH * 30;
@@ -409,8 +445,13 @@ void MainComponent::resized()
 	m_maxZeroCrossingGainLabel.setSize(pixelSize6, pixelSize);
 
 	m_generateButton.setSize(pixelSize3, pixelSize);
-	m_regionLenghtExportSlider.setSize(pixelSize6, pixelSize);
+	m_generationTypeComboBox.setSize(pixelSize9, pixelSize);	
 	m_saveButton.setSize(pixelSize3, pixelSize);
+
+	m_regionLenghtExportSlider.setSize(pixelSize12, pixelSize);
+	m_exportRegionLeftSlider.setSize(pixelSize12, pixelSize);
+	m_exportRegionRightSlider.setSize(pixelSize12, pixelSize);
+	m_exportRegionCountSlider.setSize(pixelSize12, pixelSize);
 
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
@@ -418,8 +459,8 @@ void MainComponent::resized()
 	m_waveformDisplaySource.setSize(pixelSize31, pixelSize8);
 	m_waveformDisplayOutput.setSize(pixelSize31, pixelSize8);
 
-	m_zoomRegionLeft.setSize(pixelSize3, pixelSize);
-	m_zoomRegionRight.setSize(pixelSize3, pixelSize);
+	m_zoomRegionLeftLabel.setSize(pixelSize3, pixelSize);
+	m_zoomRegionRightLabel.setSize(pixelSize3, pixelSize);
 
 	m_scrollLeft.setSize(pixelSize, pixelSize);
 	m_scrollRight.setSize(pixelSize, pixelSize);
@@ -429,7 +470,7 @@ void MainComponent::resized()
 
 	m_sourceGroupLableComponent.setTopLeftPosition(column2, row2);
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row2);
-	m_exportGroupLableComponent.setTopLeftPosition(column2, row8);
+	m_exportGroupLableComponent.setTopLeftPosition(column2, row4);
 	m_playbackGroupLableComponent.setTopLeftPosition(column8, row8);
 	m_zoomGroupLableComponent.setTopLeftPosition(column6, row14);
 
@@ -453,9 +494,14 @@ void MainComponent::resized()
 	m_regionLengthDiffLabel.setTopLeftPosition(column8, row6);
 	m_maxZeroCrossingGainLabel.setTopLeftPosition(column8, row7);
 
-	m_generateButton.setTopLeftPosition(column2, row9);
-	m_regionLenghtExportSlider.setTopLeftPosition(column4, row9);
-	m_saveButton.setTopLeftPosition(column6, row9);
+	m_generateButton.setTopLeftPosition(column2, row5);
+	m_generationTypeComboBox.setTopLeftPosition(column3, row5);
+	m_saveButton.setTopLeftPosition(column6, row5);
+
+	m_regionLenghtExportSlider.setTopLeftPosition(column3, row6);
+	m_exportRegionLeftSlider.setTopLeftPosition(column3, row7);
+	m_exportRegionRightSlider.setTopLeftPosition(column3, row8);
+	m_exportRegionCountSlider.setTopLeftPosition(column3, row9);
 
 	m_sourceButton.setTopLeftPosition(column9, row9);
 	m_playButton.setTopLeftPosition(column11, row9);
@@ -463,8 +509,8 @@ void MainComponent::resized()
 	m_waveformDisplaySource.setTopLeftPosition(column2, row11);
 	m_waveformDisplayOutput.setTopLeftPosition(column2, row13);
 
-	m_zoomRegionLeft.setTopLeftPosition(column6, row15);
-	m_zoomRegionRight.setTopLeftPosition(column8, row15);
+	m_zoomRegionLeftLabel.setTopLeftPosition(column6, row15);
+	m_zoomRegionRightLabel.setTopLeftPosition(column8, row15);
 
 	m_scrollLeft.setTopLeftPosition(column5 + pixelSize2, row15);
 	m_scrollRight.setTopLeftPosition(column9, row15);
@@ -522,8 +568,8 @@ void MainComponent::resized()
 	m_playButton.setBounds					(column2, row7, pixelWidth, pixelHeight);
 
 	// Zoom
-	m_zoomRegionLeft.setBounds				(column3, row7, pixelWidth, pixelHeight);
-	m_zoomRegionRight.setBounds				(column4, row7, pixelWidth, pixelHeight);
+	m_zoomRegionLeftLabel.setBounds				(column3, row7, pixelWidth, pixelHeight);
+	m_zoomRegionRightLabel.setBounds				(column4, row7, pixelWidth, pixelHeight);
 	
 	// Waveform source
 	m_waveformDisplaySource.setBounds			(10, row8, getWidth() - 20, pixelHeight12);

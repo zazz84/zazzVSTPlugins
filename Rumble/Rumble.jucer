@@ -2,11 +2,11 @@
 
 <JUCERPROJECT id="mn0wzw" name="Rumble" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Pitch Shift">
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Pitch Shift"
+              version="1.0.1">
   <MAINGROUP id="UA1sDy" name="Rumble">
     <GROUP id="{51826CCC-1773-FD66-B6E7-3657A2A5FD10}" name="Source">
       <FILE id="OgqoA5" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="DHfy4V" name="AudioBuffer.h" compile="0" resource="0" file="../Shared/Utilities/AudioBuffer.h"/>
       <FILE id="ZhHGe9" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="eHEEii" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -14,8 +14,6 @@
             file="Source/PluginProcessor.h"/>
       <FILE id="L0gVMF" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="ty65vO" name="CircularBuffers.h" compile="0" resource="0"
-            file="../Shared/Utilities/CircularBuffers.h"/>
       <FILE id="vDnRik" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>

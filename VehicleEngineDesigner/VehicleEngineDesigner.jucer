@@ -5,6 +5,8 @@
               jucerFormatVersion="1" companyName="zazz" version="0.0.1">
   <MAINGROUP id="mkvuHv" name="VehicleEngineDesigner">
     <GROUP id="{F2D151BB-A00D-9D60-6DFB-DB3C87000671}" name="Source">
+      <FILE id="lOSKRu" name="RandomNoRepeat.h" compile="0" resource="0"
+            file="../Shared/Utilities/RandomNoRepeat.h"/>
       <FILE id="slpAsb" name="GroupLabelComponent.h" compile="0" resource="0"
             file="../Shared/GUI/GroupLabelComponent.h"/>
       <FILE id="m9Xfgp" name="PluginNameComponent.h" compile="0" resource="0"
