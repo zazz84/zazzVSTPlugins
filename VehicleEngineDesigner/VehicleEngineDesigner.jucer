@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="AJkYCg" name="VehicleEngineDesigner" projectType="guiapp"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" companyName="zazz" version="0.0.1">
+              jucerFormatVersion="1" companyName="zazz" version="0.0.2">
   <MAINGROUP id="mkvuHv" name="VehicleEngineDesigner">
     <GROUP id="{F2D151BB-A00D-9D60-6DFB-DB3C87000671}" name="Source">
       <FILE id="lOSKRu" name="RandomNoRepeat.h" compile="0" resource="0"

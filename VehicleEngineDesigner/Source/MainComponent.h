@@ -27,7 +27,7 @@ public:
     ~MainComponent() override;
 
 	static const int CANVAS_WIDTH = 1 + 15 + 1 + 15 + 1;
-	static const int CANVAS_HEIGHT = 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 9 + 1 + 9 + 1 + 1 + 1;
+	static const int CANVAS_HEIGHT = 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 11 + 11 + 1;
 
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
@@ -130,264 +130,212 @@ private:
 	//==========================================================================
 	void generateButtonClicked()
 	{
-		// Get setting for Rnd Regions export
-		const auto exportRegionLeft = (int)m_exportRegionLeftSlider.getValue();
-		const auto exportRegionRight = (int)m_exportRegionRightSlider.getValue();
-		const auto exportRegionCout = (int)m_exportRegionCountSlider.getValue();
-		
-		const int validRegionsCount = m_validRegionsIdx.size();
-		const int regionLenghtExport = (int)m_regionLenghtExportSlider.getValue();		
-		const int sourceSize = m_bufferSource.getNumSamples();
-
-		const GenerationType generationType = static_cast<GenerationType>(m_generationTypeComboBox.getSelectedId());
-
-		// TODO - Organiye/simplifz
-		if (generationType == GenerationType::RandomRegion)
+		if (static_cast<GenerationType>(m_generationTypeComboBox.getSelectedId()) == GenerationType::RandomRegion)
 		{
-			if (exportRegionLeft < validRegionsCount &&
-				exportRegionLeft >= 0 &&
-				exportRegionRight <= validRegionsCount &&
-				exportRegionRight > 0 &&
-				exportRegionCout > 0)
-			{
-				return;
-			}
-			
-			auto* pBufferSource = m_bufferSource.getWritePointer(0);
-			
-			// Temp audio buffer
-			juce::AudioBuffer<float> tempBuffer;
-			const int tempBufferRegionCount = exportRegionRight - exportRegionLeft;
-			const int tempBufferLength = tempBufferRegionCount * regionLenghtExport;
-			tempBuffer.setSize(m_bufferSource.getNumChannels(), tempBufferLength);
-			auto* pBufferTemp = tempBuffer.getWritePointer(0);
-
-			int tempOutIndex = 0;
-			
-			for (int regionIdx = exportRegionLeft; regionIdx < exportRegionRight; regionIdx++)
-			{
-				const int segmentStartIndex = m_regions[regionIdx];
-				const int regionLenghtSource = m_regions[regionIdx + 1] - segmentStartIndex;
-				const float indexIncrement = (float)regionLenghtSource / (float)regionLenghtExport;			
-				float sourceIndex = 0.0f;
-
-				for (int i = 0; i < regionLenghtExport; i++)
-				{
-					if (m_interpolationType == InterpolationType::Point)
-					{
-						pBufferTemp[tempOutIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
-					}
-					else if (m_interpolationType == InterpolationType::Linear)
-					{
-						const int indexLeft = segmentStartIndex + (int)sourceIndex;
-						const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
-
-						const float valueLeft = pBufferSource[indexLeft];
-						const float valueRight = pBufferSource[indexRight];
-
-						const float delta = sourceIndex - std::floor(sourceIndex);
-						const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
-
-						pBufferTemp[tempOutIndex] = interpolated;
-
-					}
-
-					sourceIndex += indexIncrement;
-					tempOutIndex++;
-				}
-			}
-
-			// Get peak
-			//const float tempBufferPeak = tempBuffer.getMagnitude(0, tempBufferLength);
-			
-			// Prepare out buffer
-			m_bufferOutput.setSize(m_bufferSource.getNumChannels(), exportRegionCout * regionLenghtExport);
-			m_bufferOutput.clear();
-
-			// TODO: Handling for stereo		
-			auto* pBufferOut = m_bufferOutput.getWritePointer(0);
-			
-			int tempRegionIdxLast = 0;
-
-			RandomNoRepeat randomNoRepeat(0, tempBufferRegionCount - 1, tempBufferRegionCount / 2);
-
-			for (int outRegionIdx = 0; outRegionIdx < exportRegionCout; outRegionIdx++)
-			{
-				/*int tempRegionIdx = std::rand() % tempBufferRegionCount;
-
-				if (tempRegionIdxLast == tempRegionIdx)
-				{
-					tempRegionIdx ++;
-
-					if (tempRegionIdx == exportRegionRight)
-					{
-						tempRegionIdx = exportRegionLeft;
-					}
-				}*/
-
-				
-				const int tempRegionIdx = randomNoRepeat.get();
-
-				//tempRegionIdxLast = tempRegionIdx;
-
-				// Test
-				/*int tempRegionIdx2 = std::rand() % tempBufferRegionCount;
-
-				if (tempRegionIdx2 == tempRegionIdx)
-				{
-					tempRegionIdx2++;
-
-					if (tempRegionIdx2 == exportRegionRight)
-					{
-						tempRegionIdx2 = exportRegionLeft;
-					}
-				}*/
-
-				// Copy region from temp buffer to out buffer
-				//m_bufferOutput.copyFrom(0, outRegionIdx * regionLenghtExport, tempBuffer, 0, tempRegionIdx * regionLenghtExport, regionLenghtExport);
-
-				int outIndex = outRegionIdx * regionLenghtExport;
-				int tempIndex = tempRegionIdx * regionLenghtExport;
-				//int tempIndex2 = tempRegionIdx * regionLenghtExport;
-
-				//float regionPeak = 0.0f;
-
-				for (int i = 0; i < regionLenghtExport; i++)
-				{
-					//float out = 0.7f * pBufferTemp[tempIndex] + 0.3f * pBufferTemp[tempIndex2];
-					pBufferOut[outIndex] = pBufferTemp[tempIndex];
-
-					/*out = std::fabsf(out);
-					if (out > regionPeak)
-					{
-						regionPeak = out;
-					}*/
-					
-					outIndex++;
-					tempIndex++;
-					//tempIndex2++;
-				}
-
-				// Peak normalization
-				/*const float gain = tempBufferPeak / regionPeak;
-
-				outIndex = outRegionIdx * regionLenghtExport;
-				for (int i = 0; i < regionLenghtExport; i++)
-				{
-					pBufferOut[outIndex] = gain * pBufferOut[outIndex];
-
-					outIndex++;
-				}*/
-
-				// Draw output waveform
-				if (m_bufferOutput.getNumSamples() != 0)
-				{
-					const float verticalZoom = 1.0f / m_bufferOutput.getMagnitude(0, m_bufferOutput.getNumSamples());
-					m_waveformDisplayOutput.setVerticalZoom(verticalZoom);
-
-					std::vector<int> regionsExport;
-					std::vector<int> validRegionExportIdx;
-					regionsExport.resize(regionLenghtExport);
-					validRegionExportIdx.resize(regionLenghtExport);
-
-					int value = 0;
-					for (int i = 0; i < regionLenghtExport; i++)
-					{
-						regionsExport[i] = value;
-						validRegionExportIdx[i] = i;
-						value += regionLenghtExport;
-					}
-
-					m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
-					m_waveformDisplayOutput.setRegions(regionsExport, validRegionExportIdx);
-					m_waveformDisplayOutput.setHorizontalZoom(m_zoomRegionLeftLabel.getText().getIntValue(), m_zoomRegionRightLabel.getText().getIntValue());
-				}
-			}
+			randomRegionsGenerate();
 		}
 		else
 		{
-			// Prepare out buffer
-			const int size = validRegionsCount * regionLenghtExport;
-			m_bufferOutput.setSize(m_bufferSource.getNumChannels(), size);
-			m_bufferOutput.clear();
-
-			// TODO: Handling for stereo
-			auto* pBufferSource = m_bufferSource.getWritePointer(0);
-			auto* pBufferOut = m_bufferOutput.getWritePointer(0);
-
-			int outIndex = 0;
-
-			for (int region = 0; region < validRegionsCount; region++)
-			{
-				const int regionIdx = m_validRegionsIdx[region];
-				const int segmentStartIndex = m_regions[regionIdx];
-				const int regionLenghtSource = m_regions[regionIdx + 1] - segmentStartIndex;
-				const float indexIncrement = (float)regionLenghtSource / (float)regionLenghtExport;
-
-				float sourceIndex = 0.0f;
-
-				for (int i = 0; i < regionLenghtExport; i++)
-				{
-					if (m_interpolationType == InterpolationType::Point)
-					{
-						pBufferOut[outIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
-					}
-					else if (m_interpolationType == InterpolationType::Linear)
-					{
-						const int indexLeft = segmentStartIndex + (int)sourceIndex;
-						const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
-
-						const float valueLeft = pBufferSource[indexLeft];
-						const float valueRight = pBufferSource[indexRight];
-
-						const float delta = sourceIndex - std::floor(sourceIndex);
-						const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
-
-						pBufferOut[outIndex] = interpolated;
-
-					}
-
-					sourceIndex += indexIncrement;
-					outIndex++;
-				}
-			}
-
-			// Draw output waveform
-			if (m_bufferOutput.getNumSamples() != 0)
-			{
-				const float verticalZoom = 1.0f / m_bufferOutput.getMagnitude(0, m_bufferOutput.getNumSamples());
-				m_waveformDisplayOutput.setVerticalZoom(verticalZoom);
-
-				std::vector<int> regionsExport;
-				std::vector<int> validRegionExportIdx;
-				regionsExport.resize(validRegionsCount + 1);
-				validRegionExportIdx.resize(validRegionsCount);
-
-				int value = 0;
-				for (int i = 0; i < validRegionsCount; i++)
-				{
-					regionsExport[i] = value;
-					validRegionExportIdx[i] = i;
-					value += regionLenghtExport;
-				}
-
-				regionsExport[validRegionsCount] = value;
-
-				m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
-				m_waveformDisplayOutput.setRegions(regionsExport, validRegionExportIdx);
-				m_waveformDisplayOutput.setHorizontalZoom(m_zoomRegionLeftLabel.getText().getIntValue(), m_zoomRegionRightLabel.getText().getIntValue());
-			}
+			flatRefionsGenerate();
 		}
 	}
 
+	//==========================================================================
+	void flatRefionsGenerate()
+	{
+		const auto validRegionsCount = (int)m_validRegionsIdx.size();
+		if (validRegionsCount == 0)
+		{
+			return;
+		}
+
+		const auto exportRegionLength = (int)m_regionLenghtExportSlider.getValue();
+		if (exportRegionLength == 0)
+		{
+			return;
+		}
+
+		const auto sourceSize = m_bufferSource.getNumSamples();
+		if (sourceSize == 0)
+		{
+			return;
+		}
+		
+		// Prepare out buffer
+		const auto outputSize = validRegionsCount * exportRegionLength;
+		m_bufferOutput.setSize(m_bufferSource.getNumChannels(), outputSize);
+
+		// TODO: Handling for stereo
+		auto* pBufferSource = m_bufferSource.getWritePointer(0);
+		auto* pBufferOut = m_bufferOutput.getWritePointer(0);
+
+		int outIndex = 0;
+
+		for (int region = 0; region < validRegionsCount; region++)
+		{
+			const int regionIdx = m_validRegionsIdx[region];
+			const int segmentStartIndex = m_regions[regionIdx];
+			const int sourceRegionLength = m_regions[regionIdx + 1] - segmentStartIndex;
+			const float indexIncrement = (float)sourceRegionLength / (float)exportRegionLength;
+
+			float sourceIndex = 0.0f;
+
+			for (int i = 0; i < exportRegionLength; i++)
+			{
+				if (m_interpolationType == InterpolationType::Point)
+				{
+					pBufferOut[outIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
+				}
+				else if (m_interpolationType == InterpolationType::Linear)
+				{
+					const int indexLeft = segmentStartIndex + (int)sourceIndex;
+					const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
+
+					const float valueLeft = pBufferSource[indexLeft];
+					const float valueRight = pBufferSource[indexRight];
+
+					const float delta = sourceIndex - std::floor(sourceIndex);
+					const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
+
+					pBufferOut[outIndex] = interpolated;
+				}
+
+				sourceIndex += indexIncrement;
+				outIndex++;
+			}
+		}
+
+		// Set output waveform
+		std::vector<int> regionsExport;
+		std::vector<int> validRegionExportIdx;
+
+		regionsExport.resize(validRegionsCount + 1);
+		validRegionExportIdx.resize(validRegionsCount);
+
+		int value = 0;
+		for (int i = 0; i < validRegionsCount; i++)
+		{
+			regionsExport[i] = value;
+			validRegionExportIdx[i] = i;
+			value += exportRegionLength;
+		}
+
+		regionsExport[validRegionsCount] = value;
+
+		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
+		m_waveformDisplayOutput.setRegions(regionsExport, validRegionExportIdx);
+	}
+
+	//==========================================================================
+	void randomRegionsGenerate()
+	{
+		const auto exportRegionLeftIdx = (int)m_exportRegionLeftSlider.getValue();
+		const auto exportRegionRightIdx = (int)m_exportRegionRightSlider.getValue();
+		const auto exportRegionCout = (int)m_exportRegionCountSlider.getValue();
+
+		const auto sourceRegionCount = (int)m_regions.size() - 1;
+		const auto sourceSampleCount = m_bufferSource.getNumSamples();
+		const auto exportRegionLength = (int)m_regionLenghtExportSlider.getValue();
+
+		// Check if setup is valid
+		if (exportRegionLeftIdx >= sourceRegionCount &&
+			exportRegionLeftIdx < 0 &&
+			exportRegionRightIdx > sourceRegionCount &&
+			exportRegionRightIdx < 1 &&
+			exportRegionCout <= 0)
+		{
+			return;
+		}
+
+		const GenerationType generationType = static_cast<GenerationType>(m_generationTypeComboBox.getSelectedId());
+
+		auto* pBufferSource = m_bufferSource.getWritePointer(0);
+
+		// Temp audio buffer
+		juce::AudioBuffer<float> tempBuffer;
+		const int tempBufferRegionCount = exportRegionRightIdx - exportRegionLeftIdx;
+		const int tempBufferLength = tempBufferRegionCount * exportRegionLength;
+		tempBuffer.setSize(m_bufferSource.getNumChannels(), tempBufferLength);
+		auto* pBufferTemp = tempBuffer.getWritePointer(0);
+
+		int tempOutIndex = 0;
+
+		for (int regionIdx = exportRegionLeftIdx; regionIdx < exportRegionRightIdx; regionIdx++)
+		{
+			const int segmentStartIndex = m_regions[regionIdx];
+			const int regionLenghtSource = m_regions[regionIdx + 1] - segmentStartIndex;
+			const float indexIncrement = (float)regionLenghtSource / (float)exportRegionLength;
+			float sourceIndex = 0.0f;
+
+			for (int i = 0; i < exportRegionLength; i++)
+			{
+				if (m_interpolationType == InterpolationType::Point)
+				{
+					pBufferTemp[tempOutIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
+				}
+				else if (m_interpolationType == InterpolationType::Linear)
+				{
+					const int indexLeft = segmentStartIndex + (int)sourceIndex;
+					const int indexRight = indexLeft < sourceSampleCount - 1 ? indexLeft + 1 : indexLeft;
+
+					const float valueLeft = pBufferSource[indexLeft];
+					const float valueRight = pBufferSource[indexRight];
+
+					const float delta = sourceIndex - std::floor(sourceIndex);
+					const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
+
+					pBufferTemp[tempOutIndex] = interpolated;
+
+				}
+
+				sourceIndex += indexIncrement;
+				tempOutIndex++;
+			}
+		}
+
+		// Prepare out buffer
+		m_bufferOutput.setSize(m_bufferSource.getNumChannels(), exportRegionCout * exportRegionLength);
+		m_bufferOutput.clear();
+
+		// TODO: Handling for stereo		
+		auto* pBufferOut = m_bufferOutput.getWritePointer(0);
+
+		RandomNoRepeat randomNoRepeat(0, tempBufferRegionCount - 1, tempBufferRegionCount / 2);
+
+		for (int outRegionIdx = 0; outRegionIdx < exportRegionCout; outRegionIdx++)
+		{
+			m_bufferOutput.copyFrom(0, outRegionIdx * exportRegionLength, tempBuffer, 0, randomNoRepeat.get() * exportRegionLength, exportRegionLength);
+		}
+
+		// Set output waveform
+		std::vector<int> regionsExport;
+		std::vector<int> validRegionsExportIdx;
+		
+		regionsExport.resize(exportRegionCout + 1);
+		validRegionsExportIdx.resize(exportRegionCout);
+
+		int value = 0;
+		for (int i = 0; i < exportRegionCout; i++)
+		{
+			regionsExport[i] = value;
+			validRegionsExportIdx[i] = i;
+			value += exportRegionLength;
+		}
+
+		regionsExport[exportRegionCout] = value;
+
+		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
+		m_waveformDisplayOutput.setRegions(regionsExport, validRegionsExportIdx);
+	}
+	
 	//==========================================================================
 	void saveButtonClicked()
 	{
 		// Choose input file first (blocking for simplicity)
 		chooser = std::make_unique<juce::FileChooser>("Save processed file as...", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory), "*.wav");
-		int flags = juce::FileBrowserComponent::saveMode;
+		int flag = juce::FileBrowserComponent::saveMode;
 
-		chooser->launchAsync(flags, [this](const juce::FileChooser& fc)
+		chooser->launchAsync(flag, [this](const juce::FileChooser& fc)
 			{
 				juce::File outFile = fc.getResult();
 				if (outFile == juce::File()) // user cancelled
@@ -478,24 +426,7 @@ private:
 
 		m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)m_validRegionsIdx.size(), 0), juce::dontSendNotification);
 
-		// Handle regions component
-		int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
-		int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
-
-		if (leftRegion >= m_regions.size())
-		{
-			leftRegion = 0;
-			m_zoomRegionLeftLabel.setText("0", juce::dontSendNotification);
-		}
-
-		if (rightRegion >= m_regions.size())
-		{
-			rightRegion = m_regions.size() - 1;
-			m_zoomRegionRightLabel.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
-		}
-
 		m_waveformDisplaySource.setRegions(m_regions, m_validRegionsIdx);
-		m_waveformDisplaySource.setHorizontalZoom(leftRegion, rightRegion);
 	}
 
 	//==========================================================================
@@ -503,7 +434,7 @@ private:
 	{		
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
-		zeroCrossing.set(m_detectedFrequencySlider.getValue(), 100, juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), m_maximumFrequencySlider.getValue());
+		zeroCrossing.set((float)m_detectedFrequencySlider.getValue(), 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), (float)m_maximumFrequencySlider.getValue());
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
 
 		zeroCrossing.process(m_bufferSource, m_regions);
@@ -554,24 +485,7 @@ private:
 
 		updateValidZeroCrossingIdx();
 
-		// Handle regions component
-		int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
-		int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
-		
-		if (leftRegion == -1)
-		{
-			leftRegion = 0;
-			m_zoomRegionLeftLabel.setText("0", juce::dontSendNotification);
-		}
-
-		if (rightRegion == -1)
-		{
-			rightRegion = m_regions.size() - 1;
-			m_zoomRegionRightLabel.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
-		}
-
 		m_waveformDisplaySource.setRegions(m_regions, m_validRegionsIdx);
-		m_waveformDisplaySource.setHorizontalZoom(leftRegion, rightRegion);
 
 		repaint();
 	}
@@ -589,23 +503,6 @@ private:
 			m_sourceButton.setButtonText("Source");
 			m_sourceType = SourceType::Source;
 		}
-	}
-
-	//==========================================================================
-	void setHorizontalZoom()
-	{
-		const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
-		const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
-
-		const int regionsIndexMax = m_regions.size() - 1;
-
-		if (leftRegion == -1 || leftRegion > regionsIndexMax || rightRegion == -1 | rightRegion > regionsIndexMax)
-		{
-			return;
-		}
-		
-		m_waveformDisplaySource.setHorizontalZoom(leftRegion, rightRegion);
-		m_waveformDisplayOutput.setHorizontalZoom(leftRegion, rightRegion);
 	}
 
 	//==========================================================================
@@ -637,9 +534,6 @@ private:
 	juce::TextButton m_playButton;
 	juce::TextButton m_sourceButton;
 
-	juce::TextButton m_scrollLeft;
-	juce::TextButton m_scrollRight;
-
 	// Sliders
 	juce::Slider m_detectedFrequencySlider;
 	juce::Slider m_thresholdSlider;
@@ -667,9 +561,6 @@ private:
 	juce::Label m_validRegionsCountLabel;
 	juce::Label m_maxZeroCrossingGainLabel;
 
-	juce::Label m_zoomRegionLeftLabel;
-	juce::Label m_zoomRegionRightLabel;
-
 	// Export
 	juce::Label m_exportRegionLeftLabel;
 	juce::Label m_exportRegionRightLabel;
@@ -681,9 +572,6 @@ private:
 	GroupLabelComponent m_regionGroupLableComponent{ "Regions Detection" };
 	GroupLabelComponent m_exportGroupLableComponent{ "Output" };
 	GroupLabelComponent m_playbackGroupLableComponent{ "Playback" };
-	GroupLabelComponent m_sourceWaveformGroupLableComponent{ "Source" };
-	GroupLabelComponent m_outputWaveformGroupLableComponent{ "Output" };
-	GroupLabelComponent m_zoomGroupLableComponent{ "Zoom" };
 
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;

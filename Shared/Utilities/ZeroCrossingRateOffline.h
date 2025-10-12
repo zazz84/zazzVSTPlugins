@@ -84,8 +84,8 @@ public:
 
 private:
 	BiquadFilter m_filter;
-	int m_estimatedFrequencyMin = 0.0f;
-	int m_estimatedFrequencyMax = 0.0f;
+	int m_estimatedFrequencyMin = 0;
+	int m_estimatedFrequencyMax = 0;
 	float m_detectedFrequency = 0.0f;
 	float m_maxRMS = 0.0f;
 	int m_sampleRate = 48000;

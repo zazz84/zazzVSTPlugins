@@ -170,14 +170,14 @@ public:
 				const int sampleStart = zeroCrossingEstimatedIdx[segmentId] - testRangeHalf;
 				const int sampleEnd = zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
 
-				float inLast = bufferSum[sampleStart - 1];
+				float inLast2 = bufferSum[sampleStart - 1];
 				int closestIndex = sampleStart;
 
 				for (int sample = sampleStart; sample < sampleEnd; sample++)
 				{
 					const float in = bufferSum[sample];
 
-					if (inLast < 0.0f && in >= 0.0f)
+					if (inLast2 < 0.0f && in >= 0.0f)
 					{
 						// Find closes sample to estimated zero crossing
 						if (std::abs(zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(zeroCrossingEstimatedIdx[segmentId] - closestIndex))
@@ -186,7 +186,7 @@ public:
 						}
 					}
 
-					inLast = in;
+					inLast2 = in;
 				}
 
 				regions[segmentId] = closestIndex;
@@ -210,10 +210,10 @@ public:
 				const int currentCrossing = regions[i + 1];
 				const int size = currentCrossing - regions[i];
 				const int idealZeroCrossing = regions[i] + median;
-				const int diff = std::abs(median - size);
+				const int diff2 = std::abs(median - size);
 
-				int indexLeft = idealZeroCrossing - diff;
-				for (int j = idealZeroCrossing - diff; j < idealZeroCrossing; j++)
+				int indexLeft = idealZeroCrossing - diff2;
+				for (int j = idealZeroCrossing - diff2; j < idealZeroCrossing; j++)
 				{
 					if (bufferSum[j - 1] < 0.0f && bufferSum[j] >= 0.0f)
 					{
@@ -221,8 +221,8 @@ public:
 					}
 				}
 
-				int indexRight = idealZeroCrossing + diff;
-				for (int j = idealZeroCrossing + diff; j >= idealZeroCrossing; j--)
+				int indexRight = idealZeroCrossing + diff2;
+				for (int j = idealZeroCrossing + diff2; j >= idealZeroCrossing; j--)
 				{
 					if (bufferSum[j - 1] < 0.0f && bufferSum[j] >= 0.0f)
 					{
@@ -233,7 +233,7 @@ public:
 				const int betterIndex = idealZeroCrossing - indexLeft < indexRight - idealZeroCrossing ? indexLeft : indexRight;
 				const int diffBetter = std::abs(idealZeroCrossing - betterIndex);
 
-				if (diffBetter < diff)
+				if (diffBetter < diff2)
 				{
 					regions[i + 1] = betterIndex;
 				}

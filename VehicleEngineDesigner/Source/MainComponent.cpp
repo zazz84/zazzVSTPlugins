@@ -1,7 +1,7 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent()
+MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
 {
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
@@ -12,9 +12,6 @@ MainComponent::MainComponent()
 	addAndMakeVisible(m_regionGroupLableComponent);
 	addAndMakeVisible(m_exportGroupLableComponent);
 	addAndMakeVisible(m_playbackGroupLableComponent);
-	addAndMakeVisible(m_sourceWaveformGroupLableComponent);
-	addAndMakeVisible(m_outputWaveformGroupLableComponent);
-	addAndMakeVisible(m_zoomGroupLableComponent);
 	
 	// Labels
 	//
@@ -67,6 +64,7 @@ MainComponent::MainComponent()
 	m_maximumFrequencyLabel.attachToComponent(&m_maximumFrequencySlider, true);
 
 	//
+	// TODO - Remove this slider and label
 	//addAndMakeVisible(m_regionOffsetLenghtSlider);
 	m_regionOffsetLenghtSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_regionOffsetLenghtSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
@@ -101,79 +99,8 @@ MainComponent::MainComponent()
 	m_regionsCountLabel.setJustificationType(juce::Justification::centred);
 
 	//
-	//addAndMakeVisible(m_validRegionsCountLabel);
-	//m_validRegionsCountLabel.setJustificationType(juce::Justification::centred);
-
-	//
 	addAndMakeVisible(m_maxZeroCrossingGainLabel);
 	m_maxZeroCrossingGainLabel.setJustificationType(juce::Justification::centred);
-
-	// Zoom	
-	addAndMakeVisible(m_zoomRegionLeftLabel);
-	m_zoomRegionLeftLabel.setEditable(true, true, false);  // user can click & type
-	m_zoomRegionLeftLabel.setJustificationType(juce::Justification::centred);
-	m_zoomRegionLeftLabel.setText("-1", juce::dontSendNotification);
-
-	m_zoomRegionLeftLabel.onTextChange = [this]
-	{	
-		// Reset to invalid when not regions are detected
-		if (m_regions.size() == 0)
-		{
-			m_zoomRegionLeftLabel.setText("-1", juce::dontSendNotification);
-			return;
-		}
-		
-		const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
-		const int regionsMax = m_regions.size() - 1;
-
-		if (leftRegion < 0 || leftRegion > regionsMax)
-		{
-			m_zoomRegionLeftLabel.setText("0", juce::dontSendNotification);
-		}
-
-		// Limit if large than right region
-		const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
-
-		if (leftRegion >= rightRegion)
-		{
-			m_zoomRegionLeftLabel.setText(juce::String((float)(std::max(0, rightRegion - 1)), 0), juce::dontSendNotification);
-		}
-
-		setHorizontalZoom();
-	};
-
-	addAndMakeVisible(m_zoomRegionRightLabel);
-	m_zoomRegionRightLabel.setEditable(true, true, false);  // user can click & type
-	m_zoomRegionRightLabel.setJustificationType(juce::Justification::centred);
-	m_zoomRegionRightLabel.setText("-1", juce::dontSendNotification);
-
-	m_zoomRegionRightLabel.onTextChange = [this]
-	{
-		// Reset to invalid when not regions are detected
-		if (m_regions.size() == 0)
-		{
-			m_zoomRegionRightLabel.setText("-1", juce::dontSendNotification);
-			return;
-		}
-
-		const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
-		const int regionsMax = m_regions.size() - 1;
-
-		if (rightRegion < 0 || rightRegion > regionsMax)
-		{
-			m_zoomRegionRightLabel.setText(juce::String((float)(regionsMax)), juce::dontSendNotification);
-		}
-
-		// Limit if large than right region
-		const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
-
-		if (leftRegion >= rightRegion)
-		{
-			m_zoomRegionRightLabel.setText(juce::String((float)(std::min(regionsMax, leftRegion + 1)), 0), juce::dontSendNotification);
-		}
-
-		setHorizontalZoom();
-	};
 
 	// Export sliders
 	addAndMakeVisible(m_exportRegionLeftSlider);
@@ -205,59 +132,6 @@ MainComponent::MainComponent()
 	addAndMakeVisible(m_exportRegionCountLabel);
 	m_exportRegionCountLabel.setText("Reg Count", juce::dontSendNotification);
 	m_exportRegionCountLabel.attachToComponent(&m_exportRegionCountSlider, true);
-
-	// Scroll buttons
-	addAndMakeVisible(&m_scrollLeft);
-	m_scrollLeft.setButtonText("<");
-	m_scrollLeft.onClick = [this]
-	{ 
-		int zoomLeft = m_zoomRegionLeftLabel.getText().getIntValue();
-		int zoomRight = m_zoomRegionRightLabel.getText().getIntValue();
-		const bool regionsIsEmpty = m_zoomRegionRightLabel.getText().isEmpty();
-		const int regionsMax = m_regions.size() - 1;
-
-		if (zoomLeft > zoomRight || zoomLeft == -1 || zoomRight == -1 || regionsMax == 0 || regionsIsEmpty)
-		{
-			return;
-		}
-
-		// Set left to 0, if not enough regions
-		const int size = std::fminf(zoomLeft, zoomRight - zoomLeft);
-
-		zoomLeft -= size;
-		zoomRight -= size;
-
-		m_zoomRegionLeftLabel.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
-		m_zoomRegionRightLabel.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
-
-		setHorizontalZoom();
-	};
-
-	addAndMakeVisible(&m_scrollRight);
-	m_scrollRight.setButtonText(">");
-	m_scrollRight.onClick = [this]
-	{
-		int zoomLeft = m_zoomRegionLeftLabel.getText().getIntValue();
-		int zoomRight = m_zoomRegionRightLabel.getText().getIntValue();
-		const bool regionsIsEmpty = m_zoomRegionRightLabel.getText().isEmpty();
-		const int regionsMax = m_regions.size() - 1;
-
-		if (zoomLeft > zoomRight || zoomLeft == -1 || zoomRight == -1 || regionsMax == 0 || regionsIsEmpty)
-		{
-			return;
-		}
-
-		// Set right to region max, if not enough regions
-		const int size = std::fminf(regionsMax - zoomRight, zoomRight - zoomLeft);
-
-		zoomRight += size;
-		zoomLeft += size;
-
-		m_zoomRegionLeftLabel.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
-		m_zoomRegionRightLabel.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
-
-		setHorizontalZoom();
-	};
 
 	// Buttons
 	addAndMakeVisible(&m_openSourceButton);
@@ -307,7 +181,7 @@ MainComponent::MainComponent()
 
 	setSize(canvasWidth, canvasHeight);
 
-	//
+	// Force fixes aspect
 	m_formatManager.registerBasicFormats();
 
 	setAudioChannels(0, 2);
@@ -383,6 +257,7 @@ void MainComponent::resized()
 	const int pixelSize7 = pixelSize6 + pixelSize;
 	const int pixelSize8 = pixelSize6 + pixelSize2;
 	const int pixelSize9 = pixelSize3 + pixelSize6;
+	const int pixelSize11 = pixelSize9 + pixelSize2;
 	const int pixelSize12 = pixelSize6 + pixelSize6;
 	const int pixelSize15 = pixelSize9 + pixelSize6;
 	const int pixelSize31 = pixelSize15 + pixelSize15 + pixelSize;
@@ -409,12 +284,8 @@ void MainComponent::resized()
 	const int row7 = row6 + pixelSize;
 	const int row8 = row7 + pixelSize;
 	const int row9 = row8 + pixelSize;		
-	const int row10 = row9 + pixelSize2;				// Source group label
-	const int row11 = row10 + pixelSize;				// Source waveform
-	const int row12 = row11 + pixelSize8;				// Output group label
-	const int row13 = row12 + pixelSize;				// Output waveform
-	const int row14 = row13 + pixelSize8;	// Zoom widgets
-	const int row15 = row14 + pixelSize;	// Zoom widgets
+	const int row10 = row9 + pixelSize2;				// Source waveform
+	const int row11 = row10 + pixelSize11;				// Output waveform
 	
 	// Set size
 	m_pluginNameComponent.setSize(width, pixelSize2);
@@ -423,10 +294,6 @@ void MainComponent::resized()
 	m_regionGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_exportGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_playbackGroupLableComponent.setSize(pixelSize15, pixelSize);
-	m_zoomGroupLableComponent.setSize(pixelSize7, pixelSize);
-
-	m_sourceWaveformGroupLableComponent.setSize(pixelSize31, pixelSize);
-	m_outputWaveformGroupLableComponent.setSize(pixelSize31, pixelSize);
 
 	m_openSourceButton.setSize(pixelSize3, pixelSize);
 	m_sourceFileNameLabel.setSize(pixelSize12, pixelSize);
@@ -436,10 +303,8 @@ void MainComponent::resized()
 	m_detectedFrequencySlider.setSize(pixelSize6, pixelSize);
 	m_thresholdSlider.setSize(pixelSize6, pixelSize);
 	m_maximumFrequencySlider.setSize(pixelSize6, pixelSize);
-	//m_detectFrequencyButton.setSize(pixelSize3, pixelSize);
 	 
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
-	//m_validRegionsCountLabel.setSize(pixelSize15, pixelSize);
 	m_regionLenghtMedianLabel.setSize(pixelSize6, pixelSize);
 	m_regionLengthDiffLabel.setSize(pixelSize6, pixelSize);
 	m_maxZeroCrossingGainLabel.setSize(pixelSize6, pixelSize);
@@ -456,14 +321,8 @@ void MainComponent::resized()
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
 
-	m_waveformDisplaySource.setSize(pixelSize31, pixelSize8);
-	m_waveformDisplayOutput.setSize(pixelSize31, pixelSize8);
-
-	m_zoomRegionLeftLabel.setSize(pixelSize3, pixelSize);
-	m_zoomRegionRightLabel.setSize(pixelSize3, pixelSize);
-
-	m_scrollLeft.setSize(pixelSize, pixelSize);
-	m_scrollRight.setSize(pixelSize, pixelSize);
+	m_waveformDisplaySource.setSize(pixelSize31, pixelSize11);
+	m_waveformDisplayOutput.setSize(pixelSize31, pixelSize11);
 
 	// Set position
 	m_pluginNameComponent.setTopLeftPosition(column1, row1);
@@ -472,10 +331,6 @@ void MainComponent::resized()
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row2);
 	m_exportGroupLableComponent.setTopLeftPosition(column2, row4);
 	m_playbackGroupLableComponent.setTopLeftPosition(column8, row8);
-	m_zoomGroupLableComponent.setTopLeftPosition(column6, row14);
-
-	m_sourceWaveformGroupLableComponent.setTopLeftPosition(column2, row10);
-	m_outputWaveformGroupLableComponent.setTopLeftPosition(column2, row12);
 
 	m_openSourceButton.setTopLeftPosition(column2, row3);
 	m_sourceFileNameLabel.setTopLeftPosition(column3, row3);
@@ -485,11 +340,9 @@ void MainComponent::resized()
 
 	m_thresholdSlider.setTopLeftPosition(column11, row3);
 	m_maximumFrequencySlider.setTopLeftPosition(column11, row4);
-	//m_detectFrequencyButton.setTopLeftPosition(column12, row3);
 	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
 
 	m_regionsCountLabel.setTopLeftPosition(column8, row4);
-	//m_validRegionsCountLabel.setTopLeftPosition(column8, row5);
 	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row5);
 	m_regionLengthDiffLabel.setTopLeftPosition(column8, row6);
 	m_maxZeroCrossingGainLabel.setTopLeftPosition(column8, row7);
@@ -506,74 +359,6 @@ void MainComponent::resized()
 	m_sourceButton.setTopLeftPosition(column9, row9);
 	m_playButton.setTopLeftPosition(column11, row9);
 
-	m_waveformDisplaySource.setTopLeftPosition(column2, row11);
-	m_waveformDisplayOutput.setTopLeftPosition(column2, row13);
-
-	m_zoomRegionLeftLabel.setTopLeftPosition(column6, row15);
-	m_zoomRegionRightLabel.setTopLeftPosition(column8, row15);
-
-	m_scrollLeft.setTopLeftPosition(column5 + pixelSize2, row15);
-	m_scrollRight.setTopLeftPosition(column9, row15);
-
-	/*const int EXTRA_SPACE = 20;
-	const int ROW_HEIGHT = 30;
-	const int pixelHeight = 20;
-	const int pixelHeight12 = 12 * pixelHeight;
-
-	const int row1 = EXTRA_SPACE;
-	const int row2 = row1 + ROW_HEIGHT + EXTRA_SPACE;
-	const int row3 = row2 + ROW_HEIGHT + EXTRA_SPACE;
-	const int row4 = row3 + ROW_HEIGHT;
-	const int row5 = row4 + ROW_HEIGHT + EXTRA_SPACE;
-	const int row6 = row5 + ROW_HEIGHT + EXTRA_SPACE;
-	const int row7 = row6 + ROW_HEIGHT + EXTRA_SPACE;
-	const int row8 = row7 + ROW_HEIGHT + EXTRA_SPACE;
-	const int row9 = row8 + ROW_HEIGHT + pixelHeight12;
-
-	const int width = getWidth();
-	
-	const int pixelWidth = 300;
-	const int pixelWidth2 = pixelWidth + pixelWidth;
-	const int pixelWidth3 = pixelWidth2 + pixelWidth;
-	const int pixelWidth4 = pixelWidth2 + pixelWidth2;
-
-	const int column1 = (getWidth() / 2) - 600;
-	const int column2 = column1 + 300;
-	const int column3 = column2 + 300;
-	const int column4 = column3 + 300;
-	
-	//
-	m_openSourceButton.setBounds			(column1, row1, pixelWidth, pixelHeight);
-	m_sourceFileNameLabel.setBounds			(column2, row1, pixelWidth3, pixelHeight);
-	
-	m_detectFrequencyButton.setBounds		(column1, row2, pixelWidth, pixelHeight);
-	m_detectedFrequencySlider.setBounds		(column4, row2, pixelWidth, pixelHeight);
-	
-	m_detectRegionsButton.setBounds			(column1, row3, pixelWidth, pixelHeight);	
-	m_detectionTypeComboBox.setBounds		(column2, row3, pixelWidth, pixelHeight);
-	m_regionOffsetLenghtSlider.setBounds	(column4, row3, pixelWidth, pixelHeight);
-	
-	m_regionsCountLabel.setBounds			(column1, row4, pixelWidth, pixelHeight);
-	m_validRegionsCountLabel.setBounds		(column2, row4, pixelWidth, pixelHeight);
-	m_regionLenghtMedianLabel.setBounds		(column3, row4, pixelWidth, pixelHeight);
-	m_maxZeroCrossingGainLabel.setBounds	(column4, row4, pixelWidth, pixelHeight);
-	
-	m_generateButton.setBounds				(column1, row5, pixelWidth, pixelHeight);
-	m_regionLenghtExportSlider.setBounds	(column4, row5, pixelWidth, pixelHeight);
-	
-	m_saveButton.setBounds					(column1, row6, pixelWidth4, pixelHeight);
-
-	// Play buttons
-	m_sourceButton.setBounds				(column1, row7, pixelWidth, pixelHeight);
-	m_playButton.setBounds					(column2, row7, pixelWidth, pixelHeight);
-
-	// Zoom
-	m_zoomRegionLeftLabel.setBounds				(column3, row7, pixelWidth, pixelHeight);
-	m_zoomRegionRightLabel.setBounds				(column4, row7, pixelWidth, pixelHeight);
-	
-	// Waveform source
-	m_waveformDisplaySource.setBounds			(10, row8, getWidth() - 20, pixelHeight12);
-
-	// Waveform output
-	m_waveformDisplayOutput.setBounds			(10, row9, getWidth() - 20, pixelHeight12);*/
+	m_waveformDisplaySource.setTopLeftPosition(column2, row10);
+	m_waveformDisplayOutput.setTopLeftPosition(column2, row11);
 }
