@@ -64,25 +64,6 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_maximumFrequencyLabel.attachToComponent(&m_maximumFrequencySlider, true);
 
 	//
-	// TODO - Remove this slider and label
-	//addAndMakeVisible(m_regionOffsetLenghtSlider);
-	m_regionOffsetLenghtSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_regionOffsetLenghtSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_regionOffsetLenghtSlider.setRange(0.0, 1000.0, 1.0);   // min, max, step
-	m_regionOffsetLenghtSlider.setValue(1000.0);               // initial value
-
-	addAndMakeVisible(m_regionOffsetLenghtLabel);
-	m_regionOffsetLenghtLabel.setText("Region Lenght Offset", juce::dontSendNotification);
-
-	m_regionOffsetLenghtLabel.attachToComponent(&m_regionOffsetLenghtSlider, true);
-
-	m_regionOffsetLenghtSlider.onValueChange = [this]()
-	{
-		updateValidZeroCrossingIdx();
-		repaint(); // triggers MyComponent::paint()
-	};
-
-	//
 	addAndMakeVisible(m_regionLenghtExportSlider);
 	m_regionLenghtExportSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_regionLenghtExportSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
@@ -123,11 +104,21 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_exportRegionRightLabel.setText("Reg Right", juce::dontSendNotification);
 	m_exportRegionRightLabel.attachToComponent(&m_exportRegionRightSlider, true);
 
+	addAndMakeVisible(m_exportMaxRegionOffsetSlider);
+	m_exportMaxRegionOffsetSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_exportMaxRegionOffsetSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_exportMaxRegionOffsetSlider.setRange(0.0, 1000.0, 1.0);
+	m_exportMaxRegionOffsetSlider.setValue(1000.0);
+
+	addAndMakeVisible(m_exportMaxRegionOffsetLabel);
+	m_exportMaxRegionOffsetLabel.setText("Max Offset", juce::dontSendNotification);
+	m_exportMaxRegionOffsetLabel.attachToComponent(&m_exportMaxRegionOffsetSlider, true);
+
 	addAndMakeVisible(m_exportRegionCountSlider);
 	m_exportRegionCountSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_exportRegionCountSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
 	m_exportRegionCountSlider.setRange(0.0, 200.0, 1.0);
-	m_exportRegionCountSlider.setValue(0.0);
+	m_exportRegionCountSlider.setValue(200.0);
 
 	addAndMakeVisible(m_exportRegionCountLabel);
 	m_exportRegionCountLabel.setText("Reg Count", juce::dontSendNotification);
@@ -137,10 +128,6 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(&m_openSourceButton);
 	m_openSourceButton.setButtonText("Open");
 	m_openSourceButton.onClick = [this] { openSourceButtonClicked(); };
-
-	//addAndMakeVisible(&m_detectFrequencyButton);
-	m_detectFrequencyButton.setButtonText("Detect Frequency");
-	m_detectFrequencyButton.onClick = [this] { detectFrequencyButtonClicked(); };
 
 	addAndMakeVisible(&m_detectRegionsButton);
 	m_detectRegionsButton.setButtonText("Detect");
@@ -284,8 +271,9 @@ void MainComponent::resized()
 	const int row7 = row6 + pixelSize;
 	const int row8 = row7 + pixelSize;
 	const int row9 = row8 + pixelSize;		
-	const int row10 = row9 + pixelSize2;				// Source waveform
-	const int row11 = row10 + pixelSize11;				// Output waveform
+	const int row10 = row9 + pixelSize;		
+	const int row11 = row10 + pixelSize2;				// Source waveform
+	const int row12 = row11 + pixelSize11;				// Output waveform
 	
 	// Set size
 	m_pluginNameComponent.setSize(width, pixelSize2);
@@ -303,6 +291,7 @@ void MainComponent::resized()
 	m_detectedFrequencySlider.setSize(pixelSize6, pixelSize);
 	m_thresholdSlider.setSize(pixelSize6, pixelSize);
 	m_maximumFrequencySlider.setSize(pixelSize6, pixelSize);
+	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
 	 
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_regionLenghtMedianLabel.setSize(pixelSize6, pixelSize);
@@ -341,6 +330,7 @@ void MainComponent::resized()
 	m_thresholdSlider.setTopLeftPosition(column11, row3);
 	m_maximumFrequencySlider.setTopLeftPosition(column11, row4);
 	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
+	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column11, row6);
 
 	m_regionsCountLabel.setTopLeftPosition(column8, row4);
 	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row5);
@@ -359,6 +349,6 @@ void MainComponent::resized()
 	m_sourceButton.setTopLeftPosition(column9, row9);
 	m_playButton.setTopLeftPosition(column11, row9);
 
-	m_waveformDisplaySource.setTopLeftPosition(column2, row10);
-	m_waveformDisplayOutput.setTopLeftPosition(column2, row11);
+	m_waveformDisplaySource.setTopLeftPosition(column2, row11);
+	m_waveformDisplayOutput.setTopLeftPosition(column2, row12);
 }

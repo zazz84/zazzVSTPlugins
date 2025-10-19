@@ -65,7 +65,9 @@ public:
 		// Create sum buffer to handle stereo input
 		juce::AudioBuffer<float> sumAudioBuffer(1, samples);
 
-		if (channels == 1)
+		sumAudioBuffer.copyFrom(0, 0, audioBuffer.getReadPointer(0), audioBuffer.getNumSamples());
+
+		/*if (channels == 1)
 		{
 			sumAudioBuffer.makeCopyOf(audioBuffer, true);
 		}
@@ -79,7 +81,7 @@ public:
 			{
 				bufferSum[sample] = 0.5f * (bufferLeft[sample] + bufferRight[sample]);
 			}
-		}
+		}*/
 
 		// Estimated zero crossing extracted from filtered signal
 		m_filter.reset();
@@ -137,21 +139,24 @@ public:
 			sinceLast++;
 		}
 
-		zeroCrossingEstimatedIdx.push_back(samples);
-
 		// Remove false positive first and last
 		const int testRangeHalf = m_searchRange / 2;
 
-		if (zeroCrossingEstimatedIdx[1] - testRangeHalf <= 0)
+		/*if (zeroCrossingEstimatedIdx.size() > 1)
 		{
-			zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.begin() + 1);
+			if (zeroCrossingEstimatedIdx[1] - testRangeHalf <= 0)
+			{
+				zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.begin() + 1);
+			}
 		}
 
-		if (zeroCrossingEstimatedIdx[zeroCrossingEstimatedIdx.size() - 2] + testRangeHalf >= samples)
+		if (zeroCrossingEstimatedIdx.size() > 1)
 		{
-			zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.end() - 1);
-		}
-		
+			if (zeroCrossingEstimatedIdx[zeroCrossingEstimatedIdx.size() - 1] + testRangeHalf >= samples)
+			{
+				zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.end());
+			}
+		}*/
 
 		// Handle final zero crossing
 		regions.resize(zeroCrossingEstimatedIdx.size());
@@ -165,7 +170,7 @@ public:
 			// Final zero corssing with smaller amplitude
 			regions[0] = 0;
 
-			for (int segmentId = 1; segmentId < regions.size() - 1; segmentId++)
+			for (int segmentId = 1; segmentId < regions.size(); segmentId++)
 			{
 				const int sampleStart = zeroCrossingEstimatedIdx[segmentId] - testRangeHalf;
 				const int sampleEnd = zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
@@ -192,10 +197,10 @@ public:
 				regions[segmentId] = closestIndex;
 			}
 
-			regions[regions.size() - 1] = samples;
+			//regions[regions.size() - 1] = samples;
 
 			// Try to find better zero crossings by comparing region length to its median
-			std::vector<int> diff;
+			/*std::vector<int> diff;
 			diff.resize(regions.size() - 1);
 
 			for (int segmentId = 0; segmentId < regions.size() - 1; segmentId++)
@@ -237,7 +242,7 @@ public:
 				{
 					regions[i + 1] = betterIndex;
 				}
-			}
+			}*/
 		}
 	}
 

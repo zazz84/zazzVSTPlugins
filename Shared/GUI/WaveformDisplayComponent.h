@@ -23,6 +23,13 @@
 
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 
+struct Region
+{
+	int m_sampleIndex = -1;
+	bool m_isValid = false;
+	int m_length = 0;
+};
+
 class WaveformDisplayComponent : public juce::Component
 {
 public:
@@ -40,8 +47,10 @@ public:
 
 		m_zoomRegionLeftLabel.onTextChange = [this]
 		{
+			const size_t size = m_regions.size();
+			
 			// Reset to invalid when not regions are detected
-			if (m_regions.size() == 0)
+			if (size == 0)
 			{
 				m_zoomRegionLeftLabel.setText("-1", juce::dontSendNotification);
 				return;
@@ -50,6 +59,7 @@ public:
 			const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
 			const int regionsMax = (int)m_regions.size() - 1;
 
+			// Reset if wrong input
 			if (leftRegion < 0 || leftRegion > regionsMax)
 			{
 				m_zoomRegionLeftLabel.setText("0", juce::dontSendNotification);
@@ -58,9 +68,9 @@ public:
 			// Limit if large than right region
 			const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
 
-			if (leftRegion >= rightRegion)
+			if (leftRegion > rightRegion)
 			{
-				m_zoomRegionLeftLabel.setText(juce::String((float)(std::max(0, rightRegion - 1)), 0), juce::dontSendNotification);
+				m_zoomRegionLeftLabel.setText(juce::String((float)rightRegion, 0), juce::dontSendNotification);
 			}
 
 			setHorizontalZoom();
@@ -73,16 +83,19 @@ public:
 
 		m_zoomRegionRightLabel.onTextChange = [this]
 		{
+			const size_t size = m_regions.size();
+			
 			// Reset to invalid when not regions are detected
-			if (m_regions.size() == 0)
+			if (size == 0)
 			{
 				m_zoomRegionRightLabel.setText("-1", juce::dontSendNotification);
 				return;
 			}
 
 			const int rightRegion = m_zoomRegionRightLabel.getText().getIntValue();
-			const int regionsMax = (int)m_regions.size() - 1;
+			const int regionsMax = (int)size - 1;
 
+			// Reset if wrong input
 			if (rightRegion < 0 || rightRegion > regionsMax)
 			{
 				m_zoomRegionRightLabel.setText(juce::String((float)(regionsMax)), juce::dontSendNotification);
@@ -91,7 +104,7 @@ public:
 			// Limit if large than right region
 			const int leftRegion = m_zoomRegionLeftLabel.getText().getIntValue();
 
-			if (leftRegion >= rightRegion)
+			if (leftRegion > rightRegion)
 			{
 				m_zoomRegionRightLabel.setText(juce::String((float)(std::min(regionsMax, leftRegion + 1)), 0), juce::dontSendNotification);
 			}
@@ -100,9 +113,9 @@ public:
 		};
 
 		// Scroll buttons
-		addAndMakeVisible(&m_scrollLeft);
-		m_scrollLeft.setButtonText("<");
-		m_scrollLeft.onClick = [this]
+		addAndMakeVisible(&m_scrollLeftButton);
+		m_scrollLeftButton.setButtonText("<");
+		m_scrollLeftButton.onClick = [this]
 		{
 			int zoomLeft = m_zoomRegionLeftLabel.getText().getIntValue();
 			int zoomRight = m_zoomRegionRightLabel.getText().getIntValue();
@@ -114,11 +127,11 @@ public:
 				return;
 			}
 
-			// Set left to 0, if not enough regions
-			const int size = std::min(zoomLeft, zoomRight - zoomLeft);
+			// Set zoom
+			const int size = zoomRight - zoomLeft + 1;
 
-			zoomLeft -= size;
-			zoomRight -= size;
+			zoomLeft = std::max(0, zoomLeft - size);
+			zoomRight = std::max(0, zoomRight - size);
 
 			m_zoomRegionLeftLabel.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
 			m_zoomRegionRightLabel.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
@@ -126,9 +139,9 @@ public:
 			setHorizontalZoom();
 		};
 
-		addAndMakeVisible(&m_scrollRight);
-		m_scrollRight.setButtonText(">");
-		m_scrollRight.onClick = [this]
+		addAndMakeVisible(&m_scrollRightButton);
+		m_scrollRightButton.setButtonText(">");
+		m_scrollRightButton.onClick = [this]
 		{
 			int zoomLeft = m_zoomRegionLeftLabel.getText().getIntValue();
 			int zoomRight = m_zoomRegionRightLabel.getText().getIntValue();
@@ -140,26 +153,47 @@ public:
 				return;
 			}
 
-			// Set right to region max, if not enough regions
-			const int size = std::min(regionsMax - zoomRight, zoomRight - zoomLeft);
+			// Set zoom
+			const int size = zoomRight - zoomLeft + 1;
 
-			zoomRight += size;
-			zoomLeft += size;
+			zoomRight = std::min(regionsMax, zoomRight + size);
+			zoomLeft = std::min(regionsMax, zoomLeft + size);
 
 			m_zoomRegionLeftLabel.setText(juce::String((float)zoomLeft, 0), juce::dontSendNotification);
 			m_zoomRegionRightLabel.setText(juce::String((float)zoomRight, 0), juce::dontSendNotification);
 
 			setHorizontalZoom();
 		};
+
+		addAndMakeVisible(&m_resetZoomButton);
+		m_resetZoomButton.setButtonText("R");
+		m_resetZoomButton.onClick = [this]
+		{			
+			m_zoomRegionLeftLabel.setText("0", juce::NotificationType::dontSendNotification);
+			m_zoomRegionRightLabel.setText(juce::String((float)(m_regions.size() - 1), 0), juce::NotificationType::dontSendNotification);
+
+			setHorizontalZoom();
+		};
+
+		addAndMakeVisible(&m_showDetailsButton);
+		m_showDetailsButton.setButtonText("D");
+		m_showDetailsButton.setClickingTogglesState(true);
+		m_showDetailsButton.setToggleState(true, juce::NotificationType::dontSendNotification);
+		m_showDetailsButton.onClick = [this]
+		{
+			repaint();
+		};
+
 	}
 	~WaveformDisplayComponent() = default;
 
 	void setAudioBuffer(const juce::AudioBuffer<float> buffer)
 	{
 		m_audioBuffer = buffer;
+		m_leftSampleIndex = 0;
 		m_rightSampleIndex = buffer.getNumSamples();
 
-		if (buffer.getNumSamples() != 0)
+		if (m_rightSampleIndex != 0)
 		{
 			const float verticalZoom = 1.0f / buffer.getMagnitude(0, buffer.getNumSamples());
 			m_verticalZoom = verticalZoom;
@@ -177,17 +211,21 @@ public:
 		m_zoomRegionRightLabel.setText("-1", juce::dontSendNotification);
 
 		m_regions.clear();
-		m_validRegionsIdx.clear();
 
 		repaint();
 	}
-	void setRegions(const std::vector<int> regions, const std::vector<int> validRegionsIdx)
+	void setRegions(const std::vector<Region> regions)
 	{
+		const size_t size = regions.size();
+		if (size == 0)
+		{
+			return;
+		}
+		
 		m_regions = regions;
-		m_validRegionsIdx = validRegionsIdx;
 
 		m_leftRegionIndex = 0;
-		m_rightRegionIndex = (int)(m_regions.size() - 1);
+		m_rightRegionIndex = (int)(size - 1);
 
 		m_zoomRegionLeftLabel.setText("0", juce::dontSendNotification);	
 		m_zoomRegionRightLabel.setText(juce::String((float)m_rightRegionIndex, 0), juce::dontSendNotification);
@@ -206,12 +244,12 @@ public:
 		const int size = (int)m_regions.size();
 		if (leftRegionIndex >= 0 && leftRegionIndex < size)
 		{
-			m_leftSampleIndex = m_regions[m_leftRegionIndex];
+			m_leftSampleIndex = m_regions[m_leftRegionIndex].m_sampleIndex;
 		}
 
 		if (rightRegionIndex >= 0 && rightRegionIndex < size)
 		{
-			m_rightSampleIndex = m_regions[rightRegionIndex];
+			m_rightSampleIndex = m_regions[rightRegionIndex].m_sampleIndex + m_regions[rightRegionIndex].m_length;
 		}
 		
 		repaint();
@@ -231,8 +269,10 @@ public:
 
 		m_zoomRegionLeftLabel.setSize(pixelSize, pixelSize);
 		m_zoomRegionRightLabel.setSize(pixelSize, pixelSize);
-		m_scrollLeft.setSize(pixelSize, pixelSize);
-		m_scrollRight.setSize(pixelSize, pixelSize);
+		m_scrollLeftButton.setSize(pixelSize, pixelSize);
+		m_scrollRightButton.setSize(pixelSize, pixelSize);
+		m_resetZoomButton.setSize(pixelSize, pixelSize);
+		m_showDetailsButton.setSize(pixelSize, pixelSize);
 
 		// Set position
 		const auto column1 = 0;	
@@ -240,6 +280,8 @@ public:
 		const auto column2 = column4 - pixelSize2;
 		const auto column3 = column4 - pixelSize;
 		const auto column5 = column4 + pixelSize;
+		const auto column6 = column5 + pixelSize2;
+		const auto column7 = column6 + pixelSize8;
 
 		const auto row1 = 0;
 		const auto row2 = row1 + pixelSize;
@@ -249,10 +291,12 @@ public:
 		m_nameGroupComponent.setTopLeftPosition(column1, row1);
 		m_zoomGroupComponent.setTopLeftPosition(column2, row3);
 
-		m_scrollLeft.setTopLeftPosition(column2, row4);
-		m_zoomRegionLeftLabel.setTopLeftPosition(column3, row4);
-		m_zoomRegionRightLabel.setTopLeftPosition(column4, row4);
-		m_scrollRight.setTopLeftPosition(column5, row4);
+		m_scrollLeftButton.setTopLeftPosition		(column2, row4);
+		m_zoomRegionLeftLabel.setTopLeftPosition	(column3, row4);
+		m_zoomRegionRightLabel.setTopLeftPosition	(column4, row4);
+		m_scrollRightButton.setTopLeftPosition		(column5, row4);
+		m_resetZoomButton.setTopLeftPosition		(column6, row4);
+		m_showDetailsButton.setTopLeftPosition		(column7, row4);
 	}
 	void paint(juce::Graphics& g) override
 	{
@@ -263,6 +307,9 @@ public:
 		const auto pixelSize5 = 5 * pixelSize;
 		const auto pixelSize8 = 8 * pixelSize;
 		const auto pixelSize9 = pixelSize8 + pixelSize;
+
+		// Misc
+		const auto showDetails = m_showDetailsButton.getToggleState();
 
 		// Draw background
 		juce::Rectangle<float> backgroundRectabgle;
@@ -311,32 +358,20 @@ public:
 			const float factor = (float)width / (float)(m_rightSampleIndex - m_leftSampleIndex);
 
 			// Draw all regions
-			g.setColour(juce::Colours::red);
-
 			for (int region = m_leftRegionIndex; region <= m_rightRegionIndex; region++)
 			{
-				const float x = factor * (float)(m_regions[region] - m_leftSampleIndex);
+				const float x = factor * (float)(m_regions[region].m_sampleIndex - m_leftSampleIndex);
 
-				g.drawLine(x, (float)pixelSize, x, (float)pixelSize9, 1.0f);
-			}
-
-			// Draw valid regions
-			for (int id = 0; id < m_validRegionsIdx.size(); id++)
-			{
-				const int region = m_validRegionsIdx[id];
-
-				if (region >= m_leftRegionIndex && region <= m_rightRegionIndex)
+				if (m_regions[region].m_isValid)
 				{
-					const float x = factor * (float)(m_regions[region] - m_leftSampleIndex);
-
 					g.setColour(juce::Colours::whitesmoke);
 					g.drawLine(x, (float)pixelSize, x, (float)pixelSize9, 3.0f);
 
-					// Dont draw for the last region
-					if (region != m_rightRegionIndex)
+					// Draw details
+					if (showDetails == true)
 					{
 						constexpr float recWidth = 70.0f;
-						
+
 						// Region index
 						juce::Rectangle<float> rectangle(x + 5.0f, (float)pixelSize5 + 5.0f, recWidth, 20.0f);
 
@@ -352,7 +387,7 @@ public:
 						g.fillRect(rectangle);
 
 						g.setColour(juce::Colours::black);
-						const int sampleIndex = m_regions[region];
+						const int sampleIndex = m_regions[region].m_sampleIndex;
 						g.drawText(juce::String((float)sampleIndex, 0), rectangle, juce::Justification::centred);
 
 						// Sample value
@@ -374,10 +409,15 @@ public:
 						g.fillRect(rectangle);
 
 						g.setColour(juce::Colours::black);
-						const int regionLength = m_regions[region + 1] - m_regions[region];
-						g.drawText(juce::String((float)regionLength, 0), rectangle, juce::Justification::centred);
+						g.drawText(juce::String((float)m_regions[region].m_length, 0), rectangle, juce::Justification::centred);
 					}
 				}
+				else
+				{
+					g.setColour(juce::Colours::red);
+				}
+
+				g.drawLine(x, (float)pixelSize, x, (float)pixelSize9, 1.0f);
 			}
 
 			// Draw last line
@@ -405,15 +445,16 @@ public:
 private:
 	juce::AudioBuffer<float> m_audioBuffer;
 
-	std::vector<int> m_regions;
-	std::vector<int> m_validRegionsIdx;
+	std::vector<Region> m_regions;
 
 	GroupLabelComponent m_nameGroupComponent;
 	GroupLabelComponent m_zoomGroupComponent{ "Zoom" };
 	juce::Label m_zoomRegionLeftLabel;
 	juce::Label m_zoomRegionRightLabel;
-	juce::TextButton m_scrollLeft;
-	juce::TextButton m_scrollRight;
+	juce::TextButton m_scrollLeftButton;
+	juce::TextButton m_scrollRightButton;
+	juce::TextButton m_resetZoomButton;
+	juce::TextButton m_showDetailsButton;
 
 	float m_verticalZoom = 1.0f;
 	int m_leftSampleIndex = 0;

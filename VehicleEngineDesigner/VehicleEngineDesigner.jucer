@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="AJkYCg" name="VehicleEngineDesigner" projectType="guiapp"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" companyName="zazz" version="0.0.2">
+              jucerFormatVersion="1" companyName="zazz" version="0.0.3">
   <MAINGROUP id="mkvuHv" name="VehicleEngineDesigner">
     <GROUP id="{F2D151BB-A00D-9D60-6DFB-DB3C87000671}" name="Source">
       <FILE id="lOSKRu" name="RandomNoRepeat.h" compile="0" resource="0"
@@ -23,6 +23,8 @@
       <FILE id="v7ssQr" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
     </GROUP>
+    <FILE id="o84b2O" name="VehicleEngineDesigner.png" compile="0" resource="1"
+          file="VehicleEngineDesigner.png"/>
   </MAINGROUP>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -40,7 +42,7 @@
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017">
+    <VS2017 targetFolder="Builds/VisualStudio2017" smallIcon="o84b2O" bigIcon="o84b2O">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="VehicleEngineDesigner"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="VehicleEngineDesigner"/>
