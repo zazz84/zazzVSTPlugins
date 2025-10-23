@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "juce_dsp/juce_dsp.h"
 
 #include <vector>
 #include <algorithm>
@@ -412,13 +413,123 @@ private:
 		const int leftThreshold = m_regionLenghtMedian - regionOffset;
 		const int rightThreshold = m_regionLenghtMedian + regionOffset;
 
+		// Limit regions by offset
 		for (auto& region : m_regions)
 		{
 			region.m_isValid = region.m_length > leftThreshold && region.m_length < rightThreshold;
 		}
 
-		const auto validRegionsCount = getValidRegionsCount();
+		// Compare spectrum
+		const int FFT_ORDER = 10;
+		const int FFT_SIZE = 1 << FFT_ORDER;
 
+		juce::dsp::FFT forwardFFT(FFT_ORDER);
+		juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
+		float tempBuffer[FFT_SIZE];
+		float fftData[2 * FFT_SIZE];
+		auto* pBufferSource = m_bufferSource.getWritePointer(0);
+		const int sourceSize = m_bufferSource.getNumSamples();
+
+
+		for (auto& region : m_regions)
+		{
+			if (region.m_isValid == false)
+			{
+				continue;
+			}
+
+			// Resample
+			const int segmentStartIndex = region.m_sampleIndex;
+			const int sourceRegionLength = region.m_length;
+			const float indexIncrement = (float)sourceRegionLength / (float)FFT_SIZE;
+
+			float sourceIndex = 0.0f;
+
+			for (int i = 0; i < FFT_SIZE; i++)
+			{
+				const int indexLeft = segmentStartIndex + (int)sourceIndex;
+				const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
+
+				const float valueLeft = pBufferSource[indexLeft];
+				const float valueRight = pBufferSource[indexRight];
+
+				const float delta = sourceIndex - std::floor(sourceIndex);
+				const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
+
+				//tempBuffer[i] = interpolated;
+				region.m_fftData[i] = interpolated;
+
+				sourceIndex += indexIncrement;
+			}
+
+			// Get spectrum
+			// Apply windowing function
+			window.multiplyWithWindowingTable(region.m_fftData, FFT_SIZE);
+
+			// Perform FFT
+			forwardFFT.performFrequencyOnlyForwardTransform(region.m_fftData);
+		}
+
+		// Do FFT statistics		
+		auto validRegionsCount = getValidRegionsCount();
+
+		// Get average
+		float fftDataAverage[2 * FFT_SIZE];
+		std::fill(std::begin(fftDataAverage), std::end(fftDataAverage), 0.0f);
+
+		for (auto& region : m_regions)
+		{
+			if (region.m_isValid == false)
+			{
+				continue;
+			}
+
+			for (size_t i = 0; i < 2 * FFT_SIZE; i++)
+			{
+				const float value = region.m_fftData[i];
+				if (value > 0.001f)
+				{
+					fftDataAverage[i] += value;
+				}
+			}
+		}
+
+		for (size_t i = 0; i < 2 * FFT_SIZE; i++)
+		{
+			fftDataAverage[i] = fftDataAverage[i] / (float)(validRegionsCount);
+		}
+
+		// Get difference
+		const auto spectrumDifference = 0.01 * m_SpectrumDifferenceSlider.getValue();
+
+		for (auto& region : m_regions)
+		{
+			if (region.m_isValid == false)
+			{
+				continue;
+			}
+
+			float diff = 0.0f;
+
+			for (size_t i = 0; i < FFT_SIZE; i++)
+			{
+				const float d = std::fabsf(fftDataAverage[i] - region.m_fftData[i]);
+				if (d > 0.001f)
+				{
+					diff += d;
+				}
+			}
+
+			// Set invalid
+			region.m_difference = diff / (float)(FFT_SIZE);
+			if (region.m_difference > spectrumDifference)
+			{
+				region.m_isValid = false;
+			}
+		}
+
+		
+		validRegionsCount = getValidRegionsCount();
 		m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)validRegionsCount, 0), juce::dontSendNotification);
 		m_waveformDisplaySource.setRegions(m_regions);
 	}
@@ -473,7 +584,7 @@ private:
 			m_regions[zeroCrossingIdxs.size() - 1].m_length = m_bufferSource.getNumSamples() - zeroCrossingIdxs[zeroCrossingIdxs.size() - 1];
 		}
 	
-		m_regionsCountLabel.setText("Count: " + juce::String((float)size, 0), juce::dontSendNotification);
+		m_regionsCountLabel.setText("Regions count: " + juce::String((float)size, 0), juce::dontSendNotification);
 
 		// Get median
 		m_regionLenghtMedian = getMedian(m_regions);
@@ -601,6 +712,7 @@ private:
 	juce::Slider m_detectedFrequencySlider;
 	juce::Slider m_thresholdSlider;
 	juce::Slider m_maximumFrequencySlider;
+	juce::Slider m_SpectrumDifferenceSlider;
 	juce::Slider m_regionLenghtExportSlider;
 
 	juce::Slider m_exportRegionLeftSlider;
@@ -614,6 +726,7 @@ private:
 	juce::Label m_detectedFrequencyLabel;
 	juce::Label m_thresholdLabel;
 	juce::Label m_maximumFrequencyLabel;
+	juce::Label m_SpectrumDifferenceLabel;
 
 	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionLengthDiffLabel;

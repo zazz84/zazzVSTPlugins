@@ -25,9 +25,15 @@
 
 struct Region
 {
+	static const int FFT_ORDER = 10;
+	static const int FFT_SIZE = 1 << FFT_ORDER;
+	
 	int m_sampleIndex = -1;
 	bool m_isValid = false;
 	int m_length = 0;
+
+	float m_fftData[2 * FFT_SIZE];
+	float m_difference = 0.0f;
 };
 
 class WaveformDisplayComponent : public juce::Component

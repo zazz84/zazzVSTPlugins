@@ -26,7 +26,10 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_regionLengthDiffLabel);
 	m_regionLengthDiffLabel.setText("", juce::dontSendNotification);
 	m_regionLengthDiffLabel.setJustificationType(juce::Justification::centred);
-	
+
+	addAndMakeVisible(m_validRegionsCountLabel);
+	m_validRegionsCountLabel.setText("", juce::dontSendNotification);
+	m_validRegionsCountLabel.setJustificationType(juce::Justification::centred);
 	//
 	addAndMakeVisible(m_detectedFrequencySlider);
 	m_detectedFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
@@ -50,6 +53,18 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_thresholdLabel.setText("Threshold", juce::dontSendNotification);
 
 	m_thresholdLabel.attachToComponent(&m_thresholdSlider, true);
+
+	//
+	addAndMakeVisible(m_SpectrumDifferenceSlider);
+	m_SpectrumDifferenceSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_SpectrumDifferenceSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_SpectrumDifferenceSlider.setRange(0.0, 100.0, 1.0);
+	m_SpectrumDifferenceSlider.setValue(100.0);
+
+	addAndMakeVisible(m_SpectrumDifferenceLabel);
+	m_SpectrumDifferenceLabel.setText("Spectrum", juce::dontSendNotification);
+
+	m_SpectrumDifferenceLabel.attachToComponent(&m_SpectrumDifferenceSlider, true);
 
 	//
 	addAndMakeVisible(m_maximumFrequencySlider);
@@ -292,8 +307,10 @@ void MainComponent::resized()
 	m_thresholdSlider.setSize(pixelSize6, pixelSize);
 	m_maximumFrequencySlider.setSize(pixelSize6, pixelSize);
 	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
+	m_SpectrumDifferenceSlider.setSize(pixelSize6, pixelSize);
 	 
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
+	m_validRegionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_regionLenghtMedianLabel.setSize(pixelSize6, pixelSize);
 	m_regionLengthDiffLabel.setSize(pixelSize6, pixelSize);
 	m_maxZeroCrossingGainLabel.setSize(pixelSize6, pixelSize);
@@ -319,7 +336,7 @@ void MainComponent::resized()
 	m_sourceGroupLableComponent.setTopLeftPosition(column2, row2);
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row2);
 	m_exportGroupLableComponent.setTopLeftPosition(column2, row4);
-	m_playbackGroupLableComponent.setTopLeftPosition(column8, row8);
+	m_playbackGroupLableComponent.setTopLeftPosition(column8, row9);
 
 	m_openSourceButton.setTopLeftPosition(column2, row3);
 	m_sourceFileNameLabel.setTopLeftPosition(column3, row3);
@@ -331,11 +348,13 @@ void MainComponent::resized()
 	m_maximumFrequencySlider.setTopLeftPosition(column11, row4);
 	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
 	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column11, row6);
+	m_SpectrumDifferenceSlider.setTopLeftPosition(column11, row7);
 
 	m_regionsCountLabel.setTopLeftPosition(column8, row4);
-	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row5);
-	m_regionLengthDiffLabel.setTopLeftPosition(column8, row6);
-	m_maxZeroCrossingGainLabel.setTopLeftPosition(column8, row7);
+	m_validRegionsCountLabel.setTopLeftPosition(column8, row5);
+	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row6);
+	m_regionLengthDiffLabel.setTopLeftPosition(column8, row7);
+	m_maxZeroCrossingGainLabel.setTopLeftPosition(column8, row8);
 
 	m_generateButton.setTopLeftPosition(column2, row5);
 	m_generationTypeComboBox.setTopLeftPosition(column3, row5);
@@ -346,8 +365,8 @@ void MainComponent::resized()
 	m_exportRegionRightSlider.setTopLeftPosition(column3, row8);
 	m_exportRegionCountSlider.setTopLeftPosition(column3, row9);
 
-	m_sourceButton.setTopLeftPosition(column9, row9);
-	m_playButton.setTopLeftPosition(column11, row9);
+	m_sourceButton.setTopLeftPosition(column9, row10);
+	m_playButton.setTopLeftPosition(column11, row10);
 
 	m_waveformDisplaySource.setTopLeftPosition(column2, row11);
 	m_waveformDisplayOutput.setTopLeftPosition(column2, row12);
