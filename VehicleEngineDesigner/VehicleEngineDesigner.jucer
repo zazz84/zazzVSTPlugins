@@ -2,9 +2,21 @@
 
 <JUCERPROJECT id="AJkYCg" name="VehicleEngineDesigner" projectType="guiapp"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" companyName="zazz" version="0.0.4">
+              jucerFormatVersion="1" companyName="zazz" version="0.0.5">
   <MAINGROUP id="mkvuHv" name="VehicleEngineDesigner">
     <GROUP id="{F2D151BB-A00D-9D60-6DFB-DB3C87000671}" name="Source">
+      <FILE id="QG7Vn3" name="CircularBuffers.h" compile="0" resource="0"
+            file="../Shared/Utilities/CircularBuffers.h"/>
+      <FILE id="mTqTgQ" name="WaveformRuntimeComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/WaveformRuntimeComponent.h"/>
+      <FILE id="W2MsFt" name="DesignComponent.cpp" compile="1" resource="0"
+            file="Source/DesignComponent.cpp"/>
+      <FILE id="mf4UEO" name="DesignComponent.h" compile="0" resource="0"
+            file="Source/DesignComponent.h"/>
+      <FILE id="GzOYFs" name="MainComponentBase.cpp" compile="1" resource="0"
+            file="Source/MainComponentBase.cpp"/>
+      <FILE id="PFoawm" name="MainComponentBase.h" compile="0" resource="0"
+            file="Source/MainComponentBase.h"/>
       <FILE id="lOSKRu" name="RandomNoRepeat.h" compile="0" resource="0"
             file="../Shared/Utilities/RandomNoRepeat.h"/>
       <FILE id="slpAsb" name="GroupLabelComponent.h" compile="0" resource="0"

@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "MainComponentBase.h"
+
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
@@ -20,16 +22,12 @@
     This component lives inside our window, and this is where you should put all
     your controls and content.
 */
-class MainComponent  : public juce::AudioAppComponent, public juce::ChangeListener
+class MainComponent  : public MainComponentBase
 {
 public:
     //==============================================================================
     MainComponent();
     ~MainComponent() override;
-
-	static const int CANVAS_WIDTH = 1 + 15 + 1 + 15 + 1;
-	static const int CANVAS_HEIGHT = 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 11 + 11 + 1;
-	static const int WRITTE_BIT_DEPTH = 32;		// 32-bit float
 
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
@@ -37,48 +35,31 @@ public:
     void releaseResources() override;
 
     //==============================================================================
-    void paint (juce::Graphics& g) override;
+    //void paint (juce::Graphics& g) override;
     void resized() override;
 
 	void changeListenerCallback(juce::ChangeBroadcaster* source) override
 	{
 	}
 
-private:
-	enum TransportState
-	{
-		Stopped,
-		Starting,
-		Playing,
-		Stopping
-	};
-
-	enum SourceType
-	{
-		Source,
-		Output
-	};
-
-	enum GenerationType
-	{
-		NotDefined,
-		Flat,
-		RandomRegion
-	};
-
-	enum InterpolationType
-	{
-		Point,
-		Linear
-	};
-
 	//==========================================================================
 	void openSourceButtonClicked()
 	{
-		chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav");
+		openFile(m_bufferSource, m_sampleRate, [this]()
+		{
+			// Draw waveform
+			const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
+			m_waveformDisplaySource.setVerticalZoom(verticalZoom);
+			m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+
+			// Set filename label
+			m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
+		});	
+		
+		/*m_chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav");
 		auto chooserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
 
-		chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
+		m_chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
 			{
 				auto file = fc.getResult();
 
@@ -107,7 +88,7 @@ private:
 						m_sourceFileNameLabel.setText(file.getFileName(), juce::dontSendNotification);
 					}
 				}
-			});
+			});*/
 	}
 
 	//==========================================================================
@@ -352,8 +333,10 @@ private:
 	//==========================================================================
 	void saveButtonClicked()
 	{
+		saveFile(m_bufferOutput, m_sampleRate);
+		
 		// Choose input file first (blocking for simplicity)
-		chooser = std::make_unique<juce::FileChooser>("Save processed file as...", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory), "*.wav");
+		/*chooser = std::make_unique<juce::FileChooser>("Save processed file as...", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory), "*.wav");
 		int flag = juce::FileBrowserComponent::saveMode;
 
 		chooser->launchAsync(flag, [this](const juce::FileChooser& fc)
@@ -398,7 +381,7 @@ private:
 										"Failed to save file!");
 							});
 					}).detach();
-			});
+			});*/
 	}
 
 	//==========================================================================
@@ -755,10 +738,6 @@ private:
 
 	//! Stores zero crossing points in source audio buffer
 	std::vector<Region> m_regions{};
-
-	std::unique_ptr<juce::FileChooser> chooser;
-
-	juce::AudioFormatManager m_formatManager;
 	
 	juce::AudioBuffer<float> m_bufferSource;
 	juce::AudioBuffer<float> m_bufferOutput;

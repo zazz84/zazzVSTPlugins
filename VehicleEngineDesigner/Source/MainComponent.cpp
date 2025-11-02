@@ -1,7 +1,7 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
+MainComponent::MainComponent() : MainComponentBase(), m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
 {
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
@@ -178,15 +178,13 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_generationTypeComboBox);
 	
 	// Canvas size
-	const int canvasWidth = CANVAS_WIDTH * 30;
-	const int canvasHeight = CANVAS_HEIGHT * 30;
+	//const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
+	//const int canvasHeight = CANVAS_HEIGHT * PIXEL_SIZE;
 
-	setSize(canvasWidth, canvasHeight);
+	//setSize(canvasWidth, canvasHeight);
+	//setSize(getWidth(), getHeight());
 
 	// Force fixes aspect
-	m_formatManager.registerBasicFormats();
-
-	setAudioChannels(0, 2);
 }
 
 MainComponent::~MainComponent()
@@ -239,18 +237,22 @@ void MainComponent::releaseResources()
 }
 
 //==============================================================================
-void MainComponent::paint (juce::Graphics& g)
+/*void MainComponent::paint (juce::Graphics& g)
 {
     g.fillAll (darkColor);
-}
+}*/
 
 void MainComponent::resized()
 {	
 	// Force fized ratio
+	/*const int width = getWidth();
+	const int pixelSize = width / CANVAS_WIDTH;
+	const int height = pixelSize * CANVAS_HEIGHT;*/
+	//setSize(width, pixelSize * CANVAS_HEIGHT);
+
+	// Pixel size
 	const int width = getWidth();
 	const int pixelSize = width / CANVAS_WIDTH;
-	const int height = pixelSize * CANVAS_HEIGHT;
-	setSize(width, pixelSize * CANVAS_HEIGHT);
 
 	// Calculate helpers
 	const int pixelSize2 = pixelSize + pixelSize;

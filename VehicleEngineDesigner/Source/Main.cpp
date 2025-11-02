@@ -7,7 +7,9 @@
 */
 
 #include <JuceHeader.h>
+
 #include "MainComponent.h"
+#include "DesignComponent.h"
 
 //==============================================================================
 class VehicleEngineDesignerApplication  : public juce::JUCEApplication
@@ -64,7 +66,7 @@ public:
                                                           .findColour (juce::ResizableWindow::backgroundColourId),
                               DocumentWindow::allButtons)
         {
-            setUsingNativeTitleBar (true);
+            /*setUsingNativeTitleBar (true);
             setContentOwned (new MainComponent(), true);
 
            #if JUCE_IOS || JUCE_ANDROID
@@ -74,7 +76,19 @@ public:
             centreWithSize (getWidth(), getHeight());
            #endif
 
-            setVisible (true);
+            setVisible (true);*/
+
+			setUsingNativeTitleBar(false);
+			
+			auto* tabs = new juce::TabbedComponent(juce::TabbedButtonBar::TabsAtTop);	
+			tabs->addTab("Flatten", juce::Colours::darkgrey, new MainComponent, true);
+			tabs->addTab("Design", juce::Colours::grey, new DesignComponent, true);
+
+			tabs->setSize(MainComponent::CANVAS_WIDTH * MainComponent::PIXEL_SIZE, MainComponent::CANVAS_HEIGHT * MainComponent::PIXEL_SIZE);
+
+			setContentOwned(tabs, true);
+			centreWithSize(getWidth(), getHeight());
+			setVisible(true);
         }
 
         void closeButtonPressed() override
