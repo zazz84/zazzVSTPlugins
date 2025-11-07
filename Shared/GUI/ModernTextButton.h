@@ -43,6 +43,17 @@ public:
 		m_textButtonAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, name, m_textButton));
 	}
 
+	ModernTextButton(juce::AudioProcessorValueTreeState& vts, const std::string label, std::string name) : valueTreeState(vts), m_textButton(label)
+	{
+		m_textButton.setLookAndFeel(&m_modernTextButtonLookAndFeel);
+		addAndMakeVisible(m_textButton);
+		m_textButton.setColour(juce::TextButton::buttonColourId, lightColor);
+		m_textButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+		m_textButton.setClickingTogglesState(true);
+
+		m_textButtonAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, name, m_textButton));
+	}
+
 	inline void paint(juce::Graphics& g) override
 	{
 		const auto width = getWidth();

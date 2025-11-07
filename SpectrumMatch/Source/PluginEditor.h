@@ -20,8 +20,10 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/TextModernRotarySlide.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GainMeterComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernTextButton.h"
 
 //==============================================================================
 class SpectrumMatchAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
@@ -31,7 +33,7 @@ public:
     ~SpectrumMatchAudioProcessorEditor() override;
 
 	static const int CANVAS_WIDTH = 1 + 6 * 3 + 1;
-	static const int CANVAS_HEIGHT = 2 + 8 + 4 + 1 + 4 + 1;
+	static const int CANVAS_HEIGHT = 2 + 8 + 4 + 1 + 1 + 4 + 1;
 	
 	//==============================================================================
 	void timerCallback() override;
@@ -57,6 +59,15 @@ protected:
 	ModernRotarySlider m_gain5Slider;
 	ModernRotarySlider m_gain6Slider;
 	ModernRotarySlider m_volumeSlider;
+	TextModernRotarySlider m_typeSlider;
+	ModernRotarySlider m_mixSlider;
+
+	ModernTextButton m_mute1Button;
+	ModernTextButton m_mute2Button;
+	ModernTextButton m_mute3Button;
+	ModernTextButton m_mute4Button;
+	ModernTextButton m_mute5Button;
+	ModernTextButton m_mute6Button;
 
 	GainMeterComponent m_gain1Meter;
 	GainMeterComponent m_gain2Meter;

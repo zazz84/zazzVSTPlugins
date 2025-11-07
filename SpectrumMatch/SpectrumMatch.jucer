@@ -2,12 +2,16 @@
 
 <JUCERPROJECT id="qgEUDQ" name="SpectrumMatch" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3">
+              companyName="zazz" pluginFormats="buildVST3" version="1.0.1">
   <MAINGROUP id="YO9bTQ" name="SpectrumMatch">
     <GROUP id="{06C8D1AB-206B-F5C1-16BE-5A7FE5EF9F72}" name="Source">
+      <FILE id="Bec8UT" name="TextModernRotarySlide.h" compile="0" resource="0"
+            file="../Shared/GUI/TextModernRotarySlide.h"/>
       <FILE id="crIfHu" name="SpectrumMatch.h" compile="0" resource="0" file="../Shared/Filters/SpectrumMatch.h"/>
       <FILE id="NFuHaK" name="EnvelopeFollowers.h" compile="0" resource="0"
             file="../Shared/Dynamics/EnvelopeFollowers.h"/>
+      <FILE id="FdBTZK" name="ModernTextButton.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernTextButton.h"/>
       <FILE id="waXtof" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="HxloaK" name="GainMeterComponent.h" compile="0" resource="0"
             file="../Shared/GUI/GainMeterComponent.h"/>
@@ -34,6 +38,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -61,6 +66,7 @@
         <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>

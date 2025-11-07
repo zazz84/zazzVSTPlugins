@@ -32,6 +32,14 @@ SpectrumMatchAudioProcessorEditor::SpectrumMatchAudioProcessorEditor (SpectrumMa
 	m_gain5Slider	(vts,	SpectrumMatchAudioProcessor::paramsNames[6], SpectrumMatchAudioProcessor::paramsUnitNames[6], SpectrumMatchAudioProcessor::labelNames[6]),
 	m_gain6Slider	(vts,	SpectrumMatchAudioProcessor::paramsNames[7], SpectrumMatchAudioProcessor::paramsUnitNames[7], SpectrumMatchAudioProcessor::labelNames[7]),
 	m_volumeSlider	(vts,	SpectrumMatchAudioProcessor::paramsNames[8], SpectrumMatchAudioProcessor::paramsUnitNames[8], SpectrumMatchAudioProcessor::labelNames[8]),
+	m_typeSlider	(vts,	SpectrumMatchAudioProcessor::paramsNames[9], SpectrumMatchAudioProcessor::paramsUnitNames[9], SpectrumMatchAudioProcessor::labelNames[9], { "TD", "FFT"}),
+	m_mixSlider		(vts,	SpectrumMatchAudioProcessor::paramsNames[10], SpectrumMatchAudioProcessor::paramsUnitNames[10], SpectrumMatchAudioProcessor::labelNames[10]),
+	m_mute1Button(vts, { "B" }, {"Bypass1"}),
+	m_mute2Button(vts, { "B" }, {"Bypass2"}),
+	m_mute3Button(vts, { "B" }, {"Bypass3"}),
+	m_mute4Button(vts, { "B" }, {"Bypass4"}),
+	m_mute5Button(vts, { "B" }, {"Bypass5"}),
+	m_mute6Button(vts, { "B" }, {"Bypass6"}),
 	m_pluginLabel("zazz::SpectrumMatch"),
 	m_gain1Meter(),
 	m_gain2Meter(),
@@ -51,6 +59,23 @@ SpectrumMatchAudioProcessorEditor::SpectrumMatchAudioProcessorEditor (SpectrumMa
 	addAndMakeVisible(m_gain5Slider);
 	addAndMakeVisible(m_gain6Slider);
 	addAndMakeVisible(m_volumeSlider);
+	addAndMakeVisible(m_typeSlider);
+	addAndMakeVisible(m_mixSlider);
+
+	addAndMakeVisible(m_mute1Button);
+	addAndMakeVisible(m_mute2Button);
+	addAndMakeVisible(m_mute3Button);
+	addAndMakeVisible(m_mute4Button);
+	addAndMakeVisible(m_mute5Button);
+	addAndMakeVisible(m_mute6Button);
+
+	constexpr int BORDER = 15;
+	m_mute1Button.setBorder(BORDER);
+	m_mute2Button.setBorder(BORDER);
+	m_mute3Button.setBorder(BORDER);
+	m_mute4Button.setBorder(BORDER);
+	m_mute5Button.setBorder(BORDER);
+	m_mute6Button.setBorder(BORDER);
 
 	addAndMakeVisible(m_gain1Meter);
 	addAndMakeVisible(m_gain2Meter);
@@ -139,14 +164,24 @@ void SpectrumMatchAudioProcessorEditor::resized()
 	m_gain4Slider.setSize(pixelSize3, pixelSize4);
 	m_gain5Slider.setSize(pixelSize3, pixelSize4);
 	m_gain6Slider.setSize(pixelSize3, pixelSize4);
+
+	m_mute1Button.setSize(pixelSize, pixelSize);
+	m_mute2Button.setSize(pixelSize, pixelSize);
+	m_mute3Button.setSize(pixelSize, pixelSize);
+	m_mute4Button.setSize(pixelSize, pixelSize);
+	m_mute5Button.setSize(pixelSize, pixelSize);
+	m_mute6Button.setSize(pixelSize, pixelSize);
 	
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
+	m_typeSlider.setSize(pixelSize3, pixelSize4);
+	m_mixSlider.setSize(pixelSize3, pixelSize4);
 
 	//Set position
 	const int row1 = 0;
 	const int row2 = row1 + pixelSize2;
 	const int row3 = row2 + pixelSize8;
-	const int row4 = row3 + pixelSize4 + pixelSize;
+	const int row4 = row3 + pixelSize4;
+	const int row5 = row4 + pixelSize2;
 
 	const int column1 = 0;
 	const int column2 = column1 + pixelSize;
@@ -172,7 +207,17 @@ void SpectrumMatchAudioProcessorEditor::resized()
 	m_gain5Slider.setTopLeftPosition	(column6, row3);
 	m_gain6Slider.setTopLeftPosition	(column7, row3);
 
-	m_attackSlider.setTopLeftPosition	(column3, row4);
-	m_releaseSlider.setTopLeftPosition	(column4, row4);
-	m_volumeSlider.setTopLeftPosition	(column6, row4);
+	m_mute1Button.setTopLeftPosition	(column2 + pixelSize, row4);
+	m_mute2Button.setTopLeftPosition	(column3 + pixelSize, row4);
+	m_mute3Button.setTopLeftPosition	(column4 + pixelSize, row4);
+	m_mute4Button.setTopLeftPosition	(column5 + pixelSize, row4);
+	m_mute5Button.setTopLeftPosition	(column6 + pixelSize, row4);
+	m_mute6Button.setTopLeftPosition	(column7 + pixelSize, row4);
+
+	m_typeSlider.setTopLeftPosition		(column2, row5);
+	m_attackSlider.setTopLeftPosition	(column4 - pixelHalf - pixelSize, row5);
+	m_releaseSlider.setTopLeftPosition	(column5 - pixelHalf - pixelSize, row5);
+
+	m_mixSlider.setTopLeftPosition		(column6, row5);
+	m_volumeSlider.setTopLeftPosition	(column7, row5);
 }

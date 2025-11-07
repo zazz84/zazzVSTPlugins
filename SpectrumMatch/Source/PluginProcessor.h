@@ -46,12 +46,26 @@ public:
         Gain5,
         Gain6,
 		Volume,
+		DetectionType,
+		Mix,
         COUNT
     };
+
+	enum Buttons
+	{
+		Mute1,
+		Mute2,
+		Mute3,
+		Mute4,
+		Mute5,
+		Mute6,
+		ButtonsCount
+	};
 
     static const std::string paramsNames[];
     static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
+	static const std::string buttonsNames[];
     static const int N_CHANNELS = 2;
 
     //==============================================================================
@@ -102,6 +116,8 @@ private:
 	SpectrumMatch m_spectrumMatch[N_CHANNELS];
 		
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
+	std::array<juce::AudioParameterBool*, Buttons::ButtonsCount> m_buttons;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumMatchAudioProcessor)
 };
