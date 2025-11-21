@@ -120,6 +120,7 @@ void MorpherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 	{
 		m_inFilter[channel].init(sr);
 		m_scFilter[channel].init(sr);
+		m_spectrumMorph[channel].init(sr);
 	}
 }
 
@@ -194,6 +195,7 @@ void MorpherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 		auto* mainChannelBuffer = mainBuffer.getWritePointer(channel);
 		auto* sideChainChannelBuffer = sideChainBuffer.getWritePointer(std::min(channel, SCChannels));
 		
+		// Volume
 		if (parametersValues[Parameters::Type] == 1)
 		{
 			const auto wet = Math::remap(parametersValues[Parameters::Morph], -100.0f, 100.0f, 0.0f, 1.0f);
@@ -209,6 +211,7 @@ void MorpherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 				mainChannelBuffer[sample] = dry * inGain * in + wet * scGain * sc;
 			}
 		}
+		// LP
 		else if (parametersValues[Parameters::Type] == 2)
 		{
 			auto& inFilter = m_inFilter[channel];
@@ -234,6 +237,7 @@ void MorpherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 				mainChannelBuffer[sample] = inGain * inFilter.processHP(in) + scGain * scFilter.processLP(sc);
 			}
 		}
+		// HP
 		else if (parametersValues[Parameters::Type] == 3)
 		{
 			auto& inFilter = m_inFilter[channel];
@@ -257,6 +261,29 @@ void MorpherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
 				//Out
 				mainChannelBuffer[sample] = inGain * inFilter.processLP(in) + scGain * scFilter.processHP(sc);
+			}
+		}
+		// Spectrum
+		else if (parametersValues[Parameters::Type] == 4)
+		{
+			auto& spectrumMorph = m_spectrumMorph[channel];
+			const auto wet = Math::remap(parametersValues[Parameters::Morph], -100.0f, 100.0f, 0.0f, 1.0f);
+			const auto dry = 1.0f - wet;
+			SpectrumMorph::Params params{ 5.0f, 50.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0, true, true, true, true, true, true, wet };
+			spectrumMorph.set(params);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				// Read
+				const float in = mainChannelBuffer[sample];
+				const float sc = sideChainChannelBuffer[sample];
+
+				//Out
+				float outIn{ 0.0f };
+				float outSC{ 0.0f };
+				spectrumMorph.process(in, sc, outIn, outSC);
+				mainChannelBuffer[sample] = inGain * dry *  outIn + scGain * wet * outSC;
+				//mainChannelBuffer[sample] = inGain * outIn;
 			}
 		}
 	}
@@ -301,7 +328,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MorpherAudioProcessor::creat
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::InVolume], paramsNames[Parameters::InVolume], NormalisableRange<float>	(  -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::SCVolume], paramsNames[Parameters::SCVolume], NormalisableRange<float>	(  -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Morph], paramsNames[Parameters::Morph], NormalisableRange<float>			( -100.0f, 100.0f,  0.1f, 1.0f),  0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Type], paramsNames[Parameters::Type], NormalisableRange<float>			(    1.0f,   3.0f,  1.0f, 1.0f),  1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Type], paramsNames[Parameters::Type], NormalisableRange<float>			(    1.0f,   4.0f,  1.0f, 1.0f),  1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Volume], paramsNames[Parameters::Volume], NormalisableRange<float>		(  -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 
 	return layout;

@@ -6,6 +6,7 @@
               pluginVST3Category="Tools">
   <MAINGROUP id="bWOwuM" name="Morpher">
     <GROUP id="{57ED16ED-7B5D-5029-BD3A-89DBED714616}" name="Source">
+      <FILE id="f42QLi" name="SpectrumMatch.h" compile="0" resource="0" file="../Shared/Filters/SpectrumMatch.h"/>
       <FILE id="puekrW" name="LinkwitzRileyFilter.h" compile="0" resource="0"
             file="../Shared/Filters/LinkwitzRileyFilter.h"/>
       <FILE id="uYvLKj" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
@@ -34,6 +35,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -61,6 +63,7 @@
         <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>

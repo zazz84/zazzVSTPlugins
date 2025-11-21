@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <cstdlib>
+
 #include "../../../zazzVSTPlugins/Shared/Oscillators/SinOscillator.h"
 #include "../../../zazzVSTPlugins/Shared/Oscillators/SawOscillator.h"
 

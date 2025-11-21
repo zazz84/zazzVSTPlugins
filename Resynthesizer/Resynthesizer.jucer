@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="QPbKdp" name="Waveshaper" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="ZQlj3U" name="Resynthesizer" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" version="1.2.0">
-  <MAINGROUP id="njm7Tj" name="Waveshaper">
-    <GROUP id="{B419E272-D7E6-39F9-CB49-4E89D2A01BE1}" name="GUI">
-      <FILE id="XZ1Lff" name="GainReductionMeterComponent.h" compile="0"
-            resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
-      <FILE id="DqRFcI" name="ModernRotarySlider.h" compile="0" resource="0"
-            file="../Shared/GUI/ModernRotarySlider.h"/>
-      <FILE id="JWm9mK" name="PluginNameComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/PluginNameComponent.h"/>
-      <FILE id="dJKF3A" name="TextModernRotarySlide.h" compile="0" resource="0"
+              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Tools">
+  <MAINGROUP id="TJ0V2f" name="Resynthesizer">
+    <GROUP id="{1A094EDF-9453-28D6-169E-72E347EB7AA1}" name="Source">
+      <FILE id="cRoFu6" name="TextModernRotarySlide.h" compile="0" resource="0"
             file="../Shared/GUI/TextModernRotarySlide.h"/>
-    </GROUP>
-    <GROUP id="{7E5A61C9-1855-0A97-1192-F96E0F1285C7}" name="Source">
-      <FILE id="Jnv4Z7" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
-      <FILE id="rsAV3N" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-      <FILE id="h5SbQh" name="WaveShapers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/WaveShapers.h"/>
-      <FILE id="xTNWYL" name="PluginProcessor.cpp" compile="1" resource="0"
+      <FILE id="C6fSEM" name="NoiseGenerator.h" compile="0" resource="0"
+            file="../Shared/Utilities/NoiseGenerator.h"/>
+      <FILE id="CRb2dL" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
+      <FILE id="Unlvcx" name="OnePoleFilters.h" compile="0" resource="0"
+            file="../Shared/Filters/OnePoleFilters.h"/>
+      <FILE id="qWB5IJ" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+      <FILE id="KnMMgj" name="GroupLabelComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/GroupLabelComponent.h"/>
+      <FILE id="j7rJeq" name="PitchDetectionMulti.h" compile="0" resource="0"
+            file="../Shared/Utilities/PitchDetectionMulti.h"/>
+      <FILE id="WwvU20" name="ModernTextButton.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernTextButton.h"/>
+      <FILE id="xaSXg4" name="ModernRotarySlider.h" compile="0" resource="0"
+            file="../Shared/GUI/ModernRotarySlider.h"/>
+      <FILE id="s6B4YZ" name="PluginNameComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/PluginNameComponent.h"/>
+      <FILE id="z9e47O" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="b5JsUt" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="vDh7Zr" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="vKE9ey" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="c5cCaD" name="SinSawOscillator.h" compile="0" resource="0"
+            file="../Shared/Oscillators/SinSawOscillator.h"/>
+      <FILE id="HCwsAb" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="mncD08" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="ThKiGI" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -47,9 +54,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="Waveshaper" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="Resynthesizer" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="Waveshaper" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="Resynthesizer" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

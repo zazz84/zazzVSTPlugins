@@ -14,29 +14,9 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 //==============================================================================
-#define PROCESS_WAVESHAPER(WAVESHAPER)												\
-    for (int sample = 0; sample < samples; sample++) {                              \
-        float& in = channelBuffer[sample];                                          \
-		float out = preFilter.processDF1(gain * in);                                \
-        out = WAVESHAPER(out, drive, asymetry);										\
-		out = postFilter.processDF1(out);											\
-        in = volume * ((1.0f - mix) * in + mix * out);								\
-    }
 
-#define PROCESS_WAVESHAPER_SPLIT(WAVESHAPER)										\
-    for (int sample = 0; sample < samples; sample++) {                              \
-        float& in = channelBuffer[sample];                                          \
-		float out = Waveshapers::Split2(in, splitThreshold, split);			        \
-		out = preFilter.processDF1(gain * out);										\
-        out = WAVESHAPER(out, drive, asymetry);										\
-		out = postFilter.processDF1(out);											\
-        in = volume * ((1.0f - mix) * in + mix * out);								\
-    }
-
-//==============================================================================
-
-const std::string WaveshaperAudioProcessor::paramsNames[] = { "Type", "Gain", "Color", "Split", "Asymetry", "Mix", "Volume" };
-const std::string WaveshaperAudioProcessor::labelNames[]  = { "Type", "Gain", "Color", "Split", "Asymetry", "Mix", "Volume" };
+const std::string WaveshaperAudioProcessor::paramsNames[] = { "Type", "Gain", "Color", "Split", "Asymmetry", "Mix", "Volume" };
+const std::string WaveshaperAudioProcessor::labelNames[]  = { "Type", "Gain", "Color", "Split", "Asymmetry", "Mix", "Volume" };
 const std::string WaveshaperAudioProcessor::paramsUnitNames[] = { "", " dB", "", " dB", " %", " %", "dB" };
 
 //==============================================================================
@@ -55,7 +35,6 @@ WaveshaperAudioProcessor::WaveshaperAudioProcessor()
 	typeParameter		= apvts.getRawParameterValue(paramsNames[0]);
 	gainParameter		= apvts.getRawParameterValue(paramsNames[1]);
 	colorParameter		= apvts.getRawParameterValue(paramsNames[2]);
-	splitParameter		= apvts.getRawParameterValue(paramsNames[3]);
 	asymetryParameter	= apvts.getRawParameterValue(paramsNames[4]);
 	mixParameter		= apvts.getRawParameterValue(paramsNames[5]);
 	volumeParameter		= apvts.getRawParameterValue(paramsNames[6]);
@@ -137,6 +116,8 @@ void WaveshaperAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 
 	m_postFilter[0].init(sr);
 	m_postFilter[1].init(sr);
+
+	m_oversampling.initProcessing((size_t)samplesPerBlock);
 }
 
 void WaveshaperAudioProcessor::releaseResources()
@@ -176,104 +157,114 @@ void WaveshaperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const auto type   = typeParameter->load();
 	const auto gain = type != 3 ? juce::Decibels::decibelsToGain(gainParameter->load()) : juce::Decibels::decibelsToGain(gainParameter->load() - 6.0f);
 	const auto color  = 18.0f * 0.01f * colorParameter->load();
-	const auto splitdB  = splitParameter->load();
 	const auto asymetry  = 0.01f * asymetryParameter->load();
 	const auto mix    = 0.01f * mixParameter->load();
 	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
-	const auto samples = buffer.getNumSamples();
-	const auto split = juce::Decibels::decibelsToGain(splitdB);
-	const auto splitThreshold = juce::Decibels::decibelsToGain(-40.0f);
+	constexpr float frequency = 440.0f;
+	const auto dry = volume * (1.0f - mix);
+	const auto wet = volume * mix;
 
-	if (splitdB < -39.5f)
+	// Store input
+	//juce::AudioBuffer<float> outBuffer(buffer);
+
+	juce::AudioBuffer<float> outBuffer;
+	outBuffer.setSize(buffer.getNumChannels(), buffer.getNumSamples());
+
+	// deep copy
+	outBuffer.makeCopyOf(buffer);
+
+	// Prefilter
+	for (int channel = 0; channel < channels; ++channel)
 	{
-		for (int channel = 0; channel < channels; ++channel)
+		auto& preFilter = m_preFilter[channel];
+		auto* channelBuffer = outBuffer.getWritePointer(channel);
+
+		if (color < 0.0f)
 		{
-			// Filter
-			auto& preFilter = m_preFilter[channel];
-			auto& postFilter = m_postFilter[channel];
-
-			constexpr float frequency = 440.0f;
-
-			if (color < 0.0f)
-			{
-				preFilter.setLowShelf(frequency, 0.707f, 0.5f * color);
-				postFilter.setLowShelf(frequency, 0.707f, -0.5f * color);
-			}
-			else
-			{
-				preFilter.setLowShelf(frequency, 0.707f, color);
-				postFilter.setLowShelf(frequency, 0.707f, -color);
-			}
-
-			// Channel pointer
-			auto* channelBuffer = buffer.getWritePointer(channel);
-			if (type == 1)
-			{
-				const auto drive = 1.0f;
-
-				PROCESS_WAVESHAPER(Waveshapers::Tanh)
-			}
-			else if (type == 2)
-			{
-				const auto drive = 1.0f;
-
-				PROCESS_WAVESHAPER(Waveshapers::Reciprocal)
-			}
-			else if (type == 3)
-			{
-				const auto drive = Math::remap(gain, 0.0f, 18.0f, 1.0f, 8.0f);
-
-				PROCESS_WAVESHAPER(Waveshapers::Exponential)
-			}
+			preFilter.setLowShelf(frequency, 0.707f, 0.5f * color);
 		}
-	}
-	else
-	{
-		for (int channel = 0; channel < channels; ++channel)
+		else
 		{
-			// Filter
-			auto& preFilter = m_preFilter[channel];
-			auto& postFilter = m_postFilter[channel];
+			preFilter.setLowShelf(frequency, 0.707f, color);
+		}
 
-			constexpr float frequency = 440.0f;
-
-			if (color < 0.0f)
-			{
-				preFilter.setLowShelf(frequency, 0.707f, 0.5f * color);
-				postFilter.setLowShelf(frequency, 0.707f, -0.5f * color);
-			}
-			else
-			{
-				preFilter.setLowShelf(frequency, 0.707f, color);
-				postFilter.setLowShelf(frequency, 0.707f, -color);
-			}
-
-			// Channel pointer
-			auto* channelBuffer = buffer.getWritePointer(channel);
-			if (type == 1)
-			{				
-				const auto drive = 1.0f;
-
-				PROCESS_WAVESHAPER_SPLIT(Waveshapers::Tanh)
-			}
-			else if (type == 2)
-			{
-				const auto drive = 1.0f;
-
-				PROCESS_WAVESHAPER_SPLIT(Waveshapers::Reciprocal)
-			}
-			else if (type == 3)
-			{
-				const auto drive = Math::remap(gain, 0.0f, 18.0f, 1.0f, 8.0f);
-
-				PROCESS_WAVESHAPER_SPLIT(Waveshapers::Exponential)
-			}
+		for (int sample = 0; sample < outBuffer.getNumSamples(); sample++)
+		{
+				float& in = channelBuffer[sample];                                          
+				in = preFilter.processDF1(gain * in);
 		}
 	}
 	
+	// Create AudioBlock
+	juce::dsp::AudioBlock<float> outputBlock(outBuffer);
+
+	// Upsample
+	auto upsampledBlock = m_oversampling.processSamplesUp(outputBlock);
+
+	// Process upsampeled buffer
+	for (int channel = 0; channel < channels; ++channel)
+	{
+		// Channel pointer
+		auto* channelBuffer = upsampledBlock.getChannelPointer(channel);
+		
+		if (type == 1)
+		{
+			const auto drive = 1.0f;
+
+			for (int sample = 0; sample < upsampledBlock.getNumSamples(); sample++)
+			{
+				channelBuffer[sample] = Waveshapers::Tanh(channelBuffer[sample], drive, asymetry);
+			}
+		}
+		else if (type == 2)
+		{
+			const auto drive = 1.0f;
+
+			for (int sample = 0; sample < upsampledBlock.getNumSamples(); sample++)
+			{
+				channelBuffer[sample] = Waveshapers::Reciprocal(channelBuffer[sample], drive, asymetry);
+			}
+		}
+		else if (type == 3)
+		{
+			const auto drive = Math::remap(gain, 0.0f, 18.0f, 1.0f, 8.0f);
+
+			for (int sample = 0; sample < upsampledBlock.getNumSamples(); sample++)
+			{
+				channelBuffer[sample] = Waveshapers::Exponential(channelBuffer[sample], drive, asymetry);
+			}
+		}
+	}
+
+	//Downsample
+	m_oversampling.processSamplesDown(outputBlock);
+
+	// Post filter + Mix
+	for (int channel = 0; channel < channels; ++channel)
+	{
+		auto& postFilter = m_postFilter[channel];
+		auto* outChannel = outBuffer.getWritePointer(channel);
+		auto* inChannel = buffer.getWritePointer(channel);
+
+		if (color < 0.0f)
+		{
+			postFilter.setLowShelf(frequency, 0.707f, -0.5f * color);
+		}
+		else
+		{
+			postFilter.setLowShelf(frequency, 0.707f, -color);
+		}
+
+		for (int sample = 0; sample < outBuffer.getNumSamples(); sample++)
+		{
+			const float out = postFilter.processDF1(outChannel[sample]);
+
+			inChannel[sample] = dry * inChannel[sample] + wet * out;
+		}
+	}
 }
 
 //==============================================================================
@@ -313,7 +304,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout WaveshaperAudioProcessor::cr
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(    1.0f,   3.0f,  1.0f, 1.0f),   1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>(  -40.0f,   0.0f,  1.0f, 1.0f), -40.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -100.0f, 100.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>(    0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[6], paramsNames[6], NormalisableRange<float>(  -36.0f,  36.0f,  1.0f, 1.0f),   0.0f));

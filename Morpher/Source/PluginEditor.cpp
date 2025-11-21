@@ -26,7 +26,7 @@ MorpherAudioProcessorEditor::MorpherAudioProcessorEditor (MorpherAudioProcessor&
 	m_inVolumeSlider(vts, MorpherAudioProcessor::paramsNames[MorpherAudioProcessor::Parameters::InVolume], MorpherAudioProcessor::paramsUnitNames[MorpherAudioProcessor::Parameters::InVolume], MorpherAudioProcessor::labelNames[MorpherAudioProcessor::Parameters::InVolume]),
 	m_SCvolumeSlider(vts, MorpherAudioProcessor::paramsNames[MorpherAudioProcessor::Parameters::SCVolume], MorpherAudioProcessor::paramsUnitNames[MorpherAudioProcessor::Parameters::SCVolume], MorpherAudioProcessor::labelNames[MorpherAudioProcessor::Parameters::SCVolume]),
 	m_morphSlider(vts, MorpherAudioProcessor::paramsNames[MorpherAudioProcessor::Parameters::Morph], MorpherAudioProcessor::paramsUnitNames[MorpherAudioProcessor::Parameters::Morph], MorpherAudioProcessor::labelNames[MorpherAudioProcessor::Parameters::Morph]),
-	m_typeSlider(vts, MorpherAudioProcessor::paramsNames[MorpherAudioProcessor::Parameters::Type], MorpherAudioProcessor::paramsUnitNames[MorpherAudioProcessor::Parameters::Type], MorpherAudioProcessor::labelNames[MorpherAudioProcessor::Parameters::Type], {"Volume", "HP", "LP"}),
+	m_typeSlider(vts, MorpherAudioProcessor::paramsNames[MorpherAudioProcessor::Parameters::Type], MorpherAudioProcessor::paramsUnitNames[MorpherAudioProcessor::Parameters::Type], MorpherAudioProcessor::labelNames[MorpherAudioProcessor::Parameters::Type], {"Volume", "HP", "LP", "Spectrum"}),
 	m_volumeSlider(vts, MorpherAudioProcessor::paramsNames[MorpherAudioProcessor::Parameters::Volume], MorpherAudioProcessor::paramsUnitNames[MorpherAudioProcessor::Parameters::Volume], MorpherAudioProcessor::labelNames[MorpherAudioProcessor::Parameters::Volume]),
 	m_pluginLabel("zazz::Morpher")
 {	

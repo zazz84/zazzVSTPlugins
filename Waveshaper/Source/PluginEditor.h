@@ -15,7 +15,7 @@ public:
     WaveshaperAudioProcessorEditor (WaveshaperAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~WaveshaperAudioProcessorEditor() override;
 
-	static const int CANVAS_WIDTH = 1 + 3 + 3 + 3 + 3 + 3 + 1;
+	static const int CANVAS_WIDTH = 1 + 3 + 3 + 3 + 3 + 1;
 	static const int CANVAS_HEIGHT = 2 + 4 + 4 + 1;
 	
 	//==============================================================================
@@ -33,7 +33,6 @@ protected:
 	TextModernRotarySlider m_typeSlider;
 	ModernRotarySlider m_gainSlider;
 	ModernRotarySlider m_colorSlider;
-	ModernRotarySlider m_splitSlider;
 	ModernRotarySlider m_asymetrySlider;
 	ModernRotarySlider m_mixSlider;
 	ModernRotarySlider m_volumeSlider;

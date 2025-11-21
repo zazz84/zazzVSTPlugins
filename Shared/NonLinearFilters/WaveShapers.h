@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify

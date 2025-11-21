@@ -31,9 +31,14 @@ public:
 	{
 		m_sampleRate = sampleRate;
 	}
-	inline void set(float frequency)
+	inline void set(float frequency, float phase = 0.0f)
 	{
 		m_step =  (2.0f * M_PI) * frequency / (float)m_sampleRate;
+
+		if (phase > 0.0f)
+		{
+			m_phase = phase;
+		}
 	}
 	inline float process()
 	{

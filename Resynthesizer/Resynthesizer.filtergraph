@@ -61,11 +61,11 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="6" x="0.3596214511041009" y="0.29182156133829" useARA="0"
+  <FILTER uid="6" x="0.4921135646687697" y="0.3234200743494424" useARA="0"
           uiLastX_Normal="1402" uiLastY_Normal="5" uiopen_Normal="1">
     <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
             version="1.0.0" file="C:\Program Files\Common Files\VST3\AudioFilePlayer.vst3\Contents\x86_64-win\AudioFilePlayer.vst3"
-            uniqueId="79fe81c" isInstrument="0" fileTime="18bda162bc0" infoUpdateTime="19a62a6f104"
+            uniqueId="79fe81c" isInstrument="0" fileTime="18bda162bc0" infoUpdateTime="19a9165c3ce"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
             uid="e95d02c7"/>
     <STATE>307.VMjLgnR....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCM13BTIISX1UEaho2ZVkUdAAkKAwDUigWRWkEcQ0VTucmUY4BQl4TQLolShUELhsVRxHlXucEV071QWQDNwfELvXUVzEkLhIVPEkkXQUUV4EkLTUWUsElZMczUJUkQUc1bwHEdEEiXzslLWESQosjLEw1Xt3hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
@@ -78,31 +78,14 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="11" x="0.501577287066246" y="0.5483271375464684" useARA="0">
-    <PLUGIN name="Morpher" format="VST3" category="Fx|Tools" manufacturer="zazz"
-            version="1.0.0" file="C:\Program Files\Common Files\VST3\Morpher.vst3\Contents\x86_64-win\Morpher.vst3"
-            uniqueId="2a0dd2f" isInstrument="0" fileTime="19a62a47cc5" infoUpdateTime="19a62a6f104"
-            numInputs="4" numOutputs="2" isShell="0" hasARAExtension="0"
-            uid="e95abf6b"/>
-    <STATE>504.VMjLg7d....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9HSNz3hUMoFSmQjSt3hKt7zJlcUXxEDZisVRxH1a3vVX3fjTLQmKogjYTwVXogiQY8FMwjENHIUUTkEUKMCR38TNtHzSPUDahcFLVkkdUwlX4QyPOAUQpQUPvPDRuEkUOglZpElU3XTXv.iUYglKnM1Y2Y0XqASZHY2LBwDZ2f1S23RUPIUQTMkYpYTV3fjTSUWRGIlaIIDRwTjQgASUV8DZtj1R1gDdKkicCQUPIUETMEjTZoFLogzTMoVU0cmUiMWUrgjYXcEVxU0UYgCRBwDctjFR0MyPOAUQpQUPvPDRuEkUOgFTUQlcUwFRlg0UXIWUWkENHIESz4RZHU2LC8DTEoFUAACQH8VTV8DZXASXxU0UgsVRBgTLEYTXvTkUOglKosjcHg2R4XWdKAUQrI1YvXUV5UEahkGMC4hKt3hKt3hKt3hKlIUUMQUTPkzUZESQFM1ZQQEV5UjQtDDQlAEMAcEV40zQtDDQ14hK5EjKt3hKt3hKt3hRUACTEEzZh8VVWgkdUYTTmE0UXwyKIMzasA2atUlaz4COuX0TTMCTrU2Yo41TzEFck4C.</STATE>
-    <LAYOUT>
-      <INPUTS>
-        <BUS index="0" layout="L R"/>
-        <BUS index="1" layout="L R"/>
-      </INPUTS>
-      <OUTPUTS>
-        <BUS index="0" layout="L R"/>
-      </OUTPUTS>
-    </LAYOUT>
-  </FILTER>
-  <FILTER uid="14" x="0.576235541535226" y="0.3197026022304832" useARA="0"
-          uiLastX_Normal="1404" uiLastY_Normal="538" uiopen_Normal="1">
-    <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
-            version="1.0.0" file="C:\Program Files\Common Files\VST3\AudioFilePlayer.vst3\Contents\x86_64-win\AudioFilePlayer.vst3"
-            uniqueId="79fe81c" isInstrument="0" fileTime="18bda162bc0" infoUpdateTime="19a62a6f104"
+  <FILTER uid="15" x="0.4931650893796004" y="0.5557620817843866" useARA="0"
+          uiLastX_Normal="170" uiLastY_Normal="267" uiopen_Normal="0">
+    <PLUGIN name="Resynthesizer" format="VST3" category="Fx|Tools" manufacturer="zazz"
+            version="1.0.0" file="C:\Program Files\Common Files\VST3\Resynthesizer.vst3\Contents\x86_64-win\Resynthesizer.vst3"
+            uniqueId="7a5de1f" isInstrument="0" fileTime="19a916470fc" infoUpdateTime="19a9165c3ce"
             numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
-            uid="e95d02c7"/>
-    <STATE>283.VMjLgHQ....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DiL33BTIISX1UEaho2ZVkUdAAkKAwDUigWRWkEcQ0VTucmUY4BQtnTQLolShUELhsVRxHlXucEV071QWQTUwHVbQISX1cWUSASSWoUZ2sFT3UjQiISQrsjLEw1Xt3hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+            uid="e95d181a"/>
+    <STATE>1324.VMjLgLRA...O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9jCL43hUMoFSmYldt3hKt7zJlcUXxEDZisVRxH1a3vVX3fjTLQmKogjYTwVXogiQY8FMwjENHIUUTkEUKMCR38TNtHzSPUDahcFLVkkdUwlX4QyPOAUQpQUPvPDRuEkUOgFVpI1ZEc0XqQSLXQSQogjYXcEVxU0UYgCRR4DMyHkSzn1TNQCR4wjLtjVS1Q0PMICR3sTN1MDUAkTUP0TPRokZvjFRFkzUYcWUWkEcMYEY3gjPHESQFEFLUY0Sno1TNQmZS4DMpMkS3wTdMYGVCwDLPkWSncCZOciKUAkTEQ0TlolQYgCRnEEdUYkXvTEagk1ZxvDZtf1XmcmUisFLogDMpk1Rzn1TNQiZowTdhMDSw3xTMomXogTcyLzSPUjZTEDLDgzaQY0SngkZhsVQWM1ZzDCVzDUZHYFVWgkbUcUV3fjTNQyLR4DMpMkSzfTdLIiKo0jcTMTSxfDdKkicCQUPIUETMEjTZoFLogjQIcUV2U0UYQWSVQFLHIDRwTjQgASUV8DZpMkSzo1TNQiZS4DdLkWS1g0PLACT40DZ2f1S23RUPIUQTMkYpYTV3fDZQgWUVIFLUwVXosVaMglKnM1Y2Y0XqASZHQiZosDMpMkSznVZLkmXCwTLtLUS5IVZHU2LC8DTEoFUAACQH8VTV8DZXolXqUzUisFMwfEMikFRlg0UXIWUWkENHIkSzLiTNQiZS4DMHkGSx3RZMYGUC0jLHg2R4X2PTETRUAUSAIkVpASZHYTRWk0cUcUVz0jUjMCRBgTLEYTXvTkUOglZS4DcpMkSzn1TNgGS40jcXMDSv.UdMg1Mn8zMtTETRUDUSYlZFkENHIzTqUDahQWRBgTLEYTXvTkUOglKosjcHg2R4X2PTETRUAUSAIkVpASZHYENFEFLvXUVn4BZic1cVM1ZvjFR1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUVwDZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUrwDZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUwvDZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUF0DZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUV0DZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUr0DZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUwzDZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHgVU0cmUiMWUF4DZtf1XmcmUisFLogzbDMDS1MiPLg1Mn8zMtTETRUDUSYlZFkENHI0TuQiUZMWUWE1TQcUV1kDdKkic4sDTEwlXmAiUYoWUrIVdzLjKt3hKt3hKt3hKtXlTU0DUQAURWoULEYzXqEEUXoWQF4RPDYFTzDzUXkWSG4RPDYmKtnWPt3hKt3hKt3hKJUELPUTPqI1aYcEV5UkQQcVTWgEOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
     <LAYOUT>
       <INPUTS>
         <BUS index="0" layout="L R"/>
@@ -112,10 +95,8 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="11" dstChannel="0"/>
-  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="11" dstChannel="1"/>
-  <CONNECTION srcFilter="11" srcChannel="0" dstFilter="3" dstChannel="0"/>
-  <CONNECTION srcFilter="11" srcChannel="1" dstFilter="3" dstChannel="1"/>
-  <CONNECTION srcFilter="14" srcChannel="0" dstFilter="11" dstChannel="2"/>
-  <CONNECTION srcFilter="14" srcChannel="1" dstFilter="11" dstChannel="3"/>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="15" dstChannel="0"/>
+  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="15" dstChannel="1"/>
+  <CONNECTION srcFilter="15" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="15" srcChannel="1" dstFilter="3" dstChannel="1"/>
 </FILTERGRAPH>

@@ -49,43 +49,147 @@ DesignComponent::DesignComponent() : MainComponentBase()
 		addAndMakeVisible(gainLabel);
 		gainLabel.setText("0.0", juce::dontSendNotification);
 		gainLabel.setJustificationType(juce::Justification::centred);
+
+		// Spectrum match slider
+		juce::Slider& spectrumMatchSlider = m_spectrumMatchSlider[i];
+
+		addAndMakeVisible(spectrumMatchSlider);
+		spectrumMatchSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+		spectrumMatchSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+		spectrumMatchSlider.setRange(0.0, 100.0, 1.0);
+		spectrumMatchSlider.setValue((float)(i * 100 / (SOURCE_COUNT - 1)));
 	}
 
 	// Play button
-	addAndMakeVisible(&m_playButton);
-	m_playButton.setButtonText("Play");
-	m_playButton.onClick = [this]
+	addAndMakeVisible(&m_playSourceButton);
+	m_playSourceButton.setButtonText("Play Source");
+	m_playSourceButton.onClick = [this]
 	{ 
 		if (m_sourceState == TransportState::Stopped)
 		{
 			m_sourceState = TransportState::Playing;
-			m_playButton.setButtonText("Stop");
+			m_playSourceButton.setButtonText("Stop Source");
 
-			// Get number of defined sources
-			m_usedSources = SOURCE_COUNT;
+			m_playSource = true;
 
-			for (int i = SOURCE_COUNT - 1; i >= 0; i--)
-			{
-				if (m_bufferSource[i].getNumSamples() == 0)
-				{
-					m_usedSources = i;
-				}
-			}
+			m_usedSources = getUsedSourcesCount();
 		}
 		else if (m_sourceState == TransportState::Playing)
 		{
-			// Reset playback index
-			for (size_t i = 0; i < SOURCE_COUNT; i++)
-			{
-				for (size_t j = 0; j < 2; j++)
-				{
-					m_playbackIndex[i][j] = 0.0f;
-				}
-			}
+			resetPlaybackIndex();
 
 			m_sourceState = TransportState::Stopped;
-			m_playButton.setButtonText("Play");
+			m_playSourceButton.setButtonText("Play Source");
 		}
+	};
+
+	// Play processed button
+	addAndMakeVisible(&m_playProcessedButton);
+	m_playProcessedButton.setButtonText("Play Porcessed");
+	m_playProcessedButton.onClick = [this]
+	{
+		if (m_sourceState == TransportState::Stopped)
+		{
+			m_sourceState = TransportState::Playing;
+			m_playProcessedButton.setButtonText("Stop Processed");
+		
+			m_playSource = false;			
+			m_usedSources = getUsedSourcesCount();
+		}
+		else if (m_sourceState == TransportState::Playing)
+		{
+			resetPlaybackIndex();
+
+			m_sourceState = TransportState::Stopped;
+			m_playSourceButton.setButtonText("Play Processed");
+		}
+	};
+
+	// Apply spectrum match
+	addAndMakeVisible(&m_applySpectrumMatchButton);
+	m_applySpectrumMatchButton.setButtonText("Apply spectrum match");
+	m_applySpectrumMatchButton.onClick = [this]
+	{
+		m_usedSources = getUsedSourcesCount();
+		if (m_usedSources == 0)
+		{
+			return;
+		}
+
+		float gains[SOURCE_COUNT][SpectrumDetectionTD::BANDS_COUNT] = {};
+		
+		// Get spectrums
+		SpectrumDetectionTD spectrumDetection{};
+		spectrumDetection.init(m_sampleRate[0]);
+		spectrumDetection.set(400.0f, 800.0f);
+
+		for (int i = 0; i < m_usedSources; i++)
+		{
+			const int samples = m_bufferSource[i].getNumSamples();
+			auto* channelBuffer = m_bufferSource[i].getWritePointer(0);
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				spectrumDetection.process(sample);
+			}
+
+			// Copy spectrum into local gains buffer
+			float* spectrum = spectrumDetection.getSpectrum();
+			
+			for (int j = 0; j < SpectrumDetectionTD::BANDS_COUNT; j++)
+			{
+				gains[i][j] = juce::Decibels::gainToDecibels(spectrum[j]);
+			}
+		}
+
+		// Initialize processed buffers
+		for (int i = 0; i < m_usedSources; i++)
+		{
+			m_bufferProcessed[i].setSize(m_bufferSource[i].getNumChannels(), m_bufferSource[i].getNumSamples());
+		}
+
+		// Apply spectrums
+		SpectrumApply spectrumApply{};
+		spectrumApply.init(m_sampleRate[0]);
+
+		for (int source = 0; source < m_usedSources; source++)
+		{
+			// Calculate apply gains
+			float applyGain[SpectrumApply::BANDS_COUNT]{ 0.0f };
+			const float spectrumMatchValue = 0.01f * m_spectrumMatchSlider[source].getValue();
+
+			for (int band = 0; band < SpectrumApply::BANDS_COUNT; band++)
+			{
+				const float leftdB = gains[0][band];
+				const float rightdB = gains[m_usedSources - 1][band];
+
+				const float dB = gains[source][band];
+				const float targetdB = leftdB + spectrumMatchValue * (rightdB - leftdB);
+				
+				applyGain[band] = targetdB - dB;
+			}
+
+			// Apply gains
+			SpectrumApply::Params params{ applyGain };
+			spectrumApply.set(params);
+
+			const float channels = m_bufferProcessed[source].getNumChannels();
+			const float samples = m_bufferProcessed[source].getNumSamples();
+
+			for (int channel = 0; channel < channels; channel++)
+			{
+				auto* bufferSource = m_bufferSource[source].getWritePointer(channel);
+				auto* bufferProcessed = m_bufferProcessed[source].getWritePointer(channel);
+
+				for (int sample = 0; sample < samples; sample++)
+				{
+					const float in = bufferSource[sample];
+					const float out = spectrumApply.process(in);
+					bufferProcessed[sample] = out;
+				}
+			}
+		}
+
 	};
 
 	// Region length slider
@@ -161,6 +265,7 @@ void DesignComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buff
 			else if (regionLengthPlayback < regionCrossfade[i + 1])
 			{
 				m_gain[i] = 1.0f - ((float)(regionLengthPlayback - regionCrossfade[i]) / (float)(regionCrossfade[i + 1] - regionCrossfade[i]));
+				m_gain[i] = std::sqrtf(m_gain[i]);
 			}
 			else
 			{
@@ -176,6 +281,7 @@ void DesignComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buff
 			else if (regionLengthPlayback > regionCrossfade[i - 1] && regionLengthPlayback < regionCrossfade[i])
 			{
 				m_gain[i] = (float)(regionLengthPlayback - regionCrossfade[i - 1]) / (float)(regionCrossfade[i] - regionCrossfade[i - 1]);
+				m_gain[i] = std::sqrtf(m_gain[i]);
 			}
 			else
 			{
@@ -191,10 +297,12 @@ void DesignComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buff
 			if (regionLengthPlayback > regionCrossfade[i - 1] && regionLengthPlayback < regionCrossfade[i])
 			{
 				m_gain[i] = (float)(regionLengthPlayback - regionCrossfade[i - 1]) / (float)(regionCrossfade[i] - regionCrossfade[i - 1]);
+				m_gain[i] = std::sqrtf(m_gain[i]);
 			}
 			else if (regionLengthPlayback > regionCrossfade[i] && regionLengthPlayback < regionCrossfade[i + 1])
 			{
 				m_gain[i] = 1.0f - ((float)(regionLengthPlayback - regionCrossfade[i]) / (float)(regionCrossfade[i + 1] - regionCrossfade[i]));
+				m_gain[i] = std::sqrtf(m_gain[i]);
 			}
 			else if (regionLengthPlayback == regionCrossfade[i])
 			{
@@ -231,7 +339,15 @@ void DesignComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buff
 					playbackIndex -= bufferLength[i];
 				}
 
-				out += m_gain[i] * m_bufferSource[i].getWritePointer(0)[(int)playbackIndex];
+				if (m_playSource)
+				{
+					out += m_gain[i] * m_bufferSource[i].getWritePointer(0)[(int)playbackIndex];
+				}
+				else
+				{
+					out += m_gain[i] * m_bufferProcessed[i].getWritePointer(0)[(int)playbackIndex];
+				}
+				
 			}
 
 			if (channel == 0)
@@ -315,8 +431,10 @@ void DesignComponent::resized()
 	const int row8 = row7 + pixelSize;
 	const int row9 = row8 + pixelSize;
 	const int row10 = row9 + pixelSize;
-	const int row11 = row10 + pixelSize2;				// Source waveform
-	const int row12 = row11 + pixelSize11;				// Output waveform
+	const int row11 = row10 + pixelSize;
+	const int row12 = row11 + pixelSize2;				// Source waveform
+	const int row13 = row12 + pixelSize11;				// Output waveform
+	const int row14 = row13 + pixelSize;				// Output waveform
 
 	// Set size
 	for (size_t i = 0; i < SOURCE_COUNT; i++)
@@ -335,9 +453,14 @@ void DesignComponent::resized()
 
 		// Gain label
 		m_gainLabel[i].setSize(pixelSize3, pixelSize);
+
+		// Spectrum slider
+		m_spectrumMatchSlider[i].setSize(pixelSize6, pixelSize);
 	}
 
-	m_playButton.setSize(pixelSize31, pixelSize);
+	m_playSourceButton.setSize(pixelSize31, pixelSize);
+	m_playProcessedButton.setSize(pixelSize31, pixelSize);
+	m_applySpectrumMatchButton.setSize(pixelSize31, pixelSize);
 	m_waveformDisplay.setSize(pixelSize31, pixelSize12);
 
 	m_regionLengthPlaybackSlider.setSize(pixelSize31 - pixelSize3, pixelSize);
@@ -382,8 +505,18 @@ void DesignComponent::resized()
 	m_gainLabel[4].setTopLeftPosition(column10, row6);
 	m_gainLabel[5].setTopLeftPosition(column10, row7);
 
+	// SpectrumMatch slider
+	m_spectrumMatchSlider[0].setTopLeftPosition(column11, row2);
+	m_spectrumMatchSlider[1].setTopLeftPosition(column11, row3);
+	m_spectrumMatchSlider[2].setTopLeftPosition(column11, row4);
+	m_spectrumMatchSlider[3].setTopLeftPosition(column11, row5);
+	m_spectrumMatchSlider[4].setTopLeftPosition(column11, row6);
+	m_spectrumMatchSlider[5].setTopLeftPosition(column11, row7);
+
 	// Other
-	m_playButton.setTopLeftPosition(column2, row8);
-	m_regionLengthPlaybackSlider.setTopLeftPosition(column3, row9);
-	m_waveformDisplay.setTopLeftPosition(column2, row10);
+	m_playSourceButton.setTopLeftPosition(column2, row8);
+	m_playProcessedButton.setTopLeftPosition(column2, row9);
+	m_applySpectrumMatchButton.setTopLeftPosition(column2, row14);
+	m_regionLengthPlaybackSlider.setTopLeftPosition(column3, row10);
+	m_waveformDisplay.setTopLeftPosition(column2, row11);
 }

@@ -21,32 +21,10 @@
 #include <array>
 
 #include <JuceHeader.h>
+#include "juce_dsp/juce_dsp.h"
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/EnvelopeFollowers.h"
-
- /*
-  * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation, either version 3 of the License, or
-  * (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program. If not, see <https://www.gnu.org/licenses/>.
-  */
-
-#pragma
-
-#include <JuceHeader.h>
-#include "juce_dsp/juce_dsp.h"
-
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 class SpectrumDetectionFFT
@@ -271,6 +249,107 @@ private:
 	float m_spectrumGainsSmooth[BANDS_COUNT]{ 0.0f };
 };
 
+class SpectrumApply
+{
+public:
+	SpectrumApply() = default;
+	~SpectrumApply() = default;
+
+	static const int BANDS_COUNT = 6;
+	inline static float FILTER_FREQUENCY[BANDS_COUNT] = { 50.0f, 120.0f, 380.0f, 1000.0f, 3300.0f, 10000.0f };
+	inline static float APPLY_FILTER_Q[BANDS_COUNT] = { 1.0f, 1.0f, 1.0f, 0.7f, 0.3, 0.3f };
+	inline static float APPLY_FILTER_SCALE_FACTOR[BANDS_COUNT] = { 1.0f, 1.0f, 0.67f, 0.5f, 0.5f, 0.5f };
+
+	struct Params
+	{
+		Params() = default;
+		~Params() = default;
+
+		Params(const float gainsdB[BANDS_COUNT])
+		{
+			std::copy(gainsdB, gainsdB + BANDS_COUNT, m_gainsdB);
+		}
+
+		Params(float gain1dB,
+			float gain2dB,
+			float gain3dB,
+			float gain4dB,
+			float gain5dB,
+			float gain6dB)
+			: m_gainsdB{ gain1dB, gain2dB, gain3dB, gain4dB, gain5dB, gain6dB }
+		{};
+
+		Params(float gain1dB,
+			float gain2dB,
+			float gain3dB,
+			float gain4dB,
+			float gain5dB,
+			float gain6dB,
+			bool bypass1,
+			bool bypass2,
+			bool bypass3,
+			bool bypass4,
+			bool bypass5,
+			bool bypass6)
+			: m_gainsdB{ gain1dB, gain2dB, gain3dB, gain4dB, gain5dB, gain6dB },
+			m_bypass{ bypass1, bypass2, bypass3, bypass4, bypass5, bypass6 }
+		{};
+
+		float m_gainsdB[BANDS_COUNT]{1.0f};
+		bool m_bypass[BANDS_COUNT]{true};
+	};
+
+	inline void init(const int sampleRate) noexcept
+	{
+		for (size_t i = 0; i < BANDS_COUNT; i++)
+		{
+			m_applyfilter[i].init(sampleRate);
+		}
+	}
+	inline void set(Params params)
+	{
+		m_params = params;
+	}
+	inline void setGains(float* gains)
+	{
+		m_params.m_gainsdB[0] = juce::Decibels::gainToDecibels(gains[0]);
+		m_params.m_gainsdB[1] = juce::Decibels::gainToDecibels(gains[1]);
+		m_params.m_gainsdB[2] = juce::Decibels::gainToDecibels(gains[2]);
+		m_params.m_gainsdB[3] = juce::Decibels::gainToDecibels(gains[3]);
+		m_params.m_gainsdB[4] = juce::Decibels::gainToDecibels(gains[4]);
+		m_params.m_gainsdB[5] = juce::Decibels::gainToDecibels(gains[5]);
+	}
+	inline void setGainsdB(float* gainsdB)
+	{
+		m_params.m_gainsdB[0] = gainsdB[0];
+		m_params.m_gainsdB[1] = gainsdB[1];
+		m_params.m_gainsdB[2] = gainsdB[2];
+		m_params.m_gainsdB[3] = gainsdB[3];
+		m_params.m_gainsdB[4] = gainsdB[4];
+		m_params.m_gainsdB[5] = gainsdB[5];
+	}
+	inline float process(const float in) noexcept
+	{
+		float out = in;
+		for (size_t i = 0; i < BANDS_COUNT; i++)
+		{
+			if (m_params.m_bypass[i] == true)
+			{
+				continue;
+			}
+
+			m_applyfilter[i].setPeak(FILTER_FREQUENCY[i], APPLY_FILTER_Q[i], APPLY_FILTER_SCALE_FACTOR[i] * m_params.m_gainsdB[i]);
+			out = m_applyfilter[i].processDF1(out);
+		}
+
+		return out;
+	}
+
+private:
+	BiquadFilter m_applyfilter[BANDS_COUNT];
+	Params m_params;
+};
+
 class SpectrumMatch
 {
 public:
@@ -425,11 +504,186 @@ public:
 private:
 	SpectrumDetectionFFT m_spectrumDetectionFFT{};
 	SpectrumDetectionTD m_spectrumDetectionTD{};
-	
-	Params m_paramsLast{};
-
 	BiquadFilter m_applyfilter[BANDS_COUNT];
+	Params m_paramsLast{};
 	float m_filterGain[BANDS_COUNT]{ 0.0f };
+};
 
-	BranchingEnvelopeFollower<float> m_smoother[BANDS_COUNT];
+class SpectrumMorph
+{
+public:
+	enum DetectioType
+	{
+		TimeDomain,
+		FrequencyDomain,
+		COUNT
+	};
+
+	struct Params
+	{
+		static constexpr int NUM_BANDS = 6;
+
+		Params() = default;
+		~Params() = default;
+
+		// Constructor with 6 separate float gains
+		Params(float attackTimeMS,
+			float releaseTimeMS,
+			float gain1,
+			float gain2,
+			float gain3,
+			float gain4,
+			float gain5,
+			float gain6,
+			int detectionType,
+			bool mute1,
+			bool mute2,
+			bool mute3,
+			bool mute4,
+			bool mute5,
+			bool mute6,
+			float ratio)
+			: m_attackTimeMS{ attackTimeMS },
+			m_releaseTimeMS{ releaseTimeMS },
+			m_gains{ gain1, gain2, gain3, gain4, gain5, gain6 },
+			m_mute{ mute1, mute2, mute3, mute4, mute5, mute6 },
+			m_detectionType{ static_cast<DetectioType>(detectionType) },
+			m_ratio { ratio }
+		{}
+
+		// Equality helper for floats
+		static bool nearlyEqual(float a, float b, float epsilon = 1e-6f)
+		{
+			return std::fabs(a - b) < epsilon;
+		}
+
+		// Equality operator
+		bool operator==(const Params& other) const noexcept
+		{
+			if (!nearlyEqual(m_attackTimeMS, other.m_attackTimeMS) ||
+				!nearlyEqual(m_releaseTimeMS, other.m_releaseTimeMS) ||
+				!nearlyEqual(m_ratio, other.m_ratio))
+				return false;
+
+			for (int i = 0; i < NUM_BANDS; ++i)
+			{
+				if (!nearlyEqual(m_gains[i], other.m_gains[i]))
+					return false;
+
+				if (m_mute[i] != other.m_mute[i])
+					return false;
+			}
+
+			if (m_detectionType != other.m_detectionType)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		// Not-equal operator
+		bool operator!=(const Params& other) const noexcept
+		{
+			return !(*this == other);
+		}
+
+		float m_attackTimeMS{ 0.0f };
+		float m_releaseTimeMS{ 0.0f };
+		std::array<float, NUM_BANDS> m_gains{ {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f} };
+		std::array<bool, NUM_BANDS> m_mute{ {false, false, false, false, false, false} };
+		float m_ratio{ 0.0f };
+		DetectioType m_detectionType{ DetectioType::TimeDomain };
+	};
+
+	SpectrumMorph() = default;
+	~SpectrumMorph() = default;
+
+	static const int BANDS_COUNT = 6;
+	inline static float FILTER_FREQUENCY[BANDS_COUNT] = { 50.0f, 120.0f, 380.0f, 1000.0f, 3300.0f, 10000.0f };
+	inline static float APPLY_FILTER_Q[BANDS_COUNT] = { 1.0f, 1.0f, 1.0f, 0.7f, 0.3, 0.3f };
+	inline static float APPLY_FILTER_SCALE_FACTOR[BANDS_COUNT] = { 1.0f, 1.0f, 0.67f, 0.5f, 0.5f, 0.5f };
+
+	inline void init(const int sampleRate) noexcept
+	{
+		m_spectrumDetectionInTD.init(sampleRate);
+		m_spectrumDetectionSCTD.init(sampleRate);
+		m_spectrumDetectionInFFT.init(sampleRate);
+		m_spectrumDetectionSCFFT.init(sampleRate);
+
+		m_spectrumApplyIn.init(sampleRate);
+		m_spectrumApplySC.init(sampleRate);
+	}
+	inline void set(const Params& params) noexcept
+	{
+		if (params == m_params)
+		{
+			return;
+		}
+
+		m_params = params;
+
+		m_spectrumDetectionInTD.set(params.m_attackTimeMS, params.m_releaseTimeMS);
+		m_spectrumDetectionSCTD.set(params.m_attackTimeMS, params.m_releaseTimeMS);
+		m_spectrumDetectionInFFT.set(params.m_attackTimeMS, params.m_releaseTimeMS);
+		m_spectrumDetectionSCFFT.set(params.m_attackTimeMS, params.m_releaseTimeMS);
+	}
+	inline void process(const float in, const float SC, float& outIn, float& outSC) noexcept
+	{
+		// Get spectrums
+		float* spectrumGainsIn{ nullptr };
+		float* spectrumGainsSC{ nullptr };
+		if (m_params.m_detectionType == DetectioType::TimeDomain)
+		{
+			m_spectrumDetectionInTD.process(in);
+			spectrumGainsIn = m_spectrumDetectionInTD.getSpectrum();
+
+			m_spectrumDetectionSCTD.process(SC);
+			spectrumGainsSC = m_spectrumDetectionSCTD.getSpectrum();
+		}
+		else if (m_params.m_detectionType == DetectioType::FrequencyDomain)
+		{
+			m_spectrumDetectionInFFT.process(in);
+			spectrumGainsIn = m_spectrumDetectionInFFT.getSpectrum();
+
+			m_spectrumDetectionSCFFT.process(SC);
+			spectrumGainsSC = m_spectrumDetectionSCFFT.getSpectrum();
+		}
+
+		// Morph spectrums
+		// TODO: Optimize
+		float morphSpectrumGainsIndB[BANDS_COUNT];
+		float morphSpectrumGainsSCdB[BANDS_COUNT];
+		for (size_t i = 0; i < BANDS_COUNT; i++)
+		{
+			const float spectrumGainIndB = juce::Decibels::gainToDecibels(spectrumGainsIn[i]);
+			const float spectrumGainSCdB = juce::Decibels::gainToDecibels(spectrumGainsSC[i]);
+			const float ratio = m_params.m_ratio * m_params.m_ratio;
+			
+			morphSpectrumGainsIndB[i] = ratio * (spectrumGainSCdB - spectrumGainIndB);
+			morphSpectrumGainsSCdB[i] = (1.0f - ratio) * (spectrumGainIndB - spectrumGainSCdB);
+		}
+		
+		// Apply spectrum
+		m_spectrumApplyIn.setGainsdB(morphSpectrumGainsIndB);
+		outIn = m_spectrumApplyIn.process(in);
+		
+		m_spectrumApplySC.setGainsdB(morphSpectrumGainsSCdB);
+		outSC = m_spectrumApplySC.process(SC);
+	}
+	inline float* getGains() noexcept
+	{
+		return m_filterGain;
+	}
+
+private:
+	SpectrumDetectionFFT m_spectrumDetectionInFFT{};
+	SpectrumDetectionFFT m_spectrumDetectionSCFFT{};
+	SpectrumDetectionTD m_spectrumDetectionInTD{};
+	SpectrumDetectionTD m_spectrumDetectionSCTD{};
+	SpectrumApply m_spectrumApplyIn{};
+	SpectrumApply m_spectrumApplySC{};
+	Params m_params{};
+
+	float m_filterGain[BANDS_COUNT]{ 0.0f };
 };

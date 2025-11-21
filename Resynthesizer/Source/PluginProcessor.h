@@ -18,14 +18,18 @@
 #pragma once
 
 #include <array>
+#include <vector>
 
 #include <JuceHeader.h>
 
-#include "../../../zazzVSTPlugins/Shared/Filters/LinkwitzRileyFilter.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/SpectrumMatch.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/PitchDetectionMulti.h"
+#include "../../../zazzVSTPlugins/Shared/Oscillators/SinSawOscillator.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/NoiseGenerator.h"
 
 //==============================================================================
-class MorpherAudioProcessor  : public juce::AudioProcessor
+class ResynthesizerAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -33,16 +37,32 @@ class MorpherAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    MorpherAudioProcessor();
-    ~MorpherAudioProcessor() override;
+    ResynthesizerAudioProcessor();
+    ~ResynthesizerAudioProcessor() override;
 
 	enum Parameters
     {
-        InVolume,
-		SCVolume,
-		Morph,
-		Type,
+        Frequency1,
+        Frequency2,
+        Frequency3,
+        Frequency4,
+        Frequency5,
+        Frequency6,
+        Frequency7,
+        Frequency8,
+		Volume1,
+		Volume2,
+		Volume3,
+		Volume4,
+		Volume5,
+		Volume6,
+		Volume7,
+		Volume8,
 		Volume,
+		MinimumStep,
+		Shape,
+		Factor,
+		Style,
         COUNT
     };
 
@@ -50,6 +70,7 @@ public:
     static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
+    static const int N_OSCILATORS = 8;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -91,11 +112,20 @@ public:
 
 private:	
 	//==============================================================================
+	void setParameterRaw(const juce::String& paramID, float rawValue);
+
+	//==============================================================================
+	PitchDetectionMulti m_pitchDetection;
+
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
+	std::array<SinSawOscillator, N_OSCILATORS> m_oscilators;
+	std::array<PinkNoiseGenerator, N_OSCILATORS> m_noiseGenerators;
+	std::array<BiquadFilter, N_OSCILATORS> m_noiseFilters;
+	std::vector<PitchDetectionMulti::Spectrum> m_spectrum;
+	juce::AudioParameterBool* m_learnButton;
+	bool m_learnButtonLast{ false };
 
-	std::array<LinkwitzRileyFilter, N_CHANNELS> m_inFilter;
-	std::array<LinkwitzRileyFilter, N_CHANNELS> m_scFilter;
-	std::array<SpectrumMorph, N_CHANNELS> m_spectrumMorph;
+	OnePoleLowPassFilter m_smoother;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MorpherAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ResynthesizerAudioProcessor)
 };

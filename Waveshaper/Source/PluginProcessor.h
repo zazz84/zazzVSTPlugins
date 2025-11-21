@@ -19,6 +19,8 @@ public:
 	static const std::string paramsNames[];
 	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
+	static const int OVERSAMPLING_FACTOR = 3;
+	static const int OVERSAMPLING_MULTIPLIER = 8;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -60,13 +62,18 @@ public:
 
 private:	
 	//==============================================================================
+	juce::dsp::Oversampling<float> m_oversampling{ 2,                      // numChannels
+												   OVERSAMPLING_FACTOR,    // oversampling factor = 2^4 = 16x
+												   juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR,
+												   false,                  // don't use linear-phase
+												   false };					// don't process by blocks only};
+	
 	BiquadFilter m_preFilter[2];
 	BiquadFilter m_postFilter[2];
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* colorParameter = nullptr;
-	std::atomic<float>* splitParameter = nullptr;
 	std::atomic<float>* asymetryParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
