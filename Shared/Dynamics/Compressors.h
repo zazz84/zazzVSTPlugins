@@ -470,3 +470,66 @@ protected:
 	float m_peakRatio = 1.0f;
 	float m_logRatio = 1.0f;
 };
+
+//==============================================================================
+class SmoothCompressor
+{
+public:
+	SmoothCompressor() = default;
+	~SmoothCompressor() = default;
+
+	inline void init(const int sampleRate)
+	{
+		m_envelopeFollowerLog.init(sampleRate);
+		m_envelopeFollowerLin.init(sampleRate);
+
+		const int size = static_cast<int>(0.01f * static_cast<float>(sampleRate));		// RMS calculated from 10ms long buffer
+		m_RMS.init(size);
+	};
+	inline void set(const float thresholddB, const float ratio, const float kneeWidth, const float attackTimeMS, const float releaseTimeMS, const float peakRatio = 1.0f, const float logRatio = 1.0f)
+	{
+		m_params.set(thresholddB, ratio, kneeWidth);
+
+		m_envelopeFollowerLin.set(attackTimeMS, releaseTimeMS);
+		m_envelopeFollowerLog.set(attackTimeMS, releaseTimeMS);
+
+		m_peakRatio = peakRatio;
+		m_logRatio = logRatio;
+	};
+	inline float processHardKnee(const float in)
+	{
+		// Get combined peak/rms input
+		const float rms = RMS_FACTOR * m_RMS.process(in);
+		const float peak = std::fabsf(in);
+		const float inCombined = m_peakRatio * (peak - rms) + rms;
+
+		// Get log attenuation
+		const float indB = juce::Decibels::gainToDecibels(inCombined);
+		const float envelopeIndB = (indB >= m_params.m_thresholddB) ? (indB - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+		const float attenuateLogdB = -m_envelopeFollowerLog.process(envelopeIndB);
+
+		// Get lin attenuation
+		const float smoothLin = (1.0f / 24.0f) * m_envelopeFollowerLin.process(24.0f * inCombined);
+		const float attenuateLindB = smoothLin > m_params.m_threshold ? (juce::Decibels::gainToDecibels(smoothLin) - m_params.m_thresholddB) * m_params.m_R_Inv_minus_One : 0.0f;
+
+		// Get combined lin/log attenuation
+		const float attenuatedB = m_logRatio * (attenuateLogdB - attenuateLindB) + attenuateLindB;
+		const float attenuateGain = juce::Decibels::decibelsToGain(attenuatedB);
+
+		// Apply gain reduction
+		return attenuateGain * in;
+	};
+	/*float processHardKneeLinPeak(float in);
+	float processHardKneeLogPeak(float in);
+	float processHardKneeLinRMS(float in);
+	float processHardKneeLogRMS(float in);
+	float processSoftKnee(float in);*/
+
+protected:
+	ZCHoldEnvelopeFollower<float> m_envelopeFollowerLog;
+	ZCHoldEnvelopeFollower<float> m_envelopeFollowerLin;
+	RMS m_RMS;
+	CompressorParams<float> m_params;
+	float m_peakRatio = 1.0f;
+	float m_logRatio = 1.0f;
+};

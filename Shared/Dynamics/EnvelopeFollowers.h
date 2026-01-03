@@ -18,6 +18,7 @@
 #pragma once
 
 #include <cmath>
+#include <cstddef>
 #include <algorithm>
 #include <type_traits>
 
@@ -384,4 +385,80 @@ private:
 	BranchingEnvelopeFollower<T> m_inputEnvelopeFollower;
 	BranchingEnvelopeFollower<T> m_outputEnvelopeFollower;
 	T m_dynamics = T(0.0);
+};
+
+
+//==============================================================================
+
+template <typename T>
+class ZCHoldEnvelopeFollower
+{
+public:
+	ZCHoldEnvelopeFollower()
+		: m_attackCoef(T(0.01)), m_releaseCoef(T(0.001)),
+		m_gain(T(1.0)), m_outLast(T(0.0)),
+		m_prevSample(T(0.0)), m_holdCounter(0), m_lastZCIndex(0), m_sampleIndex(0),
+		m_sampleRate(48000)
+	{};
+
+	~ZCHoldEnvelopeFollower() = default;
+
+	inline void init(const int sampleRate)
+	{
+		m_sampleRate = sampleRate;
+	};
+	inline void set(T attackMs, T releaseMs)
+	{
+		m_attackCoef = std::exp(T(-1000) / (attackMs * (T)m_sampleRate));
+		m_releaseCoef = std::exp(T(-1000) / (releaseMs * (T)m_sampleRate));
+		m_gain = T(0.85);
+		m_outLast = T(0);
+		m_prevSample = T(0);
+		m_holdCounter = 0;
+		m_lastZCIndex = 0;
+		m_sampleIndex = 0;
+	}
+	inline T process(T in)
+	{
+		// Zero-crossing detection
+		if ((m_prevSample <= T(0) && in > T(0)) || (m_prevSample >= T(0) && in < T(0)))
+		{
+			int interval = static_cast<int>(m_sampleIndex - m_lastZCIndex);
+			m_holdCounter = interval;
+			m_lastZCIndex = m_sampleIndex;
+		}
+
+		T out;
+		if (m_holdCounter > 0)
+		{
+			out = m_gain * m_outLast;
+			m_holdCounter -= 1;
+			if (m_holdCounter < 0) m_holdCounter = 0;
+		}
+		else
+		{
+			T v = std::fabs(in);
+			T coef = (v > m_outLast) ? m_attackCoef : m_releaseCoef;
+			out = v + coef * (m_outLast - v);
+			out *= m_gain;
+		}
+
+		m_prevSample = in;
+		m_outLast = out;
+		++m_sampleIndex;
+
+		return out;
+	}
+
+private:
+	T m_attackCoef;
+	T m_releaseCoef;
+	T m_gain;
+
+	T m_outLast;
+	T m_prevSample;
+	int m_holdCounter;
+	int m_lastZCIndex;
+	int m_sampleIndex;
+	int m_sampleRate;
 };

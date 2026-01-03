@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="1" x="0.5" y="0.1" useARA="0">
+    <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="2" isShell="0" hasARAExtension="0" uid="246006c0"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="2" x="0.25" y="0.1" useARA="0">
+    <PLUGIN name="MIDI Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="a9e4f9eb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" hasARAExtension="0" uid="a9e4f9eb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="3" x="0.5" y="0.9" useARA="0">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" hasARAExtension="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="4" x="0.25" y="0.9" useARA="0">
+    <PLUGIN name="MIDI Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="9d5bbb00"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" hasARAExtension="0" uid="9d5bbb00"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="6" x="0.49875" y="0.2923387096774194" useARA="0" uiLastX_Normal="1402"
+          uiLastY_Normal="5" uiopen_Normal="1">
+    <PLUGIN name="AudioFilePlayer" format="VST3" category="Fx" manufacturer="Matkat Music LLC"
+            version="1.0.0" file="C:\Program Files\Common Files\VST3\AudioFilePlayer.vst3\Contents\x86_64-win\AudioFilePlayer.vst3"
+            uniqueId="79fe81c" isInstrument="0" fileTime="18bda162bc0" infoUpdateTime="19b83b468ae"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="e95d02c7"/>
+    <STATE>307.VMjLgnR....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCM13BTIISX1UEaho2ZVkUdAAkKAwDUigWRWkEcQ0VTucmUY4BQl4TQLolShUELhsVRxHlXucEV071QWQDNwfELvXUVzEkLhIVPEkkXQUUV4EkLTUWUsElZMczUJUkQUc1bwHEdEEiXzslLWESQosjLEw1Xt3hKt3hKt3hKt3hKt3FUUMTUDQEdqw1XmE0UYQTQFM1YAAkKAgDUjYWQwHVdAAkKAwjKtLlKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYDOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="15" x="0.4963196635120926" y="0.5892193308550185" useARA="0">
+    <PLUGIN name="FFTFilter" format="VST3" category="Fx|EQ" manufacturer="zazz"
+            version="1.0.0" file="C:\Program Files\Common Files\VST3\FFTFilter.vst3\Contents\x86_64-win\FFTFilter.vst3"
+            uniqueId="199e917" isInstrument="0" fileTime="19b83b405ba" infoUpdateTime="19b83b468ae"
+            numInputs="2" numOutputs="2" isShell="0" hasARAExtension="0"
+            uid="e95a3221"/>
+    <STATE>539.VMjLgHg....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9LiLv3hUMoFSmI2St3hKt7zJlcUXxEDZisVRxH1a3vVX3fjTLQmKogjYTwVXogiQY8FMwjENHIUUTkEUKMCR38TNtHzSPUDahcFLVkkdUwlX4QyPOAUQpQUPvPDRuEkUOglXTg0azXESn4BZic1cVM1ZvjFR1MiPLg1Mn8zMtTETRUDUSYlZFkENHgWTmsFaggGRBgTLEYTXvTkUOglKosjcHg2R4X2PTETRUAUSAIkVpASZHcTQVoEcMkFRlg0UXIWUWkENHIDSz4RZHU2LC8DTEoFUAACQH8VTV8DZhQEVuQiQMglKnM1Y2Y0XqASZHY2LBwDZ2f1S23RUPIUQTMkYpYTV3fDdQc1ZrEFLHIDRwTjQgASUV8DZtj1R1gDdKkicCQUPIUETMEjTZoFLogjU3XTXv.iUYglKnM1Y2Y0XqASZHY2LBwDZ2f1S2biPTcVRWg0bUYzXqkjLhkiKt3hKt3hKt3hKt3haTU0PUQDU3sFaicVTWkEQEYzXmEDTtDDRTQlcEEiX4EDTtDDSt3xXt3hKt3hKt3hKlIUUMQUTPkzUZESQFM1ZQQEV5UjQ77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="6" srcChannel="0" dstFilter="15" dstChannel="0"/>
+  <CONNECTION srcFilter="6" srcChannel="1" dstFilter="15" dstChannel="1"/>
+  <CONNECTION srcFilter="15" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="15" srcChannel="1" dstFilter="3" dstChannel="1"/>
+</FILTERGRAPH>
