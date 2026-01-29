@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,25 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernTextButton.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/SpectrumCurveComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/SpectrumDifferenceComponent.h"
 
 //==============================================================================
-class VoiceFilterAudioProcessorEditor : public juce::AudioProcessorEditor
+class SpectrumMatchFFTAudioProcessorEditor : public juce::AudioProcessorEditor, juce::Timer
 {
 public:
-    VoiceFilterAudioProcessorEditor (VoiceFilterAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~VoiceFilterAudioProcessorEditor() override;
+    SpectrumMatchFFTAudioProcessorEditor (SpectrumMatchFFTAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~SpectrumMatchFFTAudioProcessorEditor() override;
 
-	static const int CANVAS_WIDTH = 1 + 6 * 3 + 1;
-	static const int CANVAS_HEIGHT = 2 + 4 + 1;
+	static const int CANVAS_WIDTH = 1 + 30 + 1;
+	static const int CANVAS_HEIGHT = 2 + 1 + 10 + 1 + 10 + 1 + 4;
 	
 	//==============================================================================
+	void timerCallback() override;
 	void paint (juce::Graphics&) override;
     void resized() override;
 
@@ -40,23 +45,31 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    VoiceFilterAudioProcessor& audioProcessor;
+    SpectrumMatchFFTAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
 	PluginNameComponent m_pluginLabel;
 
-	ModernRotarySlider m_gain1Slider;
-	ModernRotarySlider m_gain2Slider;
-	ModernRotarySlider m_gain3Slider;
-	ModernRotarySlider m_gain4Slider;
-	ModernRotarySlider m_gain5Slider;
+	GroupLabelComponent m_spectrumGroupLabel;
+	GroupLabelComponent m_spectrumDiffGroupLabel;
 
+	SpectrumCurveComponent m_spectrumCurveComponent;
+	SpectrumDifferenceComponent m_spectrumDifferenceComponent;
+
+	ModernRotarySlider m_lowPassFilterSlider;
+	ModernRotarySlider m_highPassFilterSlider;
+	ModernRotarySlider m_frequencyShiftSlider;
+	ModernRotarySlider m_resolutionSlider;
+	ModernRotarySlider m_ammountSlider;
 	ModernRotarySlider m_volumeSlider;
+
+	ModernTextButton m_sourceSpectrumButton;
+	ModernTextButton m_targetSpectrumButton;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
 	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VoiceFilterAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpectrumMatchFFTAudioProcessorEditor)
 };

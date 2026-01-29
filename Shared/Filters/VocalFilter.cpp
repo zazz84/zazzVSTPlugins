@@ -1,8 +1,8 @@
-#include "VoiceFilter.h"
+#include "VocalFilter.h"
 
-const int VoiceFilter::frequency[] = { 80, 250, 660, 3000, 8000};
+const int VocalFilter::frequency[] = { 80, 250, 660, 3000, 8000};
 
-VoiceFilter::VoiceFilter() :
+VocalFilter::VocalFilter() :
     fft(fftOrder),
     window(fftSize + 1, juce::dsp::WindowingFunction<float>::WindowingMethod::hann, false)
 {
@@ -10,10 +10,10 @@ VoiceFilter::VoiceFilter() :
     // are symmetrical, which is wrong for overlap-add processing. To make the
     // window periodic, set size to 1025 but only use the first 1024 samples.
 
-	std::fill(std::begin(m_bucketGain), std::end(m_bucketGain), 1.0f);
+	std::fill(std::begin(m_binGain), std::end(m_binGain), 1.0f);
 }
 
-void VoiceFilter::reset()
+void VocalFilter::reset()
 {
     count = 0;
     pos = 0;
@@ -23,14 +23,14 @@ void VoiceFilter::reset()
     std::fill(outputFifo.begin(), outputFifo.end(), 0.0f);
 }
 
-void VoiceFilter::processBlock(float* data, int numSamples, bool bypassed)
+void VocalFilter::processBlock(float* data, int numSamples, bool bypassed)
 {
     for (int i = 0; i < numSamples; ++i) {
         data[i] = processSample(data[i], bypassed);
     }
 }
 
-float VoiceFilter::processSample(float sample, bool bypassed)
+float VocalFilter::processSample(float sample, bool bypassed)
 {
     // Push the new sample value into the input FIFO.
     inputFifo[pos] = sample;
@@ -61,7 +61,7 @@ float VoiceFilter::processSample(float sample, bool bypassed)
     return outputSample;
 }
 
-void VoiceFilter::processFrame(bool bypassed)
+void VocalFilter::processFrame(bool bypassed)
 {
     const float* inputPtr = inputFifo.data();
     float* fftPtr = fftData.data();
@@ -103,7 +103,7 @@ void VoiceFilter::processFrame(bool bypassed)
     }
 }
 
-void VoiceFilter::processSpectrum(float* data, int numBins)
+void VocalFilter::processSpectrum(float* data, int numBins)
 {
     // The spectrum data is floats organized as [re, im, re, im, ...]
     // but it's easier to deal with this as std::complex values.
@@ -122,6 +122,6 @@ void VoiceFilter::processSpectrum(float* data, int numBins)
         //phase *= float(i);
 
         // Convert magnitude and phase back into a complex number.
-        cdata[i] = std::polar(magnitude * m_bucketGain[i], phase);
+        cdata[i] = std::polar(magnitude * m_binGain[i], phase);
     }
 }

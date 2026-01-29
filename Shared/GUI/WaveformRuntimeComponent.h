@@ -43,7 +43,7 @@ public:
 	bool canRepaint() { return m_repaint; };
 	void paint(juce::Graphics& g) override
 	{		
-		const auto width = getWidth();
+		/*const auto width = getWidth();
 		const auto height = getHeight();
 		const auto heightHalf = 0.5f * height;
 
@@ -77,7 +77,7 @@ public:
 
 		g.strokePath(path, juce::PathStrokeType(1.0f));
 
-		m_repaint = false;
+		m_repaint = false;*/
 	}
 
 private:

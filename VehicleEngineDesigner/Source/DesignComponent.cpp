@@ -1,5 +1,7 @@
 #include "DesignComponent.h"
 
+#include "../../../zazzVSTPlugins/Shared/Filters/SpectrumApplyFFT.h"
+
 //==============================================================================
 DesignComponent::DesignComponent() : MainComponentBase()
 {
@@ -116,12 +118,10 @@ DesignComponent::DesignComponent() : MainComponentBase()
 			return;
 		}
 
-		float gains[SOURCE_COUNT][SpectrumDetectionTD::BANDS_COUNT] = {};
+		float gains[SOURCE_COUNT][SpectrumDetectionFFTFull::BINS_COUNT] = {};
 		
 		// Get spectrums
-		SpectrumDetectionTD spectrumDetection{};
-		spectrumDetection.init(m_sampleRate[0]);
-		spectrumDetection.set(400.0f, 800.0f);
+		SpectrumDetectionFFTFull spectrumDetection{};
 
 		for (int i = 0; i < m_usedSources; i++)
 		{
@@ -136,10 +136,14 @@ DesignComponent::DesignComponent() : MainComponentBase()
 			// Copy spectrum into local gains buffer
 			float* spectrum = spectrumDetection.getSpectrum();
 			
-			for (int j = 0; j < SpectrumDetectionTD::BANDS_COUNT; j++)
+			// TODO: Optimize
+			for (int j = 0; j < SpectrumDetectionFFTFull::BINS_COUNT; j++)
 			{
-				gains[i][j] = juce::Decibels::gainToDecibels(spectrum[j]);
+				//gains[i][j] = juce::Decibels::gainToDecibels(spectrum[j]);
+				gains[i][j] = spectrum[j];
 			}
+
+			spectrumDetection.release();
 		}
 
 		// Initialize processed buffers
@@ -149,28 +153,28 @@ DesignComponent::DesignComponent() : MainComponentBase()
 		}
 
 		// Apply spectrums
-		SpectrumApply spectrumApply{};
-		spectrumApply.init(m_sampleRate[0]);
+		SpectrumApplyFFT spectrumApply{};
 
 		for (int source = 0; source < m_usedSources; source++)
-		{
+		{		
 			// Calculate apply gains
-			float applyGain[SpectrumApply::BANDS_COUNT]{ 0.0f };
+			float applyGain[SpectrumApplyFFT::numBins] = {};
 			const float spectrumMatchValue = 0.01f * m_spectrumMatchSlider[source].getValue();
 
-			for (int band = 0; band < SpectrumApply::BANDS_COUNT; band++)
+			for (int band = 0; band < SpectrumDetectionFFTFull::BINS_COUNT; band++)
 			{
 				const float leftdB = gains[0][band];
 				const float rightdB = gains[m_usedSources - 1][band];
 
 				const float dB = gains[source][band];
 				const float targetdB = leftdB + spectrumMatchValue * (rightdB - leftdB);
-				
-				applyGain[band] = targetdB - dB;
+				const float apply = targetdB - dB;
+
+				applyGain[band] = apply;
 			}
 
 			// Apply gains
-			SpectrumApply::Params params{ applyGain };
+			SpectrumApplyFFT::Params params{ applyGain };
 			spectrumApply.set(params);
 
 			const float channels = m_bufferProcessed[source].getNumChannels();
@@ -181,13 +185,21 @@ DesignComponent::DesignComponent() : MainComponentBase()
 				auto* bufferSource = m_bufferSource[source].getWritePointer(channel);
 				auto* bufferProcessed = m_bufferProcessed[source].getWritePointer(channel);
 
+				// TODO: Optimize
+				for (int sample = 0; sample < samples; sample++)
+				{
+					spectrumApply.processSample(bufferSource[sample], false);
+				}
+
 				for (int sample = 0; sample < samples; sample++)
 				{
 					const float in = bufferSource[sample];
-					const float out = spectrumApply.process(in);
+					const float out = spectrumApply.processSample(in, false);
 					bufferProcessed[sample] = out;
 				}
 			}
+
+			spectrumApply.reset();
 		}
 
 	};

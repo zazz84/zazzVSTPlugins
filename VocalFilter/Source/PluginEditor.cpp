@@ -22,13 +22,13 @@
 #define CREATE_PARAM_SLIDER(sliderName, paramEnum) \
     sliderName( \
         vts, \
-        VoiceFilterAudioProcessor::paramsNames[VoiceFilterAudioProcessor::Parameters::paramEnum], \
-        VoiceFilterAudioProcessor::paramsUnitNames[VoiceFilterAudioProcessor::Parameters::paramEnum], \
-        VoiceFilterAudioProcessor::labelNames[VoiceFilterAudioProcessor::Parameters::paramEnum] \
+        VocalFilterAudioProcessor::paramsNames[VocalFilterAudioProcessor::Parameters::paramEnum], \
+        VocalFilterAudioProcessor::paramsUnitNames[VocalFilterAudioProcessor::Parameters::paramEnum], \
+        VocalFilterAudioProcessor::labelNames[VocalFilterAudioProcessor::Parameters::paramEnum] \
     )
 
 //==============================================================================
-VoiceFilterAudioProcessorEditor::VoiceFilterAudioProcessorEditor (VoiceFilterAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+VocalFilterAudioProcessorEditor::VocalFilterAudioProcessorEditor (VocalFilterAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p),
 	audioProcessor (p),
 	valueTreeState(vts),
@@ -38,7 +38,7 @@ VoiceFilterAudioProcessorEditor::VoiceFilterAudioProcessorEditor (VoiceFilterAud
 	CREATE_PARAM_SLIDER(m_gain4Slider, Gain4),
 	CREATE_PARAM_SLIDER(m_gain5Slider, Gain5),
 	CREATE_PARAM_SLIDER(m_volumeSlider, Volume),
-	m_pluginLabel("zazz::VoiceFilter")
+	m_pluginLabel("zazz::VocalFilter")
 {	
 	addAndMakeVisible(m_pluginLabel);
 
@@ -68,17 +68,17 @@ VoiceFilterAudioProcessorEditor::VoiceFilterAudioProcessorEditor (VoiceFilterAud
 	}
 }
 
-VoiceFilterAudioProcessorEditor::~VoiceFilterAudioProcessorEditor()
+VocalFilterAudioProcessorEditor::~VocalFilterAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void VoiceFilterAudioProcessorEditor::paint (juce::Graphics& g)
+void VocalFilterAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(darkColor);
 }
 
-void VoiceFilterAudioProcessorEditor::resized()
+void VocalFilterAudioProcessorEditor::resized()
 {
 	const int width = getWidth();
 	const int height = getHeight();

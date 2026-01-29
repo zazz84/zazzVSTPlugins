@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="tEWBQ9" name="VoiceFilter" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="tEWBQ9" name="VocalFilter" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="EQ">
-  <MAINGROUP id="gnhUyl" name="VoiceFilter">
+  <MAINGROUP id="gnhUyl" name="VocalFilter">
     <GROUP id="{191B5B0C-9222-ACB6-5CDF-9E5EB0F9E7EE}" name="Source">
       <FILE id="Sprae1" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
       <FILE id="lpJWBo" name="ModernRotarySlider.h" compile="0" resource="0"
@@ -12,10 +12,10 @@
             file="../Shared/GUI/PluginNameComponent.h"/>
       <FILE id="Vaj6Jw" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
+      <FILE id="Jg71sj" name="VocalFilter.cpp" compile="1" resource="0" file="../Shared/Filters/VocalFilter.cpp"/>
+      <FILE id="qHcqJo" name="VocalFilter.h" compile="0" resource="0" file="../Shared/Filters/VocalFilter.h"/>
       <FILE id="Nk1H1X" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="OrT0jC" name="VoiceFilter.cpp" compile="1" resource="0" file="../Shared/Filters/VoiceFilter.cpp"/>
-      <FILE id="Llh1bU" name="VoiceFilter.h" compile="0" resource="0" file="../Shared/Filters/VoiceFilter.h"/>
       <FILE id="LIrpBh" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="XsjskL" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
@@ -41,9 +41,9 @@
   <EXPORTFORMATS>
     <VS2017 targetFolder="Builds/VisualStudio2017">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="VoiceFilter" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="1" name="Debug" targetName="VocalFilter" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="VoiceFilter" enablePluginBinaryCopyStep="1"
+        <CONFIGURATION isDebug="0" name="Release" targetName="VocalFilter" enablePluginBinaryCopyStep="1"
                        vst3BinaryLocation="c:\Program Files\Common Files\VST3\"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

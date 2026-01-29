@@ -21,10 +21,10 @@
 
 #include <JuceHeader.h>
 
-#include "../../../zazzVSTPlugins/Shared/Filters/VoiceFilter.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/VocalFilter.h"
 
 //==============================================================================
-class VoiceFilterAudioProcessor  : public juce::AudioProcessor
+class VocalFilterAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -32,8 +32,8 @@ class VoiceFilterAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    VoiceFilterAudioProcessor();
-    ~VoiceFilterAudioProcessor() override;
+    VocalFilterAudioProcessor();
+    ~VocalFilterAudioProcessor() override;
 
 	enum Parameters
     {
@@ -91,8 +91,8 @@ public:
 
 private:	
 	//==============================================================================
-	std::array<VoiceFilter, N_CHANNELS> m_fftProcessor;
+	std::array<VocalFilter, N_CHANNELS> m_fftProcessor;
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VoiceFilterAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VocalFilterAudioProcessor)
 };

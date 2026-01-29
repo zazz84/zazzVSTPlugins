@@ -20,12 +20,12 @@
 
 //==============================================================================
 
-const std::string VoiceFilterAudioProcessor::paramsNames[] =      { "Gain1",	"Gain2",	"Gain3",	"Gain4",	"Gain5",	"Volume" };
-const std::string VoiceFilterAudioProcessor::labelNames[] =		{ "80 Hz",	"250 Hz",	"660 Hz",	"3 kHz",	"8 kHz",	"Volume" };
-const std::string VoiceFilterAudioProcessor::paramsUnitNames[] =  { " dB",	" dB",		" dB",		" dB",		" dB",		" dB" };
+const std::string VocalFilterAudioProcessor::paramsNames[] =      { "Gain1",	"Gain2",	"Gain3",	"Gain4",	"Gain5",	"Volume" };
+const std::string VocalFilterAudioProcessor::labelNames[] =		  { "80 Hz",	"250 Hz",	"660 Hz",	"3 kHz",	"8 kHz",	"Volume" };
+const std::string VocalFilterAudioProcessor::paramsUnitNames[] =  { " dB",	" dB",		" dB",		" dB",		" dB",		" dB" };
 
 //==============================================================================
-VoiceFilterAudioProcessor::VoiceFilterAudioProcessor()
+VocalFilterAudioProcessor::VocalFilterAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -43,17 +43,17 @@ VoiceFilterAudioProcessor::VoiceFilterAudioProcessor()
     }
 }
 
-VoiceFilterAudioProcessor::~VoiceFilterAudioProcessor()
+VocalFilterAudioProcessor::~VocalFilterAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String VoiceFilterAudioProcessor::getName() const
+const juce::String VocalFilterAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool VoiceFilterAudioProcessor::acceptsMidi() const
+bool VocalFilterAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -62,7 +62,7 @@ bool VoiceFilterAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool VoiceFilterAudioProcessor::producesMidi() const
+bool VocalFilterAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -71,7 +71,7 @@ bool VoiceFilterAudioProcessor::producesMidi() const
    #endif
 }
 
-bool VoiceFilterAudioProcessor::isMidiEffect() const
+bool VocalFilterAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -80,37 +80,37 @@ bool VoiceFilterAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double VoiceFilterAudioProcessor::getTailLengthSeconds() const
+double VocalFilterAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int VoiceFilterAudioProcessor::getNumPrograms()
+int VocalFilterAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int VoiceFilterAudioProcessor::getCurrentProgram()
+int VocalFilterAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void VoiceFilterAudioProcessor::setCurrentProgram (int index)
+void VocalFilterAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String VoiceFilterAudioProcessor::getProgramName (int index)
+const juce::String VocalFilterAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void VoiceFilterAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void VocalFilterAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void VoiceFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void VocalFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
 
@@ -123,13 +123,13 @@ void VoiceFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
 	m_fftProcessor[1].init(sr);
 }
 
-void VoiceFilterAudioProcessor::releaseResources()
+void VocalFilterAudioProcessor::releaseResources()
 {
 	
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool VoiceFilterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool VocalFilterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -154,7 +154,7 @@ bool VoiceFilterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 }
 #endif
 
-void VoiceFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void VocalFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
 
@@ -203,25 +203,25 @@ void VoiceFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, 
 }
 
 //==============================================================================
-bool VoiceFilterAudioProcessor::hasEditor() const
+bool VocalFilterAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* VoiceFilterAudioProcessor::createEditor()
+juce::AudioProcessorEditor* VocalFilterAudioProcessor::createEditor()
 {
-    return new VoiceFilterAudioProcessorEditor (*this, apvts);
+    return new VocalFilterAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void VoiceFilterAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void VocalFilterAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void VoiceFilterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void VocalFilterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -230,7 +230,7 @@ void VoiceFilterAudioProcessor::setStateInformation (const void* data, int sizeI
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout VoiceFilterAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout VocalFilterAudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
@@ -250,5 +250,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout VoiceFilterAudioProcessor::c
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new VoiceFilterAudioProcessor();
+    return new VocalFilterAudioProcessor();
 }

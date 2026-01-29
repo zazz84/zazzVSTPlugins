@@ -34,7 +34,7 @@ MainComponent::MainComponent() : MainComponentBase(), m_waveformDisplaySource("S
 	addAndMakeVisible(m_detectedFrequencySlider);
 	m_detectedFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_detectedFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_detectedFrequencySlider.setRange(2.0, 200.0, 0.1);   // min, max, step
+	m_detectedFrequencySlider.setRange(2.0, 1000.0, 0.1);   // min, max, step
 	m_detectedFrequencySlider.setValue(50.0);              // initial value
 
 	addAndMakeVisible(m_detectedFrequencyLabel);
@@ -70,7 +70,7 @@ MainComponent::MainComponent() : MainComponentBase(), m_waveformDisplaySource("S
 	addAndMakeVisible(m_maximumFrequencySlider);
 	m_maximumFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_maximumFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_maximumFrequencySlider.setRange( 2.0, 200.0, 0.1);
+	m_maximumFrequencySlider.setRange( 2.0, 1000.0, 0.1);
 	m_maximumFrequencySlider.setValue( 200.0);
 
 	addAndMakeVisible(m_maximumFrequencyLabel);

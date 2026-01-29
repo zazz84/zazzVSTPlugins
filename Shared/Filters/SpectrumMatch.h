@@ -176,6 +176,144 @@ private:
 	int m_sampleRate = 48000;
 };
 
+class SpectrumDetectionFFTFull
+{
+public:
+	static const int FFT_ORDER = 12;
+	static const int FFT_SIZE = 1 << FFT_ORDER;
+	static const int BINS_COUNT = FFT_SIZE / 2;
+
+	SpectrumDetectionFFTFull() : m_forwardFFT(FFT_ORDER), m_window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann)
+	{
+		// Arrays init values
+		std::fill(std::begin(m_fifo), std::end(m_fifo), 0.0f);
+		std::fill(std::begin(m_fftData), std::end(m_fftData), 0.0f);
+		std::fill(std::begin(m_spectrumGainsSmooth), std::end(m_spectrumGainsSmooth), 0.0f);
+	}
+	~SpectrumDetectionFFTFull() = default;
+
+	inline void process(const float sample) noexcept
+	{
+		m_fifo[m_fifoIndex++] = sample;
+
+		if (m_fifoIndex == FFT_SIZE)
+		{
+			juce::zeromem(m_fftData, sizeof(m_fftData));
+			std::memcpy(m_fftData, m_fifo, sizeof(m_fifo));
+
+			// Window
+			m_window.multiplyWithWindowingTable(m_fftData, FFT_SIZE);
+
+			// FFT
+			m_forwardFFT.performRealOnlyForwardTransform(m_fftData, true);
+
+			m_fifoIndex = 0;
+
+			// Handle spectrum average
+			m_bufferCount++;
+
+			auto* cdata = reinterpret_cast<std::complex<float>*>(m_fftData);
+			for (size_t i = 0; i < BINS_COUNT; ++i)
+			{
+				const float magnitude = std::abs(cdata[i]);
+
+				m_spectrumGainsSmooth[i] += magnitude;
+			}
+		}
+	}
+	inline void release() noexcept
+	{
+		std::fill(std::begin(m_fifo), std::end(m_fifo), 0.0f);
+		std::fill(std::begin(m_fftData), std::end(m_fftData), 0.0f);
+		std::fill(std::begin(m_spectrumGainsSmooth), std::end(m_spectrumGainsSmooth), 0.0f);
+
+		m_fifoIndex = 0;
+		m_bufferCount = 0;
+	}
+	inline float* getSpectrum()
+	{
+		constexpr float windowGain = 0.5f; // Hann
+		const float baseNorm = 1.0f / ((float)(m_bufferCount) * windowGain);
+
+		for (size_t i = 0; i < BINS_COUNT; ++i)
+		{
+			m_spectrumGainsSmooth[i] = juce::Decibels::gainToDecibels(baseNorm * m_spectrumGainsSmooth[i]);
+		}
+
+		float avg = 0.0f;
+
+		for (size_t i = 0; i < BINS_COUNT; ++i)
+		{
+			avg += m_spectrumGainsSmooth[i];
+		}
+
+		avg /= (float)BINS_COUNT;
+
+		for (size_t i = 0; i < BINS_COUNT; ++i)
+		{
+			m_spectrumGainsSmooth[i] -= avg;
+		}
+
+		return m_spectrumGainsSmooth;
+
+		//float spectrumSmoothSmooth[BINS_COUNT];
+
+		//smoothSpectrumOctave(m_spectrumGainsSmooth, spectrumSmoothSmooth, BINS_COUNT, 48000, FFT_SIZE, 1.0f / 6.0f);
+
+		//return spectrumSmoothSmooth;
+	}
+
+	void smoothSpectrumOctave(
+		const float* in,
+		float* out,
+		int numBins,
+		float sampleRate,
+		int fftSize,
+		float bandwidthOct)
+	{
+		for (int i = 0; i < numBins; ++i)
+		{
+			float fi = (float)i * sampleRate / fftSize;
+
+			if (fi <= 0.0f)
+			{
+				out[i] = in[i];
+				continue;
+			}
+
+			float lowF = fi * std::pow(2.0f, -bandwidthOct * 0.5f);
+			float highF = fi * std::pow(2.0f, bandwidthOct * 0.5f);
+
+			int lowBin = juce::jlimit(0, numBins - 1,
+				(int)std::floor(lowF * fftSize / sampleRate));
+			int highBin = juce::jlimit(0, numBins - 1,
+				(int)std::ceil(highF * fftSize / sampleRate));
+
+			float sum = 0.0f;
+			int count = 0;
+
+			for (int b = lowBin; b <= highBin; ++b)
+			{
+				sum += in[b];
+				++count;
+			}
+
+			out[i] = sum / (float)count;
+		}
+	}
+
+private:
+	juce::dsp::FFT m_forwardFFT;
+	juce::dsp::WindowingFunction<float> m_window;
+
+	float m_fifo[FFT_SIZE];
+	float m_fftData[2 * FFT_SIZE];
+	float m_spectrumGainsSmooth[BINS_COUNT];
+
+	int m_bufferCount = 0;
+	int m_fifoIndex = 0;
+};
+
 class SpectrumDetectionTD
 {
 public:
