@@ -272,7 +272,8 @@ void SpectrumMatchFFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 			m_filterSpectrumRuntime[i] = juce::Decibels::decibelsToGain(ammount * (dbA - dbB));
 		}
 
-		// TODO: Apply LP + HP filter to filtered spectrum
+		apply24dBButterworth(m_filterSpectrumRuntime, getSampleRate(), getFFTSize(), parametersValues[Parameters::HighPassFilter], true);
+		apply24dBButterworth(m_filterSpectrumRuntime, getSampleRate(), getFFTSize(), parametersValues[Parameters::LowPassFilter], false);
 	}
 
 	//==============================================================================
@@ -331,8 +332,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpectrumMatchFFTAudioProcess
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::HighPassFilter], paramsNames[Parameters::HighPassFilter], NormalisableRange<float>( 20.0f, 400.0f, 1.0f, 0.45f), 20.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::LowPassFilter], paramsNames[Parameters::LowPassFilter], NormalisableRange<float>( 100.0f, 20000.0f, 1.0f, 0.45f), 20000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::HighPassFilter], paramsNames[Parameters::HighPassFilter], NormalisableRange<float>( 20.0f, 660.0f, 1.0f, 0.45f), 20.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::LowPassFilter], paramsNames[Parameters::LowPassFilter], NormalisableRange<float>( 660.0f, 20000.0f, 1.0f, 0.45f), 20000.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::FrequencyShift], paramsNames[Parameters::FrequencyShift], NormalisableRange<float>( 0.25f, 4.0f,  0.01f, 0.45f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Resolution], paramsNames[Parameters::Resolution], NormalisableRange<float>( 1.0f, 12.0f, 1.0f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Ammount], paramsNames[Parameters::Ammount], NormalisableRange<float>( 0.0f, 200.0f,  1.0f, 1.0f), 100.0f));

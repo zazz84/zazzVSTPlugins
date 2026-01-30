@@ -318,6 +318,34 @@ public:
 
 		return outMagnitude;
 	}
+
+	void apply24dBButterworth(
+		std::vector<float>& spectrumMultipliers,
+		double sampleRate,
+		int fftSize,
+		float cutoffHz,
+		bool highPass)
+	{
+		const int numBins = static_cast<int>(spectrumMultipliers.size());
+
+		for (int bin = 0; bin < numBins; ++bin)
+		{
+			const double freq = (double)bin * sampleRate / fftSize;
+
+			if (freq <= 0.0)
+				continue;
+
+			const double ratio = highPass ? (cutoffHz / freq)
+				: (freq / cutoffHz);
+
+			// 4th order Butterworth → 24 dB/oct
+			const double magnitude = 1.0 / std::sqrt(1.0 + std::pow(ratio, 8.0));
+
+			const double adjustment = (1.0f - spectrumMultipliers[bin]) * (1.0f - magnitude);
+
+			spectrumMultipliers[bin] += static_cast<float>(adjustment);
+		}
+	}
 	
 	//==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;

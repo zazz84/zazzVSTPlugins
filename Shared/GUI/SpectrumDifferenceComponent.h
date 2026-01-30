@@ -142,14 +142,9 @@ private:
 
 	void drawSpectrum(juce::Graphics& g, juce::Rectangle<float> area)
 	{
-		juce::Path path;
-		const int numBins = m_spectrum.size();
-
 		auto mapX = [area, this](int bin)
 		{
-			float freq = (float)bin * (float)sampleRate / (float)fftSize;
-			if (freq < minFrequency)
-				freq = minFrequency;
+			const float freq = (float)bin * (float)sampleRate / (float)fftSize;
 
 			float normX = (std::log10(freq) - logMin) / (logMax - logMin);
 			return area.getX() + normX * area.getWidth();
@@ -164,9 +159,15 @@ private:
 			return area.getBottom() - norm * area.getHeight();
 		};
 
-		path.startNewSubPath(mapX(0), mapY(m_spectrum[0]));
+		juce::Path path;
 
-		for (int i = 1; i < numBins; ++i)
+		const float temp = (float)fftSize / (float)sampleRate;
+		const int firstBin = (int)(minFrequency * temp) + 1;
+		const int lastBin = (int)(maxFrequency * temp);
+
+		path.startNewSubPath(mapX(firstBin), mapY(m_spectrum[firstBin]));
+
+		for (int i = firstBin + 1; i < lastBin; ++i)
 		{
 			const float x = mapX(i);
 			const float y = mapY(m_spectrum[i]);

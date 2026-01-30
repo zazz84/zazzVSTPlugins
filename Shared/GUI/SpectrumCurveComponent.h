@@ -215,9 +215,6 @@ public:
 	{
 		g.fillAll(juce::Colours::black);
 
-		if (spectrumData[0].empty() && spectrumData[1].empty())
-			return;
-
 		constexpr int leftMargin = 10;
 		constexpr int bottomMargin = 10;
 		constexpr int topMargin = 20;
@@ -305,38 +302,38 @@ private:
 
 	void drawSpectrum(juce::Graphics& g, juce::Rectangle<float> area)
 	{
-		juce::Path path;
-		const int numBins = std::max((int)spectrumData[0].size(), (int)spectrumData[1].size());
-
 		auto mapX = [area, this](int bin)
 		{
 			float freq = (float)bin * (float)sampleRate / (float)fftSize;
-			if (freq < minFrequency)
-				freq = minFrequency;
-
 			float normX = (std::log10(freq) - logMin) / (logMax - logMin);
 			return area.getX() + normX * area.getWidth();
 		};
 
 		auto mapY = [area, this](float gain)
 		{
-			// Normalize / prevent log(0)
-			gain = juce::jmax(gain, 1.0e-6f);
-
 			float db = juce::Decibels::gainToDecibels(gain);
 			db = juce::jlimit(minMagnitudeDb, maxMagnitudeDb, db);
-
-			float norm = juce::jmap(db, minMagnitudeDb, maxMagnitudeDb, 0.0f, 1.0f);
+			const float norm = juce::jmap(db, minMagnitudeDb, maxMagnitudeDb, 0.0f, 1.0f);
 			return area.getBottom() - norm * area.getHeight();
 		};
 
 		// Spectrum 0
-		if (!spectrumData[0].empty())
-		{
-			path.startNewSubPath(mapX(0), mapY(spectrumData[0][0]));
+		const float temp = (float)fftSize / (float)sampleRate;
+		const int firstBin = (int)(minFrequency * temp) + 1;
+		const int lastBin = (int)(maxFrequency * temp);
 
-			for (int i = 1; i < numBins; ++i)
-				path.lineTo(mapX(i), mapY(spectrumData[0][i]));
+		if (!spectrumData[0].empty())
+		{			
+			juce::Path path;
+			path.startNewSubPath(mapX(firstBin), mapY(spectrumData[0][firstBin]));
+
+			for (int i = firstBin + 1; i < lastBin; i++)
+			{
+				const float x = mapX(i);
+				const float y = mapY(spectrumData[0][i]);
+
+				path.lineTo(x, y);
+			}
 
 			g.setColour(juce::Colours::yellow);
 			g.strokePath(path, juce::PathStrokeType(1.0f));
@@ -346,12 +343,11 @@ private:
 		if (!spectrumData[1].empty())
 		{
 			juce::Path path2;
-			path2.startNewSubPath(mapX(0), mapY(spectrumData[1][0]));
+			path2.startNewSubPath(mapX(firstBin), mapY(spectrumData[1][firstBin]));
 
-			for (int i = 1; i < numBins; ++i)
+			for (int i = firstBin + 1; i < lastBin; i++)
 			{
 				const float x = mapX(i);
-				//DBG(x);
 				const float y = mapY(spectrumData[1][i]);
 
 				path2.lineTo(x, y);

@@ -88,7 +88,7 @@ SpectrumMatchFFTAudioProcessorEditor::SpectrumMatchFFTAudioProcessorEditor (Spec
 	m_spectrumDifferenceComponent.setFFTSize(audioProcessor.getFFTSize());
 	m_spectrumDifferenceComponent.setSampleRate(audioProcessor.getSampleRate());
 
-	startTimerHz(20.0f);
+	startTimerHz(15.0f);
 }
 
 SpectrumMatchFFTAudioProcessorEditor::~SpectrumMatchFFTAudioProcessorEditor()
@@ -186,10 +186,10 @@ void SpectrumMatchFFTAudioProcessorEditor::resized()
 	m_sourceSpectrumButton.setTopLeftPosition	(column2, row8);
 	m_targetSpectrumButton.setTopLeftPosition	(column3, row8);
 
-	m_highPassFilterSlider.setTopLeftPosition	(column4, row7);
-	m_lowPassFilterSlider.setTopLeftPosition	(column5, row7);
-	m_frequencyShiftSlider.setTopLeftPosition	(column6, row7);
-	m_resolutionSlider.setTopLeftPosition		(column7, row7);
-	m_ammountSlider.setTopLeftPosition			(column8, row7);
-	m_volumeSlider.setTopLeftPosition			(column9, row7);
+	m_highPassFilterSlider.setTopLeftPosition	(column5, row7);
+	m_lowPassFilterSlider.setTopLeftPosition	(column6, row7);
+	m_frequencyShiftSlider.setTopLeftPosition	(column7, row7);
+	m_resolutionSlider.setTopLeftPosition		(column8, row7);
+	m_ammountSlider.setTopLeftPosition			(column9, row7);
+	m_volumeSlider.setTopLeftPosition			(column10, row7);
 }
