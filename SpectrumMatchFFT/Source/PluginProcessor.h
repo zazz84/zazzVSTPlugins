@@ -425,6 +425,39 @@ private:
 
 		std::memcpy(m_targetSpectrum.data(), block->getData(), block->getSize());
 	}
+	void updateSourceSpectrum(const float frequencyShift, const float resolution)
+	{
+		std::vector<float> shiftedSourceSpectrum = shiftFftMagnitudeMul(m_sourceSpectrum, getSampleRate(), getFFTSize(), frequencyShift);
+		std::vector<SpectrumMatchFFTAudioProcessor::NoteBin> noteBinsSource = fftToNoteBins(shiftedSourceSpectrum, getSampleRate(), getFFTSize(), resolution);
+		m_sourceSpectrumRuntime.clear();
+		m_sourceSpectrumRuntime = noteBinsToFFT(noteBinsSource, getSampleRate(), getFFTSize(), resolution);
+	}
+	void updateTargetSpectrum(const float resolution)
+	{
+		std::vector<SpectrumMatchFFTAudioProcessor::NoteBin> noteBinsTarget = fftToNoteBins(m_targetSpectrum, getSampleRate(), getFFTSize(), resolution);
+		m_targetSpectrumRuntime.clear();
+		m_targetSpectrumRuntime = noteBinsToFFT(noteBinsTarget, getSampleRate(), getFFTSize(), resolution);
+	}
+	void updateFilterSpectrum(const float ammount, const float highpassFilter, const float lowPassFilter)
+	{
+		// Get runtime filter spectrum
+		jassert(m_sourceSpectrumRuntime.size() == m_targetSpectrumRuntime.size());
+
+		m_filterSpectrumRuntime.clear();
+		m_filterSpectrumRuntime.resize(m_sourceSpectrumRuntime.size());
+
+		const float ammountMultiplier = 0.01f * ammount;
+
+		for (int i = 0; i < m_sourceSpectrumRuntime.size(); i++)
+		{
+			float dbA = juce::Decibels::gainToDecibels(m_sourceSpectrumRuntime[i]);
+			float dbB = juce::Decibels::gainToDecibels(m_targetSpectrumRuntime[i]);
+			m_filterSpectrumRuntime[i] = juce::Decibels::decibelsToGain(ammountMultiplier * (dbA - dbB));
+		}
+
+		apply24dBButterworth(m_filterSpectrumRuntime, getSampleRate(), getFFTSize(), highpassFilter, true);
+		apply24dBButterworth(m_filterSpectrumRuntime, getSampleRate(), getFFTSize(), lowPassFilter, false);
+	}
 
 	std::array<SpectrumMatchFFTDetect, N_CHANNELS> m_spectrumDetect{
 		SpectrumMatchFFTDetect(m_fftSize),
@@ -444,6 +477,7 @@ private:
 	juce::AudioParameterBool* m_sourceSpectrumButton;
 	juce::AudioParameterBool* m_targetSpectrumButton;
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
+	std::array<float, Parameters::COUNT> m_parametersValues;
 
 	std::vector<float> m_sourceSpectrum;
 	std::vector<float> m_targetSpectrum;

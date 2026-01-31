@@ -5,12 +5,14 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="EQ">
   <MAINGROUP id="wdSJlw" name="SpectrumMatchFFT">
     <GROUP id="{413D8BB7-8D50-2EB3-B4F5-0B00E27D9683}" name="Source">
+      <FILE id="KwtoQ2" name="BaseSpectrumCurveComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/BaseSpectrumCurveComponent.h"/>
       <FILE id="znqfvk" name="GroupLabelComponent.h" compile="0" resource="0"
             file="../Shared/GUI/GroupLabelComponent.h"/>
-      <FILE id="djOdri" name="SpectrumDifferenceComponent.h" compile="0"
-            resource="0" file="../Shared/GUI/SpectrumDifferenceComponent.h"/>
-      <FILE id="enuxXC" name="SpectrumCurveComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/SpectrumCurveComponent.h"/>
+      <FILE id="djOdri" name="SingleSpectrumCurveComponent.h" compile="0"
+            resource="0" file="../Shared/GUI/SingleSpectrumCurveComponent.h"/>
+      <FILE id="enuxXC" name="DualSpectrumCurveComponent.h" compile="0" resource="0"
+            file="../Shared/GUI/DualSpectrumCurveComponent.h"/>
       <FILE id="XEt9uc" name="ModernRotarySlider.h" compile="0" resource="0"
             file="../Shared/GUI/ModernRotarySlider.h"/>
       <FILE id="YDDOAf" name="PluginNameComponent.h" compile="0" resource="0"

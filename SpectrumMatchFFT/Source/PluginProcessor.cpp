@@ -133,6 +133,26 @@ void SpectrumMatchFFTAudioProcessor::prepareToPlay (double sampleRate, int sampl
 
 	loadSourceSpectrum();
 	loadTargetSpectrum();
+
+	// Get all parameters
+	for (int i = 0; i < Parameters::COUNT; i++)
+	{
+		m_parametersValues[i] = m_parameters[i]->load();
+	}
+
+	// Calculate runtime spectrums
+	if (!m_sourceSpectrum.empty())
+	{
+		updateSourceSpectrum(m_parametersValues[Parameters::FrequencyShift], m_parametersValues[Parameters::Resolution]);
+	}
+	if (!m_targetSpectrum.empty())
+	{
+		updateTargetSpectrum(m_parametersValues[Parameters::Resolution]);
+	}
+	if (!m_sourceSpectrumRuntime.empty() && !m_targetSpectrumRuntime.empty())
+	{
+		updateFilterSpectrum(m_parametersValues[Parameters::Ammount], m_parametersValues[Parameters::HighPassFilter], m_parametersValues[Parameters::LowPassFilter]);
+	}
 }
 
 void SpectrumMatchFFTAudioProcessor::releaseResources()
@@ -182,6 +202,8 @@ void SpectrumMatchFFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	bool sourceSpectrumCahnged = false;
+	bool targetSpectrumChanged = false;
 
 	//==============================================================================
 	// Learn source spectrum
@@ -205,6 +227,8 @@ void SpectrumMatchFFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	{
 		storeSourceSpectrum();
 		loadSourceSpectrum();
+
+		sourceSpectrumCahnged = true;
 	}
 
 	m_learnSourceLast = learnSource;
@@ -232,48 +256,42 @@ void SpectrumMatchFFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	{
 		storeTargetSpectrum();
 		loadTargetSpectrum();
+
+		targetSpectrumChanged = true;
 	}
 
 	m_learnTargetLast = learnTarget;
 
 	//==============================================================================
 	// Prepare runtime spectrums
-	if (!m_sourceSpectrum.empty())
+	if (!m_sourceSpectrum.empty() &&
+		(parametersValues[Parameters::FrequencyShift] != m_parametersValues[Parameters::FrequencyShift] ||
+		parametersValues[Parameters::Resolution] != m_parametersValues[Parameters::Resolution]) ||
+		sourceSpectrumCahnged)
 	{
-		// Get runtime source spectrum
-		std::vector<float> shiftedSourceSpectrum = shiftFftMagnitudeMul(m_sourceSpectrum, getSampleRate(), getFFTSize(), parametersValues[Parameters::FrequencyShift]);
-		std::vector<SpectrumMatchFFTAudioProcessor::NoteBin> noteBinsSource = fftToNoteBins(shiftedSourceSpectrum, getSampleRate(), getFFTSize(), parametersValues[Parameters::Resolution]);
-		m_sourceSpectrumRuntime.clear();
-		m_sourceSpectrumRuntime = noteBinsToFFT(noteBinsSource, getSampleRate(), getFFTSize(), parametersValues[Parameters::Resolution]);
+		updateSourceSpectrum(parametersValues[Parameters::FrequencyShift], parametersValues[Parameters::Resolution]);
+		
+		sourceSpectrumCahnged = true;
 	}
 
-	if (!m_targetSpectrum.empty())
+	if (!m_targetSpectrum.empty() &&
+		(parametersValues[Parameters::Resolution] != m_parametersValues[Parameters::Resolution] ||
+		targetSpectrumChanged))
 	{
-		// Get runtime target spectrum
-		std::vector<SpectrumMatchFFTAudioProcessor::NoteBin> noteBinsTarget = fftToNoteBins(m_targetSpectrum, getSampleRate(), getFFTSize(), parametersValues[Parameters::Resolution]);
-		m_targetSpectrumRuntime.clear();
-		m_targetSpectrumRuntime = noteBinsToFFT(noteBinsTarget, getSampleRate(), getFFTSize(), parametersValues[Parameters::Resolution]);
+		updateTargetSpectrum(parametersValues[Parameters::Resolution]);
+
+		targetSpectrumChanged = true;
 	}
 
-	if (!m_sourceSpectrumRuntime.empty() && !m_targetSpectrumRuntime.empty())
+	if (!m_sourceSpectrumRuntime.empty() &&
+		!m_targetSpectrumRuntime.empty() &&
+		(parametersValues[Parameters::Ammount] != m_parametersValues[Parameters::Ammount] ||
+		parametersValues[Parameters::HighPassFilter] != m_parametersValues[Parameters::HighPassFilter] ||
+		parametersValues[Parameters::LowPassFilter] != m_parametersValues[Parameters::LowPassFilter] ||
+		sourceSpectrumCahnged ||
+		targetSpectrumChanged))
 	{
-		// Get runtime filter spectrum
-		jassert(m_sourceSpectrumRuntime.size() == m_targetSpectrumRuntime.size());
-
-		m_filterSpectrumRuntime.clear();
-		m_filterSpectrumRuntime.resize(m_sourceSpectrumRuntime.size());
-
-		const float ammount = 0.01f * parametersValues[Parameters::Ammount];
-
-		for (int i = 0; i < m_sourceSpectrumRuntime.size(); i++)
-		{
-			float dbA = juce::Decibels::gainToDecibels(m_sourceSpectrumRuntime[i]);
-			float dbB = juce::Decibels::gainToDecibels(m_targetSpectrumRuntime[i]);
-			m_filterSpectrumRuntime[i] = juce::Decibels::decibelsToGain(ammount * (dbA - dbB));
-		}
-
-		apply24dBButterworth(m_filterSpectrumRuntime, getSampleRate(), getFFTSize(), parametersValues[Parameters::HighPassFilter], true);
-		apply24dBButterworth(m_filterSpectrumRuntime, getSampleRate(), getFFTSize(), parametersValues[Parameters::LowPassFilter], false);
+		updateFilterSpectrum(parametersValues[Parameters::Ammount], parametersValues[Parameters::HighPassFilter], parametersValues[Parameters::LowPassFilter]);
 	}
 
 	//==============================================================================
@@ -296,6 +314,9 @@ void SpectrumMatchFFTAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	}
 
 	buffer.applyGain(gain);
+
+	// Store parameters
+	std::copy(std::begin(parametersValues), std::end(parametersValues), std::begin(m_parametersValues));
 }
 
 //==============================================================================
@@ -336,7 +357,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SpectrumMatchFFTAudioProcess
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::LowPassFilter], paramsNames[Parameters::LowPassFilter], NormalisableRange<float>( 660.0f, 20000.0f, 1.0f, 0.45f), 20000.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::FrequencyShift], paramsNames[Parameters::FrequencyShift], NormalisableRange<float>( 0.25f, 4.0f,  0.01f, 0.45f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Resolution], paramsNames[Parameters::Resolution], NormalisableRange<float>( 1.0f, 12.0f, 1.0f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Ammount], paramsNames[Parameters::Ammount], NormalisableRange<float>( 0.0f, 200.0f,  1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Ammount], paramsNames[Parameters::Ammount], NormalisableRange<float>( -200.0f, 200.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[Parameters::Volume], paramsNames[Parameters::Volume], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 
 	layout.add(std::make_unique<juce::AudioParameterBool>("Learn Source", "Learn Source", false));

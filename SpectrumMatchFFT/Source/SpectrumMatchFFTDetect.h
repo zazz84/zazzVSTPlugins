@@ -39,17 +39,14 @@ public:
 
 		reset();
 	}
-
 	int getLatencyInSamples() const
 	{
 		return fftSize;
 	}
-
 	int getNumBins() const
 	{
 		return numBins;
 	}
-
 	void reset()
 	{
 		count = 0;
@@ -60,13 +57,11 @@ public:
 		std::fill(outputFifo.begin(), outputFifo.end(), 0.0f);
 		std::fill(m_detectedSpectrumSum.begin(), m_detectedSpectrumSum.end(), 0.0f);
 	}
-
 	void processBlock(float* data, int numSamples, bool bypassed)
 	{
 		for (int i = 0; i < numSamples; ++i)
 			data[i] = processSample(data[i], bypassed);
 	}
-
 	float processSample(float sample, bool bypassed)
 	{
 		inputFifo[pos] = sample;
@@ -85,8 +80,6 @@ public:
 
 		return outputSample;
 	}
-
-	/** Returns pointer valid until next call */
 	float* getSpectrum()
 	{
 		const float normalisationFactor = (0.5f * 2.0f) / (float)(fftSize * m_processSpectrumCount);
@@ -137,7 +130,6 @@ private:
 		for (int i = 0; i < fftSize - pos; ++i)
 			outputFifo[i + pos] += fftData[i];
 	}
-
 	void processSpectrum(float* data)
 	{
 		auto* cdata = reinterpret_cast<std::complex<float>*>(data);
@@ -155,7 +147,6 @@ private:
 	}
 
 private:
-	// Runtime configuration
 	const int fftSize;
 	const int overlap;
 	const int fftOrder;

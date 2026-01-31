@@ -31,17 +31,14 @@ public:
 
 		reset();
 	}
-
 	int getLatencyInSamples() const
 	{
 		return fftSize;
 	}
-
 	void init(int sampleRate)
 	{
 		m_sampleRate = sampleRate;
 	}
-
 	void reset()
 	{
 		count = 0;
@@ -50,18 +47,6 @@ public:
 		std::fill(inputFifo.begin(), inputFifo.end(), 0.0f);
 		std::fill(outputFifo.begin(), outputFifo.end(), 0.0f);
 	}
-
-	void set(const float* spectrumA, const float* spectrumB, const float ammount = 1.0f)
-	{	
-		for (int i = 0; i < numBins; ++i)
-		{
-			float dbA = juce::Decibels::gainToDecibels(spectrumA[i]);
-			float dbB = juce::Decibels::gainToDecibels(spectrumB[i]);
-			m_bucketGain[i] =
-				juce::Decibels::decibelsToGain(ammount * (dbA - dbB));
-		}
-	}
-
 	void set(const std::vector<float>& spectrum)
 	{
 		jassert(spectrum.size() == numBins);
@@ -74,7 +59,6 @@ public:
 		for (int i = 0; i < numSamples; ++i)
 			data[i] = processSample(data[i], bypassed);
 	}
-
 	float processSample(float sample, bool bypassed)
 	{
 		inputFifo[pos] = sample;
@@ -133,7 +117,6 @@ private:
 		for (int i = 0; i < fftSize - pos; ++i)
 			outputFifo[i + pos] += fftData[i];
 	}
-
 	void processSpectrum(float* data)
 	{
 		auto* cdata = reinterpret_cast<std::complex<float>*>(data);

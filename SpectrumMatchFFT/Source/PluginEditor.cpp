@@ -41,8 +41,8 @@ SpectrumMatchFFTAudioProcessorEditor::SpectrumMatchFFTAudioProcessorEditor (Spec
 	addAndMakeVisible(m_spectrumDiffGroupLabel);
 
 
-	addAndMakeVisible(m_spectrumCurveComponent);
-	addAndMakeVisible(m_spectrumDifferenceComponent);
+	addAndMakeVisible(m_sourceTargetSpectrumCurveComponent);
+	addAndMakeVisible(m_filterSpectrumComponent);
 
 	addAndMakeVisible(m_lowPassFilterSlider);
 	addAndMakeVisible(m_highPassFilterSlider);
@@ -83,10 +83,13 @@ SpectrumMatchFFTAudioProcessorEditor::SpectrumMatchFFTAudioProcessorEditor (Spec
 		constrainer->setSizeLimits(minScale * canvasWidth / 100, minScale * canvasHeight / 100, maxScale * canvasWidth / 100, maxScale * canvasHeight / 100);
 	}
 
-	m_spectrumCurveComponent.setFFTSize(audioProcessor.getFFTSize());
-	m_spectrumCurveComponent.setSampleRate(audioProcessor.getSampleRate());
-	m_spectrumDifferenceComponent.setFFTSize(audioProcessor.getFFTSize());
-	m_spectrumDifferenceComponent.setSampleRate(audioProcessor.getSampleRate());
+	m_sourceTargetSpectrumCurveComponent.setFFTSize(audioProcessor.getFFTSize());
+	m_sourceTargetSpectrumCurveComponent.setSampleRate(audioProcessor.getSampleRate());
+	m_sourceTargetSpectrumCurveComponent.setMagnitudeRangeDb(-80.0f, -12.0f);
+
+	m_filterSpectrumComponent.setFFTSize(audioProcessor.getFFTSize());
+	m_filterSpectrumComponent.setSampleRate(audioProcessor.getSampleRate());
+	m_filterSpectrumComponent.setMagnitudeRangeDb(-24.0f, 24.0f);
 
 	startTimerHz(15.0f);
 }
@@ -102,18 +105,18 @@ void SpectrumMatchFFTAudioProcessorEditor::timerCallback()
 	auto& sourceSpectrum = audioProcessor.getSourceSpectrum();
 	if (!sourceSpectrum.empty())
 	{	
-		m_spectrumCurveComponent.setSpectrum(sourceSpectrum.data(), audioProcessor.getNumBins(), 0);
+		m_sourceTargetSpectrumCurveComponent.setSpectrum(sourceSpectrum, false);
 	}
 
 	auto& targetSpectrum = audioProcessor.getTargetSpectrum();
 	if (!targetSpectrum.empty())
 	{
-		m_spectrumCurveComponent.setSpectrum(targetSpectrum.data(), audioProcessor.getNumBins(), 1);
+		m_sourceTargetSpectrumCurveComponent.setSpectrum(targetSpectrum, true);
 	}
 
 	if (!sourceSpectrum.empty() && !targetSpectrum.empty())
 	{
-		m_spectrumDifferenceComponent.setSpectrum(audioProcessor.getFilterSpectrum());
+		m_filterSpectrumComponent.setSpectrum(audioProcessor.getFilterSpectrum());
 	}
 }
 
@@ -131,7 +134,7 @@ void SpectrumMatchFFTAudioProcessorEditor::resized()
 	const int pixelSize2 = pixelSize + pixelSize;
 	const int pixelSize3 = pixelSize2 + pixelSize;
 	const int pixelSize4 = pixelSize3 + pixelSize;
-	const int pixelSize10 = pixelSize4 + pixelSize4 + pixelSize2;
+	const int pixelSize5 = pixelSize4 + pixelSize;
 
 	// Set size
 	m_pluginLabel.setSize(width, pixelSize2);
@@ -139,8 +142,8 @@ void SpectrumMatchFFTAudioProcessorEditor::resized()
 	m_spectrumGroupLabel.setSize(width, pixelSize);
 	m_spectrumDiffGroupLabel.setSize(width, pixelSize);
 
-	m_spectrumCurveComponent.setSize(width - pixelSize2, pixelSize10);
-	m_spectrumDifferenceComponent.setSize(width - pixelSize2, pixelSize10);
+	m_sourceTargetSpectrumCurveComponent.setSize(width - pixelSize2, pixelSize5);
+	m_filterSpectrumComponent.setSize(width - pixelSize2, pixelSize5);
 
 	m_lowPassFilterSlider.setSize(pixelSize3, pixelSize4);
 	m_highPassFilterSlider.setSize(pixelSize3, pixelSize4);
@@ -149,18 +152,18 @@ void SpectrumMatchFFTAudioProcessorEditor::resized()
 	m_ammountSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
-	m_sourceSpectrumButton.setSize(pixelSize3, pixelSize2);
-	m_targetSpectrumButton.setSize(pixelSize3, pixelSize2);
+	m_sourceSpectrumButton.setSize(pixelSize3, pixelSize);
+	m_targetSpectrumButton.setSize(pixelSize3, pixelSize);
 
 	//Set position
 	const int row1 = 0;
 	const int row2 = row1 + pixelSize2;
 	const int row3 = row2 + pixelSize;
-	const int row4 = row3 + pixelSize10;
+	const int row4 = row3 + pixelSize5;
 	const int row5 = row4 + pixelSize;
-	const int row6 = row5 + pixelSize10;
+	const int row6 = row5 + pixelSize5;
 	const int row7 = row6 + pixelSize;
-	const int row8 = row7 + pixelSize;
+
 
 	const int column1 = 0;
 	const int column2 = column1 + pixelSize;
@@ -170,26 +173,24 @@ void SpectrumMatchFFTAudioProcessorEditor::resized()
 	const int column6 = column5 + pixelSize3;
 	const int column7 = column6 + pixelSize3;
 	const int column8 = column7 + pixelSize3;
-	const int column9 = column8 + pixelSize3;
-	const int column10 = column9 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
 	m_spectrumGroupLabel.setTopLeftPosition(column1, row2);
 	
-	m_spectrumCurveComponent.setTopLeftPosition(column2, row3);
+	m_sourceTargetSpectrumCurveComponent.setTopLeftPosition(column2, row3);
 
 	m_spectrumDiffGroupLabel.setTopLeftPosition(column1, row4);
 
-	m_spectrumDifferenceComponent.setTopLeftPosition(column2, row5);
+	m_filterSpectrumComponent.setTopLeftPosition(column2, row5);
 
-	m_sourceSpectrumButton.setTopLeftPosition	(column2, row8);
-	m_targetSpectrumButton.setTopLeftPosition	(column3, row8);
+	m_sourceSpectrumButton.setTopLeftPosition	(column2, row7 + pixelSize);
+	m_targetSpectrumButton.setTopLeftPosition	(column2, row7 + pixelSize2);
 
-	m_highPassFilterSlider.setTopLeftPosition	(column5, row7);
-	m_lowPassFilterSlider.setTopLeftPosition	(column6, row7);
-	m_frequencyShiftSlider.setTopLeftPosition	(column7, row7);
-	m_resolutionSlider.setTopLeftPosition		(column8, row7);
-	m_ammountSlider.setTopLeftPosition			(column9, row7);
-	m_volumeSlider.setTopLeftPosition			(column10, row7);
+	m_highPassFilterSlider.setTopLeftPosition	(column3, row7);
+	m_lowPassFilterSlider.setTopLeftPosition	(column4, row7);
+	m_frequencyShiftSlider.setTopLeftPosition	(column5, row7);
+	m_resolutionSlider.setTopLeftPosition		(column6, row7);
+	m_ammountSlider.setTopLeftPosition			(column7, row7);
+	m_volumeSlider.setTopLeftPosition			(column8, row7);
 }

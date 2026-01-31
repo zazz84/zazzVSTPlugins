@@ -23,8 +23,8 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/SpectrumCurveComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/SpectrumDifferenceComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/SingleSpectrumCurveComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/DualSpectrumCurveComponent.h"
 
 //==============================================================================
 class SpectrumMatchFFTAudioProcessorEditor : public juce::AudioProcessorEditor, juce::Timer
@@ -33,8 +33,8 @@ public:
     SpectrumMatchFFTAudioProcessorEditor (SpectrumMatchFFTAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~SpectrumMatchFFTAudioProcessorEditor() override;
 
-	static const int CANVAS_WIDTH = 1 + 30 + 1;
-	static const int CANVAS_HEIGHT = 2 + 1 + 10 + 1 + 10 + 1 + 4;
+	static const int CANVAS_WIDTH = 1 + 21 + 1;
+	static const int CANVAS_HEIGHT = 2 + 1 + 5 + 1 + 5 + 1 + 4 + 1;
 	
 	//==============================================================================
 	void timerCallback() override;
@@ -54,8 +54,8 @@ protected:
 	GroupLabelComponent m_spectrumGroupLabel;
 	GroupLabelComponent m_spectrumDiffGroupLabel;
 
-	SpectrumCurveComponent m_spectrumCurveComponent;
-	SpectrumDifferenceComponent m_spectrumDifferenceComponent;
+	DualSpectrumCurveComponent m_sourceTargetSpectrumCurveComponent;
+	SingleSpectrumCurveComponent m_filterSpectrumComponent;
 
 	ModernRotarySlider m_lowPassFilterSlider;
 	ModernRotarySlider m_highPassFilterSlider;
