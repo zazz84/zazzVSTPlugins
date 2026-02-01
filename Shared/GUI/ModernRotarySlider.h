@@ -19,6 +19,7 @@
 
 #include <JuceHeader.h>
 
+//==============================================================================
 class ModernRotarySliderTextBox : public juce::Label
 {
 public:
@@ -351,11 +352,25 @@ public:
 class ModernRotarySlider : public juce::Component, public juce::Slider::Listener
 {
 public:
-	ModernRotarySlider(juce::AudioProcessorValueTreeState& vts, const std::string name, const std::string unit, const std::string label) : valueTreeState(vts), m_name(name), m_unit(unit), m_label(label)
+	struct ParameterDescription
+	{
+		juce::String paramName;
+		juce::String unitName;
+		juce::String labelName;
+	};
+
+	ModernRotarySlider(juce::AudioProcessorValueTreeState& vts,
+		const std::string name,
+		const std::string unit,
+		const std::string label)
+		: valueTreeState(vts),
+		m_name(name),
+		m_unit(unit),
+		m_label(label)
 	{
 		// Use custom lookAndFeel
 		m_slider.setLookAndFeel(&m_smallSliderLookAndFeel);
-		
+
 		// Create rotary slider
 		m_slider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
 		m_slider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
@@ -364,15 +379,20 @@ public:
 
 		// Attach slider to valueTreeState
 		m_sliderAttachment.reset(new juce::AudioProcessorValueTreeState::SliderAttachment(vts, name, m_slider));
-		
+
 		// Create text box
 		m_textBox.setJustificationType(juce::Justification::centred);
 		m_textBox.setEditable(true, true, false);														// Allow editing
-		
+
 		m_textBox.setText(juce::String(m_slider.getValue()) + unit, juce::dontSendNotification);		// Initialize with slider value
 		m_textBox.onTextChange = [this]() { handleTextBoxChange(); };									// Update slider on label change
 		addAndMakeVisible(m_textBox);
-	};
+	}
+	ModernRotarySlider(juce::AudioProcessorValueTreeState& vts,
+		const ParameterDescription& desc)
+		: ModernRotarySlider(vts, desc.paramName.toStdString(), desc.unitName.toStdString(), desc.labelName.toStdString())
+	{
+	}
 	~ModernRotarySlider()
 	{
 		m_slider.removeListener(this);
