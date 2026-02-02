@@ -202,15 +202,17 @@ void EarlyRefections1AudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 	earlyReflectionsParams.damping		= 0.01f * m_dampingParameter->load();
 	earlyReflectionsParams.width		= 0.01f * m_widthParameter->load();
 
-	const auto mix = 0.01f * m_mixParameter->load();
+	// Wet/Dry
 	const auto gain = juce::Decibels::decibelsToGain(m_volumeParameter->load());
+	const auto gainCompensation = Math::dBToGain(Math::remap(earlyReflectionsParams.decay, -30.0f, 0.0f, -4.5f, -12.0f) + Math::remap(earlyReflectionsParams.length, 10.0f, 100.0f, 2.0f, 0.0f));
+	const auto wet = gain * 0.01f * m_mixParameter->load();
+	const auto dry = gain * gainCompensation * (0.01f * m_mixParameter->load() - wet);
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto gainCompensation = Math::dBToGain(Math::remap(earlyReflectionsParams.decay, -30.0f, 0.0f, -4.5f, -12.0f) + Math::remap(earlyReflectionsParams.length, 10.0f, 100.0f, 2.0f, 0.0f));
 
-	for (int channel = 0; channel < channels; channel++)
+	for (unsigned int channel = 0u; channel < channels; channel++)
 	{
 		auto& earlyReflections = m_earlyReflections[channel];
 		earlyReflections.set(earlyReflectionsParams);
@@ -218,20 +220,12 @@ void EarlyRefections1AudioProcessor::processBlock (juce::AudioBuffer<float>& buf
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 
-		for (int sample = 0; sample < samples; sample++)
+		for (unsigned int sample = 0u; sample < samples; sample++)
 		{
-			// Read
-			const float in = channelBuffer[sample];
-
-			// Early reflections
-			const float out = gainCompensation * earlyReflections.process(in);
-		
-			//Out
-			channelBuffer[sample] = (1.0f - mix) * in + mix * out;
+			float& in = channelBuffer[sample];
+			in = dry * in + wet * earlyReflections.process(in);
 		}
 	}
-
-	buffer.applyGain(gain);
 }
 
 //==============================================================================

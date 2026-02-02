@@ -60,7 +60,7 @@ public:
 		m_channel = channel;
 		
 		// Set delay line
-		const int size = DELAY_LINE_LENGHT_MAX_MS * sampleRate;
+		const int size = 0.001f * DELAY_LINE_LENGHT_MAX_MS * sampleRate;
 		__super::init(size);
 
 		// Set dissution all-pass filters
