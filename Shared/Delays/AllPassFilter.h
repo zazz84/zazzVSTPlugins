@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <cstring>
+
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 
 //==============================================================================
@@ -45,12 +47,35 @@ public:
 	{
 		m_feedback = feedback;
 	};
+	inline void release()
+	{
+		__super::release();
+		
+		m_feedback = 0.5f;
+	}
 	inline float process(const float in) noexcept
 	{
 		const float delayOut =  read();
 		const float delayIn = in + m_feedback * delayOut;
 		write(delayIn);
 		return delayOut - m_feedback * delayIn;
+	};
+	inline void processBlock(float* buffer, const unsigned int samples)
+	{
+		// Get linear buffer
+		auto* linearBuffer = getLinearBuffer();
+
+		// Process
+		for (unsigned int sample = 0; sample < samples; sample++)
+		{
+			float& delayOut = linearBuffer[sample];
+			const float delayIn = buffer[sample] + m_feedback * delayOut;
+			buffer[sample] = delayOut - m_feedback * delayIn;
+			delayOut = delayIn;
+		}
+
+		// Store linear buffer
+		moveLinearBufferToCircularBuffer();
 	};
 
 protected:
