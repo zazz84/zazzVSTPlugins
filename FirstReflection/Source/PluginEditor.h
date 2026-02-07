@@ -38,7 +38,7 @@ public:
 		xMin = -2000.0f;
 		xMax = 2000.0f;
 		yMin = 0.0f;
-		yMax = 500.0f;
+		yMax = 200.0f;
 
 		// Speed of sound (m/s)
 		speedOfSound = 343.0f;
@@ -240,7 +240,7 @@ public:
     FirstReflectionAudioProcessorEditor (FirstReflectionAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~FirstReflectionAudioProcessorEditor() override;
 
-	static const int ROTARY_SLIDERS_COUNT = 6;
+	static const int ROTARY_SLIDERS_COUNT = 7;
 	static const int CANVAS_WIDTH = 1 + ROTARY_SLIDERS_COUNT * 3 + 1;
 	static const int CANVAS_HEIGHT = 2 + 10 + 4 + 1;
 	
@@ -262,6 +262,7 @@ protected:
 	ModernRotarySlider m_listenerHeightSlider;
 	ModernRotarySlider m_emitterHeightSlider;
 	ModernRotarySlider m_emitterDistanceSlider;
+	ModernRotarySlider m_diffusionSlider;
 	ModernRotarySlider m_reflectionVolumeSlider;
 	ModernRotarySlider m_reflectionLPCutoffSlider;
 	ModernRotarySlider m_volumeSlider;

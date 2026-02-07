@@ -5,6 +5,7 @@
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Reverb">
   <MAINGROUP id="s53I3N" name="FirstReflection">
     <GROUP id="{C8858347-717D-C898-1EBB-421F43DF4E77}" name="Source">
+      <FILE id="JO64ab" name="AllPassFilter.h" compile="0" resource="0" file="../Shared/Delays/AllPassFilter.h"/>
       <FILE id="OTSBXn" name="PluginNameComponent.h" compile="0" resource="0"
             file="../Shared/GUI/PluginNameComponent.h"/>
       <FILE id="tPRcli" name="ModernRotarySlider.h" compile="0" resource="0"
@@ -17,6 +18,7 @@
             file="Source/PluginProcessor.h"/>
       <FILE id="DAIiV9" name="CircularBuffers.h" compile="0" resource="0"
             file="../Shared/Utilities/CircularBuffers.h"/>
+      <FILE id="EVjs84" name="SinOscillator.h" compile="0" resource="0" file="../Shared/Oscillators/SinOscillator.h"/>
       <FILE id="ZYLT22" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="fq2AGs" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>

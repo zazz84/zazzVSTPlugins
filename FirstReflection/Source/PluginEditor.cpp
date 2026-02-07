@@ -27,6 +27,7 @@ FirstReflectionAudioProcessorEditor::FirstReflectionAudioProcessorEditor (FirstR
 	m_listenerHeightSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::ListenerHeight]),
 	m_emitterHeightSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::EmitterHeight]),
 	m_emitterDistanceSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::EmitterDistance]),
+	m_diffusionSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::Diffusion]),
 	m_reflectionVolumeSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::ReflectionVolume]),
 	m_reflectionLPCutoffSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::ReflectionLPCutoff]),
 	m_volumeSlider(vts, FirstReflectionAudioProcessor::m_parametersDescritpion[FirstReflectionAudioProcessor::Parameters::Volume])
@@ -38,6 +39,7 @@ FirstReflectionAudioProcessorEditor::FirstReflectionAudioProcessorEditor (FirstR
 	addAndMakeVisible(m_listenerHeightSlider);
 	addAndMakeVisible(m_emitterHeightSlider);
 	addAndMakeVisible(m_emitterDistanceSlider);
+	addAndMakeVisible(m_diffusionSlider);
 	addAndMakeVisible(m_reflectionVolumeSlider);
 	addAndMakeVisible(m_reflectionLPCutoffSlider);
 	addAndMakeVisible(m_volumeSlider);
@@ -96,6 +98,7 @@ void FirstReflectionAudioProcessorEditor::resized()
 	m_listenerHeightSlider.setSize(pixelSize3, pixelSize4);
 	m_emitterHeightSlider.setSize(pixelSize3, pixelSize4);
 	m_emitterDistanceSlider.setSize(pixelSize3, pixelSize4);
+	m_diffusionSlider.setSize(pixelSize3, pixelSize4);
 	m_reflectionVolumeSlider.setSize(pixelSize3, pixelSize4);
 	m_reflectionLPCutoffSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
@@ -112,6 +115,7 @@ void FirstReflectionAudioProcessorEditor::resized()
 	const int column5 = column4 + pixelSize3;
 	const int column6 = column5 + pixelSize3;
 	const int column7 = column6 + pixelSize3;
+	const int column8 = column7 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
@@ -120,7 +124,8 @@ void FirstReflectionAudioProcessorEditor::resized()
 	m_listenerHeightSlider.setTopLeftPosition(column2, row3);
 	m_emitterHeightSlider.setTopLeftPosition(column3, row3);
 	m_emitterDistanceSlider.setTopLeftPosition(column4, row3);
-	m_reflectionVolumeSlider.setTopLeftPosition(column5, row3);
-	m_reflectionLPCutoffSlider.setTopLeftPosition(column6, row3);
-	m_volumeSlider.setTopLeftPosition(column7, row3);
+	m_diffusionSlider.setTopLeftPosition(column5, row3);
+	m_reflectionVolumeSlider.setTopLeftPosition(column6, row3);
+	m_reflectionLPCutoffSlider.setTopLeftPosition(column7, row3);
+	m_volumeSlider.setTopLeftPosition(column8, row3);
 }

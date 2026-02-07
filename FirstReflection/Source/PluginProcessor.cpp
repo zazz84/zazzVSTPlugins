@@ -18,6 +18,9 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+
+//==============================================================================
 const ModernRotarySlider::ParameterDescription FirstReflectionAudioProcessor::m_parametersDescritpion[] =
 {
 	{ "ListenerY",
@@ -32,6 +35,10 @@ const ModernRotarySlider::ParameterDescription FirstReflectionAudioProcessor::m_
 	  " m",
 	  "EmitterX" },
 
+	{ "Diffusion",
+	" %",
+	"Diffusion" },
+
 	{ "Reflection",
 	  " dB",
 	  "Reflection" },
@@ -45,8 +52,10 @@ const ModernRotarySlider::ParameterDescription FirstReflectionAudioProcessor::m_
 	  "Volume" }
 };
 
-const float FirstReflectionAudioProcessor::MAXIMUM_HEIGHT = 500.0f;
+const float FirstReflectionAudioProcessor::MAXIMUM_HEIGHT = 200.0f;
+const float FirstReflectionAudioProcessor::MAXIMUM_DISTANCE = 2000.0f;
 const float FirstReflectionAudioProcessor::MAXIMUM_DELAY_TIME = 0.060f;
+const float FirstReflectionAudioProcessor::MAXIMUM_ALL_PASS_TIME = 0.0009f;
 
 //==============================================================================
 FirstReflectionAudioProcessor::FirstReflectionAudioProcessor()
@@ -138,7 +147,6 @@ void FirstReflectionAudioProcessor::prepareToPlay (double sampleRate, int sample
 {
 	const int sr = (int)sampleRate;
 
-	//const float maximumDelayTime = reflectionTimeDelay(MAXIMUM_HEIGHT, MAXIMUM_HEIGHT, MAXIMUM_HEIGHT);
 	const float maximumDelaySample = MAXIMUM_DELAY_TIME * (float)sampleRate;
 
 	for (int channel = 0; channel < N_CHANNELS; channel++)
@@ -147,6 +155,9 @@ void FirstReflectionAudioProcessor::prepareToPlay (double sampleRate, int sample
 		m_lowPassFilter[channel].init(sr);
 		m_delaySamplesSmoother[channel].init(sr);
 		m_delaySamplesSmoother[channel].set(2.0f);
+		m_allPassFilter[channel].init((int)(MAXIMUM_ALL_PASS_TIME * (float)sampleRate));
+		m_LFO[channel].init(sr);
+		m_LFO[channel].set(1.2f);
 	}
 }
 
@@ -195,8 +206,11 @@ void FirstReflectionAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto sampleRate = getSampleRate();
 	const float delayTimeSamples = std::fminf(MAXIMUM_DELAY_TIME, reflectionTimeDelay(parametersValues[Parameters::EmitterHeight], parametersValues[Parameters::ListenerHeight], parametersValues[Parameters::EmitterDistance])) * (float)getSampleRate();
 	const float reflectionsGain = juce::Decibels::decibelsToGain(parametersValues[Parameters::ReflectionVolume]);
+	const float difusedWet = 0.01f * parametersValues[Parameters::Diffusion];
+	const float difusedDry = 1.0f - difusedWet;
 	
 	for (int channel = 0; channel < channels; channel++)
 	{
@@ -205,7 +219,9 @@ void FirstReflectionAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 		auto& delayLine = m_delayLine[channel];
 		auto& lowPassFilter = m_lowPassFilter[channel];
 		auto& delaySamplesSmoother = m_delaySamplesSmoother[channel];
-
+		auto& allPassFilter = m_allPassFilter[channel];
+		auto& LFO = m_LFO[channel];
+		
 		lowPassFilter.set(parametersValues[Parameters::ReflectionLPCutoff]);
 
 		for (int sample = 0; sample < samples; sample++)
@@ -216,11 +232,17 @@ void FirstReflectionAudioProcessor::processBlock (juce::AudioBuffer<float>& buff
 			// Get delayed sample
 			const float delayTimeSamplesSmooth = delaySamplesSmoother.process(delayTimeSamples);
 			const float delayedSample = delayLine.readDelay(delayTimeSamplesSmooth);
-			
+						
+			// Modulated diffusion
+			const float lfo = LFO.process();
+			const int size0 = (0.4f + 0.6f * lfo) * MAXIMUM_ALL_PASS_TIME * sampleRate;
+			allPassFilter.set(size0);
+			const float out = (difusedDry * delayedSample) + (difusedWet * allPassFilter.process(delayedSample));
+
 			delayLine.write(in);
 		
 			//Out
-			channelBuffer[sample] = in + reflectionsGain * lowPassFilter.process(delayedSample);
+			channelBuffer[sample] = in + reflectionsGain * lowPassFilter.process(out);
 		}
 	}
 
@@ -261,10 +283,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout FirstReflectionAudioProcesso
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::EmitterDistance].paramName, m_parametersDescritpion[Parameters::EmitterDistance].paramName, NormalisableRange<float>( -4.0f * MAXIMUM_HEIGHT, 4.0f * MAXIMUM_HEIGHT,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::EmitterDistance].paramName, m_parametersDescritpion[Parameters::EmitterDistance].paramName, NormalisableRange<float>(-MAXIMUM_DISTANCE, MAXIMUM_DISTANCE,  0.1f, 1.0f),  0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::EmitterHeight].paramName, m_parametersDescritpion[Parameters::EmitterHeight].paramName, NormalisableRange<float>( 0.0f, MAXIMUM_HEIGHT,  0.1f, 1.0f),  100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::ListenerHeight].paramName, m_parametersDescritpion[Parameters::ListenerHeight].paramName, NormalisableRange<float>( 0.0f, 10.0f,  0.1f, 1.0f),  2.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::ReflectionLPCutoff].paramName, m_parametersDescritpion[Parameters::ReflectionLPCutoff].paramName, NormalisableRange<float>( 100.0f,  20000.0f,  0.1f, 0.4f), 20000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Diffusion].paramName, m_parametersDescritpion[Parameters::Diffusion].paramName, NormalisableRange<float>( 0.0f, 100.0f,  1.0f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::ReflectionLPCutoff].paramName, m_parametersDescritpion[Parameters::ReflectionLPCutoff].paramName, NormalisableRange<float>( 100.0f,  20000.0f,  1.0f, 0.4f), 20000.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::ReflectionVolume].paramName, m_parametersDescritpion[Parameters::ReflectionVolume].paramName, NormalisableRange<float>( -60.0f,  0.0f,  0.1f, 1.0f), -12.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 

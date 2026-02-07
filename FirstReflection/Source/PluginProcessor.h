@@ -24,7 +24,56 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/Delays/AllPassFilter.h"
 
+#include <cmath>
+#include <cstdlib>
+
+//==============================================================================
+class SmoothRandomLFO {
+public:
+	SmoothRandomLFO() = default;
+	~SmoothRandomLFO() = default;
+
+	inline void init(int sampleRate)
+	{
+		period = 1.0f / (float)sampleRate;
+		phase = 0.0f;
+		value1 = randomFloat();
+	}
+	inline void set(float freq)
+	{
+		frequency = freq;
+		phaseInc = frequency * period;
+	}
+	inline float process()
+	{
+		phase += phaseInc;
+		
+		if (phase >= 1.0) {
+			phase -= 1.0;
+			phaseInc = ((0.3f * randomFloat()) + (0.7f * frequency)) * period;
+			value1 = value2;
+			value2 = randomFloat(); // new target
+		}
+
+		return value1 + (value2 - value1) * phase; // linear interpolation
+	}
+
+private:
+	// Generate random float in range [0, 1]
+	inline float randomFloat() {
+		return static_cast<float>(rand()) / RAND_MAX;
+	}
+	
+	float frequency = 1.0f;
+	float phase = 0.0f;
+	float phaseInc = 0.0f;
+	float value1 = 0.0f;
+	float value2 = 0.0f;
+
+	float period = 1.0f / 48000.0f;
+};
 //==============================================================================
 class FirstReflectionAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
@@ -42,6 +91,7 @@ public:
         ListenerHeight,
 		EmitterHeight,
 		EmitterDistance,
+		Diffusion,
 		ReflectionVolume,
 		ReflectionLPCutoff,
 		Volume,
@@ -50,7 +100,9 @@ public:
 
     static const int N_CHANNELS = 2;
 	static const float MAXIMUM_HEIGHT;
+	static const float MAXIMUM_DISTANCE;
 	static const float MAXIMUM_DELAY_TIME;
+	static const float MAXIMUM_ALL_PASS_TIME;
 	static const ModernRotarySlider::ParameterDescription m_parametersDescritpion[];
 
     //==============================================================================
@@ -118,6 +170,8 @@ private:
 	CircularBuffer m_delayLine[N_CHANNELS];
 	OnePoleLowPassFilter m_lowPassFilter[N_CHANNELS];
 	OnePoleLowPassFilter m_delaySamplesSmoother[N_CHANNELS];
+	AllPassFilter m_allPassFilter[N_CHANNELS];
+	SmoothRandomLFO m_LFO[N_CHANNELS];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FirstReflectionAudioProcessor)
 };

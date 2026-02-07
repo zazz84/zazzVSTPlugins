@@ -34,20 +34,20 @@ public:
 	AllPassFilter() = default;
 	~AllPassFilter() = default;
 
-	inline void set(const int size, const float feedback = 0.5f)
+	inline void set(const int size, const float feedback = 0.5f) noexcept
 	{
 		__super::set(size);
 		m_feedback = feedback;
 	};
-	inline void setSize(const int size)
+	inline void setSize(const int size) noexcept
 	{
 		__super::set(size);
 	};
-	inline void setFeedback(const float feedback)
+	inline void setFeedback(const float feedback) noexcept
 	{
 		m_feedback = feedback;
 	};
-	inline void release()
+	inline void release() noexcept
 	{
 		__super::release();
 		
@@ -60,7 +60,7 @@ public:
 		write(delayIn);
 		return delayOut - m_feedback * delayIn;
 	};
-	inline void processBlock(float* buffer, const unsigned int samples)
+	inline void processBlock(float* buffer, const unsigned int samples) noexcept
 	{
 		// Get linear buffer
 		auto* linearBuffer = getLinearBuffer();
