@@ -1,20 +1,47 @@
 /*
-  ==============================================================================
-
-    This file contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
-
 //==============================================================================
+const ModernRotarySlider::ParameterDescription DeharshAudioProcessor::m_parametersDescritpion[] =
+{
+	{ "Damping",
+	  " dB",
+	  "Damping" },
 
-const std::string DeharshAudioProcessor::paramsNames[] = { "Damping", "Presence", "Saturation", "Mix", "Volume" };
-const std::string DeharshAudioProcessor::paramsUnitNames[] = { " dB", " dB", " %", " %", " dB" };
+	{ "Presence",
+	  " dB",
+	  "Presence" },
+
+	{ "Saturation",
+	  " %",
+	  "Saturation" },
+
+	{ "Mix",
+	" %",
+	"Mix" },
+
+	{ "Volume",
+	  " dB",
+	  "Volume" }
+};
+
 
 //==============================================================================
 DeharshAudioProcessor::DeharshAudioProcessor()
@@ -29,11 +56,10 @@ DeharshAudioProcessor::DeharshAudioProcessor()
                        )
 #endif
 {
-	dampingParameter = apvts.getRawParameterValue(paramsNames[0]);
-	presenceParameter = apvts.getRawParameterValue(paramsNames[1]);
-	saturationParameter = apvts.getRawParameterValue(paramsNames[2]);
-	mixParameter = apvts.getRawParameterValue(paramsNames[3]);
-	volumeParameter = apvts.getRawParameterValue(paramsNames[4]);
+	for (int i = 0; i < Parameters::COUNT; i++)
+	{
+		m_parameters[i] = apvts.getRawParameterValue(m_parametersDescritpion[i].paramName);
+	}
 }
 
 DeharshAudioProcessor::~DeharshAudioProcessor()
@@ -152,18 +178,29 @@ bool DeharshAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 void DeharshAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto damping = -dampingParameter->load();
-	const auto presence = presenceParameter->load();
-	const auto wetSaturation = 0.01f * saturationParameter->load();
-	const auto wet = 0.01f * mixParameter->load();
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	std::array<float, Parameters::COUNT> parametersValues;
+	for (int i = 0; i < Parameters::COUNT; i++)
+	{
+		parametersValues[i] = m_parameters[i]->load();
+	}
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto dry = 1.0f - wet;
+	
+	// Samples loop parameters
+	const auto damping = -1.0f * parametersValues[Parameters::Damping];
+	const auto gain = juce::Decibels::decibelsToGain(parametersValues[Parameters::Volume]);
+	auto wet = 0.01f * parametersValues[Parameters::Mix];
+	auto dry = 1.0f - wet;
+	wet *= gain;
+	dry *= gain;
 	const auto dampingFilterQ = 0.07f * damping + 3.0f;
-	const auto drySaturation = 1.0f - wetSaturation;
+	auto wetSaturation = 0.01f * parametersValues[Parameters::Saturation];
+	auto drySaturation = 1.0f - wetSaturation;
+	wetSaturation *= wet;
+	wetSaturation *= 2.0f;		// Gain adjustment for saturation knob
+	drySaturation *= wet;
 
 	for (int channel = 0; channel < channels; channel++)
 	{
@@ -178,8 +215,8 @@ void DeharshAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 		auto& deEmphasisFilter = m_deEmphasisFilter[channel];
 
 		dampingFilter.setPeak(3136.0f, dampingFilterQ, damping);
-		presenceHighShelfFilter.setHighShelf(4186.0f, 1.0f, presence);
-		presencePeakFilter.setPeak(6272.0f, 1.0f, 0.33f * presence);
+		presenceHighShelfFilter.setHighShelf(4186.0f, 1.0f, parametersValues[Parameters::Presence]);
+		presencePeakFilter.setPeak(6272.0f, 1.0f, 0.33f * parametersValues[Parameters::Presence]);
 
 		preEmphasisFilter.setLowShelf(440.0f, 0.707f, -9.0f);
 		deEmphasisFilter.setLowShelf(440.0f, 0.707f, 9.0f);
@@ -188,7 +225,6 @@ void DeharshAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 		{
 			// Read
 			const float in = channelBuffer[sample];
-
 			float out = in;
 
 			// Filter
@@ -198,17 +234,19 @@ void DeharshAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
 			// Saturation
 			float outSat = preEmphasisFilter.processDF1(out);
-			outSat = 0.5f * Waveshapers::Reciprocal(outSat, 2.0f);
+			
+			// Reciprocal waveshaper
+			const float absOutSat = std::abs(outSat);
+			outSat = outSat / (1.0f + 8.0f * absOutSat);
+			
 			outSat = deEmphasisFilter.processDF1(outSat);
 
 			out = drySaturation * out + wetSaturation * outSat;
 		
 			//Out
-			channelBuffer[sample] = dry * in + wet * out;
+			channelBuffer[sample] = dry * in + out;
 		}
 	}
-
-	buffer.applyGain(gain);
 }
 
 //==============================================================================
@@ -245,11 +283,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout DeharshAudioProcessor::creat
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( 0.0f, 20.0f, 0.1f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( 0.0f, 6.0f, 0.1f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Damping].paramName, m_parametersDescritpion[Parameters::Damping].paramName, NormalisableRange<float>( 0.0f, 20.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Presence].paramName, m_parametersDescritpion[Parameters::Presence].paramName, NormalisableRange<float>( 0.0f, 6.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Saturation].paramName, m_parametersDescritpion[Parameters::Saturation].paramName, NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Mix].paramName, m_parametersDescritpion[Parameters::Mix].paramName, NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>( -18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
 
 	return layout;
 }

@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
 
 #include <array>
@@ -5,6 +22,7 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
 
 //==============================================================================
 class DeharshAudioProcessor  : public juce::AudioProcessor
@@ -18,8 +36,17 @@ public:
     DeharshAudioProcessor();
     ~DeharshAudioProcessor() override;
 
-	static const std::string paramsNames[];
-	static const std::string paramsUnitNames[];
+	enum Parameters
+	{
+		Damping,
+		Presence,
+		Saturation,
+		Mix,
+		Volume,
+		COUNT
+	};
+
+	static const ModernRotarySlider::ParameterDescription m_parametersDescritpion[];
 	static const int N_CHANNELS = 2;
 
     //==============================================================================
@@ -62,18 +89,13 @@ public:
 
 private:	
 	//==============================================================================
+	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
+
 	std::array<BiquadFilter, N_CHANNELS> m_dampingFilter;
 	std::array<BiquadFilter, N_CHANNELS> m_presenceHighShelfFilter;
 	std::array<BiquadFilter, N_CHANNELS> m_presencePeakFilter;
-
 	std::array<BiquadFilter, N_CHANNELS> m_preEmphasisFilter;
 	std::array<BiquadFilter, N_CHANNELS> m_deEmphasisFilter;
-
-	std::atomic<float>* dampingParameter = nullptr;
-	std::atomic<float>* presenceParameter = nullptr;
-	std::atomic<float>* saturationParameter = nullptr;
-	std::atomic<float>* mixParameter = nullptr;
-	std::atomic<float>* volumeParameter = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DeharshAudioProcessor)
 };
