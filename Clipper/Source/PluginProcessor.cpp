@@ -9,6 +9,8 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#include <juce_core/juce_core.h>
+
 //==============================================================================
 #define PROCESS_CLIPPER(CLIPPER)												    \
     for (int sample = 0; sample < samples; sample++){                               \
@@ -150,16 +152,20 @@ bool ClipperAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
+	juce::ScopedNoDenormals noDenormals;
+	
 	// Get params
-	const auto type      = typeParameter->load();
+	const auto type = typeParameter->load();
 	const auto threshold = juce::Decibels::decibelsToGain(thresholdParameter->load());
-	const auto wet       = 0.01f * mixParameter->load();
-	const auto gain     = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto thresholdLow = -threshold;
+	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto temp = 0.01f * mixParameter->load();
+	const auto wet = gain * temp;
+	const auto dry = gain * (1.0f - temp);
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto dry = 1.0f - wet;
 	const auto guiIsOpen = m_guiIsOpen.load();
 
 	// Get input maximum
@@ -172,19 +178,29 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 		}
 	}
 
-	for (int channel = 0; channel < channels; ++channel)
+	for (int channel = 0; channel < channels; channel++)
 	{
-		auto& slopeClipper = m_slopeClipper[channel];
-
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
 				
-		if (type == 1)
-		{
-			PROCESS_CLIPPER(Clippers::HardClip)
+		if (type == Type::Hard)
+		{			
+#if JUCE_USE_SSE_INTRINSICS
+			Clippers::HardClipSSE(channelBuffer, samples, -threshold, threshold, dry, wet);
+#else
+			for (int sample = 0; sample < samples; ++sample)
+			{
+				float& in = channelBuffer[sample];
+				const float a = in < thresholdLow ? thresholdLow : in;
+				const float out = a > threshold ? threshold : a;
+				in = dry * in + wet * out;
+			}
+#endif		
 		}
-		else if (type == 2)
+		else if (type == Type::Slope)
 		{
+			auto& slopeClipper = m_slopeClipper[channel];
+
 			for (int sample = 0; sample < samples; sample++)
 			{
 				float& in = channelBuffer[sample];
@@ -192,19 +208,29 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 				in = dry * in + wet * out;
 			}
 		}
-		else if (type == 3)
+		else if (type == Type::Soft)
 		{
 			PROCESS_CLIPPER(Clippers::SoftClip)
 		}
-		else if (type == 4)
+		else if (type == Type::FoldBack)
 		{
 			PROCESS_CLIPPER(Clippers::FoldBack)
 		}
-		else if (type == 5)
+		else if (type == Type::HalfWay)
 		{
-			PROCESS_CLIPPER(Clippers::HalfWave)
+#if JUCE_USE_SSE_INTRINSICS
+			Clippers::HardClipSSE(channelBuffer, samples, 0.0f, threshold, dry, wet);
+#else
+			for (int sample = 0; sample < samples; ++sample)
+			{
+				float& in = channelBuffer[sample];
+				const float a = in < 0.0f ? 0.0f : in;
+				const float out = a > threshold ? threshold : a;
+				in = dry * in + wet * out;
+			}
+#endif
 		}
-		else if (type == 6)
+		else if (type == Type::ABS)
 		{
 			PROCESS_CLIPPER(Clippers::ABS)
 		}
@@ -219,9 +245,6 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 			m_outputMax = outputMax;
 		}
 	}
-
-	// Apply volume
-	buffer.applyGain(gain);
 }
 
 //==============================================================================

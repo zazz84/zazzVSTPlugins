@@ -18,6 +18,18 @@ public:
     ClipperAudioProcessor();
     ~ClipperAudioProcessor() override;
 
+	enum Type
+	{
+		None,
+		Hard,
+		Slope,
+		Soft,
+		FoldBack,
+		HalfWay,
+		ABS,
+		COUNT
+	};
+
 	static const std::string paramsNames[];
 	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];

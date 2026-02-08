@@ -10,9 +10,32 @@
 #include "PluginEditor.h"
 
 //==============================================================================
+const ModernRotarySlider::ParameterDescription CombFilterAudioProcessor::m_parametersDescritpion[] =
+{
+	{ "Frequency",
+	  " Hz",
+	  "Frequency" },
 
-const std::string CombFilterAudioProcessor::paramsNames[] = { "Frequency", "Stages", "Low Cut", "High Cut", "Mix", "Volume" };
-const std::string CombFilterAudioProcessor::paramsUnitNames[] = { "Hz", "", "Hz" , "Hz", "%", "dB"};
+	{ "Stages",
+	  "",
+	  "Stages" },
+
+	{ "Low Cut",
+	  " Hz",
+	  "Low Cut" },
+
+	{ "High Cut",
+	" Hz",
+	"High Cut" },
+
+	{ "Mix",
+	  " %",
+	  "Mix" },
+
+	{ "Volume",
+	  " dB",
+	  "Volume" }
+};
 
 //==============================================================================
 CombFilterAudioProcessor::CombFilterAudioProcessor()
@@ -27,12 +50,10 @@ CombFilterAudioProcessor::CombFilterAudioProcessor()
                        )
 #endif
 {
-	frequencyParameter = apvts.getRawParameterValue(paramsNames[0]);
-	stagesParameter    = apvts.getRawParameterValue(paramsNames[1]);
-	lowCutParameter    = apvts.getRawParameterValue(paramsNames[2]);
-	highCutParameter   = apvts.getRawParameterValue(paramsNames[3]);
-	mixParameter       = apvts.getRawParameterValue(paramsNames[4]);
-	volumeParameter    = apvts.getRawParameterValue(paramsNames[5]);
+	for (int i = 0; i < Parameters::COUNT; i++)
+	{
+		m_parameters[i] = apvts.getRawParameterValue(m_parametersDescritpion[i].paramName);
+	}
 }
 
 CombFilterAudioProcessor::~CombFilterAudioProcessor()
@@ -105,24 +126,23 @@ void CombFilterAudioProcessor::changeProgramName (int index, const juce::String&
 void CombFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const auto delay = (int)((float)sampleRate / (2.0f * (float)FREQUENY_MIN));
-
-	for (int i = 0; i < STAGES_MAX; i++)
-	{
-		m_combFilter[i][0].init(delay);
-		m_combFilter[i][1].init(delay);
-	}
-
 	const int sr = (int)(sampleRate);
 
-	m_lowCutFilter[0].init(sr);
-	m_lowCutFilter[1].init(sr);
-	m_highCutFilter[0].init(sr);
-	m_highCutFilter[1].init(sr);
+	for (int channel = 0; channel < N_CHANNELS; channel++)
+	{
+		for (int i = 0; i < STAGES_MAX; i++)
+		{
+			m_combFilter[channel][i].init(delay);
+			//m_combFilter[channel][i].init(delay, samplesPerBlock);
+		}
+
+		m_lowCutFilter[channel].init(sr);
+		m_highCutFilter[channel].init(sr);
+	}
 }
 
 void CombFilterAudioProcessor::releaseResources()
 {
-	
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -153,34 +173,45 @@ bool CombFilterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 
 void CombFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-	// Get params
-	const auto frequency = frequencyParameter->load();
-	const int stages = (int)(std::round(stagesParameter->load()));
-	const auto lowCut = lowCutParameter->load();
-	const auto highCut = highCutParameter->load();
-	const auto mix = 0.01f * mixParameter->load();
-	const auto volume = juce::Decibels::decibelsToGain(volumeParameter->load());
+	juce::ScopedNoDenormals noDenormals;
 
+	// Get params
+	std::array<float, Parameters::COUNT> parametersValues;
+	for (int i = 0; i < Parameters::COUNT; i++)
+	{
+		parametersValues[i] = m_parameters[i]->load();
+	}
+	
 	// Mics constants
-	const auto mixInverse = 1.0f - mix;
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
-	const auto delay = (float)getSampleRate() / (2.0f * frequency);
+
+	// Channels loop constants
+	const auto delay = (float)getSampleRate() / (2.0f * parametersValues[Parameters::Frequency]);
+
+	// Samples loop constants
+	auto wet = 0.01f * parametersValues[Parameters::Mix];
+	auto dry = 1.0f - wet;
+	const auto gain = juce::Decibels::decibelsToGain(parametersValues[Parameters::Volume]);
+	wet *= gain;
+	dry *= gain;
+	const auto stages = (int)(parametersValues[Parameters::Stages]);
 	
 	for (int channel = 0; channel < channels; ++channel)
 	{
+		auto* channelBuffer = buffer.getWritePointer(channel);
+		
+		auto& combFilter = m_combFilter[channel];
 		auto& lowCutFilter = m_lowCutFilter[channel];
 		auto& highCutFilter = m_highCutFilter[channel];
 
-		lowCutFilter.setHighPass(lowCut, 1.0f);
-		highCutFilter.setLowPass(highCut, 1.0f);
+		constexpr float Q = 1.0f;
+		lowCutFilter.setHighPass(parametersValues[Parameters::LowCut], Q);
+		highCutFilter.setLowPass(parametersValues[Parameters::HighCut], Q);	
 
-		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
-
-		for (int i = 0; i < stages; i++)
+		for (int stage = 0; stage < stages; stage++)
 		{
-			m_combFilter[i][channel].CircularBuffer::set(delay);
+			combFilter[stage].set(delay);
 		}
 
 		for (int sample = 0; sample < samples; sample++)
@@ -191,14 +222,44 @@ void CombFilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 			
 			for (int stage = 0; stage < stages; stage++)
 			{
-				out = m_combFilter[stage][channel].process(out);
+				out = combFilter[stage].process(out);
 			}
 
 			out = lowCutFilter.processDF1(out);
 			out = highCutFilter.processDF1(out);
 
-			channelBuffer[sample] = volume * (mixInverse * in + mix * out);
+			channelBuffer[sample] = dry * in + wet * out;
 		}
+
+		// Copy input to temp buffer
+		/*float* input = channelBuffer;
+
+		for (int stage = 0; stage < stages; stage++)
+		{
+			auto& comb = combFilter[stage];
+			
+			float* linearBuffer = comb.getLinearBuffer();
+
+			for (int sample = 0; sample < samples; sample++)
+			{
+				constexpr float FEEDBACK = 0.5f;	
+				linearBuffer[sample] = FEEDBACK * (input[sample] - linearBuffer[sample]);
+			}
+
+			comb.moveLinearBufferToCircularBuffer();
+			input = linearBuffer;
+		}
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			// Read comb filters out
+			float combOut = input[sample];
+
+			combOut = lowCutFilter.processDF1(combOut);
+			combOut = highCutFilter.processDF1(combOut);
+
+			channelBuffer[sample] = dry * channelBuffer[sample] + wet * combOut;
+		}*/
 	}
 }
 
@@ -236,12 +297,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout CombFilterAudioProcessor::cr
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>((float)FREQUENY_MIN, (float)FREQUENY_MAX, 1.0f, 0.3f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>(   1.0f, (float)STAGES_MAX, 1.0f, 1.0f), 1.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>((float)FREQUENY_MIN, 20000.0f, 1.0f, 0.3f), 100.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>((float)FREQUENY_MIN, 20000.0f, 1.0f, 0.3f), 10000.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>(   0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[5], paramsNames[5], NormalisableRange<float>( -18.0f,  18.0f, 0.1f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Frequency].paramName, m_parametersDescritpion[Parameters::Frequency].paramName, NormalisableRange<float>((float)FREQUENY_MIN, (float)FREQUENY_MAX, 1.0f, 0.3f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Stages].paramName, m_parametersDescritpion[Parameters::Stages].paramName, NormalisableRange<float>(1.0f, (float)STAGES_MAX, 1.0f, 1.0f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::LowCut].paramName, m_parametersDescritpion[Parameters::LowCut].paramName, NormalisableRange<float>((float)FREQUENY_MIN, 20000.0f, 1.0f, 0.3f), 100.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::HighCut].paramName, m_parametersDescritpion[Parameters::HighCut].paramName, NormalisableRange<float>((float)FREQUENY_MIN, 20000.0f, 1.0f, 0.3f), 10000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Mix].paramName, m_parametersDescritpion[Parameters::Mix].paramName, NormalisableRange<float>(0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>(-18.0f,  18.0f, 0.1f, 1.0f), 0.0f));
 
 	return layout;
 }

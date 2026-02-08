@@ -21,6 +21,8 @@
 
 #include <JuceHeader.h>
 
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+
 //==============================================================================
 class MyPluginNameAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
@@ -39,10 +41,8 @@ public:
         COUNT
     };
 
-    static const std::string paramsNames[];
-    static const std::string labelNames[];
-	static const std::string paramsUnitNames[];
     static const int N_CHANNELS = 2;
+    static const ModernRotarySlider::ParameterDescription m_parametersDescritpion[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -84,7 +84,6 @@ public:
 
 private:	
 	//==============================================================================
-
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessor)

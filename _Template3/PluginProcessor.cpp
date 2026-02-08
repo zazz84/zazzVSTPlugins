@@ -20,9 +20,12 @@
 
 //==============================================================================
 
-const std::string MyPluginNameAudioProcessor::paramsNames[] = { "Volume" };
-const std::string MyPluginNameAudioProcessor::labelNames[] = { "Volume" };
-const std::string MyPluginNameAudioProcessor::paramsUnitNames[] = { " dB" };
+const ModernRotarySlider::ParameterDescription MyPluginNameAudioProcessor::m_parametersDescritpion[] =
+{
+    { "Volume",
+      " dB",
+      "Volume" }
+};
 
 //==============================================================================
 MyPluginNameAudioProcessor::MyPluginNameAudioProcessor()
@@ -157,9 +160,6 @@ void MyPluginNameAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         parametersValues[i] = m_parameters[i]->load();
     }
 
-    // Get params
-	const auto gain = juce::Decibels::decibelsToGain(m_volumeParameter->load());
-
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
@@ -179,7 +179,7 @@ void MyPluginNameAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 		}
 	}
 
-	buffer.applyGain(gain);
+	buffer.applyGain(parametersValues[Parameters::Volume]);
 }
 
 //==============================================================================
@@ -216,7 +216,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyPluginNameAudioProcessor::
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
 
 	return layout;
 }

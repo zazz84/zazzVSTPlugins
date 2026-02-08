@@ -2,25 +2,20 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzLookAndFeel.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ZazzAudioProcessorEditor.h"
+
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
-class CombFilterAudioProcessorEditor : public juce::AudioProcessorEditor, public ZazzAudioProcessorEditor
+class CombFilterAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
     CombFilterAudioProcessorEditor (CombFilterAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~CombFilterAudioProcessorEditor() override;
 
-	// GUI setup
-	// Total number of sliders
-	static const int N_SLIDERS = 6;
-	// Total number of fows
-	static const int N_ROWS = 1;
-	// Number of sliders per row
-	static const int SLIDERS[];
-	// Number of slider width offset (from left) per row
-	static const float COLUMN_OFFSET[];
+	static const int ROTARY_SLIDERS_COUNT = 6;
+	static const int CANVAS_WIDTH = 1 + ROTARY_SLIDERS_COUNT * 3 + 1;
+	static const int CANVAS_HEIGHT = 2 + 4 + 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -34,9 +29,18 @@ private:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	juce::Label m_labels[N_SLIDERS] = {};
-	juce::Slider m_sliders[N_SLIDERS] = {};
-	std::unique_ptr<SliderAttachment> m_sliderAttachment[N_SLIDERS] = {};
+	PluginNameComponent m_pluginLabel;
+
+	ModernRotarySlider m_frequencySlider;
+	ModernRotarySlider m_stagesSlider;
+	ModernRotarySlider m_lowCutSlider;
+	ModernRotarySlider m_highCutSlider;
+	ModernRotarySlider m_mixSlider;
+	ModernRotarySlider m_volumeSlider;
+
+	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
+	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
+	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombFilterAudioProcessorEditor)
 };

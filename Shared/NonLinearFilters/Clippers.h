@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 202 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 #include <math.h>
 //#include <algorithm>
-//#include <mmintrin.h>
+#include <mmintrin.h>
 
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
@@ -27,12 +27,58 @@ class Clippers
 {
 
 public:
-	inline static float HardClip(const float in, const float threshold)
+	inline static float HardClip(const float in, const float threshold) noexcept
 	{
 		return Math::clamp(in, -threshold, threshold);
 	}
 
-	inline static float SoftClip(const float in, float const threshold)
+	inline static void HardClipSSE(float* buffer,
+		int numSamples,
+		float lo,
+		float hi,
+		float dry,
+		float wet) noexcept
+	{
+		int i = 0;
+
+		// Broadcast constants once
+		const __m128 vLo = _mm_set1_ps(lo);
+		const __m128 vHi = _mm_set1_ps(hi);
+		const __m128 vDry = _mm_set1_ps(dry);
+		const __m128 vWet = _mm_set1_ps(wet);
+
+		// Process 4 samples per iteration
+		for (; i <= numSamples - 4; i += 4)
+		{
+			// Load
+			__m128 x = _mm_loadu_ps(buffer + i);
+
+			// Hard clip
+			__m128 clipped = _mm_max_ps(x, vLo);
+			clipped = _mm_min_ps(clipped, vHi);
+
+			// Dry / wet mix
+			__m128 out =
+				_mm_add_ps(
+					_mm_mul_ps(vDry, x),
+					_mm_mul_ps(vWet, clipped)
+				);
+
+			// Store
+			_mm_storeu_ps(buffer + i, out);
+		}
+
+		// Tail processing (remaining samples)
+		for (; i < numSamples; ++i)
+		{
+			float x = buffer[i];
+			float clipped = x < lo ? lo : x;
+			clipped = clipped > hi ? hi : clipped;
+			buffer[i] = dry * x + wet * clipped;
+		}
+	}
+
+	inline static float SoftClip(const float in, float const threshold) noexcept
 	{
 		const float thresholdHalf = 0.5f * threshold;
 		const float inAbs = fabsf(in);
@@ -51,7 +97,7 @@ public:
 		}
 	}
 
-	inline static float FoldBack(const float in, float const threshold)
+	inline static float FoldBack(const float in, float const threshold) noexcept
 	{
 		if (in < threshold && in > -threshold)
 		{
@@ -68,12 +114,12 @@ public:
 		}
 	}
 
-	inline static float HalfWave(const float in, float const threshold)
+	inline static float HalfWave(const float in, float const threshold) noexcept
 	{
 		return Math::clamp(in, 0.0f, threshold);
 	}
 
-	inline static float ABS(const float in, const float threshold)
+	inline static float ABS(const float in, const float threshold) noexcept
 	{
 		const float inAbs = fabsf(in);
 

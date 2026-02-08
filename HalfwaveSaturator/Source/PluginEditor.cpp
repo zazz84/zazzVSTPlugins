@@ -19,15 +19,19 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MyPluginNameAudioProcessorEditor::MyPluginNameAudioProcessorEditor (MyPluginNameAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+HalfwaveSaturatorAudioProcessorEditor::HalfwaveSaturatorAudioProcessorEditor (HalfwaveSaturatorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p),
 	audioProcessor (p),
 	valueTreeState(vts),
-	m_volumeSlider(vts, MyPluginNameAudioProcessor::m_parametersDescritpion[MyPluginNameAudioProcessor::Parameters::Volume]),
-	m_pluginLabel("zazz::MyPluginName")
+	m_driveSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::Drive]),
+	m_lowCutSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::LowCut]),
+	m_volumeSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::Volume]),
+	m_pluginLabel("zazz::HalfwaveSaturator")
 {	
 	addAndMakeVisible(m_pluginLabel);
 
+	addAndMakeVisible(m_driveSlider);
+	addAndMakeVisible(m_lowCutSlider);
 	addAndMakeVisible(m_volumeSlider);
 
 	setResizable(true, true);
@@ -47,17 +51,17 @@ MyPluginNameAudioProcessorEditor::MyPluginNameAudioProcessorEditor (MyPluginName
 	}
 }
 
-MyPluginNameAudioProcessorEditor::~MyPluginNameAudioProcessorEditor()
+HalfwaveSaturatorAudioProcessorEditor::~HalfwaveSaturatorAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void MyPluginNameAudioProcessorEditor::paint (juce::Graphics& g)
+void HalfwaveSaturatorAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(darkColor);
 }
 
-void MyPluginNameAudioProcessorEditor::resized()
+void HalfwaveSaturatorAudioProcessorEditor::resized()
 {
 	const int width = getWidth();
 	const int height = getHeight();
@@ -70,6 +74,8 @@ void MyPluginNameAudioProcessorEditor::resized()
 	// Set size
 	m_pluginLabel.setSize(width, pixelSize2);
 
+	m_driveSlider.setSize(pixelSize3, pixelSize4);
+	m_lowCutSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
 	//Set position
@@ -77,9 +83,13 @@ void MyPluginNameAudioProcessorEditor::resized()
 	const int row2 = pixelSize2;
 
 	const int column1 = 0;
-	const int column2 = pixelSize;
+	const int column2 = column1 + pixelSize;
+	const int column3 = column2 + pixelSize3;
+	const int column4 = column3 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
-	m_volumeSlider.setTopLeftPosition	(column2, row2);
+	m_driveSlider.setTopLeftPosition	(column2, row2);
+	m_lowCutSlider.setTopLeftPosition	(column3, row2);
+	m_volumeSlider.setTopLeftPosition	(column4, row2);
 }

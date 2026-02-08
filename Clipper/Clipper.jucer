@@ -3,20 +3,24 @@
 <JUCERPROJECT id="cOssNO" name="Clipper" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
-              version="1.1.1">
+              version="1.2.0">
   <MAINGROUP id="JXcsE0" name="Clipper">
     <GROUP id="{3D17F8D1-E590-C7DF-1F49-0BE25336F6DB}" name="Source">
-      <FILE id="KVtNjN" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
-      <FILE id="uq76By" name="Helpers.h" compile="0" resource="0" file="../Shared/Utilities/Helpers.h"/>
-      <FILE id="RpRTav" name="GainReductionMeterComponent.h" compile="0"
-            resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
-      <FILE id="IWN3Qt" name="ModernRotarySlider.h" compile="0" resource="0"
-            file="../Shared/GUI/ModernRotarySlider.h"/>
-      <FILE id="C0qNcH" name="PluginNameComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/PluginNameComponent.h"/>
-      <FILE id="TCKYEK" name="TextModernRotarySlide.h" compile="0" resource="0"
-            file="../Shared/GUI/TextModernRotarySlide.h"/>
-      <FILE id="gLFJLD" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
+      <GROUP id="{F75DFCCC-D844-6F82-B530-81F018852F78}" name="Shared">
+        <FILE id="KVtNjN" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
+        <FILE id="uq76By" name="Helpers.h" compile="0" resource="0" file="../Shared/Utilities/Helpers.h"/>
+        <FILE id="gLFJLD" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
+      </GROUP>
+      <GROUP id="{705DB956-A556-7EEB-25CE-806248446160}" name="GUI">
+        <FILE id="IWN3Qt" name="ModernRotarySlider.h" compile="0" resource="0"
+              file="../Shared/GUI/ModernRotarySlider.h"/>
+        <FILE id="TCKYEK" name="TextModernRotarySlide.h" compile="0" resource="0"
+              file="../Shared/GUI/TextModernRotarySlide.h"/>
+        <FILE id="C0qNcH" name="PluginNameComponent.h" compile="0" resource="0"
+              file="../Shared/GUI/PluginNameComponent.h"/>
+        <FILE id="RpRTav" name="GainReductionMeterComponent.h" compile="0"
+              resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
+      </GROUP>
       <FILE id="GREmxT" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="r5bp1e" name="PluginProcessor.h" compile="0" resource="0"

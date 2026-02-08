@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="P88DoS" name="CombFilter" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Delay"
-              version="1.2.0">
-  <MAINGROUP id="Y7xaGw" name="CombFilter">
-    <GROUP id="{44300FCD-8FE1-52AE-9DC3-23FC75D1A288}" name="Source">
-      <GROUP id="{E6E143AB-F383-57B7-A722-B26136B6F42D}" name="GUI">
-        <FILE id="vK6UAD" name="ModernRotarySlider.h" compile="0" resource="0"
+<JUCERPROJECT id="CKfm5a" name="HalfwaveSaturator" projectType="audioplug"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
+              jucerFormatVersion="1" companyName="zazz" pluginFormats="buildVST3"
+              pluginVST3Category="Distortion">
+  <MAINGROUP id="zOa8xP" name="HalfwaveSaturator">
+    <GROUP id="{A7E4CD65-F697-6EB3-668F-1CABB94B6DF4}" name="Source">
+      <GROUP id="{F7E879FF-7896-32B3-2FB3-5FDF49534976}" name="Shared">
+        <FILE id="OKDxlH" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
+      </GROUP>
+      <GROUP id="{2E6010F1-116D-E8FA-575D-359A073271EE}" name="GUI">
+        <FILE id="e0nkJN" name="ModernRotarySlider.h" compile="0" resource="0"
               file="../Shared/GUI/ModernRotarySlider.h"/>
-        <FILE id="LUYBBW" name="PluginNameComponent.h" compile="0" resource="0"
+        <FILE id="jQOOkv" name="PluginNameComponent.h" compile="0" resource="0"
               file="../Shared/GUI/PluginNameComponent.h"/>
       </GROUP>
-      <GROUP id="{F0289AA8-DCFD-0764-A54D-7C74A9796F0F}" name="Shared">
-        <FILE id="IQz5U7" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
-        <FILE id="TxxMoG" name="CircularBuffers.h" compile="0" resource="0"
-              file="../Shared/Utilities/CircularBuffers.h"/>
-      </GROUP>
-      <FILE id="GkcFHF" name="PluginProcessor.cpp" compile="1" resource="0"
+      <FILE id="UYBS3Z" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="RXopFk" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="z5ayVs" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="eGjeYY" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="SwFzuP" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="DciKv1" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="fqXS3w" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -36,6 +34,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -61,6 +60,7 @@
         <MODULEPATH id="juce_graphics" path="../../juce"/>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
         <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>

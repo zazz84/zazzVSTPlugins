@@ -54,10 +54,11 @@ public:
 	{
 		if (true)
 		{
-			const unsigned int bufferSize = m_bitMask + 1;
-			const unsigned int readStart = (m_head - m_circularBufferDelay - m_linearBufferSize) & m_bitMask;
+			const unsigned int circularBufferSize = m_bitMask + 1;
+			//const unsigned int readStart = (m_head - m_circularBufferDelay - m_linearBufferSize) & m_bitMask;
+			const unsigned int readStart = (m_head + m_readOffset) & m_bitMask;
 
-			const unsigned int firstChunkLength = std::min(m_linearBufferSize, bufferSize - readStart);
+			const unsigned int firstChunkLength = std::min(m_linearBufferSize, circularBufferSize - readStart);
 			const unsigned int secondChunkLength = m_linearBufferSize - firstChunkLength;
 
 			// Copy first chunk

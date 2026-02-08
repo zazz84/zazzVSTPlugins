@@ -1,30 +1,31 @@
+/*
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #pragma once
+
+#include <array>
 
 #include <JuceHeader.h>
 
-#include <array>
-#include "../../../zazzVSTPlugins/Shared/Utilities/CircularBuffers.h"
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/HighOrderBiquadFilter.h"
 
 //==============================================================================
-class CombFilter : public CircularBuffer
-{
-public:
-	CombFilter() = default;
-	~CombFilter() = default;
-
-	inline float process(const float in)
-	{
-		constexpr float FEEDBACK = 0.5f;
-		
-		write(in);
-		return FEEDBACK * (in - read());
-	};
-};
-
-//==============================================================================
-class CombFilterAudioProcessor  : public juce::AudioProcessor
+class HalfwaveSaturatorAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -32,25 +33,19 @@ class CombFilterAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    CombFilterAudioProcessor();
-    ~CombFilterAudioProcessor() override;
+    HalfwaveSaturatorAudioProcessor();
+    ~HalfwaveSaturatorAudioProcessor() override;
 
 	enum Parameters
-	{
-		Frequency,
-		Stages,
+    {
+        Drive,
 		LowCut,
-		HighCut,
-		Mix,
 		Volume,
-		COUNT
-	};
+        COUNT
+    };
 
-	static const int N_CHANNELS = 2;
-	static const ModernRotarySlider::ParameterDescription m_parametersDescritpion[];
-	static const int STAGES_MAX = 24;
-	static const int FREQUENY_MIN = 40;
-	static const int FREQUENY_MAX = 10000;
+    static const int N_CHANNELS = 2;
+    static const ModernRotarySlider::ParameterDescription m_parametersDescritpion[];
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -93,10 +88,9 @@ public:
 private:	
 	//==============================================================================
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
-	
-	CombFilter m_combFilter[N_CHANNELS][STAGES_MAX];
-	BiquadFilter m_lowCutFilter[N_CHANNELS];
-	BiquadFilter m_highCutFilter[N_CHANNELS];
+	std::array<ForthOrderHighPassFilter, N_CHANNELS> m_lowCutFilter;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CombFilterAudioProcessor)
+	std::unique_ptr<juce::dsp::Oversampling<float>> oversampler;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (HalfwaveSaturatorAudioProcessor)
 };
