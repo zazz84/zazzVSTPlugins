@@ -27,6 +27,10 @@ const ModernRotarySlider::ParameterDescription HalfwaveSaturatorAudioProcessor::
 	  " %",
 	  "Drive" },
 	
+	{ "Offset",
+	" dB",
+	"Offset" },
+
 	{ "Low Cut",
 	  " Hz",
 	  "Low Cut" },
@@ -140,11 +144,12 @@ void HalfwaveSaturatorAudioProcessor::prepareToPlay (double sampleRate, int samp
 		
 	oversampler->reset();
 	oversampler->initProcessing(samplesPerBlock);
+
+	setLatencySamples((int)oversampler->getLatencyInSamples());
 }
 
 void HalfwaveSaturatorAudioProcessor::releaseResources()
 {
-	
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -192,9 +197,13 @@ void HalfwaveSaturatorAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	const auto gain = juce::Decibels::decibelsToGain(parametersValues[Parameters::Volume]);
 	auto wetRaw = 0.01f * parametersValues[Parameters::Drive];								// Rescale to [0, 1]
 	wetRaw *= wetRaw;																		// Power of 2
-	wetRaw *= 0.6f;																		// Limit to wet maximum of 75%
-	const auto wet = gain * wetRaw;
+	wetRaw *= 0.6f;																		    // Limit to wet maximum of 75%
+	const auto biasGainCompensation = juce::Decibels::decibelsToGain((2.0f / 3.0f) * parametersValues[Parameters::Offset]);
+	const auto driveGainCompensation = juce::Decibels::decibelsToGain(3.0f * wetRaw);
+	const auto wet = driveGainCompensation * biasGainCompensation * gain * wetRaw;
 	const auto dry = gain * (1.0f - wetRaw);
+	//const auto offsetGain = parametersValues[Parameters::Offset] < 0.0f ? juce::Decibels::decibelsToGain(parametersValues[Parameters::Offset]) - 1.0f : 0.5f * juce::Decibels::decibelsToGain(parametersValues[Parameters::Offset]) - 0.5f;
+	const auto offsetGain = 0.5f * juce::Decibels::decibelsToGain(parametersValues[Parameters::Offset]) - 0.5f;
 
 	// --- Upsample ---
 	juce::dsp::AudioBlock<float> block(buffer);
@@ -212,7 +221,7 @@ void HalfwaveSaturatorAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 		int overSample = 0;
 
 		// Broadcast constants once
-		const __m128 vLo = _mm_set1_ps(0.0f);
+		const __m128 vLo = _mm_set1_ps(offsetGain);
 		const __m128 vDry = _mm_set1_ps(dry);
 		const __m128 vWet = _mm_set1_ps(wet);
 
@@ -220,34 +229,31 @@ void HalfwaveSaturatorAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 		for (; overSample <= overSamples - 4; overSample += 4)
 		{
 			// Load
-			__m128 x = _mm_loadu_ps(channelBuffer + overSample);
+			auto* firstSample = channelBuffer + overSample;
+			__m128 in = _mm_loadu_ps(firstSample);
 
 			// Half wave
-			__m128 clipped = _mm_max_ps(x, vLo);
+			__m128 clipped = _mm_max_ps(in, vLo);
 
 			// Dry / wet mix
-			__m128 out =
-				_mm_add_ps(
-					_mm_mul_ps(vDry, x),
-					_mm_mul_ps(vWet, clipped)
-				);
+			__m128 out = _mm_add_ps(_mm_mul_ps(vDry, in), _mm_mul_ps(vWet, clipped));
 
 			// Store
-			_mm_storeu_ps(channelBuffer + overSample, out);
+			_mm_storeu_ps(firstSample, out);
 		}
 
 		// Tail processing (remaining samples)
 		for (; overSample < overSamples; ++overSample)
 		{
 			float& in = channelBuffer[overSample];
-			const float clipped = in < 0.0f ? 0.0f : in;
+			const float clipped = in < offsetGain ? offsetGain : in;
 			in = dry * in + wet * clipped;
 		}
 #else
 		for (int overSample = 0; overSample < overSamples; ++overSample)
 		{
 			float& in = channelBuffer[overSample];
-			const float clipped = in < 0.0f ? 0.0f : in;
+			const float clipped = in < offsetGain ? offsetGain : in;
 			in = dry * in + wet * clipped;
 		}
 #endif
@@ -257,7 +263,7 @@ void HalfwaveSaturatorAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
 	oversampler->processSamplesDown(block);
 
 	// Low cut filter
-	if (parametersValues[Parameters::LowCut] > 20.0f)
+	if (parametersValues[Parameters::LowCut] > 20.0f || parametersValues[Parameters::Offset] > 0.0f)
 	{
 		for (int channel = 0; channel < channels; channel++)
 		{
@@ -309,6 +315,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout HalfwaveSaturatorAudioProces
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Drive].paramName, m_parametersDescritpion[Parameters::Drive].paramName, NormalisableRange<float>(0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Offset].paramName, m_parametersDescritpion[Parameters::Offset].paramName, NormalisableRange<float>(0.0f, 3.0f, 0.1f, 1.0f), 0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::LowCut].paramName, m_parametersDescritpion[Parameters::LowCut].paramName, NormalisableRange<float>(20.0f, 120.0f, 1.0f, 1.0f), 20.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>(-18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
 

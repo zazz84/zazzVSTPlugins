@@ -29,7 +29,7 @@ public:
 	HalfwaveSaturatorAudioProcessorEditor(HalfwaveSaturatorAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~HalfwaveSaturatorAudioProcessorEditor() override;
 
-	static const int SLIDER_COUNT = 3;
+	static const int SLIDER_COUNT = 4;
 	static const int CANVAS_WIDTH = 1 + 3 * SLIDER_COUNT + 1;
 	static const int CANVAS_HEIGHT = 2 + 4 + 1;
 	
@@ -48,6 +48,7 @@ protected:
 	PluginNameComponent m_pluginLabel;
 
 	ModernRotarySlider m_driveSlider;
+	ModernRotarySlider m_offsetSlider;
 	ModernRotarySlider m_lowCutSlider;
 	ModernRotarySlider m_volumeSlider;
 

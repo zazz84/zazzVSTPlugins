@@ -3,7 +3,7 @@
 <JUCERPROJECT id="CKfm5a" name="HalfwaveSaturator" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
               jucerFormatVersion="1" companyName="zazz" pluginFormats="buildVST3"
-              pluginVST3Category="Distortion">
+              pluginVST3Category="Distortion" version="1.0.1">
   <MAINGROUP id="zOa8xP" name="HalfwaveSaturator">
     <GROUP id="{A7E4CD65-F697-6EB3-668F-1CABB94B6DF4}" name="Source">
       <GROUP id="{F7E879FF-7896-32B3-2FB3-5FDF49534976}" name="Shared">

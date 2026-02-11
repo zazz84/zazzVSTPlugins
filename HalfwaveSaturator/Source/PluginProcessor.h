@@ -39,6 +39,7 @@ public:
 	enum Parameters
     {
         Drive,
+		Offset,
 		LowCut,
 		Volume,
         COUNT

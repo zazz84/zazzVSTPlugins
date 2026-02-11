@@ -24,6 +24,7 @@ HalfwaveSaturatorAudioProcessorEditor::HalfwaveSaturatorAudioProcessorEditor (Ha
 	audioProcessor (p),
 	valueTreeState(vts),
 	m_driveSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::Drive]),
+	m_offsetSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::Offset]),
 	m_lowCutSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::LowCut]),
 	m_volumeSlider(vts, HalfwaveSaturatorAudioProcessor::m_parametersDescritpion[HalfwaveSaturatorAudioProcessor::Parameters::Volume]),
 	m_pluginLabel("zazz::HalfwaveSaturator")
@@ -31,6 +32,7 @@ HalfwaveSaturatorAudioProcessorEditor::HalfwaveSaturatorAudioProcessorEditor (Ha
 	addAndMakeVisible(m_pluginLabel);
 
 	addAndMakeVisible(m_driveSlider);
+	addAndMakeVisible(m_offsetSlider);
 	addAndMakeVisible(m_lowCutSlider);
 	addAndMakeVisible(m_volumeSlider);
 
@@ -75,6 +77,7 @@ void HalfwaveSaturatorAudioProcessorEditor::resized()
 	m_pluginLabel.setSize(width, pixelSize2);
 
 	m_driveSlider.setSize(pixelSize3, pixelSize4);
+	m_offsetSlider.setSize(pixelSize3, pixelSize4);
 	m_lowCutSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
@@ -86,10 +89,12 @@ void HalfwaveSaturatorAudioProcessorEditor::resized()
 	const int column2 = column1 + pixelSize;
 	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize3;
+	const int column5 = column4 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
 	m_driveSlider.setTopLeftPosition	(column2, row2);
-	m_lowCutSlider.setTopLeftPosition	(column3, row2);
-	m_volumeSlider.setTopLeftPosition	(column4, row2);
+	m_offsetSlider.setTopLeftPosition		(column3, row2);
+	m_lowCutSlider.setTopLeftPosition	(column4, row2);
+	m_volumeSlider.setTopLeftPosition	(column5, row2);
 }
