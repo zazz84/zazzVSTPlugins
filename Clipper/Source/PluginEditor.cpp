@@ -2,14 +2,16 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-ClipperAudioProcessorEditor::ClipperAudioProcessorEditor (ClipperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor(&p),
+ClipperAudioProcessorEditor::ClipperAudioProcessorEditor(ClipperAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+	: AudioProcessorEditor(&p),
 	audioProcessor(p),
 	valueTreeState(vts),
-	m_typeSlider		(vts, ClipperAudioProcessor::paramsNames[0], ClipperAudioProcessor::paramsUnitNames[0], ClipperAudioProcessor::labelNames[0], { "Hard", "Slope", "Soft", "FoldBack", "Half", "ABS" }),
-	m_thresholdSlider	(vts, ClipperAudioProcessor::paramsNames[1], ClipperAudioProcessor::paramsUnitNames[1], ClipperAudioProcessor::labelNames[1]),
-	m_mixSlider			(vts, ClipperAudioProcessor::paramsNames[2], ClipperAudioProcessor::paramsUnitNames[2], ClipperAudioProcessor::labelNames[2]),
-	m_volumeSlider		(vts, ClipperAudioProcessor::paramsNames[3], ClipperAudioProcessor::paramsUnitNames[3], ClipperAudioProcessor::labelNames[3]),
+	m_typeSlider(vts, ClipperAudioProcessor::paramsNames[0], ClipperAudioProcessor::paramsUnitNames[0], ClipperAudioProcessor::labelNames[0], { "Hard", "Slope", "Soft", "FoldBack", "Half", "ABS", "Crisp" }),
+	m_thresholdSlider(vts, ClipperAudioProcessor::paramsNames[1], ClipperAudioProcessor::paramsUnitNames[1], ClipperAudioProcessor::labelNames[1]),
+	m_mixSlider(vts, ClipperAudioProcessor::paramsNames[2], ClipperAudioProcessor::paramsUnitNames[2], ClipperAudioProcessor::labelNames[2]),
+	m_volumeSlider(vts, ClipperAudioProcessor::paramsNames[3], ClipperAudioProcessor::paramsUnitNames[3], ClipperAudioProcessor::labelNames[3]),
+	m_oversampleButton(vts, "OS"),
+	m_postClipButton(vts, "PC"),
 	m_pluginLabel("zazz::Clipper"),
 	m_gainReductionMeter()
 {	
@@ -19,6 +21,11 @@ ClipperAudioProcessorEditor::ClipperAudioProcessorEditor (ClipperAudioProcessor&
 	addAndMakeVisible(m_thresholdSlider);
 	addAndMakeVisible(m_mixSlider);
 	addAndMakeVisible(m_volumeSlider);
+
+	addAndMakeVisible(m_oversampleButton);
+	addAndMakeVisible(m_postClipButton);
+	m_oversampleButton.setBorder(10);
+	m_postClipButton.setBorder(10);
 
 	addAndMakeVisible(m_gainReductionMeter);
 
@@ -55,7 +62,6 @@ void ClipperAudioProcessorEditor::timerCallback()
 {
 	const float peakReductiondB = audioProcessor.getPeakReductiondB();
 	m_gainReductionMeter.setLevel(peakReductiondB);
-
 	m_gainReductionMeter.repaint();
 }
 
@@ -82,13 +88,16 @@ void ClipperAudioProcessorEditor::resized()
 	m_mixSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
+	m_oversampleButton.setSize(pixelSize, pixelSize);
+	m_postClipButton.setSize(pixelSize, pixelSize);
+
 	m_gainReductionMeter.setSize(pixelSize2, pixelSize4 + pixelSize4);
 
 	//Set position
 	const int row1 = 0;
 	const int row2 = row1 + pixelSize2;
 	const int row3 = row2 + pixelSize4;
-	const int row4 = row3 + pixelSize4;
+	const int row4 = row3 + pixelSize4 + pixelSize / 4;
 
 	const int column1 = 0;
 	const int column2 = column1 + pixelSize;
@@ -102,6 +111,9 @@ void ClipperAudioProcessorEditor::resized()
 	m_thresholdSlider.setTopLeftPosition(column3, row2);
 	m_mixSlider.setTopLeftPosition		(column2, row3);
 	m_volumeSlider.setTopLeftPosition	(column3, row3);
+
+	m_oversampleButton.setTopLeftPosition(column2 + pixelSize, row4);
+	m_postClipButton.setTopLeftPosition(column3 + pixelSize, row4);
 
 	m_gainReductionMeter.setTopLeftPosition(column5, row2);
 }

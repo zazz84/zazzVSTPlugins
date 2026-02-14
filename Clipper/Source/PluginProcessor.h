@@ -18,7 +18,7 @@ public:
     ClipperAudioProcessor();
     ~ClipperAudioProcessor() override;
 
-	enum Type
+	enum ClipperType
 	{
 		None,
 		Hard,
@@ -27,9 +27,13 @@ public:
 		FoldBack,
 		HalfWay,
 		ABS,
+		Crisp,
 		COUNT
 	};
 
+	const static int N_CHANNELS = 2;
+	const static int OVERSAMPLING_FACTOR = 4;
+	const static int OVERSAMPLING_MULTIPLIER = 1 << OVERSAMPLING_FACTOR;
 	static const std::string paramsNames[];
 	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
@@ -86,15 +90,66 @@ public:
 	std::atomic<bool> m_guiIsOpen{ false };
 
 private:	
-	//==============================================================================	
-	SlopeClipper m_slopeClipper[2];
+	//==============================================================================
+	inline void clip(const Clippers::Params& params, const ClipperType type, const int channel, const int sampleRate)
+	{
+		if (type == ClipperType::Hard)
+		{
+			Clippers::HardBlock(params);
+		}
+		else if (type == ClipperType::Slope)
+		{
+			auto& slopeClipper = m_slopeClipper[channel];
+			slopeClipper.set(sampleRate);
 
-	float m_lastSample[2];
+			for (int sample = 0; sample < params.samples; sample++)
+			{
+				float& in = params.buffer[sample];
+				const float clipped = slopeClipper.process(in, params.threshold);
+				in = in + params.wet * (clipped - in);
+			}
+		}
+		else if (type == ClipperType::Soft)
+		{
+			Clippers::SoftBlock(params);
+		}
+		else if (type == ClipperType::FoldBack)
+		{
+			for (int sample = 0; sample < params.samples; sample++)
+			{
+				float& in = params.buffer[sample];
+				const float clipped = Clippers::FoldBack(in, params.threshold);
+				in = in + params.wet * (clipped - in);
+			}
+		}
+		else if (type == ClipperType::HalfWay)
+		{
+			Clippers::HalfWaveBlock(params);
+		}
+		else if (type == ClipperType::ABS)
+		{
+			Clippers::ABSBlock(params);
+		}
+		else if (type == ClipperType::Crisp)
+		{
+			Clippers::CrispBlock(params);
+		}
+	}
+
+	//==============================================================================	
+	std::unique_ptr<juce::dsp::Oversampling<float>> oversampler;
+	
+	SlopeClipper m_slopeClipper[N_CHANNELS];
+
+	float m_lastSample[N_CHANNELS];
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* thresholdParameter = nullptr;
 	std::atomic<float>* mixParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	juce::AudioParameterBool* button1Parameter = nullptr;
+	juce::AudioParameterBool* button2Parameter = nullptr;
 
 	float m_inputMax = 0.0f;
 	float m_outputMax = 0.0f;

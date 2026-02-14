@@ -8,10 +8,11 @@
     <GROUP id="{3D17F8D1-E590-C7DF-1F49-0BE25336F6DB}" name="Source">
       <GROUP id="{F75DFCCC-D844-6F82-B530-81F018852F78}" name="Shared">
         <FILE id="KVtNjN" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
-        <FILE id="uq76By" name="Helpers.h" compile="0" resource="0" file="../Shared/Utilities/Helpers.h"/>
         <FILE id="gLFJLD" name="Clippers.h" compile="0" resource="0" file="../Shared/NonLinearFilters/Clippers.h"/>
       </GROUP>
       <GROUP id="{705DB956-A556-7EEB-25CE-806248446160}" name="GUI">
+        <FILE id="U8Zn2k" name="ModernTextButton.h" compile="0" resource="0"
+              file="../Shared/GUI/ModernTextButton.h"/>
         <FILE id="IWN3Qt" name="ModernRotarySlider.h" compile="0" resource="0"
               file="../Shared/GUI/ModernRotarySlider.h"/>
         <FILE id="TCKYEK" name="TextModernRotarySlide.h" compile="0" resource="0"
@@ -40,6 +41,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -67,6 +69,7 @@
         <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>

@@ -36,6 +36,8 @@ public:
 
 	static const int N_CHANNELS = 2;
 	static const int N_STAGES = 8;
+	const static int OVERSAMPLING_FACTOR = 3;
+	const static int OVERSAMPLING_MULTIPLIER = 1 << OVERSAMPLING_FACTOR;
 	static const std::string paramsNames[];
 	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
@@ -80,13 +82,16 @@ public:
 
 private:	
 	//==============================================================================
-	TubeEmulation m_tubeEmulation[N_CHANNELS][N_STAGES];
+	std::unique_ptr<juce::dsp::Oversampling<float>> oversampler;
+	
 	BiquadFilter m_preFilter[N_STAGES];
 	BiquadFilter m_postFilter[N_STAGES];
 	BranchingEnvelopeFollower<float> m_envelopeFollower[N_STAGES];
 
 	std::atomic<float>* m_driveParameter = nullptr;
 	std::atomic<float>* m_volumeParameter = nullptr;
+
+	float* m_bias = nullptr;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TubePreampAudioProcessor)
 };

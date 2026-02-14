@@ -3,7 +3,7 @@
 <JUCERPROJECT id="i3TTnC" name="TubePreamp" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
-              version="1.2.0">
+              version="1.3.0">
   <MAINGROUP id="gAV9Un" name="TubePreamp">
     <GROUP id="{F320680C-B086-EF7F-9E4F-400CC5B75939}" name="Source">
       <FILE id="qofFBN" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
@@ -35,6 +35,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -62,6 +63,7 @@
         <MODULEPATH id="juce_graphics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/Program Files/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="C:/Program Files/JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE/modules"/>
       </MODULEPATHS>
     </VS2017>
   </EXPORTFORMATS>

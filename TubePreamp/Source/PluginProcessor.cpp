@@ -113,30 +113,48 @@ void TubePreampAudioProcessor::changeProgramName (int index, const juce::String&
 void TubePreampAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = int(sampleRate);
-	
-	const float frequency = std::fminf(19000.0f, (0.5f * 0.9f) * (float)sampleRate);
+	const float frequency = Math::fminf(19000.0f, (0.5f * 0.9f) * (float)sampleRate);
 
 	for (int channel = 0; channel < N_CHANNELS; channel++)
 	{
-		for (int stage = 0; stage < N_STAGES; stage++)
-		{
-			m_tubeEmulation[channel][stage].init(sr);
-		}
-
 		m_preFilter[channel].init(sr);
 		m_postFilter[channel].init(sr);
 
-		m_preFilter[channel].setHighPass(20.0f, 0.9f);
+		m_preFilter[channel].setHighPass(25.0f, 0.9f);
 		m_postFilter[channel].setLowPass(frequency, 0.9f);
 
 		m_envelopeFollower[channel].init(sr);
-		m_envelopeFollower[channel].set(10.0f, 100.0f);
+		m_envelopeFollower[channel].set(100.0f, 800.0f);
 	}
+
+	if (m_bias != nullptr)
+	{
+		delete[] m_bias;
+		m_bias = nullptr;
+	}
+
+	m_bias = new float[samplesPerBlock];
+
+	// Initialize  oversampling
+	oversampler = std::make_unique<juce::dsp::Oversampling<float>>(
+		getTotalNumOutputChannels(),					// number of channels
+		OVERSAMPLING_FACTOR,							// oversampling factor. E.g.2^4 = 16x
+		juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR,
+		true);											// use interpolation for better quality
+
+	oversampler->reset();
+	oversampler->initProcessing(samplesPerBlock);
+
+	setLatencySamples((int)oversampler->getLatencyInSamples());
 }
 
 void TubePreampAudioProcessor::releaseResources()
 {
-	
+	if (m_bias != nullptr)
+	{
+		delete[] m_bias;
+		m_bias = nullptr;
+	}
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -180,37 +198,77 @@ void TubePreampAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
 	const float drivePerStagedB = drivedB / (float)N_STAGES;
 	const float drivePerStage = juce::Decibels::decibelsToGain(drivePerStagedB);
 
+	// Upsample
+	juce::dsp::AudioBlock<float> block(buffer);
+	auto oversampledBlock = oversampler->processSamplesUp(block);
+
 	for (int channel = 0; channel < channels; channel++)
 	{
-		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
-
-		auto& tubeEmulation = m_tubeEmulation[channel];
-		auto& preFilter = m_preFilter[channel];
-		auto& postFilter = m_postFilter[channel];
 		auto& envelopeFollower = m_envelopeFollower[channel];
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Get input
-			const float in = channelBuffer[sample];
-
-			float out = in;
+			float& in = channelBuffer[sample];
 
 			const float envelope = envelopeFollower.process(drive * in);
 
-			const float bias = Math::remap(envelope, 0.1f, 0.6f, 0.00f, 0.15f);
+			//const float bias = Math::remap(envelope, 0.1f, 0.6f, 0.00f, 0.15f);
+			constexpr float xMin = 0.1f;
+			constexpr float xMax = 0.6f;
+			constexpr float yMin = 0.0f;
+			constexpr float yMax = 0.15f;
+			constexpr float slope = yMax / (xMax - xMin);	// 0.15 / 0.5
+			constexpr float offset = -0.03f;				// -0.1 * 0.3
+			float bias = envelope * slope + offset;
+			bias = Math::clamp(bias, yMin, yMax);
 
-			out = tubeEmulation[0].process(drivePerStage * out + bias);
-			out = tubeEmulation[1].process(drivePerStage * out - bias);
-			out = tubeEmulation[2].process(drivePerStage * out + bias);
-			out = tubeEmulation[3].process(drivePerStage * out - bias);
-			out = tubeEmulation[4].process(drivePerStage * out + bias);
-			out = tubeEmulation[5].process(drivePerStage * out - bias);
-			out = tubeEmulation[6].process(drivePerStage * out + bias);
-			out = tubeEmulation[7].process(drivePerStage * out - bias);
+			m_bias[sample] = bias;
+		}
+
+		auto* oversampleBuffer = oversampledBlock.getChannelPointer(channel);
+		
+		for (int sample = 0; sample < oversampledBlock.getNumSamples(); sample++)
+		{
+			// Get input
+			float& in = oversampleBuffer[sample];
+
+			const float bias = m_bias[sample / OVERSAMPLING_MULTIPLIER];
+
+			float out = in;
+			out = TubeEmulation::process(drivePerStage * out + bias);
+			out = TubeEmulation::process(drivePerStage * out - bias);
+			out = TubeEmulation::process(drivePerStage * out + bias);
+			out = TubeEmulation::process(drivePerStage * out - bias);
+			out = TubeEmulation::process(drivePerStage * out + bias);
+			out = TubeEmulation::process(drivePerStage * out - bias);
+			out = TubeEmulation::process(drivePerStage * out + bias);
+			out = TubeEmulation::process(drivePerStage * out - bias);
 			
-			channelBuffer[sample] = volume * postFilter.processDF1(preFilter.processDF1(out));
+			// Store output
+			in = out;
+		}
+	}
+
+	// Downsample
+	oversampler->processSamplesDown(block);
+
+	// LP + HP filters
+	for (int channel = 0; channel < channels; channel++)
+	{
+		auto* channelBuffer = buffer.getWritePointer(channel);
+
+		auto& preFilter = m_preFilter[channel];
+		auto& postFilter = m_postFilter[channel];
+
+		for (int sample = 0; sample < samples; sample++)
+		{
+			// Get input
+			float& in = channelBuffer[sample];
+
+			// Store output
+			in = volume * postFilter.processDF1(preFilter.processDF1(in));
 		}
 	}
 }

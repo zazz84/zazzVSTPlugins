@@ -4,6 +4,7 @@
 #include "PluginProcessor.h"
 
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernTextButton.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/TextModernRotarySlide.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GainReductionMeterComponent.h"
@@ -16,7 +17,7 @@ public:
     ~ClipperAudioProcessorEditor() override;
 
 	static const int CANVAS_WIDTH = 1 + 3 + 3 + 1 + 2 + 1;
-	static const int CANVAS_HEIGHT = 2 + 4 + 4 + 1;
+	static const int CANVAS_HEIGHT = 2 + 4 + 4 + 1 + 1;
 	
 	//==============================================================================
 	void timerCallback() override;
@@ -37,6 +38,9 @@ protected:
 	ModernRotarySlider m_thresholdSlider;
 	ModernRotarySlider m_mixSlider;
 	ModernRotarySlider m_volumeSlider;
+
+	ModernTextButton m_oversampleButton;
+	ModernTextButton m_postClipButton;
 
 	GainReductionMeterComponent m_gainReductionMeter;
 

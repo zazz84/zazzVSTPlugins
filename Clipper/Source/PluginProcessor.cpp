@@ -1,4 +1,4 @@
-/*
+﻿/*
   ==============================================================================
 
     This file contains the basic framework code for a JUCE plugin processor.
@@ -12,15 +12,6 @@
 #include <juce_core/juce_core.h>
 
 //==============================================================================
-#define PROCESS_CLIPPER(CLIPPER)												    \
-    for (int sample = 0; sample < samples; sample++){                               \
-        float& in = channelBuffer[sample];                                          \
-        const float out = CLIPPER(in, threshold);                                   \
-        in = dry * in + wet * out;												\
-    }
-
-//==============================================================================
-
 const std::string ClipperAudioProcessor::paramsNames[] = { "Type", "Threshold", "Mix", "Volume" };
 const std::string ClipperAudioProcessor::labelNames[] =  { "Type", "Threshold", "Mix", "Volume" };
 const std::string ClipperAudioProcessor::paramsUnitNames[] = { "", " dB", " %", " dB" };
@@ -42,6 +33,9 @@ ClipperAudioProcessor::ClipperAudioProcessor()
 	thresholdParameter = apvts.getRawParameterValue(paramsNames[1]);
 	mixParameter       = apvts.getRawParameterValue(paramsNames[2]);
 	volumeParameter    = apvts.getRawParameterValue(paramsNames[3]);
+
+	button1Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("OS"));
+	button2Parameter = static_cast<juce::AudioParameterBool*>(apvts.getParameter("PC"));
 }
 
 ClipperAudioProcessor::~ClipperAudioProcessor()
@@ -113,10 +107,17 @@ void ClipperAudioProcessor::changeProgramName (int index, const juce::String& ne
 //==============================================================================
 void ClipperAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	const int sr = (int)sampleRate;
+	// Initialize  oversampling
+	oversampler = std::make_unique<juce::dsp::Oversampling<float>>(
+		getTotalNumOutputChannels(),					// number of channels
+		OVERSAMPLING_FACTOR,							// oversampling factor. E.g.2^4 = 16x
+		juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR,
+		true);											// use interpolation for better quality
 
-	m_slopeClipper[0].init(sr);
-	m_slopeClipper[1].init(sr);
+	oversampler->reset();
+	oversampler->initProcessing(samplesPerBlock);
+
+	setLatencySamples((int)oversampler->getLatencyInSamples());
 }
 
 void ClipperAudioProcessor::releaseResources()
@@ -155,96 +156,64 @@ void ClipperAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 	juce::ScopedNoDenormals noDenormals;
 	
 	// Get params
-	const auto type = typeParameter->load();
+	const auto type = static_cast<ClipperType>((int)typeParameter->load());
 	const auto threshold = juce::Decibels::decibelsToGain(thresholdParameter->load());
-	const auto thresholdLow = -threshold;
-	const auto gain = juce::Decibels::decibelsToGain(volumeParameter->load());
-	const auto temp = 0.01f * mixParameter->load();
-	const auto wet = gain * temp;
-	const auto dry = gain * (1.0f - temp);
+	const auto wet = 0.01f * mixParameter->load();
+	const auto oversample = button1Parameter->get();
+	const auto postClip = button2Parameter->get();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
-	const auto samples = buffer.getNumSamples();
 	const auto guiIsOpen = m_guiIsOpen.load();
+	const int samples = buffer.getNumSamples();
 
-	// Get input maximum
+	// Get input peak
 	if (guiIsOpen)
 	{
-		const float inputMax = std::fabsf(buffer.getMagnitude(0, samples));
-		if (inputMax > m_inputMax)
-		{
-			m_inputMax = inputMax;
-		}
+		m_inputMax = Math::fmaxf(std::fabsf(buffer.getMagnitude(0, samples)), m_inputMax);
 	}
 
-	for (int channel = 0; channel < channels; channel++)
+	if (oversample)
 	{
-		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
-				
-		if (type == Type::Hard)
-		{			
-#if JUCE_USE_SSE_INTRINSICS
-			Clippers::HardClipSSE(channelBuffer, samples, -threshold, threshold, dry, wet);
-#else
-			for (int sample = 0; sample < samples; ++sample)
-			{
-				float& in = channelBuffer[sample];
-				const float a = in < thresholdLow ? thresholdLow : in;
-				const float out = a > threshold ? threshold : a;
-				in = dry * in + wet * out;
-			}
-#endif		
-		}
-		else if (type == Type::Slope)
-		{
-			auto& slopeClipper = m_slopeClipper[channel];
+		// Upsample
+		juce::dsp::AudioBlock<float> block(buffer);
+		auto oversampledBlock = oversampler->processSamplesUp(block);
 
-			for (int sample = 0; sample < samples; sample++)
+		for (int channel = 0; channel < channels; channel++)
+		{
+			const Clippers::Params params{ threshold, wet, oversampledBlock.getChannelPointer(channel), oversampledBlock.getNumSamples() };
+			clip(params, type, channel, (int)getSampleRate() * OVERSAMPLING_MULTIPLIER);
+		}
+
+		// Downsample
+		oversampler->processSamplesDown(block);
+
+		// Post clip
+		if (postClip)
+		{
+			for (int channel = 0; channel < channels; channel++)
 			{
-				float& in = channelBuffer[sample];
-				const float out = slopeClipper.process(in, threshold);
-				in = dry * in + wet * out;
-			}
-		}
-		else if (type == Type::Soft)
-		{
-			PROCESS_CLIPPER(Clippers::SoftClip)
-		}
-		else if (type == Type::FoldBack)
-		{
-			PROCESS_CLIPPER(Clippers::FoldBack)
-		}
-		else if (type == Type::HalfWay)
-		{
-#if JUCE_USE_SSE_INTRINSICS
-			Clippers::HardClipSSE(channelBuffer, samples, 0.0f, threshold, dry, wet);
-#else
-			for (int sample = 0; sample < samples; ++sample)
-			{
-				float& in = channelBuffer[sample];
-				const float a = in < 0.0f ? 0.0f : in;
-				const float out = a > threshold ? threshold : a;
-				in = dry * in + wet * out;
-			}
-#endif
-		}
-		else if (type == Type::ABS)
-		{
-			PROCESS_CLIPPER(Clippers::ABS)
+				const Clippers::Params params{ threshold, wet, buffer.getWritePointer(channel), samples };
+				Clippers::HardBlock(params);
+			};
 		}
 	}
-
-	// Get output maximum
+	else
+	{
+		for (int channel = 0; channel < channels; channel++)
+		{
+			const Clippers::Params params{ threshold, wet, buffer.getWritePointer(channel), samples };
+			clip(params, type, channel, (int)getSampleRate());
+		}
+	}
+	
+	// Get output peak
 	if (guiIsOpen)
 	{
-		const float outputMax = std::fabsf(buffer.getMagnitude(0, samples));
-		if (outputMax > m_outputMax)
-		{
-			m_outputMax = outputMax;
-		}
+		m_outputMax = Math::fmaxf(std::fabsf(buffer.getMagnitude(0, samples)), m_outputMax);
 	}
+
+	buffer.applyGain(juce::Decibels::decibelsToGain(volumeParameter->load()));
 }
 
 //==============================================================================
@@ -281,12 +250,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout ClipperAudioProcessor::creat
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,   6.0f,  1.0f, 1.0f),   1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,   7.0f,  1.0f, 1.0f),   1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -60.0f,   0.0f,  1.0f, 1.0f),   0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.0f, 100.0f,  1.0f, 1.0f), 100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -18.0f,  18.0f,  1.0f, 1.0f),   0.0f));
 
-	layout.add(std::make_unique<juce::AudioParameterBool>("OS", "OS", true));
+	layout.add(std::make_unique<juce::AudioParameterBool>("OS", "OS", false));
+	layout.add(std::make_unique<juce::AudioParameterBool>("PC", "PC", false));
 
 	return layout;
 }

@@ -1,70 +1,78 @@
-#pragma once
+/*
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
-#include <cstdint>
-#include <type_traits>
+#pragma once
 
 #include <cmath>
 
 namespace Math
 {
-
 	//==============================================================================
-    inline float fabsf(float value)
+	__forceinline float fabsf(const float value) noexcept
     {
-        constexpr uint32_t mask = 0x7FFFFFFF;                          // Mask to clear the sign bit
-        uint32_t intValue = *reinterpret_cast<uint32_t*>(&value);      // Reinterpret float as uint32_t
-        intValue &= mask;                                              // Clear the sign bit
-        return *reinterpret_cast<float*>(&intValue);                   // Reinterpret back to float
+		uint32_t i;
+		std::memcpy(&i, &value, sizeof(float));
+		i &= 0x7FFFFFFFu;
+
+		float out;
+		std::memcpy(&out, &i, sizeof(float));
+		return out;
     }
 
 	//==============================================================================
-	template <typename T>
-	inline T abs(T value)
+	__forceinline constexpr float clamp(const float value, const float min, const float max) noexcept
 	{
-		static_assert(std::is_floating_point_v<T>, "fastAbs only supports floating-point types.");
-
-		using IntType = typename std::conditional_t<sizeof(T) == 4, uint32_t,
-			typename std::conditional_t<sizeof(T) == 8, uint64_t, uint128_t>>;
-
-		constexpr IntType mask = static_cast<IntType>(~(static_cast<IntType>(1) << (sizeof(T) * 8 - 1)));
-		IntType intValue = *reinterpret_cast<IntType*>(&value);                                             // Reinterpret as integer
-		intValue &= mask;                                                                                   // Clear the sign bit
-		return *reinterpret_cast<T*>(&intValue);                                                            // Reinterpret back to floating-point
+		const float t = value < min ? min : value;
+		return t > max ? max : t;
 	}
 
 	//==============================================================================
-	inline float clamp(float val, float minval, float maxval)
+	__forceinline constexpr int clampInt(const int value, const int min, const int max) noexcept
 	{
-		const float t = val < minval ? minval : val;
-		return t > maxval ? maxval : t;
-	}
-	//==============================================================================
-	inline int clampInt(int val, int minval, int maxval)
-	{
-		const int t = val < minval ? minval : val;
-		return t > maxval ? maxval : t;
+		const int t = value < min ? min : value;
+		return t > max ? max : t;
 	}
 
 	//==============================================================================
-	inline float fminf(const float a, const float b)
+	__forceinline constexpr float fminf(const float a, const float b) noexcept
 	{
 		return a > b ? b : a;
 	}
 
 	//==============================================================================
-	inline float fmaxf(const float a, const float b)
+	__forceinline constexpr float fmaxf(const float a, const float b) noexcept
 	{
 		return a > b ? a : b;
+	}
+
+	//==============================================================================
+	__forceinline constexpr float sign(const float value) noexcept
+	{
+		return value > 0.0f ? 1.0f : -1.0f;
 	}
 	
 	//==============================================================================
 	// This is a fast approximation to log2()
 	// Y = C[0]*F*F*F + C[1]*F*F + C[2]*F + C[3] + E;
-	inline float log2(float x)
+	__forceinline float log2Approx(const float value) noexcept
 	{
 		float Y, F;
 		int E;
-		F = frexpf(Math::fabsf(x), &E);
+		F = frexpf(Math::fabsf(value), &E);
 		Y = 1.23149591368684f;
 		Y *= F;
 		Y += -4.11852516267426f;
@@ -79,63 +87,42 @@ namespace Math
 
 	//==============================================================================
 	// log10f is exactly log2(x) / log2(10.0f)
-	inline float log10(const float x)
+	__forceinline float log10Approx(const float value) noexcept
 	{
-		return Math::log2(x) * 0.3010299956639812f;
+		return Math::log2Approx(value) * 0.3010299956639812f;
 	}
 
 	//==============================================================================
-	//powf(10.f,x) is exactly exp(log(10.0f)*x)
-	inline float pow10(const float x)
+	// powf(10.f,x) is exactly exp(log(10.0f)*x)
+	__forceinline float pow10(const float value) noexcept
 	{
-		return std::expf(2.302585092994046f * x);
-	}
-
-	// Fast power-of-10 approximation, with RMS error of 1.77%. 
-	// This approximation developed by Nicol Schraudolph (Neural Computation vol 11, 1999).  
-	// Adapted for 32-bit floats by Lippold Haken of Haken Audio, April 2010.
-	// Set float variable's bits to integer expression.
-	// f=b^f is approximated by
-	//   (int)f = f*0x00800000*log(b)/log(2) + 0x3F800000-60801*8
-	// f=10^f is approximated by
-	//   (int)f = f*27866352.6 + 1064866808.0
-	/*inline float pow10(float f)
-	{
-		*(int *)&f = f * 27866352.6f + 1064866808.0f;
-		return f;
-	}*/
-
-	//==============================================================================
-	inline float dBToGain(float dB)
-	{
-		//return dB > -100.0f ? std::pow(10.0f, (1.0f / 20.0f) * dB) : 0.0f;
-		return dB > -100.0f ? Math::pow10((1.0f / 20.0f) * dB) : 0.0f;
+		return std::expf(2.302585092994046f * value);
 	}
 
 	//==============================================================================
-	inline float gainTodB(float gain)
+	__forceinline float dBToGain(float dB) noexcept
 	{
-		//return gain > 0.00001f ? 20.0f * std::log10(gain) : -100.0f;
-		return gain > 0.00001f ? 20.0f * Math::log10(gain) : -100.0f;
+		constexpr float DB_TO_GAIN = 0.05f;
+		return dB > -100.0f ? Math::pow10(DB_TO_GAIN * dB) : 0.0f;
 	}
 
 	//==============================================================================
-	// fast log aproximation for input (0.0f, 1.0f)
-	// -45dB = 0 gain
-	inline float gainTodBAprox(const float x)
+	__forceinline float gainTodBAprox(float gain) noexcept
 	{
-		return 5.0f - (5.0f / (x + 0.1f));
+		return gain > 0.00001f ? 20.0f * Math::log10Approx(gain) : -100.0f;
 	}
 
 	//==============================================================================
-	// Aproximation for dB > 0
-	inline float dBToGainAprox(float dB)
+	// Fast proximation for input (0.0f, 1.0f), where -45db = 0.0f
+	__forceinline float gain01TodBApprox(const float gain) noexcept
 	{
-		return 1.0f + 0.02f * dB * dB;
+		return 5.0f - (5.0f / (gain + 0.1f));
 	}
 
 	//==============================================================================
-	inline float remap(float value, float inMin, float inMax, float outMin, float outMax)
+	// No safety checks
+	// inMin must be < inMax
+	__forceinline float remap(float value, float inMin, float inMax, float outMin, float outMax) noexcept
 	{
 		if (value <= inMin)
 		{
@@ -152,52 +139,35 @@ namespace Math
 	};
 
 	//==============================================================================
-	/*inline float fast_exp(float p)
-	{
-	    union
-	    {
-	        float f;
-	        int32_t i;
-	    } reinterpreter;
-
-	    reinterpreter.i = (int32_t)(12102203.0f * p) + 127 * (1 << 23);
-	    int32_t m = (reinterpreter.i >> 7) & 0xFFFF; // Copy mantissa
-	    
-	    // Empirical values for small maximum relative error (1.21e-5):
-	    reinterpreter.i += (((((((((((3537 * m) >> 16) + 13668) * m) >> 18) + 15817) * m) >> 14) - 80470) * m) >> 11);
-	    return reinterpreter.f;
-	}*/
-
-	//==============================================================================
-	inline float frequenyToMel(const float frequency)
+	__forceinline float frequencyToMel(const float frequency) noexcept
 	{
 		return 1127.0f * std::log(1.0f + frequency / 700.0f);
 	};
 
 	//==============================================================================
-	inline float melToFrequency(const float mel)
+	__forceinline float melToFrequency(const float mel) noexcept
 	{
 		return 700.0f * (std::expf(mel / 1127.0f) - 1.0f);
 	}
 
 	//==============================================================================
-	inline float shiftFrequency(float frequency, float semitones)
+	__forceinline float shiftFrequency(float frequency, float semitones) noexcept
 	{
-		return frequency * std::powf(2.0f, semitones / 12.0f);
+		return frequency * std::exp2f(semitones / 12.0f);
 	}
 
 	//==============================================================================
-	inline float noteToFrequency(int midiNoteNumber)
+	__forceinline float noteToFrequency(int midiNoteNumber) noexcept
 	{
-		return 440.0f * std::pow(2.0f, (float)(midiNoteNumber - 69) / 12.0f);
+		return 440.0f * std::exp2f((float)(midiNoteNumber - 69) / 12.0f);
 	}
 	//==============================================================================
-	__forceinline bool almostEquals(const float a, const float b, const float epsilon)
+	__forceinline bool almostEquals(const float a, const float b, const float epsilon = 0.001f) noexcept
 	{
 		return fabsf(a - b) < epsilon;
 	}
 	//==============================================================================
-	__forceinline float getAmplitudeAttenuation(const float distance, const float factor, const float innerRange)
+	__forceinline constexpr float getAmplitudeAttenuation(const float distance, const float factor, const float innerRange) noexcept
 	{
 		if (distance <= innerRange)
 		{

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,29 @@
 
 #pragma once
 
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/Clippers.h"
-#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/WaveShapers.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 
 class TubeEmulation
 {
 public:
-	TubeEmulation() = default;
-	~TubeEmulation() = default;
+	inline static float process(float in) noexcept
+	{
+		float out = in;
 
-	inline void init(int sampleRate)
-	{
-		m_clipper.init(sampleRate);
-	};
-	inline float process(float in)
-	{
-		float out = m_clipper.process(in);
-		out = 0.675f * Waveshapers::ARRY(out);
+		// Soft clipper
+		constexpr float softClipperRatio = 0.3f;		// The small, the more hard clipping
+		constexpr float softClipperThreshold = 0.8913;	// -1dB
+
+		if (const float inAbs = Math::fabsf(in); inAbs > softClipperThreshold)
+		{
+			const float sign = Math::sign(in);
+			out = softClipperThreshold + (inAbs - softClipperThreshold) * softClipperRatio;
+			out *= sign;
+		}
+			
+		// ARRY waveshaper
+		out = out * (1.0f - (1.0f / 3.0f) * (out * out));
+
 		return out;
 	};
-
-private:
-	SoftClipper m_clipper;
 };
