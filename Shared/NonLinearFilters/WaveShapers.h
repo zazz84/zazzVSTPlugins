@@ -153,6 +153,11 @@ public:
 		return 1.5f * in * (1.0f - (1.0f / 3.0f) * (in * in));
 	};
 
+	inline static cubic(float in)
+	{
+		return in - (1.0f / 3.0f) * in * in * in;
+	}
+
 	inline static float ReciprocalQuadratic(float in, float drive)
 	{
 		const float driveAdjusted = 0.25f * drive;

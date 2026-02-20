@@ -29,6 +29,19 @@ public:
 	{
 		return Math::clamp(in, -threshold, threshold);
 	}
+	inline static float HardRatio(const float in, const float threshold, const float ratio)
+	{
+	  if (in > threshold)
+	  {
+	    return threshold + (in - threshold) * ratio;
+	  }
+	  else if (in < -threshold)
+	  {
+	    return -(threshold + (-in - threshold) * ratio);
+	  }
+
+	  return in;
+	}
 	// Different algorithm than SoftBlock
 	inline static float Soft(const float in, float const threshold) noexcept
 	{

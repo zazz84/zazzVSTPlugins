@@ -22,9 +22,10 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/NonLinearFilters/PhaseDistortion.h"
 
 //==============================================================================
-class MyPluginNameAudioProcessor  : public juce::AudioProcessor
+class PhaseDistortionAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -32,12 +33,15 @@ class MyPluginNameAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    MyPluginNameAudioProcessor();
-    ~MyPluginNameAudioProcessor() override;
+    PhaseDistortionAudioProcessor();
+    ~PhaseDistortionAudioProcessor() override;
 
 	enum Parameters
     {
-        Volume,
+        Drive,
+		Tone,
+		Mix,
+		Volume,
         COUNT
     };
 
@@ -84,28 +88,29 @@ public:
 
 private:	
 	//==============================================================================
-    float getParameterValue(const Parameters parameter) { return m_parameterValues[static_cast<size_t>(parameter)]; };
-    bool loadParameters() noexcept
-    {
-        bool changed = false;
+	float getParameterValue(const Parameters parameter) { return m_parameterValues[static_cast<size_t>(parameter)]; };
+	bool loadParameters() noexcept
+	{
+		bool parametersChanged = false;
 
-        for (int i = 0; i < Parameters::COUNT; i++)
-        {
-            float newValue = m_parameters[i]->load();
+		for (int i = 0; i < Parameters::COUNT; i++)
+		{
+			float newValue = m_parameters[i]->load();
 
-            if (fabsf(newValue - m_parameterValues[i]) > 1e-6f)
-            {
-                m_parameterValues[i] = newValue;
-                changed = true;
-            }
-        }
+			if (fabsf(newValue - m_parameterValues[i]) > 1e-6f)
+			{
+				m_parameterValues[i] = newValue;
+				parametersChanged = true;
+			}
+		}
 
-        return changed;
-    }
+		return parametersChanged;
+	}
 
-    //==============================================================================
-
+	//==============================================================================
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
+	std::array<float, Parameters::COUNT> m_parameterValues;
+	std::array<PhaseDistortion, N_CHANNELS> m_phaseDistortion;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaseDistortionAudioProcessor)
 };
