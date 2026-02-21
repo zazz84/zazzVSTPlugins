@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,9 +22,10 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/PhaseModulator.h"
 
 //==============================================================================
-class MyPluginNameAudioProcessor  : public juce::AudioProcessor
+class PhaseModulatorAudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -32,11 +33,15 @@ class MyPluginNameAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    MyPluginNameAudioProcessor();
-    ~MyPluginNameAudioProcessor() override;
+    PhaseModulatorAudioProcessor();
+    ~PhaseModulatorAudioProcessor() override;
 
 	enum Parameters
     {
+        Depth,
+        Frequency,
+		Feedback,
+        Mix,
         Volume,
         COUNT
     };
@@ -104,8 +109,9 @@ private:
     }
 
     //==============================================================================
-    std::array<float, Parameters::COUNT> m_parameterValues;
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
+	std::array<float, Parameters::COUNT> m_parameterValues;
+	std::array<PhaseModulator, N_CHANNELS> m_phaseModulator;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaseModulatorAudioProcessor)
 };

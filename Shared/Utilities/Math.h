@@ -178,4 +178,24 @@ namespace Math
 			return factor / (distance - innerRange + factor);
 		}
 	}
+
+	//==============================================================================
+	// Returns peak position in range [-1, 1]
+	__forceinline float quadraticInterpolationOffset(const float a, const float b, const float c) noexcept
+	{
+		const float denn = a - 2.0f * b + c;
+		if (Math::almostEquals(denn, 0.0f))
+		{
+			return 0.0f;
+		}
+		
+		return 0.5f * (a - c) / denn;
+	}
+
+	//==============================================================================	
+	// Returns extimated intersample peak value
+	__forceinline float quadraticInterpolationValue(const float a, const float b, const float  c) noexcept
+	{
+		return b - 0.25f * (a - c) * quadraticInterpolationOffset(a, b, c);
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,15 +19,23 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MyPluginNameAudioProcessorEditor::MyPluginNameAudioProcessorEditor (MyPluginNameAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+PhaseModulatorAudioProcessorEditor::PhaseModulatorAudioProcessorEditor (PhaseModulatorAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p),
 	audioProcessor (p),
 	valueTreeState(vts),
-	m_volumeSlider(vts, MyPluginNameAudioProcessor::m_parametersDescritpion[MyPluginNameAudioProcessor::Parameters::Volume]),
-	m_pluginLabel("zazz::MyPluginName")
+	m_depthSlider(vts, PhaseModulatorAudioProcessor::m_parametersDescritpion[PhaseModulatorAudioProcessor::Parameters::Depth]),
+	m_frequencySlider(vts, PhaseModulatorAudioProcessor::m_parametersDescritpion[PhaseModulatorAudioProcessor::Parameters::Frequency]),
+	m_feedbackSlider(vts, PhaseModulatorAudioProcessor::m_parametersDescritpion[PhaseModulatorAudioProcessor::Parameters::Feedback]),
+	m_mixSlider(vts, PhaseModulatorAudioProcessor::m_parametersDescritpion[PhaseModulatorAudioProcessor::Parameters::Mix]),
+	m_volumeSlider(vts, PhaseModulatorAudioProcessor::m_parametersDescritpion[PhaseModulatorAudioProcessor::Parameters::Volume]),
+	m_pluginLabel("zazz::PhaseModulator")
 {	
 	addAndMakeVisible(m_pluginLabel);
 
+	addAndMakeVisible(m_depthSlider);
+	addAndMakeVisible(m_frequencySlider);
+	addAndMakeVisible(m_feedbackSlider);
+	addAndMakeVisible(m_mixSlider);
 	addAndMakeVisible(m_volumeSlider);
 
 	setResizable(true, true);
@@ -47,17 +55,17 @@ MyPluginNameAudioProcessorEditor::MyPluginNameAudioProcessorEditor (MyPluginName
 	}
 }
 
-MyPluginNameAudioProcessorEditor::~MyPluginNameAudioProcessorEditor()
+PhaseModulatorAudioProcessorEditor::~PhaseModulatorAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void MyPluginNameAudioProcessorEditor::paint (juce::Graphics& g)
+void PhaseModulatorAudioProcessorEditor::paint (juce::Graphics& g)
 {
 	g.fillAll(darkColor);
 }
 
-void MyPluginNameAudioProcessorEditor::resized()
+void PhaseModulatorAudioProcessorEditor::resized()
 {
 	const int width = getWidth();
 	const int height = getHeight();
@@ -70,6 +78,10 @@ void MyPluginNameAudioProcessorEditor::resized()
 	// Set size
 	m_pluginLabel.setSize(width, pixelSize2);
 
+	m_depthSlider.setSize(pixelSize3, pixelSize4);
+	m_frequencySlider.setSize(pixelSize3, pixelSize4);
+	m_feedbackSlider.setSize(pixelSize3, pixelSize4);
+	m_mixSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
 	//Set position
@@ -77,9 +89,17 @@ void MyPluginNameAudioProcessorEditor::resized()
 	const int row2 = pixelSize2;
 
 	const int column1 = 0;
-	const int column2 = pixelSize;
+	const int column2 = column1 + pixelSize;
+	const int column3 = column2 + pixelSize3;
+	const int column4 = column3 + pixelSize3;
+	const int column5 = column4 + pixelSize3;
+	const int column6 = column5 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
-	m_volumeSlider.setTopLeftPosition	(column2, row2);
+	m_depthSlider.setTopLeftPosition(column2, row2);
+	m_frequencySlider.setTopLeftPosition(column3, row2);
+	m_feedbackSlider.setTopLeftPosition(column4, row2);
+	m_mixSlider.setTopLeftPosition(column5, row2);
+	m_volumeSlider.setTopLeftPosition(column6, row2);
 }

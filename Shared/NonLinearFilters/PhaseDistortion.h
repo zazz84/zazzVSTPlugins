@@ -43,7 +43,7 @@ public:
     }
 
 private:
-	HilbertFilter m_hilbert;
+	HilbertFilterIIR m_hilbert;
 	BiquadFilter m_filter;
     float k = 1.0f;
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,13 +23,14 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 //==============================================================================
-class MyPluginNameAudioProcessorEditor : public juce::AudioProcessorEditor
+class PhaseModulatorAudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-    MyPluginNameAudioProcessorEditor (MyPluginNameAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~MyPluginNameAudioProcessorEditor() override;
+    PhaseModulatorAudioProcessorEditor (PhaseModulatorAudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~PhaseModulatorAudioProcessorEditor() override;
 
-	static const int CANVAS_WIDTH = 1 + 3 + 1;
+	static const int SLIDES_COUNT = 5;
+	static const int CANVAS_WIDTH = 1 + SLIDES_COUNT * 3 + 1;
 	static const int CANVAS_HEIGHT = 2 + 4 + 1;
 	
 	//==============================================================================
@@ -40,17 +41,21 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    MyPluginNameAudioProcessor& audioProcessor;
+    PhaseModulatorAudioProcessor& audioProcessor;
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
 	PluginNameComponent m_pluginLabel;
 
+	ModernRotarySlider m_depthSlider;
+	ModernRotarySlider m_frequencySlider;
+	ModernRotarySlider m_feedbackSlider;
+	ModernRotarySlider m_mixSlider;
 	ModernRotarySlider m_volumeSlider;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
 	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MyPluginNameAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PhaseModulatorAudioProcessorEditor)
 };

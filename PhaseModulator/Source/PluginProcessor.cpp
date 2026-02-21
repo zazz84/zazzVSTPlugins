@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,15 +20,31 @@
 
 //==============================================================================
 
-const ModernRotarySlider::ParameterDescription MyPluginNameAudioProcessor::m_parametersDescritpion[] =
+const ModernRotarySlider::ParameterDescription PhaseModulatorAudioProcessor::m_parametersDescritpion[] =
 {
-    { "Volume",
+	{ "Depth",
+	  " %",
+	  "Depth" },
+
+	{ "Frequency",
+	  " Hz",
+	  "Frequency" },
+
+	{ "Feedback",
+	" %",
+	"Feedback" },
+
+	{ "Mix",
+	  " %",
+	  "Mix" },
+
+	{ "Volume",
       " dB",
       "Volume" }
 };
 
 //==============================================================================
-MyPluginNameAudioProcessor::MyPluginNameAudioProcessor()
+PhaseModulatorAudioProcessor::PhaseModulatorAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -46,17 +62,17 @@ MyPluginNameAudioProcessor::MyPluginNameAudioProcessor()
     }
 }
 
-MyPluginNameAudioProcessor::~MyPluginNameAudioProcessor()
+PhaseModulatorAudioProcessor::~PhaseModulatorAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String MyPluginNameAudioProcessor::getName() const
+const juce::String PhaseModulatorAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool MyPluginNameAudioProcessor::acceptsMidi() const
+bool PhaseModulatorAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -65,7 +81,7 @@ bool MyPluginNameAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool MyPluginNameAudioProcessor::producesMidi() const
+bool PhaseModulatorAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -74,7 +90,7 @@ bool MyPluginNameAudioProcessor::producesMidi() const
    #endif
 }
 
-bool MyPluginNameAudioProcessor::isMidiEffect() const
+bool PhaseModulatorAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -83,48 +99,53 @@ bool MyPluginNameAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double MyPluginNameAudioProcessor::getTailLengthSeconds() const
+double PhaseModulatorAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int MyPluginNameAudioProcessor::getNumPrograms()
+int PhaseModulatorAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int MyPluginNameAudioProcessor::getCurrentProgram()
+int PhaseModulatorAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void MyPluginNameAudioProcessor::setCurrentProgram (int index)
+void PhaseModulatorAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String MyPluginNameAudioProcessor::getProgramName (int index)
+const juce::String PhaseModulatorAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void MyPluginNameAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void PhaseModulatorAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void MyPluginNameAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void PhaseModulatorAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
 	const int sr = (int)sampleRate;
+
+	for (int channel = 0; channel < N_CHANNELS; channel++)
+	{
+		m_phaseModulator[channel].init(sr);
+	}
 }
 
-void MyPluginNameAudioProcessor::releaseResources()
+void PhaseModulatorAudioProcessor::releaseResources()
 {
 	
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool MyPluginNameAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool PhaseModulatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -149,54 +170,60 @@ bool MyPluginNameAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void MyPluginNameAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void PhaseModulatorAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
 
-    loadParameters();
+	loadParameters();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
 	const auto samples = buffer.getNumSamples();
+	const auto wet = 0.01f * getParameterValue(Parameters::Mix);
 
 	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
 		auto* channelBuffer = buffer.getWritePointer(channel);
+		auto& phaseModulator = m_phaseModulator[channel];
+		phaseModulator.set(getParameterValue(Parameters::Frequency), 0.01f * getParameterValue(Parameters::Depth), 0.0098f * getParameterValue(Parameters::Feedback));
 
 		for (int sample = 0; sample < samples; sample++)
 		{
 			// Read
 			const float in = channelBuffer[sample];
+
+			// Phase modulator
+			const float out = phaseModulator.process(in);
 		
 			//Out
-			channelBuffer[sample] = in;
+			channelBuffer[sample] = in + wet * (out - in);
 		}
 	}
 
-	buffer.applyGain(juce::Decibels::decibelsToGain(parametersValues[Parameters::Volume]));
+	buffer.applyGain(juce::Decibels::decibelsToGain(getParameterValue(Parameters::Volume)));
 }
 
 //==============================================================================
-bool MyPluginNameAudioProcessor::hasEditor() const
+bool PhaseModulatorAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* MyPluginNameAudioProcessor::createEditor()
+juce::AudioProcessorEditor* PhaseModulatorAudioProcessor::createEditor()
 {
-    return new MyPluginNameAudioProcessorEditor (*this, apvts);
+    return new PhaseModulatorAudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void MyPluginNameAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void PhaseModulatorAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void MyPluginNameAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void PhaseModulatorAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -205,13 +232,17 @@ void MyPluginNameAudioProcessor::setStateInformation (const void* data, int size
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout MyPluginNameAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout PhaseModulatorAudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
 	using namespace juce;
 
-	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f),  0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Depth].paramName, m_parametersDescritpion[Parameters::Depth].paramName, NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Frequency].paramName, m_parametersDescritpion[Parameters::Frequency].paramName, NormalisableRange<float>( 0.1f, 20000.0f, 0.01f, 0.2f), 1.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Feedback].paramName, m_parametersDescritpion[Parameters::Feedback].paramName, NormalisableRange<float>( -100.0f, 100.0f, 1.0f, 1.0f), 0.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Mix].paramName, m_parametersDescritpion[Parameters::Mix].paramName, NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>( -18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
 
 	return layout;
 }
@@ -220,5 +251,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout MyPluginNameAudioProcessor::
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new MyPluginNameAudioProcessor();
+    return new PhaseModulatorAudioProcessor();
 }

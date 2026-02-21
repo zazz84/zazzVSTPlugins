@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 // Based on https://github.com/Signalsmith-Audio/hilbert-iir
 
 #pragma once
@@ -5,11 +22,11 @@
 #include <cmath>
 #include <algorithm>
 
-class HilbertFilter
+class HilbertFilterIIR
 {
 public:
-	HilbertFilter() = default;
-	~HilbertFilter() = default;
+	HilbertFilterIIR() = default;
+	~HilbertFilterIIR() = default;
 
 	static constexpr int order = 12;
 
@@ -129,4 +146,70 @@ private:
     float m_direct = 0.0f;
     float m_passbandGain = 2.0f;
     int   m_sampleRate = 48000;
+};
+
+//==============================================================================
+class HilbertFilterFIR
+{
+public:
+	HilbertFilterFIR(int taps)
+    {
+        if (taps % 2 == 0)
+            taps++;  // Must be odd
+
+        N = taps;
+        h.resize(N);
+        buffer.resize(N, 0.0);
+
+        designHilbert();
+    }
+
+    double process(double input)
+    {
+        // Shift buffer
+        for (int i = N - 1; i > 0; --i)
+            buffer[i] = buffer[i - 1];
+
+        buffer[0] = input;
+
+        // FIR convolution
+        double y = 0.0;
+        for (int i = 0; i < N; ++i)
+            y += h[i] * buffer[i];
+
+        return y;  // Quadrature output
+    }
+
+private:
+    int N;
+    std::vector<double> h;
+    std::vector<double> buffer;
+
+	static constexpr float PI = 3.14159265358979f;
+
+    void designHilbert()
+    {
+        int M = (N - 1) / 2;
+
+        for (int n = 0; n < N; ++n)
+        {
+            int k = n - M;
+
+            if (k == 0)
+            {
+                h[n] = 0.0;
+            }
+            else if (k % 2 != 0)
+            {
+                h[n] = 2.0 / (PI * k);
+            }
+            else
+            {
+                h[n] = 0.0;
+            }
+
+            // Apply Hamming window
+            h[n] *= (0.54 - 0.46 * cos(2.0 * PI * n / (N - 1)));
+        }
+    }
 };
