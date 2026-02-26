@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -508,14 +508,16 @@ public:
 	{
 		if (sliderThatChanged == &m_slider)
 		{
-			auto value = m_slider.getValue();
+			const auto value = m_slider.getValue();
 			
 			if (juce::ModifierKeys::currentModifiers.isShiftDown())
 			{
-				value = std::round(value);
+				m_textBox.setText(juce::String(std::round(value)) + m_unit, juce::dontSendNotification);
 			}
-		
-			m_textBox.setText(juce::String(value) + m_unit, juce::dontSendNotification);
+			else
+			{
+				m_textBox.setText(juce::String(value, getNumDecimalsFromInterval(m_slider.getInterval())) + m_unit, juce::dontSendNotification);
+			}
 		}
 	}
 
@@ -561,4 +563,13 @@ public:
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
 	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
+
+private:
+	int getNumDecimalsFromInterval(float interval)
+	{
+		if (interval <= 0.0f)
+			return 0;
+
+		return juce::jlimit(0, 10, (int)std::round(std::abs(std::log10(interval))));
+	}
 };
