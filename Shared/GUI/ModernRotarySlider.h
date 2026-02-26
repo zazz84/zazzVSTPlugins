@@ -502,7 +502,6 @@ public:
 		m_drawLabel = drawLabel;
 	}
 
-public:
 	// Update label when slider changes
 	void sliderValueChanged(juce::Slider* sliderThatChanged) override
 	{
@@ -524,20 +523,25 @@ public:
 	// Update slider when label text changes
 	void handleTextBoxChange()
 	{
-		auto enteredText = m_textBox.getText();
+		auto oldValue = m_slider.getValue();
+		auto text = m_textBox.getText().trim();
 
-		// Attempt to parse the text as a double
-		double newValue = enteredText.getDoubleValue();
-
-		// Validate that the entered text is a valid number
-		bool isValidNumber = enteredText.trim().isNotEmpty() && enteredText == juce::String(newValue);
-
-		if (!isValidNumber)
+		if (m_unit.isNotEmpty() && text.endsWith(m_unit))
 		{
-			return;
+			text = text.dropLastCharacters(m_unit.length()).trim();
 		}
 
-		m_slider.setValue(newValue, juce::sendNotification);      // Update slider value
+		auto newValue = text.getDoubleValue();
+
+		if (text.containsOnly("0123456789.-"))
+		{
+			m_slider.setValue(newValue, juce::sendNotification);
+		}
+		else
+		{
+			// Reset textbox to old value
+			m_textBox.setText(juce::String(oldValue, getNumDecimalsFromInterval(m_slider.getInterval())) + m_unit, juce::dontSendNotification);
+		}
 	}
 
 	float getValue()
