@@ -29,8 +29,9 @@ public:
     MyPluginNameAudioProcessorEditor (MyPluginNameAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~MyPluginNameAudioProcessorEditor() override;
 
-	static const int CANVAS_WIDTH = 1 + 3 + 1;
-	static const int CANVAS_HEIGHT = 2 + 4 + 1;
+    static const unsigned int SLIDER_COUNT = 5;
+	static const unsigned int CANVAS_WIDTH = 1 + SLIDER_COUNT * 3 + 1;
+	static const unsigned int CANVAS_HEIGHT = 2 + 4 + 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;

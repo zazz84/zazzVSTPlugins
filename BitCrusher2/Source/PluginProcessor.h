@@ -22,10 +22,11 @@
 #include <JuceHeader.h>
 
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/BitCrusher.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/NoiseGate.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
 
 //==============================================================================
-class BitCrusherAudioProcessor  : public juce::AudioProcessor
+class BitCrusher2AudioProcessor  : public juce::AudioProcessor
                             #if JucePlugin_Enable_ARA
                              , public juce::AudioProcessorARAExtension
                             #endif
@@ -33,13 +34,13 @@ class BitCrusherAudioProcessor  : public juce::AudioProcessor
 
 public:
     //==============================================================================
-    BitCrusherAudioProcessor();
-    ~BitCrusherAudioProcessor() override;
+    BitCrusher2AudioProcessor();
+    ~BitCrusher2AudioProcessor() override;
 
     enum Parameters
     {
         BitDepth,
-        Filter,
+        Drive,
         Downsample,
         Mix,
         Volume,
@@ -47,6 +48,8 @@ public:
     };
 
 	static const unsigned int N_CHANNELS = 2;
+    const static int OVERSAMPLING_FACTOR = 4;
+    const static int OVERSAMPLING_MULTIPLIER = 1 << OVERSAMPLING_FACTOR;
     static const ModernRotarySlider::ParameterDescription m_parametersDescritpion[];
 
     //==============================================================================
@@ -107,13 +110,14 @@ private:
 
         return changed;
     }
-    juce::AudioParameterBool* m_type1Button;
-    juce::AudioParameterBool* m_type2Button;
 
+    std::unique_ptr<juce::dsp::Oversampling<float>> oversampler;
+    
 	std::array<float, Parameters::COUNT> m_parameterValues;
 	std::array<std::atomic<float>*, Parameters::COUNT> m_parameters;
 
-    std::array<BitCrusher, N_CHANNELS> m_bitCrusher;
+    std::array<BitCrusherSmooth, N_CHANNELS> m_bitCrusher;
+    std::array<NoiseGate, N_CHANNELS> m_noiseGate;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitCrusherAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitCrusher2AudioProcessor)
 };

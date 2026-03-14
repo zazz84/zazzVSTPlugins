@@ -19,48 +19,24 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-BitCrusherAudioProcessorEditor::BitCrusherAudioProcessorEditor (BitCrusherAudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
+BitCrusher2AudioProcessorEditor::BitCrusher2AudioProcessorEditor (BitCrusher2AudioProcessor& p, juce::AudioProcessorValueTreeState& vts)
 	: AudioProcessorEditor(&p),
 	audioProcessor(p),
 	valueTreeState(vts),
-	m_bitDepthSlider(vts, BitCrusherAudioProcessor::m_parametersDescritpion[BitCrusherAudioProcessor::Parameters::BitDepth]),
-	m_filterSlider(vts, BitCrusherAudioProcessor::m_parametersDescritpion[BitCrusherAudioProcessor::Parameters::Filter]),
-	m_downsampleSlider(vts, BitCrusherAudioProcessor::m_parametersDescritpion[BitCrusherAudioProcessor::Parameters::Downsample]),
-	m_mixSlider(vts, BitCrusherAudioProcessor::m_parametersDescritpion[BitCrusherAudioProcessor::Parameters::Mix]),
-	m_volumeSlider(vts, BitCrusherAudioProcessor::m_parametersDescritpion[BitCrusherAudioProcessor::Parameters::Volume]),
-	m_pluginLabel("zazz::BitCrusher")
+	m_bitDepthSlider(vts, BitCrusher2AudioProcessor::m_parametersDescritpion[BitCrusher2AudioProcessor::Parameters::BitDepth]),
+	m_driveSlider(vts, BitCrusher2AudioProcessor::m_parametersDescritpion[BitCrusher2AudioProcessor::Parameters::Drive]),
+	m_downsampleSlider(vts, BitCrusher2AudioProcessor::m_parametersDescritpion[BitCrusher2AudioProcessor::Parameters::Downsample]),
+	m_mixSlider(vts, BitCrusher2AudioProcessor::m_parametersDescritpion[BitCrusher2AudioProcessor::Parameters::Mix]),
+	m_volumeSlider(vts, BitCrusher2AudioProcessor::m_parametersDescritpion[BitCrusher2AudioProcessor::Parameters::Volume]),
+	m_pluginLabel("zazz::BitCrusher2")
 {
 	addAndMakeVisible(m_pluginLabel);
 
 	addAndMakeVisible(m_bitDepthSlider);
-	addAndMakeVisible(m_filterSlider);
+	addAndMakeVisible(m_driveSlider);
 	addAndMakeVisible(m_downsampleSlider);
 	addAndMakeVisible(m_mixSlider);
 	addAndMakeVisible(m_volumeSlider);
-
-	addAndMakeVisible(m_type1Button);
-	addAndMakeVisible(m_type2Button);
-
-	m_type1Button.setLookAndFeel(&customLook);
-	m_type2Button.setLookAndFeel(&customLook);
-
-	// Buttons has to be in the same component for RadioGroup to work
-	constexpr int GROUP_ID = 1;
-	m_type1Button.setRadioGroupId(GROUP_ID);
-	m_type2Button.setRadioGroupId(GROUP_ID);
-
-	m_type1Button.setColour(juce::TextButton::buttonColourId, lightColor);
-	m_type2Button.setColour(juce::TextButton::buttonColourId, lightColor);
-
-	m_type1Button.setColour(juce::TextButton::buttonOnColourId, darkColor);
-	m_type2Button.setColour(juce::TextButton::buttonOnColourId, darkColor);
-
-	constexpr bool CLICKING_STATE = true;
-	m_type1Button.setClickingTogglesState(CLICKING_STATE);
-	m_type2Button.setClickingTogglesState(CLICKING_STATE);
-
-	button1Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "1", m_type1Button));
-	button2Attachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, "2", m_type2Button));
 
 	setResizable(true, true);
 
@@ -79,23 +55,22 @@ BitCrusherAudioProcessorEditor::BitCrusherAudioProcessorEditor (BitCrusherAudioP
 	}
 }
 
-BitCrusherAudioProcessorEditor::~BitCrusherAudioProcessorEditor()
+BitCrusher2AudioProcessorEditor::~BitCrusher2AudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void BitCrusherAudioProcessorEditor::paint (juce::Graphics& g)
+void BitCrusher2AudioProcessorEditor::paint (juce::Graphics& g)
 {	
 	g.fillAll(darkColor);
 }
 
-void BitCrusherAudioProcessorEditor::resized()
+void BitCrusher2AudioProcessorEditor::resized()
 {
 	const int width = getWidth();
 	const int height = getHeight();
 
 	const int pixelSize = width / CANVAS_WIDTH;
-	const int pixelSizeHalf = pixelSize / 2;
 	const int pixelSize2 = pixelSize + pixelSize;
 	const int pixelSize3 = pixelSize2 + pixelSize;
 	const int pixelSize4 = pixelSize3 + pixelSize;
@@ -104,20 +79,14 @@ void BitCrusherAudioProcessorEditor::resized()
 	m_pluginLabel.setSize(width, pixelSize2);
 
 	m_bitDepthSlider.setSize(pixelSize3, pixelSize4);
-	m_filterSlider.setSize(pixelSize3, pixelSize4);
+	m_driveSlider.setSize(pixelSize3, pixelSize4);
 	m_downsampleSlider.setSize(pixelSize3, pixelSize4);
 	m_mixSlider.setSize(pixelSize3, pixelSize4);
 	m_volumeSlider.setSize(pixelSize3, pixelSize4);
 
-	const int buttonOffset = pixelSize / 10;
-	const int buttonWidth = 8 * buttonOffset;	
-	m_type1Button.setSize(buttonWidth, buttonWidth);
-	m_type2Button.setSize(buttonWidth, buttonWidth);
-
 	//Set position
 	const int row1 = 0;
-	const int row2 = row1 + pixelSize2;
-	const int row3 = row2 + pixelSize4 + pixelSizeHalf / 2 + buttonOffset;
+	const int row2 = pixelSize2;
 
 	const int column1 = 0;
 	const int column2 = column1 + pixelSize;
@@ -125,15 +94,13 @@ void BitCrusherAudioProcessorEditor::resized()
 	const int column4 = column3 + pixelSize3;
 	const int column5 = column4 + pixelSize3;
 	const int column6 = column5 + pixelSize3;
+	const int column7 = column6 + pixelSize3;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
 	m_bitDepthSlider.setTopLeftPosition(column2, row2);
-	m_filterSlider.setTopLeftPosition(column3, row2);
+	m_driveSlider.setTopLeftPosition(column3, row2);
 	m_downsampleSlider.setTopLeftPosition(column4, row2);
 	m_mixSlider.setTopLeftPosition(column5, row2);
 	m_volumeSlider.setTopLeftPosition(column6, row2);
-
-	m_type1Button.setTopLeftPosition(column2 + pixelSizeHalf + buttonOffset, row3);
-	m_type2Button.setTopLeftPosition(column2 + pixelSizeHalf + pixelSize + buttonOffset, row3);
 }

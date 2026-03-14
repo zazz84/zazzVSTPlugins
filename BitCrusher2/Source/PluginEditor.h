@@ -20,31 +20,20 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ModernTextButton.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
 
 
 //==============================================================================
-class CustomLookAndFeel : public juce::LookAndFeel_V4
+class BitCrusher2AudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-	juce::Font getTextButtonFont(juce::TextButton&, int buttonHeight) override
-	{
-		return juce::Font(10.0f); // Custom font size
-	}
-};
-
-//==============================================================================
-class BitCrusherAudioProcessorEditor : public juce::AudioProcessorEditor
-{
-public:
-    BitCrusherAudioProcessorEditor (BitCrusherAudioProcessor&, juce::AudioProcessorValueTreeState&);
-    ~BitCrusherAudioProcessorEditor() override;
+    BitCrusher2AudioProcessorEditor (BitCrusher2AudioProcessor&, juce::AudioProcessorValueTreeState&);
+    ~BitCrusher2AudioProcessorEditor() override;
 
 	// GUI setup
 	static const unsigned int SLIDER_COUNT = 5;
 	static const unsigned int CANVAS_WIDTH = 1 + SLIDER_COUNT * 3 + 1;
-	static const unsigned int CANVAS_HEIGHT = 2 + 4 + 1 + 1;
+	static const unsigned int CANVAS_HEIGHT = 2 + 4 + 1;
 	
 	//==============================================================================
 	void paint (juce::Graphics&) override;
@@ -54,28 +43,20 @@ public:
 	typedef juce::AudioProcessorValueTreeState::ComboBoxAttachment ComboBoxAttachment;
 	
 protected:
-    BitCrusherAudioProcessor& audioProcessor;
+    BitCrusher2AudioProcessor& audioProcessor;
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
 	PluginNameComponent m_pluginLabel;
 
 	ModernRotarySlider m_bitDepthSlider;
-	ModernRotarySlider m_filterSlider;
+	ModernRotarySlider m_driveSlider;
 	ModernRotarySlider m_downsampleSlider;
 	ModernRotarySlider m_mixSlider;
 	ModernRotarySlider m_volumeSlider;
-
-	CustomLookAndFeel customLook;
-
-	juce::TextButton m_type1Button{ "1" };
-	juce::TextButton m_type2Button{ "2" };
-
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button1Attachment;
-	std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> button2Attachment;
 
 	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
 	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
 	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitCrusherAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BitCrusher2AudioProcessorEditor)
 };

@@ -19,16 +19,16 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-const ModernRotarySlider::ParameterDescription BitCrusherAudioProcessor::m_parametersDescritpion[] =
+const ModernRotarySlider::ParameterDescription BitCrusher2AudioProcessor::m_parametersDescritpion[] =
 {
-	{ "Bitdepth",
+	{ "Depth",
 	  " bit",
 	  "Depth" },
-	
-	{ "Filter",
-	" Hz",
-	"Filter" },
 
+	{ "Drive",
+	" %",
+	"Drive" },
+	
 	{ "Downsample",
 	" x",
 	"Downsample" },
@@ -43,7 +43,7 @@ const ModernRotarySlider::ParameterDescription BitCrusherAudioProcessor::m_param
 };
 
 //==============================================================================
-BitCrusherAudioProcessor::BitCrusherAudioProcessor()
+BitCrusher2AudioProcessor::BitCrusher2AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -59,22 +59,19 @@ BitCrusherAudioProcessor::BitCrusherAudioProcessor()
 	{
 		m_parameters[i] = apvts.getRawParameterValue(m_parametersDescritpion[i].paramName);
 	}
-
-	m_type1Button = static_cast<juce::AudioParameterBool*>(apvts.getParameter("1"));
-	m_type2Button = static_cast<juce::AudioParameterBool*>(apvts.getParameter("2"));
 }
 
-BitCrusherAudioProcessor::~BitCrusherAudioProcessor()
+BitCrusher2AudioProcessor::~BitCrusher2AudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String BitCrusherAudioProcessor::getName() const
+const juce::String BitCrusher2AudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool BitCrusherAudioProcessor::acceptsMidi() const
+bool BitCrusher2AudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -83,7 +80,7 @@ bool BitCrusherAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool BitCrusherAudioProcessor::producesMidi() const
+bool BitCrusher2AudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -92,7 +89,7 @@ bool BitCrusherAudioProcessor::producesMidi() const
    #endif
 }
 
-bool BitCrusherAudioProcessor::isMidiEffect() const
+bool BitCrusher2AudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -101,62 +98,67 @@ bool BitCrusherAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double BitCrusherAudioProcessor::getTailLengthSeconds() const
+double BitCrusher2AudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int BitCrusherAudioProcessor::getNumPrograms()
+int BitCrusher2AudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int BitCrusherAudioProcessor::getCurrentProgram()
+int BitCrusher2AudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void BitCrusherAudioProcessor::setCurrentProgram (int index)
+void BitCrusher2AudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String BitCrusherAudioProcessor::getProgramName (int index)
+const juce::String BitCrusher2AudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void BitCrusherAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void BitCrusher2AudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void BitCrusherAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void BitCrusher2AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-	const int sr = (int)sampleRate;
+	// Initialize  oversampling
+	oversampler = std::make_unique<juce::dsp::Oversampling<float>>(
+		getTotalNumOutputChannels(),					// number of channels
+		OVERSAMPLING_FACTOR,							// oversampling factor. E.g.2^4 = 16x
+		juce::dsp::Oversampling<float>::filterHalfBandPolyphaseIIR,
+		true);											// use interpolation for better quality
+
+	oversampler->reset();
+	oversampler->initProcessing(samplesPerBlock);
+
+	setLatencySamples((int)oversampler->getLatencyInSamples());
 
 	for (int channel = 0; channel < N_CHANNELS; channel++)
 	{
-		m_bitCrusher[channel].init(sr);
+		m_noiseGate[channel].init((int)(sampleRate * OVERSAMPLING_MULTIPLIER));
+		m_noiseGate[channel].set(0.1f, 0.1f, 0.0f, -45.0f);
 	}
 }
 
-void BitCrusherAudioProcessor::releaseResources()
+void BitCrusher2AudioProcessor::releaseResources()
 {
 	for (int channel = 0; channel < N_CHANNELS; channel++)
 	{
 		m_bitCrusher[channel].release();
 	}
-
-	// Reset parameters values
-	for (int i = 0; i < Parameters::COUNT; i++)
-	{
-		m_parameterValues[i] = 0.0f;
-	}
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool BitCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool BitCrusher2AudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -181,82 +183,77 @@ bool BitCrusherAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 #endif
 
-void BitCrusherAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void BitCrusher2AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	juce::ScopedNoDenormals noDenormals;
 	const bool paramsChanged = loadParameters();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
-	const auto samples = buffer.getNumSamples();
+	const auto samples = OVERSAMPLING_MULTIPLIER * buffer.getNumSamples();
 	const auto gain = juce::Decibels::decibelsToGain(getParameterValue(Parameters::Volume));
 	const auto wet = gain * 0.01f * getParameterValue(Parameters::Mix);
 	const auto dry = gain * (1.0f - 0.01f * getParameterValue(Parameters::Mix));
+	const auto downSample = OVERSAMPLING_MULTIPLIER * (int)(getSampleRate() / 48000.0) * (int)getParameterValue(Parameters::Downsample);
+
+	// Upsample
+	juce::dsp::AudioBlock<float> block(buffer);
+	auto oversampledBlock = oversampler->processSamplesUp(block);
 
 	for (int channel = 0; channel < channels; channel++)
 	{
 		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
+		auto* channelBuffer = oversampledBlock.getChannelPointer(channel);
 
 		// References
 		auto& bitCrusher = m_bitCrusher[channel];
+		auto& noiseGate = m_noiseGate[channel];
 
 		if (paramsChanged)
 		{
-			bitCrusher.set(getParameterValue(Parameters::BitDepth), (int)getParameterValue(Parameters::Downsample), getParameterValue(Parameters::Filter));
+			bitCrusher.set(getParameterValue(Parameters::BitDepth), downSample, 0.01f * getParameterValue(Parameters::Drive));
 		}
 	
-		if (m_type1Button->get() == true)
+		for (int sample = 0; sample < samples; sample++)
 		{
-			for (int sample = 0; sample < samples; sample++)
-			{
-				// Read
-				const float in = channelBuffer[sample];
+			// Read
+			const float in = channelBuffer[sample];
 
-				// BitCrusher
-				const float out = bitCrusher.processFloor(in);
+			// NoiseGate
+			float out = noiseGate.process(in);
+			
+			// BitCrusher
+			out = bitCrusher.process(out);
 
-				//Out
-				channelBuffer[sample] = dry * in + wet * out;
-			}
-		}
-		else
-		{
-			for (int sample = 0; sample < samples; sample++)
-			{
-				// Read
-				const float in = channelBuffer[sample];
-
-				// BitCrusher
-				const float out = bitCrusher.processRound(in);
-
-				//Out
-				channelBuffer[sample] = dry * in + wet * out;
-			}
+			//Out
+			channelBuffer[sample] = dry * in + wet * out;
 		}
 	}
+
+	// Downsample
+	oversampler->processSamplesDown(block);
 }
 
 //==============================================================================
-bool BitCrusherAudioProcessor::hasEditor() const
+bool BitCrusher2AudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* BitCrusherAudioProcessor::createEditor()
+juce::AudioProcessorEditor* BitCrusher2AudioProcessor::createEditor()
 {
-    return new BitCrusherAudioProcessorEditor (*this, apvts);
+    return new BitCrusher2AudioProcessorEditor (*this, apvts);
 }
 
 //==============================================================================
-void BitCrusherAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void BitCrusher2AudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {	
 	auto state = apvts.copyState();
 	std::unique_ptr<juce::XmlElement> xml(state.createXml());
 	copyXmlToBinary(*xml, destData);
 }
 
-void BitCrusherAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void BitCrusher2AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
 	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
@@ -265,20 +262,17 @@ void BitCrusherAudioProcessor::setStateInformation (const void* data, int sizeIn
 			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-juce::AudioProcessorValueTreeState::ParameterLayout BitCrusherAudioProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout BitCrusher2AudioProcessor::createParameterLayout()
 {
 	APVTS::ParameterLayout layout;
 
 	using namespace juce;
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::BitDepth].paramName, m_parametersDescritpion[Parameters::BitDepth].paramName, NormalisableRange<float>( 0.0f, 8.0f, 0.1f, 1.0f), 4.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Filter].paramName, m_parametersDescritpion[Parameters::Filter].paramName, NormalisableRange<float>(  20.0f, 20000.0f,  1.0f, 0.4f), 20000.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Drive].paramName, m_parametersDescritpion[Parameters::Drive].paramName, NormalisableRange<float>( 0.0f, 100.0f, 1.0f, 1.0f), 50.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Downsample].paramName, m_parametersDescritpion[Parameters::Downsample].paramName, NormalisableRange<float>( 1.0f, 65.0f, 1.0f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Mix].paramName, m_parametersDescritpion[Parameters::Mix].paramName, NormalisableRange<float>( 0.0f, 100.0f,  1.0f, 1.0f),   100.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(m_parametersDescritpion[Parameters::Volume].paramName, m_parametersDescritpion[Parameters::Volume].paramName, NormalisableRange<float>( -18.0f, 18.0f, 0.1f, 1.0f), 0.0f));
-
-	layout.add(std::make_unique<juce::AudioParameterBool>("1", "1", true));
-	layout.add(std::make_unique<juce::AudioParameterBool>("2", "2", false));
 
 	return layout;
 }
@@ -287,5 +281,5 @@ juce::AudioProcessorValueTreeState::ParameterLayout BitCrusherAudioProcessor::cr
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new BitCrusherAudioProcessor();
+    return new BitCrusher2AudioProcessor();
 }

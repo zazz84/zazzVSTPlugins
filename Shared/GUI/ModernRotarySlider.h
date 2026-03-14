@@ -569,9 +569,9 @@ public:
 	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
 private:
-	int getNumDecimalsFromInterval(float interval)
+	int getNumDecimalsFromInterval(double interval)
 	{
-		if (interval <= 0.0f)
+		if (interval <= 0.0)
 			return 0;
 
 		return juce::jlimit(0, 10, (int)std::round(std::abs(std::log10(interval))));

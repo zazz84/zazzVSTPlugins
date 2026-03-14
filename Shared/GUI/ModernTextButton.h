@@ -86,6 +86,13 @@ public:
 		m_border = border;
 	}
 
+	void setClickingTogglesState(bool state)
+	{
+		m_textButton.setClickingTogglesState(state);
+	}
+	
+
+private:
 	juce::AudioProcessorValueTreeState& valueTreeState;
 	ModernTextButtonLookAndFeel m_modernTextButtonLookAndFeel;
 

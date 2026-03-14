@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="yB4PVd" name="BitCrusher" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="yB4PVd" name="BitCrusher2" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Distortion"
-              version="1.1.0">
-  <MAINGROUP id="JNLcOH" name="BitCrusher">
+              version="1.0.0" pluginCode="Yb4s">
+  <MAINGROUP id="JNLcOH" name="BitCrusher2">
     <GROUP id="{15516279-1398-FC67-DACE-D9A1E8F3C018}" name="Source">
       <GROUP id="{E85F4F24-0CFD-44B5-A3A3-33F00C2D9F54}" name="GUI">
         <FILE id="S0DIW2" name="ModernRotarySlider.h" compile="0" resource="0"
               file="../Shared/GUI/ModernRotarySlider.h"/>
-        <FILE id="beNlYw" name="ModernTextButton.h" compile="0" resource="0"
-              file="../Shared/GUI/ModernTextButton.h"/>
         <FILE id="CcJ75F" name="PluginNameComponent.h" compile="0" resource="0"
               file="../Shared/GUI/PluginNameComponent.h"/>
       </GROUP>
       <GROUP id="{C566C9E5-3A6F-6EED-E8B3-1618ABEA8092}" name="Shared">
+        <FILE id="VixByx" name="EnvelopeFollowers.h" compile="0" resource="0"
+              file="../Shared/Dynamics/EnvelopeFollowers.h"/>
+        <FILE id="Q00FjA" name="NoiseGate.h" compile="0" resource="0" file="../Shared/Dynamics/NoiseGate.h"/>
         <FILE id="EvKr4C" name="Math.h" compile="0" resource="0" file="../Shared/Utilities/Math.h"/>
         <FILE id="caEHsK" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
         <FILE id="LJScx4" name="HighOrderBiquadFilter.h" compile="0" resource="0"
@@ -42,6 +43,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
@@ -73,8 +75,10 @@
     </VS2017>
     <VS2026 targetFolder="Builds/VisualStudio2026">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" enablePluginBinaryCopyStep="1" vst3BinaryLocation_x64="c:\Program Files\Common Files\VST3\"/>
-        <CONFIGURATION isDebug="0" name="Release" enablePluginBinaryCopyStep="1" vst3BinaryLocation_x64="c:\Program Files\Common Files\VST3\"/>
+        <CONFIGURATION isDebug="1" name="Debug" enablePluginBinaryCopyStep="1" vst3BinaryLocation_x64="c:\Program Files\Common Files\VST3\"
+                       targetName="BitCrusher2"/>
+        <CONFIGURATION isDebug="0" name="Release" enablePluginBinaryCopyStep="1" vst3BinaryLocation_x64="c:\Program Files\Common Files\VST3\"
+                       targetName="BitCrusher2"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
@@ -90,6 +94,7 @@
         <MODULEPATH id="juce_graphics" path="../../juce"/>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
         <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_dsp" path="C:/Program Files/JUCE8/modules"/>
       </MODULEPATHS>
     </VS2026>
   </EXPORTFORMATS>
