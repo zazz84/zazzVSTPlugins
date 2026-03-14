@@ -3,7 +3,7 @@
 <JUCERPROJECT id="eRwFEW" name="TransientShaper" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               companyName="zazz" pluginFormats="buildVST3" pluginVST3Category="Dynamics"
-              version="1.1.0">
+              version="1.2.0">
   <MAINGROUP id="eOCWoC" name="TransientShaper">
     <GROUP id="{D1570B5D-7FF4-281E-3A2A-53A93623A733}" name="Source">
       <FILE id="SdP4Gm" name="OnePoleFilters.h" compile="0" resource="0"

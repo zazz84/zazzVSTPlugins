@@ -82,7 +82,7 @@ MainComponent::MainComponent() : MainComponentBase(), m_waveformDisplaySource("S
 	addAndMakeVisible(m_regionLenghtExportSlider);
 	m_regionLenghtExportSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_regionLenghtExportSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_regionLenghtExportSlider.setRange(0.0, 5000.0, 1.0);        // min, max, step
+	m_regionLenghtExportSlider.setRange(0.0, 10000.0, 1.0);        // min, max, step
 	m_regionLenghtExportSlider.setValue(1000.0);                     // initial value
 
 	addAndMakeVisible(m_regionLenghtExportLabel);

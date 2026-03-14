@@ -116,15 +116,20 @@ public:
 		m_envelopeFollowerSlow.set(attackSlow, releaseSlow);
 	}
 	inline float process(const float in) noexcept
-	{
-		const float envelopeIn = Math::fabsf(in);
+	{		
+		// Quadratic interpolation
+		float peakInterpolated = Math::quadraticInterpolationValue(m_y2, m_y1, in);
+		m_y2 = m_y1;
+		m_y1 = in;
+
+		const float envelopeIn = Math::fabsf(peakInterpolated);
 		
 		// Process Attack
 		const float envelopeSlow = m_envelopeFollowerSlow.process(envelopeIn);
 		const float envelopeFast = m_envelopeFollowerFast.process(envelopeIn);
 
-		const float envelopeSlowdB = Math::gainTodB(envelopeSlow);
-		const float envelopeFastdB = Math::gainTodB(envelopeFast);
+		const float envelopeSlowdB = Math::gainTodBAprox(envelopeSlow);
+		const float envelopeFastdB = Math::gainTodBAprox(envelopeFast);
 
 		float differencedB = envelopeFastdB - envelopeSlowdB;
 
@@ -163,4 +168,7 @@ private:
 	float m_sustainGain = 0.0f;
 
 	float m_maxGaindB = 0.0f;
+
+	float m_y1 = 0.0f;			// z-1 sample
+	float m_y2 = 0.0f;			// z-2 sample
 };
