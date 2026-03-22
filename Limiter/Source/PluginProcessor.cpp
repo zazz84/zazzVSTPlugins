@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ const std::string LimiterAudioProcessor::paramsNames[] = { "Type", "Gain", "Rele
 const std::string LimiterAudioProcessor::labelNames[] =  { "Type", "Input", "Release", "Threshold", "Output" };
 const std::string LimiterAudioProcessor::paramsUnitNames[] = {"", " dB", " ms", " dB", " dB" };
 
-const float LimiterAudioProcessor::MAXIMUM_ATTACK_TIME_MS = 1.0f;
+const float LimiterAudioProcessor::MAXIMUM_ATTACK_TIME_MS = 1.33f;
 
 //==============================================================================
 LimiterAudioProcessor::LimiterAudioProcessor()
@@ -44,6 +44,10 @@ LimiterAudioProcessor::LimiterAudioProcessor()
 	releaseParameter   = apvts.getRawParameterValue(paramsNames[2]);
 	thresholdParameter = apvts.getRawParameterValue(paramsNames[3]);
 	volumeParameter    = apvts.getRawParameterValue(paramsNames[4]);
+
+    m_ispButton = static_cast<juce::AudioParameterBool*>(apvts.getParameter("ISP"));
+    m_clipButton = static_cast<juce::AudioParameterBool*>(apvts.getParameter("Clip"));
+    m_adaptiveButton = static_cast<juce::AudioParameterBool*>(apvts.getParameter("AR"));
 }
 
 LimiterAudioProcessor::~LimiterAudioProcessor()
@@ -118,57 +122,42 @@ void LimiterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 	const int sr = (int)sampleRate;
 	const int attackSize = (int)(MAXIMUM_ATTACK_TIME_MS * 0.001 * sampleRate);		// Maximum attack time
 	
-	setLatencySamples(attackSize);
+	setLatencySamples(attackSize + 1);
 
-	// Limiter 1
-	const int attackSize1 = 2 * attackSize / 3;
-	const int attackSize2 = attackSize - attackSize1;
+	for (unsigned int channel = 0; channel < N_CHANNELS; channel++)
+	{
+		m_dirtyLimiter[channel].init(sr, attackSize);
+		m_dirtyLimiter[channel].setAttackSize(attackSize);
 
-	m_limiter1[0].init(sr, attackSize1);
-	m_limiter1[1].init(sr, attackSize1);
+		m_agressiveLimiter[channel].init(sr, attackSize);
+		m_agressiveLimiter[channel].setAttackSize(attackSize);
 
-	m_limiter2[0].init(sr, attackSize2);
-	m_limiter2[1].init(sr, attackSize2);
+		m_cleanLimiter[channel].init(sr, attackSize);
+		m_cleanLimiter[channel].setAttackSize(attackSize);
 
-	m_limiter1[0].setAttackSize(attackSize1);
-	m_limiter1[1].setAttackSize(attackSize1);
+        m_circularBuffer[channel].init(attackSize);
 
-	m_limiter2[0].setAttackSize(attackSize2);
-	m_limiter2[1].setAttackSize(attackSize2);
+        m_adaptiveReleaseTime[channel].init(sr);
+        m_adaptiveReleaseTime[channel].set(0.1f, 50.0f, 0.05f);
+	}
 
-	m_clipper[0].init(sr);
-	m_clipper[1].init(sr);
-
-	// Limiter 2
-	m_logLimiter[0].init(sr, attackSize);
-	m_logLimiter[1].init(sr, attackSize);
-
-	m_logLimiter[0].setAttackSize(attackSize);
-	m_logLimiter[1].setAttackSize(attackSize);
-
-	m_clipper2[0].init(sr);
-	m_clipper2[1].init(sr);
-
-	// Limiter 3
-	m_advancedLimiter[0].init(sr, attackSize);
-	m_advancedLimiter[1].init(sr, attackSize);
-
-	m_advancedLimiter[0].setAttackSize(attackSize);
-	m_advancedLimiter[1].setAttackSize(attackSize);
+    m_adaptiveReleaseTimeSmoother.init(sr);
+    m_adaptiveReleaseTimeSmoother.init(10.0f);
 }
 
 void LimiterAudioProcessor::releaseResources()
 {
-	m_limiter1[0].release();
-	m_limiter1[1].release();
-	m_limiter2[0].release();
-	m_limiter2[1].release();
+	for (unsigned int channel = 0; channel < N_CHANNELS; channel++)
+	{
+		m_dirtyLimiter[channel].release();
+		m_agressiveLimiter[channel].release();
+		m_cleanLimiter[channel].release();
+        m_circularBuffer[channel].release();
+        m_interSamplePeak[channel].release();
+        m_adaptiveReleaseTime[channel].release();
+	}
 
-	m_logLimiter[0].release();
-	m_logLimiter[1].release();
-
-	m_advancedLimiter[0].release();
-	m_advancedLimiter[1].release();
+    m_adaptiveReleaseTimeSmoother.release();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -200,11 +189,14 @@ bool LimiterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
 	// Get params
-	const auto type			= typeParameter->load();
-	const auto inputGain	= juce::Decibels::decibelsToGain(gainParameter->load());
-	const auto release		= releaseParameter->load();
-	const auto threshold	= juce::Decibels::decibelsToGain(thresholdParameter->load());
-	const auto outputGain	= juce::Decibels::decibelsToGain(volumeParameter->load());
+	const auto type			    = static_cast<Type>(typeParameter->load());
+	const auto inputGain	    = juce::Decibels::decibelsToGain(gainParameter->load());
+	const auto release		    = releaseParameter->load();
+	const auto threshold	    = juce::Decibels::decibelsToGain(thresholdParameter->load());
+	const auto outputGain	    = juce::Decibels::decibelsToGain(volumeParameter->load());
+    const bool interSamplePeak  = m_ispButton->get();
+    const bool clip             = m_clipButton->get();
+    const bool adaptive         = m_adaptiveButton->get();
 
 	// Mics constants
 	const auto channels = getTotalNumOutputChannels();
@@ -212,89 +204,103 @@ void LimiterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 	
 	buffer.applyGain(inputGain);
 
-	for (int channel = 0; channel < channels; ++channel)
-	{
-		// Channel pointer
-		auto* channelBuffer = buffer.getWritePointer(channel);
+    //Get input peak
+    float inPeak = 0.0f;
 
-		if (type == 1)
-		{
-			auto& limiter1 = m_limiter1[channel];
-			auto& limiter2 = m_limiter2[channel];
-			auto& clipper = m_clipper[channel];
+	// Process limiter
+    auto processChannel = [&](auto& limiter, int channel, float* channelBuffer)
+        {
+            auto& circularBuffer = m_circularBuffer[channel];
+            auto& isp = m_interSamplePeak[channel];
+            auto& adaptiveReleaseTime = m_adaptiveReleaseTime[channel];
+                      
+            limiter.setReleaseTime(release);
+            limiter.setThreshold(threshold);
 
-			limiter1.setReleaseTime(release);
-			limiter1.setThreshold(threshold);
+            adaptiveReleaseTime.setThreshold(threshold);
 
-			limiter2.setReleaseTime(release);
-			limiter2.setThreshold(threshold);
+            //float adaptiveReleaseMax = 0.0f;
 
-			const float gainMin = limiter1.getGainMin() * limiter2.getGainMin();
-			if (gainMin < m_gainMin)
-			{
-				m_gainMin = gainMin;
-			}
+            for (int sample = 0; sample < samples; sample++)
+            {
+                const auto in = channelBuffer[sample]; 
+                const auto inDelayed = circularBuffer.read();
+                circularBuffer.write(in);
 
-			for (int sample = 0; sample < samples; sample++)
-			{
-				float in = channelBuffer[sample];
+                // Get peak for detection
+                const auto peak = interSamplePeak ? isp.process(in) : isp.get(in);
 
-				in = limiter1.process(in);
-				in = limiter2.process(in);
+                // Get input peak for GR meter
+                inPeak = std::fmaxf(inPeak, std::fabsf(inDelayed));
 
-				const float out = clipper.process(in, threshold);
+                if (adaptive)
+                {
+                    const float adaptiveRelease = adaptiveReleaseTime.process(peak);
+                    limiter.setReleaseTime(adaptiveRelease);
 
-				channelBuffer[sample] = out;
-			}
-		}
-		else if (type == 2)
-		{
-			auto& logLimiter = m_logLimiter[channel];
-			
-			logLimiter.setReleaseTime(release);
-			logLimiter.setThreshold(threshold);
+                    //adaptiveReleaseMax = std::fmaxf(adaptiveRelease, adaptiveReleaseMax);
+                    m_adaptiveReleaseTimeMS = m_adaptiveReleaseTimeSmoother.process(adaptiveRelease);
+                }
 
-			const float gainMin = logLimiter.getGainMin();
-			if (gainMin < m_gainMin)
-			{
-				m_gainMin = gainMin;
-			}
+                channelBuffer[sample] = limiter.process(peak, inDelayed);
+            }
 
-			auto& clipper = m_clipper2[channel];
+            /*if (adaptive)
+            {
+                if (channel == 0)
+                {
+                    m_adaptiveReleaseTimeMS = adaptiveReleaseMax;
+                }
+                else
+                {
+                    m_adaptiveReleaseTimeMS = std::fmaxf(m_adaptiveReleaseTimeMS, adaptiveReleaseMax);
+                }
+            }*/
+        };
 
-			for (int sample = 0; sample < samples; sample++)
-			{
-				float in = channelBuffer[sample];
+    for (int channel = 0; channel < channels; channel++)
+    {
+        float* channelBuffer = buffer.getWritePointer(channel);
 
-				const float out = clipper.process(logLimiter.process(in), threshold);
+        switch (type)
+        {
+        case Type::Dirty:
+            processChannel(m_dirtyLimiter[channel], channel, channelBuffer);
+            break;
 
-				channelBuffer[sample] = out;
-			}
-		}
-		else
-		{
-			auto& limiter = m_advancedLimiter[channel];
-			
-			limiter.setReleaseTime(release);
-			limiter.setThreshold(threshold);
+        case Type::Agressive:
+            processChannel(m_agressiveLimiter[channel], channel, channelBuffer);
+            break;
 
-			const float gainMin = limiter.getGainMin();
-			if (gainMin < m_gainMin)
-			{
-				m_gainMin = gainMin;
-			}
+        default: // Clean
+            processChannel(m_cleanLimiter[channel], channel, channelBuffer);
+            break;
+        }
+    }
 
-			for (int sample = 0; sample < samples; sample++)
-			{
-				float in = channelBuffer[sample];
+    // Add clipping
+    if (clip)
+    {
+        for (int channel = 0; channel < channels; channel++)
+        {
+            Clippers::Params params;
+            params.threshold = threshold;
+            params.wet = 1.0f;
+            params.buffer = buffer.getWritePointer(channel);
+            params.samples = samples;
 
-				const float out = limiter.process(in);
+            Clippers::HardBlock(params);
+        }
+    }
 
-				channelBuffer[sample] = out;
-			}
-		}
-	}
+    //Get output peak
+    const float outPeak = buffer.getMagnitude(0, samples);
 
+    // Update gain reduction
+    const float gainReductiondB = Math::gainTodB(inPeak) - Math::gainTodB(outPeak);
+    m_gainReductiondB = std::fmaxf(m_gainReductiondB, gainReductiondB);
+
+    // Apply output gain
 	buffer.applyGain(outputGain);
 }
 
@@ -334,9 +340,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout LimiterAudioProcessor::creat
 
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[0], paramsNames[0], NormalisableRange<float>(   1.0f,   3.0f,  1.0f, 1.0f), 1.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[1], paramsNames[1], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f), 0.0f));
-	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   1.0f, 100.0f,  1.0f, 0.7f), 5.0f));
+	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[2], paramsNames[2], NormalisableRange<float>(   0.1f, 100.0f,  0.1f, 0.6f), 5.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[3], paramsNames[3], NormalisableRange<float>( -30.0f,   0.0f,  0.1f, 1.0f), 0.0f));
 	layout.add(std::make_unique<juce::AudioParameterFloat>(paramsNames[4], paramsNames[4], NormalisableRange<float>( -18.0f,  18.0f,  0.1f, 1.0f), 0.0f));
+
+    layout.add(std::make_unique<juce::AudioParameterBool>("ISP", "ISP", true));
+    layout.add(std::make_unique<juce::AudioParameterBool>("Clip", "Clip", true));
+    layout.add(std::make_unique<juce::AudioParameterBool>("AR", "AR", false));
 
 	return layout;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,16 @@
 
 #include <JuceHeader.h>
 
+#include <array>
+
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter2.h"
 #include "../../../zazzVSTPlugins/Shared/Dynamics/Limiter3.h"
+#include "../../../zazzVSTPlugins/Shared/Dynamics/AdaptiveReleaseTime.h"
 #include "../../../zazzVSTPlugins/Shared/NonLinearFilters/Clippers.h"
+#include "../../../zazzVSTPlugins/Shared/Filters/OnePoleFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/InterSamplePeak.h"
 
 //==============================================================================
 class LimiterAudioProcessor : public juce::AudioProcessor
@@ -37,10 +42,20 @@ public:
 	LimiterAudioProcessor();
 	~LimiterAudioProcessor() override;
 
+	enum Type
+	{
+		None,
+		Dirty,
+		Agressive,
+		Clean,
+		COUNT
+	};
+
 	static const std::string paramsNames[];
 	static const std::string labelNames[];
 	static const std::string paramsUnitNames[];
 
+	static const int N_CHANNELS = 2;
 	static const float MAXIMUM_ATTACK_TIME_MS;
 
 	//==============================================================================
@@ -78,10 +93,15 @@ public:
 
 	float getPeakReductiondB()
 	{
-		const float gainReductiondB = -Math::gainTodB(m_gainMin);
-		m_gainMin = 1.0f;
+		const float gainReductiondB = m_gainReductiondB;
+		m_gainReductiondB = 0.0f;
 
 		return gainReductiondB;
+	}
+
+	float getAdaptiveReleaseTimeMS()
+	{
+		return m_adaptiveReleaseTimeMS;
 	}
 
 	using APVTS = juce::AudioProcessorValueTreeState;
@@ -91,22 +111,26 @@ public:
 
 private:	
 	//==============================================================================
-	Limiter m_limiter1[2];
-	Limiter m_limiter2[2];
-	SlopeClipper m_clipper[2];
+	std::array<Limiter, N_CHANNELS> m_dirtyLimiter;
+	std::array<Limiter2, N_CHANNELS> m_agressiveLimiter;
+	std::array<Limiter3, N_CHANNELS> m_cleanLimiter;
+	std::array<CircularBuffer, N_CHANNELS> m_circularBuffer;
+	std::array<InterSamplePeak, N_CHANNELS> m_interSamplePeak;
+	std::array<AdaptiveReleaseTime, N_CHANNELS> m_adaptiveReleaseTime;
 
-	Limiter2 m_logLimiter[2];
-	SlopeClipper m_clipper2[2];
-
-	Limiter3 m_advancedLimiter[2];
-
-	float m_gainMin = 1.0f;
+	float m_gainReductiondB = 0.0f;
+	float m_adaptiveReleaseTimeMS = 0.0f;
+	OnePoleLowPassFilter m_adaptiveReleaseTimeSmoother;
 
 	std::atomic<float>* typeParameter = nullptr;
 	std::atomic<float>* gainParameter = nullptr;
 	std::atomic<float>* releaseParameter = nullptr;
 	std::atomic<float>* thresholdParameter = nullptr;
 	std::atomic<float>* volumeParameter = nullptr;
+
+	juce::AudioParameterBool* m_ispButton;
+	juce::AudioParameterBool* m_clipButton;
+	juce::AudioParameterBool* m_adaptiveButton;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LimiterAudioProcessor)
 };

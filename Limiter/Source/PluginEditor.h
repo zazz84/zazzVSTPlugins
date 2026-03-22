@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/TextModernRotarySlide.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GainReductionMeterComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/ModernTextButton.h"
 
 //==============================================================================
 class LimiterAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
@@ -52,6 +53,10 @@ protected:
 	ModernRotarySlider m_volumeSlider;
 	TextModernRotarySlider m_typeSlider;
 	ModernRotarySlider m_releaseSlider;
+
+	ModernTextButton m_ispButton;
+	ModernTextButton m_clipButton;
+	ModernTextButton m_adaptiveReleaseButton;
 
 	PluginNameComponent m_pluginLabel;
 

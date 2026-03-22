@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,8 +36,8 @@ public:
 	{
 		m_textButton.setLookAndFeel(&m_modernTextButtonLookAndFeel);
 		addAndMakeVisible(m_textButton);
-		m_textButton.setColour(juce::TextButton::buttonColourId, lightColor);
-		m_textButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+		m_textButton.setColour(juce::TextButton::buttonColourId, darkColor);
+		m_textButton.setColour(juce::TextButton::buttonOnColourId, lightColor);
 		m_textButton.setClickingTogglesState(true);
 
 		m_textButtonAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, name, m_textButton));
@@ -47,8 +47,8 @@ public:
 	{
 		m_textButton.setLookAndFeel(&m_modernTextButtonLookAndFeel);
 		addAndMakeVisible(m_textButton);
-		m_textButton.setColour(juce::TextButton::buttonColourId, lightColor);
-		m_textButton.setColour(juce::TextButton::buttonOnColourId, darkColor);
+		m_textButton.setColour(juce::TextButton::buttonColourId, darkColor);
+		m_textButton.setColour(juce::TextButton::buttonOnColourId, lightColor);
 		m_textButton.setClickingTogglesState(true);
 
 		m_textButtonAttachment.reset(new juce::AudioProcessorValueTreeState::ButtonAttachment(valueTreeState, name, m_textButton));

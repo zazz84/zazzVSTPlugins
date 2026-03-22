@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@ LimiterAudioProcessorEditor::LimiterAudioProcessorEditor (LimiterAudioProcessor&
 	m_typeSlider		(vts, LimiterAudioProcessor::paramsNames[0], LimiterAudioProcessor::paramsUnitNames[0], LimiterAudioProcessor::labelNames[0], { "Dirty", "Agressive", "Clean" }),
 	m_releaseSlider		(vts, LimiterAudioProcessor::paramsNames[2], LimiterAudioProcessor::paramsUnitNames[2], LimiterAudioProcessor::labelNames[2]),
 	m_pluginLabel("zazz::Limiter"),
+	m_ispButton(vts, "ISP"),
+	m_clipButton(vts, "Clip"),
+	m_adaptiveReleaseButton(vts, "AR"),
 	m_gainReductionMeter()
 {	
 	addAndMakeVisible(m_gainSlider);
@@ -40,6 +43,13 @@ LimiterAudioProcessorEditor::LimiterAudioProcessorEditor (LimiterAudioProcessor&
 	addAndMakeVisible(m_pluginLabel);
 	
 	addAndMakeVisible(m_gainReductionMeter);
+
+	addAndMakeVisible(m_ispButton);
+	addAndMakeVisible(m_clipButton);
+	addAndMakeVisible(m_adaptiveReleaseButton);
+	m_ispButton.setBorder(10);
+	m_clipButton.setBorder(10);
+	m_adaptiveReleaseButton.setBorder(10);
 
 	setResizable(true, true);
 
@@ -71,6 +81,12 @@ void LimiterAudioProcessorEditor::timerCallback()
 	const float gainReduction = audioProcessor.getPeakReductiondB();
 	m_gainReductionMeter.setLevel(gainReduction);
 	m_gainReductionMeter.repaint();
+
+	if (valueTreeState.getRawParameterValue("AR")->load() > 0.0f)
+	{
+		const double adaptiveReleaseTimeMS = (double)audioProcessor.getAdaptiveReleaseTimeMS();
+		m_releaseSlider.m_slider.setValue(adaptiveReleaseTimeMS);
+	}
 }
 
 void LimiterAudioProcessorEditor::paint (juce::Graphics& g)
@@ -100,29 +116,39 @@ void LimiterAudioProcessorEditor::resized()
 	m_typeSlider.setSize(pixelSize3, pixelSize4);
 	m_releaseSlider.setSize(pixelSize3, pixelSize4);
 
+	m_ispButton.setSize(pixelSize, pixelSize);
+	m_clipButton.setSize(pixelSize, pixelSize);
+	m_adaptiveReleaseButton.setSize(pixelSize, pixelSize);
+
 	//Set position
 	const int row1 = 0;
 	const int row2 = pixelSize2;
 	const int row3 = row2 + pixelSize4;
+	const int row4 = row3 + pixelSize;
+	const int row5 = row4 + pixelSize;
+	const int row6 = row5 + pixelSize;
 
 	const int column1 = 0;
 	const int column2 = pixelSize;
 	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize3;
-	const int column5 = column4 + pixelSize3;
+	const int column5 = column4 + pixelSize;
+	const int column6 = column5 + pixelSize2;
 
-	const int column25 = column2 + pixelSize15;
-	const int column35 = column3 + pixelSize15;
 
 	m_pluginLabel.setTopLeftPosition(column1, row1);
 
-	m_gainReductionMeter.setTopLeftPosition(column5, row2);
+	m_gainReductionMeter.setTopLeftPosition(column6, row2);
 
 	m_gainSlider.setTopLeftPosition(column2, row2);
 	m_thresholdSlider.setTopLeftPosition(column3, row2);
 	m_volumeSlider.setTopLeftPosition(column4, row2);
 
-	m_typeSlider.setTopLeftPosition(column25, row3);
-	m_releaseSlider.setTopLeftPosition(column35, row3);
+	m_typeSlider.setTopLeftPosition(column2, row3);
+	m_releaseSlider.setTopLeftPosition(column3, row3);
+
+	m_ispButton.setTopLeftPosition(column5, row4);
+	m_clipButton.setTopLeftPosition(column5, row5);
+	m_adaptiveReleaseButton.setTopLeftPosition(column5, row6);
 
 }

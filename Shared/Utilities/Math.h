@@ -107,9 +107,20 @@ namespace Math
 	}
 
 	//==============================================================================
+	__forceinline float gainTodB(float gain) noexcept
+	{
+		constexpr float minGain = 1e-5f;
+		constexpr float factor = 8.685889638f; // 20 / ln(10)
+
+		return gain > minGain ? factor * std::log(gain) : -100.0f;
+	}
+
+	//==============================================================================
 	__forceinline float gainTodBAprox(float gain) noexcept
 	{
-		return gain > 0.00001f ? 20.0f * Math::log10Approx(gain) : -100.0f;
+		constexpr float minGain = 1e-5f;
+		
+		return gain > minGain ? 20.0f * Math::log10Approx(gain) : -100.0f;
 	}
 
 	//==============================================================================
@@ -181,7 +192,7 @@ namespace Math
 
 	//==============================================================================
 	// Returns peak position in range [-1, 1]
-	__forceinline float quadraticInterpolationOffset(const float a, const float b, const float c) noexcept
+	/*__forceinline float quadraticInterpolationOffset(const float a, const float b, const float c) noexcept
 	{
 		const float denn = a - 2.0f * b + c;
 		if (Math::almostEquals(denn, 0.0f))
@@ -190,12 +201,57 @@ namespace Math
 		}
 		
 		return 0.5f * (a - c) / denn;
-	}
+	}*/
 
 	//==============================================================================	
 	// Returns extimated intersample peak value
-	__forceinline float quadraticInterpolationValue(const float a, const float b, const float  c) noexcept
+	/*__forceinline float quadraticInterpolationValue(const float a, const float b, const float  c) noexcept
 	{
 		return b - 0.25f * (a - c) * quadraticInterpolationOffset(a, b, c);
+	}*/
+
+	//==============================================================================
+	// Returns peak position in range [-1, 1]
+	__forceinline float quadraticInterpolationOffset(const float a, const float b, const float c) noexcept
+	{
+	    const float denn = a - 2.0f * b + c;
+
+	    if (std::abs(denn) < 1e-12f)  // avoid division by zero
+	        return 0.0f;
+
+	    float delta = 0.5f * (a - c) / denn;
+
+	    // Clamp delta to [-1, 1] for stability
+	    if (delta > 1.0f) delta = 1.0f;
+	    if (delta < -1.0f) delta = -1.0f;
+
+	    return delta;
+	}
+
+	//==============================================================================
+	// Returns estimated intersample peak value only if b is a local extremum
+	__forceinline float quadraticInterpolationValue(const float a, const float b, const float c) noexcept
+	{
+	    // Check for local maximum or minimum
+	    if ((b > a && b > c) || (b < a && b < c))
+	    {
+	        float delta = quadraticInterpolationOffset(a, b, c);
+	        return b - 0.25f * (a - c) * delta;
+	    }
+	    else
+	    {
+	        // Not an extremum → return middle sample
+	        return b;
+	    }
+	}
+
+	//==============================================================================
+	// Aproximation assuming source is triangle wave
+	__forceinline float slopeToFrequency(const float slope, const float peakAmplitude, const float sampleRate) noexcept
+	{
+		// convert slope from per-sample → per-second
+		float slopePerSecond = slope * sampleRate;
+
+		return slopePerSecond / (4.0f * peakAmplitude);
 	}
 }

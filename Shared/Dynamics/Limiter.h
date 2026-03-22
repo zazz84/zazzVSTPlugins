@@ -31,11 +31,9 @@ public:
 	}
 	inline void set(const float attackMS, const float releaseMS, const float threshold)
 	{
-		const float factor = 0.001f * (float)m_sampleRate;
-
-		m_attackSize = (int)(attackMS * factor);
-		m_releaseSize = (int)(releaseMS * factor);
-		m_threshold = threshold;
+		setAttackTime(attackMS);
+		setReleaseTime(releaseMS);
+		setThreshold(threshold);
 	}
 	inline void setAttackTime(const float attackMS)
 	{
@@ -53,18 +51,18 @@ public:
 	{
 		m_threshold = threshold;
 	}
-	inline float getGainMin()
-	{
-		const float gainMin = m_gainMin;
-		m_gainMin = 1.0f;
-		return gainMin;
-	}
 	inline float process(float in)
 	{
-		// In
+		// Handle delay buffer
 		const float inDelayed = m_buffer.readDelay(m_attackSize);
 		m_buffer.write(in);
 
+		return process(in, inDelayed);
+	};
+	// in: used to calculate gain reduction
+	// inDelayed: used to for output calculation
+	inline float process(float in, float inDelayed)
+	{
 		// Start attack
 		const float inAbs = std::fabsf(in);
 		if (inAbs > m_threshold && inAbs > m_currentPeak)
@@ -91,12 +89,6 @@ public:
 			m_interpolationMultiplier += m_interpolationSpeed;
 		}
 
-		// Get min gain
-		if (m_interpolationMultiplier < m_gainMin)
-		{
-			m_gainMin = m_interpolationMultiplier;
-		}
-
 		//Out
 		return m_interpolationMultiplier * inDelayed;
 	};
@@ -104,7 +96,6 @@ public:
 	{
 		m_buffer.release();
 
-		m_gainMin = 1.0f;
 		m_currentPeak = 0.0f;
 		m_interpolationMultiplier = 1.0f;
 		m_interpolationSpeed = 0.0f;

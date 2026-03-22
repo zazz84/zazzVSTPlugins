@@ -59,12 +59,9 @@ public:
 	}
 	inline void set(const float attackMS, const float releaseMS, const float threshold)
 	{
-		const auto tmp = attackMS * 0.001f * (float)m_sampleRate;
-		m_attackSize = (int)(tmp);
-		m_attackFactor = 1.0f / tmp;
+		setAttackTime(attackMS);
 		
-		m_threshold = threshold;
-		m_thresholddB = Math::gainTodB(threshold);
+		setThreshold(threshold);
 		
 		m_envelopeFollower.set(0.0f, releaseMS);
 	}
@@ -92,25 +89,25 @@ public:
 		m_threshold = threshold;
 		m_thresholddB = Math::gainTodB(threshold);
 	}
-	inline float getGainMin()
-	{
-		const float gainMin = m_gainMin;
-		m_gainMin = 1.0f;
-		return gainMin;
-	}
 	inline float process(float in)
 	{
-		// Handle buffer
+		// Handle delay buffer
 		const float inDelayed = m_buffer.readDelay(m_attackSize);
 		m_buffer.write(in);
 
+		return process(in, inDelayed);
+	};
+	// in: used to calculate gain reduction
+	// inDelayed: used to for output calculation
+	inline float process(const float in, const float inDelayed)
+	{
 		// Detect peak
 		const float inAbs = std::fabsf(in);
 		if (inAbs > m_threshold)
 		{
 			const float attenuatedB = Math::gainTodB(inAbs) - m_thresholddB;
 			const float step = attenuatedB * m_attackFactor;
-			
+
 			Peak& peak = m_peaks[m_peaksWritteIndex];
 			m_peaksWritteIndex++;
 			if (m_peaksWritteIndex >= m_attackSizeMax)
@@ -122,7 +119,7 @@ public:
 			peak.m_step = step;
 			peak.m_value = 0.0f;
 		}
-		
+
 		// Process peaks
 		float max = 0.0f;
 		//const int validPeaksCount = m_firstValidPeakIndex <= m_peaksWritteIndex ? m_peaksWritteIndex - m_firstValidPeakIndex + 1 : m_firstValidPeakIndex + m_attackSizeMax - m_peaksWritteIndex - 1;
@@ -131,7 +128,7 @@ public:
 		for (int i = 0; i < m_attackSizeMax; i++)
 		{
 			//const int idx = (i + m_firstValidPeakIndex) % m_attackSizeMax;
-			
+
 			//Peak& peak = m_peaks[idx];
 			Peak& peak = m_peaks[i];
 
@@ -153,12 +150,6 @@ public:
 		const float maxSmooth = m_envelopeFollower.process(max);
 		const float gain = Math::dBToGain(-maxSmooth);
 
-		// Get min gain
-		if (gain < m_gainMin)
-		{
-			m_gainMin = gain;
-		}
-
 		// apply attenuation for output
 		return gain * inDelayed;
 	};
@@ -171,7 +162,6 @@ public:
 		
 		m_envelopeFollower.release();
 
-		m_gainMin = 1.0;
 		m_threshold = 1.0;
 		m_thresholddB = 0.0f;
 		m_attackFactor = 1.0f;
@@ -187,7 +177,6 @@ private:
 	Peak* m_peaks = nullptr;
 	BranchingEnvelopeFollower<float> m_envelopeFollower;
 
-	float m_gainMin = 1.0f;	
 	float m_threshold = 1.0;
 	float m_thresholddB = 0.0f;
 	float m_attackFactor = 1.0f;

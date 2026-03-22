@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Filip Cenzak (filip.c@centrum.cz)
+ * Copyright (C) 2026 Filip Cenzak (filip.c@centrum.cz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,9 @@ public:
 		constexpr int sampleRate = 20;
 
 		m_smoother.init(sampleRate);
-		m_smoother.set(0.0f, 150.0f, 150.0f);
+		m_smoother.set(0.0f, 150.0f, 50.0f);
+		m_smootherText.init(sampleRate);
+		m_smootherText.set(0.0f, 150.0f, 400.0f);
 	}
 	~GainReductionMeterComponent()
 	{
@@ -94,11 +96,13 @@ public:
 		g.fillRect(bounds);
 
 		// Draw maximum gain reduction value
+		const float gainSmooth = m_smootherText.process(m_level);
+
 		if (pixelSize > SMALL_LOD_WIDTH_LIMIT)
 		{
 			bounds.setSize(meterWidth, pixelSizeHalf);
 			bounds.setPosition(xPos, yPos + meterHeight);
-			g.drawText(juce::String(levelNormalizedSmooth * gainReductionMax, 1), bounds, juce::Justification::centred);
+			g.drawText(juce::String(gainSmooth, 1), bounds, juce::Justification::centred);
 		}
 
 		// Draw background gain reduction bar
@@ -116,6 +120,7 @@ public:
 
 private:
 	HoldEnvelopeFollower<float> m_smoother;
+	HoldEnvelopeFollower<float> m_smootherText;
 
 	float m_level = 0.0f;
 

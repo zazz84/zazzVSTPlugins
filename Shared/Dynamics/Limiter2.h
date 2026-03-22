@@ -33,9 +33,9 @@ public:
 	}
 	inline void set(const float attackMS, const float releaseMS, const float threshold)
 	{
-		m_attackSize = (int)(attackMS * 0.001f * (float)m_sampleRate);
-		m_thresholdMultiplier = 1.0f / threshold;
-		m_envelopeFollower.set(attackMS, releaseMS);
+		setAttackTime(attackMS);
+		setThreshold(threshold);
+		setReleaseTime(releaseMS);
 	}
 	inline void setAttackTime(const float attackMS)
 	{
@@ -55,29 +55,25 @@ public:
 	{
 		m_thresholdMultiplier = 1.0f / threshold;
 	}
-	inline float getGainMin()
-	{
-		const float gainMin = m_gainMin;
-		m_gainMin = 1.0f;
-		return gainMin;
-	}
 	inline float process(float in)
 	{
-		// Handle buffer
+		// Handle delay buffer
 		const float inDelayed = m_buffer.readDelay(m_attackSize);
 		m_buffer.write(in);
 
+		return process(in, inDelayed);
+	};
+	// in: used to calculate gain reduction
+	// inDelayed: used to for output calculation
+	inline float process(float in, float inDelayed)
+	{
 		// Get envelope
 		const float inAbs = std::fabsf(in);
 		const float aboveThresholdNormalized = m_thresholdMultiplier * inAbs;
 		const float envelope = std::max(1.0f, m_envelopeFollower.process(aboveThresholdNormalized));
 
 		// Get min gain
-		const float gain = 1 / envelope;
-		if (gain < m_gainMin)
-		{
-			m_gainMin = gain;
-		}
+		const float gain = 1.0f / envelope;
 
 		// apply attenuation for output
 		return gain * inDelayed;
@@ -87,7 +83,6 @@ public:
 		m_buffer.release();
 		m_envelopeFollower.release();
 
-		m_gainMin = 1.0f;
 		m_thresholdMultiplier = 1.0f;
 		m_sampleRate = 48000;
 		m_attackSize = 0;
@@ -97,7 +92,6 @@ private:
 	CircularBuffer m_buffer;
 	BranchingEnvelopeFollower<float> m_envelopeFollower;
 
-	float m_gainMin = 1.0f;
 	float m_thresholdMultiplier = 1.0f;
 	int m_sampleRate = 48000;
 	int m_attackSize = 0;
