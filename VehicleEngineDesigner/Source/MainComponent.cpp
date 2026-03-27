@@ -1,8 +1,12 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() : MainComponentBase(), m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
+MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
 {
+	m_formatManager.registerBasicFormats();
+
+	setAudioChannels(0, 2);
+
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
 
@@ -178,13 +182,11 @@ MainComponent::MainComponent() : MainComponentBase(), m_waveformDisplaySource("S
 	addAndMakeVisible(m_generationTypeComboBox);
 	
 	// Canvas size
-	//const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
-	//const int canvasHeight = CANVAS_HEIGHT * PIXEL_SIZE;
+	const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
+	const int canvasHeight = CANVAS_HEIGHT * PIXEL_SIZE;
 
-	//setSize(canvasWidth, canvasHeight);
-	//setSize(getWidth(), getHeight());
-
-	// Force fixes aspect
+	setSize(canvasWidth, canvasHeight);
+	setSize(getWidth(), getHeight());
 }
 
 MainComponent::~MainComponent()
@@ -237,19 +239,13 @@ void MainComponent::releaseResources()
 }
 
 //==============================================================================
-/*void MainComponent::paint (juce::Graphics& g)
+void MainComponent::paint (juce::Graphics& g)
 {
-    g.fillAll (darkColor);
-}*/
+    g.fillAll(zazzGUI::Colors::darkColor);
+}
 
 void MainComponent::resized()
 {	
-	// Force fized ratio
-	/*const int width = getWidth();
-	const int pixelSize = width / CANVAS_WIDTH;
-	const int height = pixelSize * CANVAS_HEIGHT;*/
-	//setSize(width, pixelSize * CANVAS_HEIGHT);
-
 	// Pixel size
 	const int width = getWidth();
 	const int pixelSize = width / CANVAS_WIDTH;

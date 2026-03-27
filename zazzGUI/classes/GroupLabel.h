@@ -6,14 +6,14 @@
 
 namespace zazzGUI
 {
-	class GroupLabelComponent : public juce::Component
+	class GroupLabel : public juce::Component
 	{
 
 	public:
-		GroupLabelComponent(const juce::String& name) : m_name(name)
+		GroupLabel(const juce::String& name) : m_name(name)
 		{
 		}
-		~GroupLabelComponent() = default;
+		~GroupLabel() = default;
 
 		static const int MICRO_LOD_HEIGHT_LIMIT = 17;
 

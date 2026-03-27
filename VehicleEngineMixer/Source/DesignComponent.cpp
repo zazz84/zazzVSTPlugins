@@ -3,14 +3,8 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/SpectrumApplyFFT.h"
 
 //==============================================================================
-DesignComponent::DesignComponent()
+DesignComponent::DesignComponent() : MainComponentBase()
 {
-	m_formatManager.registerBasicFormats();
-
-	setAudioChannels(0, 2);
-
-	startTimer(50);
-
 	for (size_t i = 0; i < SOURCE_COUNT; i++)
 	{
 		// Open button

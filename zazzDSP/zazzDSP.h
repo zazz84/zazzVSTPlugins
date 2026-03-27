@@ -16,7 +16,9 @@ END_JUCE_MODULE_DECLARATION
 
 #pragma once
 
-#include "utilities/CircularBuffer.h"
+#include "Utilities/CircularBuffer.h"
+#include "Utilities/FileIO.h"
+#include "Utilities/Statistics.h"
 
 namespace zazzDSP
 {

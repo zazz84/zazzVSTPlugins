@@ -9,7 +9,6 @@
 #include <JuceHeader.h>
 
 #include "MainComponent.h"
-#include "DesignComponent.h"
 
 //==============================================================================
 class VehicleEngineDesignerApplication  : public juce::JUCEApplication
@@ -66,27 +65,10 @@ public:
                                                           .findColour (juce::ResizableWindow::backgroundColourId),
                               DocumentWindow::allButtons)
         {
-            /*setUsingNativeTitleBar (true);
-            setContentOwned (new MainComponent(), true);
-
-           #if JUCE_IOS || JUCE_ANDROID
-            setFullScreen (true);
-           #else
-            setResizable (true, true);
-            centreWithSize (getWidth(), getHeight());
-           #endif
-
-            setVisible (true);*/
-
 			setUsingNativeTitleBar(false);
-			
-			auto* tabs = new juce::TabbedComponent(juce::TabbedButtonBar::TabsAtTop);	
-			tabs->addTab("Flatten", juce::Colours::darkgrey, new MainComponent, true);
-			tabs->addTab("Design", juce::Colours::grey, new DesignComponent, true);
 
-			tabs->setSize(MainComponent::CANVAS_WIDTH * MainComponent::PIXEL_SIZE, MainComponent::CANVAS_HEIGHT * MainComponent::PIXEL_SIZE);
-
-			setContentOwned(tabs, true);
+			setContentOwned(new MainComponent(), true);
+			setResizable(true, true);
 			centreWithSize(getWidth(), getHeight());
 			setVisible(true);
         }

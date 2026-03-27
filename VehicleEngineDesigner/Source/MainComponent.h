@@ -4,14 +4,9 @@
 #include "juce_dsp/juce_dsp.h"
 
 #include <vector>
-#include <algorithm>
-
-#include "MainComponentBase.h"
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRateOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
@@ -19,24 +14,57 @@
 
 //==============================================================================
 /*
-    This component lives inside our window, and this is where you should put all
-    your controls and content.
+	This component lives inside our window, and this is where you should put all
+	your controls and content.
 */
-class MainComponent  : public MainComponentBase
+class MainComponent  : public juce::AudioAppComponent, public juce::ChangeListener
 {
 public:
-    //==============================================================================
-    MainComponent();
-    ~MainComponent() override;
+	//==============================================================================
+	enum TransportState
+	{
+		Stopped,
+		Starting,
+		Playing,
+		Stopping
+	};
 
-    //==============================================================================
-    void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
-    void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
-    void releaseResources() override;
+	enum SourceType
+	{
+		Source,
+		Output
+	};
 
-    //==============================================================================
-    //void paint (juce::Graphics& g) override;
-    void resized() override;
+	enum GenerationType
+	{
+		NotDefined,
+		Flat,
+		RandomRegion
+	};
+
+	enum InterpolationType
+	{
+		Point,
+		Linear
+	};
+	
+	//==============================================================================
+	MainComponent();
+	~MainComponent() override;
+
+	static const int CANVAS_WIDTH = 1 + 15 + 1 + 15 + 1;
+	static const int CANVAS_HEIGHT = 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 11 + 11 + 1 + 1;
+	static const int PIXEL_SIZE = 27;
+	static const int WRITTE_BIT_DEPTH = 32;		// 32-bit float
+
+	//==============================================================================
+	void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
+	void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
+	void releaseResources() override;
+
+	//==============================================================================
+	void paint (juce::Graphics& g) override;
+	void resized() override;
 
 	void changeListenerCallback(juce::ChangeBroadcaster* source) override
 	{
@@ -45,7 +73,7 @@ public:
 	//==========================================================================
 	void openSourceButtonClicked()
 	{
-		openFile(m_bufferSource, m_sampleRate, [this]()
+		zazzDSP::FileIO::openWavFile(m_bufferSource, m_sampleRate, m_formatManager, m_fileName, m_chooser, [this]()
 		{
 			// Draw waveform
 			const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
@@ -55,40 +83,6 @@ public:
 			// Set filename label
 			m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
 		});	
-		
-		/*m_chooser = std::make_unique<juce::FileChooser>("Select a Wave file to play...", juce::File{}, "*.wav");
-		auto chooserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
-
-		m_chooser->launchAsync(chooserFlags, [this](const juce::FileChooser& fc)
-			{
-				auto file = fc.getResult();
-
-				if (file != juce::File{})                                               
-				{
-					auto* reader = m_formatManager.createReaderFor(file);                 
-
-					if (reader != nullptr)
-					{                                                  
-						m_sampleRate = (int)reader->sampleRate;                                        
-
-						// Create audio buffer
-						m_bufferSource.setSize((int)reader->numChannels, (int)reader->lengthInSamples);				
-						reader->read(&m_bufferSource, 0, (int)reader->lengthInSamples, 0, true, true);
-
-						// Draw waveform
-						if (m_bufferSource.getNumSamples() != 0)
-						{
-							const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
-							m_waveformDisplaySource.setVerticalZoom(verticalZoom);
-							m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
-
-							//m_regionsComponent.setHorizontalZoom(m_zoomRegionLeftLabel.getText().getIntValue(), m_zoomRegionRightLabel.getText().getIntValue());
-						}
-
-						m_sourceFileNameLabel.setText(file.getFileName(), juce::dontSendNotification);
-					}
-				}
-			});*/
 	}
 
 	//==========================================================================
@@ -333,55 +327,7 @@ public:
 	//==========================================================================
 	void saveButtonClicked()
 	{
-		saveFile(m_bufferOutput, m_sampleRate);
-		
-		// Choose input file first (blocking for simplicity)
-		/*chooser = std::make_unique<juce::FileChooser>("Save processed file as...", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory), "*.wav");
-		int flag = juce::FileBrowserComponent::saveMode;
-
-		chooser->launchAsync(flag, [this](const juce::FileChooser& fc)
-			{
-				juce::File outFile = fc.getResult();
-				if (outFile == juce::File()) // user cancelled
-					return;
-
-				if (outFile.getFileExtension().isEmpty())
-					outFile = outFile.withFileExtension(".wav");
-
-			
-				// Save on background thread
-				std::thread([this, outFile]()
-					{
-						juce::WavAudioFormat wavFormat;
-						std::unique_ptr<juce::FileOutputStream> stream(outFile.createOutputStream());
-
-						bool ok = false;
-						if (stream != nullptr)
-						{
-							std::unique_ptr<juce::AudioFormatWriter> writer(wavFormat.createWriterFor(stream.get(), m_sampleRate, m_bufferOutput.getNumChannels(), WRITTE_BIT_DEPTH, {}, 0));
-
-							if (writer != nullptr)
-							{
-								
-								stream.release(); // writer owns stream
-								ok = writer->writeFromAudioSampleBuffer(m_bufferOutput, 0, m_bufferOutput.getNumSamples());
-							}
-						}
-
-						// Notify on UI thread
-						juce::MessageManager::callAsync([outFile, ok]()
-							{
-								if (ok)
-									juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::InfoIcon,
-										"Saved",
-										"Processed file saved to:\n" + outFile.getFullPathName());
-								else
-									juce::AlertWindow::showMessageBoxAsync(juce::AlertWindow::WarningIcon,
-										"Error",
-										"Failed to save file!");
-							});
-					}).detach();
-			});*/
+		zazzDSP::FileIO::saveWavFile(m_bufferOutput, m_sampleRate, m_chooser, WRITTE_BIT_DEPTH);
 	}
 
 	//==========================================================================
@@ -639,23 +585,6 @@ public:
 	}
 
 	//==========================================================================
-	int getMedian(std::vector<int> input)
-	{
-		if (input.empty())
-		{
-			return 0;
-		}
-
-		std::sort(input.begin(), input.end());
-		size_t n = input.size();
-
-		if (n % 2 == 1) // odd number of elements
-			return input[n / 2];
-		else // even number of elements
-			return (input[n / 2 - 1] + input[n / 2]) / 2;
-	}
-
-	//==========================================================================
 	int getMedian(std::vector<Region> regions)
 	{
 		if (regions.empty())
@@ -671,20 +600,14 @@ public:
 			input[i] = regions[i].m_length;
 		}
 
-		std::sort(input.begin(), input.end());
-		size_t n = input.size();
-
-		if (n % 2 == 1) // odd number of elements
-			return input[n / 2];
-		else // even number of elements
-			return (input[n / 2 - 1] + input[n / 2]) / 2;
+		return zazzDSP::Statistics::getMedian(input);
 	}
 	
 	//==========================================================================
 	// Buttons
 	juce::TextButton m_openSourceButton;
 	juce::TextButton m_detectRegionsButton;
-	
+
 	juce::TextButton m_generateButton;
 	juce::TextButton m_saveButton;
 
@@ -702,7 +625,7 @@ public:
 	juce::Slider m_exportRegionRightSlider;
 	juce::Slider m_exportMaxRegionOffsetSlider;
 	juce::Slider m_exportRegionCountSlider;
-	
+
 	// Labels
 	juce::Label m_sourceFileNameLabel;
 
@@ -714,7 +637,7 @@ public:
 	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionLengthDiffLabel;
 	juce::Label m_regionLenghtExportLabel;
-	
+
 	juce::Label m_regionsCountLabel;
 	juce::Label m_validRegionsCountLabel;
 	juce::Label m_maxZeroCrossingGainLabel;
@@ -725,12 +648,12 @@ public:
 	juce::Label m_exportMaxRegionOffsetLabel;
 	juce::Label m_exportRegionCountLabel;
 
-	PluginNameComponent m_pluginNameComponent{ "zazz::VehicleEngineDesigner" };
+	zazzGUI::PluginName m_pluginNameComponent{ "zazz::VehicleEngineDesigner" };
 
-	GroupLabelComponent m_sourceGroupLableComponent{ "Source" };
-	GroupLabelComponent m_regionGroupLableComponent{ "Regions Detection" };
-	GroupLabelComponent m_exportGroupLableComponent{ "Output" };
-	GroupLabelComponent m_playbackGroupLableComponent{ "Playback" };
+	zazzGUI::GroupLabel m_sourceGroupLableComponent{ "Source" };
+	zazzGUI::GroupLabel m_regionGroupLableComponent{ "Regions Detection" };
+	zazzGUI::GroupLabel m_exportGroupLableComponent{ "Output" };
+	zazzGUI::GroupLabel m_playbackGroupLableComponent{ "Playback" };
 
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;
@@ -738,7 +661,7 @@ public:
 
 	//! Stores zero crossing points in source audio buffer
 	std::vector<Region> m_regions{};
-	
+
 	juce::AudioBuffer<float> m_bufferSource;
 	juce::AudioBuffer<float> m_bufferOutput;
 
@@ -755,10 +678,10 @@ public:
 	int m_playbackIndex = 0;
 	int m_sampleRate = 48000;
 
-	// Colors
-	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
-	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
-	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
-	
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
+	// From MainComponentBase
+	juce::AudioFormatManager m_formatManager;
+	std::unique_ptr<juce::FileChooser> m_chooser;
+	juce::String m_fileName;						// TODO: Figure out how to pass it in callbacl
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
