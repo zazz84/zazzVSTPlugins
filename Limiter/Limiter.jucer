@@ -6,16 +6,8 @@
               version="1.2.0">
   <MAINGROUP id="Xy6ZHl" name="Limiter">
     <GROUP id="{E462C0D6-ECCB-D9CD-72E5-C7765CEC32C9}" name="GUI">
-      <FILE id="prPC2p" name="ModernTextButton.h" compile="0" resource="0"
-            file="../Shared/GUI/ModernTextButton.h"/>
       <FILE id="LTLOsX" name="GainReductionMeterComponent.h" compile="0"
             resource="0" file="../Shared/GUI/GainReductionMeterComponent.h"/>
-      <FILE id="oLfm1s" name="TextModernRotarySlide.h" compile="0" resource="0"
-            file="../Shared/GUI/TextModernRotarySlide.h"/>
-      <FILE id="We9D5s" name="ModernRotarySlider.h" compile="0" resource="0"
-            file="../Shared/GUI/ModernRotarySlider.h"/>
-      <FILE id="xb8n3j" name="PluginNameComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/PluginNameComponent.h"/>
     </GROUP>
     <GROUP id="{F30C2DE0-8446-C509-1116-67109A44CEC9}" name="Shared">
       <FILE id="FFFB5y" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
@@ -63,6 +55,7 @@
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="zazzGUI" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
   <EXPORTFORMATS>
@@ -109,6 +102,7 @@
         <MODULEPATH id="juce_graphics" path="../../juce"/>
         <MODULEPATH id="juce_gui_basics" path="../../juce"/>
         <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="zazzGUI" path="../../zazzVSTPlugins"/>
       </MODULEPATHS>
     </VS2026>
   </EXPORTFORMATS>

@@ -19,11 +19,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/PluginNameComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/TextModernRotarySlide.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/GainReductionMeterComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/ModernTextButton.h"
 
 //==============================================================================
 class LimiterAudioProcessorEditor : public juce::AudioProcessorEditor, public juce::Timer
@@ -48,23 +44,19 @@ protected:
 
 	juce::AudioProcessorValueTreeState& valueTreeState;
 
-	ModernRotarySlider m_gainSlider;
-	ModernRotarySlider m_thresholdSlider;
-	ModernRotarySlider m_volumeSlider;
-	TextModernRotarySlider m_typeSlider;
-	ModernRotarySlider m_releaseSlider;
+	zazzGUI::RotarySlider m_gainSlider;
+	zazzGUI::RotarySlider m_thresholdSlider;
+	zazzGUI::RotarySlider m_volumeSlider;
+	zazzGUI::TextRotarySlider m_typeSlider;
+	zazzGUI::RotarySlider m_releaseSlider;
 
-	ModernTextButton m_ispButton;
-	ModernTextButton m_clipButton;
-	ModernTextButton m_adaptiveReleaseButton;
+	zazzGUI::TextButton m_ispButton;
+	zazzGUI::TextButton m_clipButton;
+	zazzGUI::TextButton m_adaptiveReleaseButton;
 
-	PluginNameComponent m_pluginLabel;
+	zazzGUI::PluginName m_pluginLabel;
 
 	GainReductionMeterComponent m_gainReductionMeter;
-
-	juce::Colour darkColor = juce::Colour::fromRGB(40, 42, 46);
-	juce::Colour lightColor = juce::Colour::fromRGB(68, 68, 68);
-	juce::Colour highlightColor = juce::Colour::fromRGB(255, 255, 190);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LimiterAudioProcessorEditor)
 };

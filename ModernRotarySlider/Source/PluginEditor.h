@@ -20,8 +20,6 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-#include "../../../zazzVSTPlugins/Shared/GUI/ModernRotarySlider.h"
-
 //==============================================================================
 /**
 */
@@ -41,9 +39,9 @@ private:
     // access the processor object that created it.
     ModernRotarySliderAudioProcessor& audioProcessor;
 
-	ModernRotarySlider m_slider;
-	ModernRotarySlider m_slider2;
-	ModernRotarySlider m_slider3;
+	zazzGUI::RotarySlider m_slider;
+    zazzGUI::RotarySlider m_slider2;
+    zazzGUI::RotarySlider m_slider3;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ModernRotarySliderAudioProcessorEditor)
 };

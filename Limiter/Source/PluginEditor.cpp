@@ -85,13 +85,13 @@ void LimiterAudioProcessorEditor::timerCallback()
 	if (valueTreeState.getRawParameterValue("AR")->load() > 0.0f)
 	{
 		const double adaptiveReleaseTimeMS = (double)audioProcessor.getAdaptiveReleaseTimeMS();
-		m_releaseSlider.m_slider.setValue(adaptiveReleaseTimeMS);
+		m_releaseSlider.setValue(adaptiveReleaseTimeMS);
 	}
 }
 
 void LimiterAudioProcessorEditor::paint (juce::Graphics& g)
 {
-	g.fillAll(darkColor);
+	g.fillAll(zazzGUI::Colors::darkColor);
 }
 
 void LimiterAudioProcessorEditor::resized()

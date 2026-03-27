@@ -26,9 +26,9 @@ ModernRotarySliderAudioProcessorEditor::ModernRotarySliderAudioProcessorEditor(M
 	m_slider2(p.vts, "Test", " dB", "Dots"),
 	m_slider3(p.vts, "Test", " dB", "NoRing")
 {
-	m_slider.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Full);
-	m_slider2.setSliderType(ModernRotarySliderLookAndFeel::SliderType::Dots);
-	m_slider3.setSliderType(ModernRotarySliderLookAndFeel::SliderType::NoRing);
+	m_slider.setSliderType(zazzGUI::RotarySlider::SliderType::Full);
+	m_slider2.setSliderType(zazzGUI::RotarySlider::SliderType::Dots);
+	m_slider3.setSliderType(zazzGUI::RotarySlider::SliderType::NoRing);
 	
 	addAndMakeVisible(m_slider);
 	addAndMakeVisible(m_slider2);
