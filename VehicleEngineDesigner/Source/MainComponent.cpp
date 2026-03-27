@@ -10,8 +10,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
 
-	addAndMakeVisible(m_pluginNameComponent);
-
+	addAndMakeVisible(m_fileGroupLableComponent);
 	addAndMakeVisible(m_sourceGroupLableComponent);
 	addAndMakeVisible(m_regionGroupLableComponent);
 	addAndMakeVisible(m_exportGroupLableComponent);
@@ -160,6 +159,18 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_saveButton.setButtonText("Save");
 	m_saveButton.onClick = [this] { saveButtonClicked(); };
 
+	addAndMakeVisible(&m_saveProjectButton);
+	m_saveProjectButton.setButtonText("Save Project");
+	m_saveProjectButton.onClick = [this] { saveProjectButtonClicked(); };
+
+	addAndMakeVisible(&m_loadProjectButton);
+	m_loadProjectButton.setButtonText("Load Project");
+	m_loadProjectButton.onClick = [this] { loadProjectButtonClicked(); };
+
+	addAndMakeVisible(&m_newProjectButton);
+	m_newProjectButton.setButtonText("New Project");
+	m_newProjectButton.onClick = [this] { newProjectButtonClicked(); };
+
 	// Play buttons
 	addAndMakeVisible(&m_playButton);
 	m_playButton.setButtonText("Play");
@@ -289,8 +300,7 @@ void MainComponent::resized()
 	const int row12 = row11 + pixelSize11;				// Output waveform
 	
 	// Set size
-	m_pluginNameComponent.setSize(width, pixelSize2);
-
+	m_fileGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_sourceGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_regionGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_exportGroupLableComponent.setSize(pixelSize15, pixelSize);
@@ -316,6 +326,9 @@ void MainComponent::resized()
 	m_generateButton.setSize(pixelSize3, pixelSize);
 	m_generationTypeComboBox.setSize(pixelSize9, pixelSize);	
 	m_saveButton.setSize(pixelSize3, pixelSize);
+	m_saveProjectButton.setSize(pixelSize3, pixelSize);
+	m_loadProjectButton.setSize(pixelSize3, pixelSize);
+	m_newProjectButton.setSize(pixelSize3, pixelSize);
 
 	m_regionLenghtExportSlider.setSize(pixelSize12, pixelSize);
 	m_exportRegionLeftSlider.setSize(pixelSize12, pixelSize);
@@ -329,8 +342,7 @@ void MainComponent::resized()
 	m_waveformDisplayOutput.setSize(pixelSize31, pixelSize11);
 
 	// Set position
-	m_pluginNameComponent.setTopLeftPosition(column1, row1);
-
+	m_fileGroupLableComponent.setTopLeftPosition(column2, row1);
 	m_sourceGroupLableComponent.setTopLeftPosition(column2, row2);
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row2);
 	m_exportGroupLableComponent.setTopLeftPosition(column2, row4);
@@ -357,6 +369,10 @@ void MainComponent::resized()
 	m_generateButton.setTopLeftPosition(column2, row5);
 	m_generationTypeComboBox.setTopLeftPosition(column3, row5);
 	m_saveButton.setTopLeftPosition(column6, row5);
+	
+	m_newProjectButton.setTopLeftPosition(column3, row1 + pixelSize);
+	m_loadProjectButton.setTopLeftPosition(column4, row1 + pixelSize);
+	m_saveProjectButton.setTopLeftPosition(column5, row1 + pixelSize);
 
 	m_regionLenghtExportSlider.setTopLeftPosition(column3, row6);
 	m_exportRegionLeftSlider.setTopLeftPosition(column3, row7);

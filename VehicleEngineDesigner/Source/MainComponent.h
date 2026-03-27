@@ -73,16 +73,45 @@ public:
 	//==========================================================================
 	void openSourceButtonClicked()
 	{
-		zazzDSP::FileIO::openWavFile(m_bufferSource, m_sampleRate, m_formatManager, m_fileName, m_chooser, [this]()
-		{
-			// Draw waveform
-			const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
-			m_waveformDisplaySource.setVerticalZoom(verticalZoom);
-			m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+		m_sourceFileChooser = std::make_unique<juce::FileChooser>(
+			"Select a Wave file to play...",
+			juce::File{},
+			"*.wav");
 
-			// Set filename label
-			m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
-		});	
+		auto flags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
+
+		m_sourceFileChooser->launchAsync(flags, [this](const juce::FileChooser& fc)
+		{
+			juce::File file = fc.getResult();
+			if (file == juce::File{})
+				return;
+
+			// Store full file path
+			m_sourceFilePath = file.getFullPathName();
+
+			auto* reader = m_formatManager.createReaderFor(file);
+			if (reader != nullptr)
+			{
+				const int samples = (int)reader->lengthInSamples;
+				if (samples != 0)
+				{
+					m_sampleRate = static_cast<int>(reader->sampleRate);
+					m_fileName = file.getFileName();
+					m_bufferSource.setSize((int)reader->numChannels, (int)reader->lengthInSamples);
+					reader->read(&m_bufferSource, 0, (int)reader->lengthInSamples, 0, true, true);
+
+					// Draw waveform
+					const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
+					m_waveformDisplaySource.setVerticalZoom(verticalZoom);
+					m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+
+					// Set filename label
+					m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
+				}
+
+				delete reader;
+			}
+		});
 	}
 
 	//==========================================================================
@@ -328,6 +357,207 @@ public:
 	void saveButtonClicked()
 	{
 		zazzDSP::FileIO::saveWavFile(m_bufferOutput, m_sampleRate, m_chooser, WRITTE_BIT_DEPTH);
+	}
+
+	//==========================================================================
+	void newProjectButtonClicked()
+	{
+		// Clear all buffers
+		m_bufferSource.clear();
+		m_bufferOutput.clear();
+		m_regions.clear();
+
+		// Clear file information
+		m_fileName = "";
+		m_sourceFilePath = "";
+		m_sourceFileNameLabel.setText("", juce::dontSendNotification);
+
+		// Reset playback state
+		m_playbackIndex = 0;
+		m_sourceState = TransportState::Stopped;
+		m_playButton.setButtonText("Play");
+
+		// Reset source type
+		m_sourceType = SourceType::Source;
+		m_sourceButton.setButtonText("Source");
+
+		// Reset interpolation type
+		m_interpolationType = InterpolationType::Linear;
+
+		// Reset region median
+		m_regionLenghtMedian = 0;
+
+		// Reset all sliders to default values
+		m_detectedFrequencySlider.setValue(50.0);
+		m_thresholdSlider.setValue(-60.0);
+		m_maximumFrequencySlider.setValue(200.0);
+		m_SpectrumDifferenceSlider.setValue(100.0);
+		m_regionLenghtExportSlider.setValue(1000.0);
+		m_exportRegionLeftSlider.setValue(0.0);
+		m_exportRegionRightSlider.setValue(0.0);
+		m_exportMaxRegionOffsetSlider.setValue(1000.0);
+		m_exportRegionCountSlider.setValue(200.0);
+
+		// Reset combo boxes to default
+		m_detectionTypeComboBox.setSelectedId(1);
+		m_generationTypeComboBox.setSelectedId(1);
+
+		// Clear all labels
+		m_regionsCountLabel.setText("", juce::dontSendNotification);
+		m_validRegionsCountLabel.setText("", juce::dontSendNotification);
+		m_regionLenghtMedianLabel.setText("", juce::dontSendNotification);
+		m_regionLengthDiffLabel.setText("", juce::dontSendNotification);
+		m_maxZeroCrossingGainLabel.setText("", juce::dontSendNotification);
+
+		// Clear waveform displays
+		m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
+
+		// Repaint to update UI
+		repaint();
+	}
+
+	//==========================================================================
+	void saveProjectButtonClicked()
+	{
+		m_projectSaveChooser = std::make_unique<juce::FileChooser>(
+			"Save Project File",
+			juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
+			"*.json");
+
+		auto flags = juce::FileBrowserComponent::saveMode;
+
+		m_projectSaveChooser->launchAsync(flags, [this](const juce::FileChooser& fc)
+		{
+			juce::File projectFile = fc.getResult();
+			if (projectFile == juce::File())
+				return;
+
+			auto projectObject = std::make_unique<juce::DynamicObject>();
+
+			// Save file path
+			projectObject->setProperty("sourceFilePath", m_sourceFilePath);
+
+			// Save all slider values
+			projectObject->setProperty("detectedFrequency", m_detectedFrequencySlider.getValue());
+			projectObject->setProperty("threshold", m_thresholdSlider.getValue());
+			projectObject->setProperty("maximumFrequency", m_maximumFrequencySlider.getValue());
+			projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
+			projectObject->setProperty("regionLenghtExport", m_regionLenghtExportSlider.getValue());
+			projectObject->setProperty("exportRegionLeft", m_exportRegionLeftSlider.getValue());
+			projectObject->setProperty("exportRegionRight", m_exportRegionRightSlider.getValue());
+			projectObject->setProperty("exportMaxRegionOffset", m_exportMaxRegionOffsetSlider.getValue());
+			projectObject->setProperty("exportRegionCount", m_exportRegionCountSlider.getValue());
+
+			// Save combo box selections
+			projectObject->setProperty("detectionType", m_detectionTypeComboBox.getSelectedId());
+			projectObject->setProperty("generationType", m_generationTypeComboBox.getSelectedId());
+
+			// Save interpolation type
+			projectObject->setProperty("interpolationType", (int)m_interpolationType);
+
+			juce::var jsonVar(projectObject.release());
+			projectFile.replaceWithText(juce::JSON::toString(jsonVar, true));
+		});
+	}
+
+	//==========================================================================
+	void loadProjectButtonClicked()
+	{
+		m_projectLoadChooser = std::make_unique<juce::FileChooser>(
+			"Load Project File",
+			juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
+			"*.json");
+
+		auto flags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
+
+		m_projectLoadChooser->launchAsync(flags, [this](const juce::FileChooser& fc)
+		{
+			juce::File projectFile = fc.getResult();
+			if (projectFile == juce::File())
+				return;
+
+			juce::String fileContents = projectFile.loadFileAsString();
+			auto jsonVar = juce::JSON::parse(fileContents);
+
+			if (jsonVar.isObject())
+			{
+				auto* obj = jsonVar.getDynamicObject();
+
+				// Load source file if path exists
+				if (obj->hasProperty("sourceFilePath"))
+				{
+					juce::String filePath = obj->getProperty("sourceFilePath").toString();
+					juce::File sourceFile(filePath);
+
+					if (sourceFile.exists())
+					{
+						auto* reader = m_formatManager.createReaderFor(sourceFile);
+						if (reader != nullptr)
+						{
+							const int samples = (int)reader->lengthInSamples;
+							if (samples != 0)
+							{
+								m_sampleRate = static_cast<int>(reader->sampleRate);
+								m_fileName = sourceFile.getFileName();
+								m_sourceFilePath = sourceFile.getFullPathName();
+								m_bufferSource.setSize((int)reader->numChannels, (int)reader->lengthInSamples);
+								reader->read(&m_bufferSource, 0, (int)reader->lengthInSamples, 0, true, true);
+
+								// Draw waveform
+								const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
+								m_waveformDisplaySource.setVerticalZoom(verticalZoom);
+								m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+
+								// Set filename label
+								m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
+							}
+
+							delete reader;
+						}
+					}
+				}
+
+				// Load slider values if they exist
+				if (obj->hasProperty("detectedFrequency"))
+					m_detectedFrequencySlider.setValue(obj->getProperty("detectedFrequency"));
+				if (obj->hasProperty("threshold"))
+					m_thresholdSlider.setValue(obj->getProperty("threshold"));
+				if (obj->hasProperty("maximumFrequency"))
+					m_maximumFrequencySlider.setValue(obj->getProperty("maximumFrequency"));
+				if (obj->hasProperty("spectrumDifference"))
+					m_SpectrumDifferenceSlider.setValue(obj->getProperty("spectrumDifference"));
+				if (obj->hasProperty("regionLenghtExport"))
+					m_regionLenghtExportSlider.setValue(obj->getProperty("regionLenghtExport"));
+				if (obj->hasProperty("exportRegionLeft"))
+					m_exportRegionLeftSlider.setValue(obj->getProperty("exportRegionLeft"));
+				if (obj->hasProperty("exportRegionRight"))
+					m_exportRegionRightSlider.setValue(obj->getProperty("exportRegionRight"));
+				if (obj->hasProperty("exportMaxRegionOffset"))
+					m_exportMaxRegionOffsetSlider.setValue(obj->getProperty("exportMaxRegionOffset"));
+				if (obj->hasProperty("exportRegionCount"))
+					m_exportRegionCountSlider.setValue(obj->getProperty("exportRegionCount"));
+
+				// Load combo box selections if they exist
+				if (obj->hasProperty("detectionType"))
+					m_detectionTypeComboBox.setSelectedId(obj->getProperty("detectionType"));
+				if (obj->hasProperty("generationType"))
+					m_generationTypeComboBox.setSelectedId(obj->getProperty("generationType"));
+
+				// Load interpolation type if it exists
+				if (obj->hasProperty("interpolationType"))
+					m_interpolationType = static_cast<InterpolationType>((int)obj->getProperty("interpolationType"));
+
+				// Run detect regions with loaded parameters
+				if (m_bufferSource.getNumSamples() > 0)
+				{
+					detectRegionsButtonClicked();
+
+					// Run generate with loaded parameters
+					generateButtonClicked();
+				}
+			}
+		});
 	}
 
 	//==========================================================================
@@ -610,6 +840,9 @@ public:
 
 	juce::TextButton m_generateButton;
 	juce::TextButton m_saveButton;
+	juce::TextButton m_saveProjectButton;
+	juce::TextButton m_loadProjectButton;
+	juce::TextButton m_newProjectButton;
 
 	juce::TextButton m_playButton;
 	juce::TextButton m_sourceButton;
@@ -648,8 +881,7 @@ public:
 	juce::Label m_exportMaxRegionOffsetLabel;
 	juce::Label m_exportRegionCountLabel;
 
-	zazzGUI::PluginName m_pluginNameComponent{ "zazz::VehicleEngineDesigner" };
-
+	zazzGUI::GroupLabel m_fileGroupLableComponent{ "File" };
 	zazzGUI::GroupLabel m_sourceGroupLableComponent{ "Source" };
 	zazzGUI::GroupLabel m_regionGroupLableComponent{ "Regions Detection" };
 	zazzGUI::GroupLabel m_exportGroupLableComponent{ "Output" };
@@ -681,7 +913,13 @@ public:
 	// From MainComponentBase
 	juce::AudioFormatManager m_formatManager;
 	std::unique_ptr<juce::FileChooser> m_chooser;
+	std::unique_ptr<juce::FileChooser> m_sourceFileChooser;		// File chooser for loading source files
 	juce::String m_fileName;						// TODO: Figure out how to pass it in callbacl
+	juce::String m_sourceFilePath;					// Full path to loaded source file
+
+	// Project file choosers
+	std::unique_ptr<juce::FileChooser> m_projectSaveChooser;
+	std::unique_ptr<juce::FileChooser> m_projectLoadChooser;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

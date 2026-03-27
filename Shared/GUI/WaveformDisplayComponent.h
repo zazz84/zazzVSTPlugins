@@ -201,7 +201,8 @@ public:
 
 		if (m_rightSampleIndex != 0)
 		{
-			const float verticalZoom = 1.0f / buffer.getMagnitude(0, buffer.getNumSamples());
+			const float magnitude = buffer.getMagnitude(0, buffer.getNumSamples());
+			const float verticalZoom = (magnitude > 0.0f) ? 1.0f / magnitude : 1.0f;
 			m_verticalZoom = verticalZoom;
 		}
 		else
