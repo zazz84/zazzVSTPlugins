@@ -72,6 +72,18 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_SpectrumDifferenceLabel.attachToComponent(&m_SpectrumDifferenceSlider, true);
 
 	//
+	addAndMakeVisible(m_zeroCrossingCountSlider);
+	m_zeroCrossingCountSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_zeroCrossingCountSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_zeroCrossingCountSlider.setRange(1.0, 12.0, 1.0);
+	m_zeroCrossingCountSlider.setValue(1.0);
+
+	addAndMakeVisible(m_zeroCrossingCountLabel);
+	m_zeroCrossingCountLabel.setText("ZC Group", juce::dontSendNotification);
+
+	m_zeroCrossingCountLabel.attachToComponent(&m_zeroCrossingCountSlider, true);
+
+	//
 	addAndMakeVisible(m_maximumFrequencySlider);
 	m_maximumFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_maximumFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
@@ -325,6 +337,7 @@ void MainComponent::resized()
 	m_maximumFrequencySlider.setSize(pixelSize6, pixelSize);
 	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
 	m_SpectrumDifferenceSlider.setSize(pixelSize6, pixelSize);
+	m_zeroCrossingCountSlider.setSize(pixelSize6, pixelSize);
 	 
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_validRegionsCountLabel.setSize(pixelSize6, pixelSize);
@@ -368,6 +381,7 @@ void MainComponent::resized()
 	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
 	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column11, row6);
 	m_SpectrumDifferenceSlider.setTopLeftPosition(column11, row7);
+	m_zeroCrossingCountSlider.setTopLeftPosition(column11, row8);
 
 	m_regionsCountLabel.setTopLeftPosition(column8, row4);
 	m_validRegionsCountLabel.setTopLeftPosition(column8, row5);

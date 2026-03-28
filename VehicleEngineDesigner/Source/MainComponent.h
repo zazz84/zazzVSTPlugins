@@ -426,6 +426,7 @@ public:
 		m_thresholdSlider.setValue(-60.0);
 		m_maximumFrequencySlider.setValue(200.0);
 		m_SpectrumDifferenceSlider.setValue(100.0);
+		m_zeroCrossingCountSlider.setValue(1.0);
 		m_regionLenghtExportSlider.setValue(1000.0);
 		m_exportRegionLeftSlider.setValue(0.0);
 		m_exportRegionRightSlider.setValue(0.0);
@@ -477,6 +478,7 @@ public:
 			projectObject->setProperty("threshold", m_thresholdSlider.getValue());
 			projectObject->setProperty("maximumFrequency", m_maximumFrequencySlider.getValue());
 			projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
+			projectObject->setProperty("zeroCrossingCount", m_zeroCrossingCountSlider.getValue());
 			projectObject->setProperty("regionLenghtExport", m_regionLenghtExportSlider.getValue());
 			projectObject->setProperty("exportRegionLeft", m_exportRegionLeftSlider.getValue());
 			projectObject->setProperty("exportRegionRight", m_exportRegionRightSlider.getValue());
@@ -568,6 +570,8 @@ public:
 					m_maximumFrequencySlider.setValue(obj->getProperty("maximumFrequency"));
 				if (obj->hasProperty("spectrumDifference"))
 					m_SpectrumDifferenceSlider.setValue(obj->getProperty("spectrumDifference"));
+				if (obj->hasProperty("zeroCrossingCount"))
+					m_zeroCrossingCountSlider.setValue(obj->getProperty("zeroCrossingCount"));
 				if (obj->hasProperty("regionLenghtExport"))
 					m_regionLenghtExportSlider.setValue(obj->getProperty("regionLenghtExport"));
 				if (obj->hasProperty("exportRegionLeft"))
@@ -812,7 +816,7 @@ public:
 		{
 			return;
 		}
-		
+
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
 		zeroCrossing.set((float)m_detectedFrequencySlider.getValue(), 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), (float)m_maximumFrequencySlider.getValue());
@@ -823,27 +827,68 @@ public:
 
 		const size_t size = zeroCrossingIdxs.size();
 
+		// Get zero crossing grouping value
+		const int zcGroupCount = static_cast<int>(m_zeroCrossingCountSlider.getValue());
+
 		// Create regions
 		m_regions.clear();
-		
+
 		if (size != 0)
 		{
-			m_regions.resize(zeroCrossingIdxs.size());
-
-			for (int i = 0; i < zeroCrossingIdxs.size() - 1; i++)
+			if (zcGroupCount == 1)
 			{
-				m_regions[i].m_sampleIndex = zeroCrossingIdxs[i];
-				m_regions[i].m_length = zeroCrossingIdxs[i + 1] - zeroCrossingIdxs[i];
-				m_regions[i].m_isValid = true;
-			}
+				// Original behavior: each zero crossing interval is a region
+				m_regions.resize(zeroCrossingIdxs.size());
 
-			// Handle last region
-			m_regions[zeroCrossingIdxs.size() - 1].m_isValid = true;
-			m_regions[zeroCrossingIdxs.size() - 1].m_sampleIndex = zeroCrossingIdxs[zeroCrossingIdxs.size() - 1];
-			m_regions[zeroCrossingIdxs.size() - 1].m_length = m_bufferSource.getNumSamples() - zeroCrossingIdxs[zeroCrossingIdxs.size() - 1];
+				for (int i = 0; i < zeroCrossingIdxs.size() - 1; i++)
+				{
+					m_regions[i].m_sampleIndex = zeroCrossingIdxs[i];
+					m_regions[i].m_length = zeroCrossingIdxs[i + 1] - zeroCrossingIdxs[i];
+					m_regions[i].m_isValid = true;
+				}
+
+				// Handle last region
+				m_regions[zeroCrossingIdxs.size() - 1].m_isValid = true;
+				m_regions[zeroCrossingIdxs.size() - 1].m_sampleIndex = zeroCrossingIdxs[zeroCrossingIdxs.size() - 1];
+				m_regions[zeroCrossingIdxs.size() - 1].m_length = m_bufferSource.getNumSamples() - zeroCrossingIdxs[zeroCrossingIdxs.size() - 1];
+			}
+			else
+			{
+				// Grouped behavior: group N consecutive zero crossings into single region
+				std::vector<Region> groupedRegions;
+
+				for (int i = 0; i < zeroCrossingIdxs.size(); i += zcGroupCount)
+				{
+					Region region;
+					region.m_sampleIndex = zeroCrossingIdxs[i];
+					region.m_isValid = true;
+
+					// Determine end of this group
+					int endIdx = i + zcGroupCount;
+					if (endIdx >= zeroCrossingIdxs.size())
+					{
+						endIdx = zeroCrossingIdxs.size() - 1;
+					}
+
+					// Length from start of group to end of group
+					if (endIdx < zeroCrossingIdxs.size() - 1)
+					{
+						region.m_length = zeroCrossingIdxs[endIdx] - zeroCrossingIdxs[i];
+					}
+					else
+					{
+						// Last group extends to end of buffer
+						region.m_length = m_bufferSource.getNumSamples() - zeroCrossingIdxs[i];
+					}
+
+					groupedRegions.push_back(region);
+				}
+
+				m_regions = groupedRegions;
+			}
 		}
-	
-		m_regionsCountLabel.setText("Regions count: " + juce::String((float)size, 0), juce::dontSendNotification);
+
+		m_regionsCountLabel.setText("Regions count: " + juce::String((float)m_regions.size(), 0), juce::dontSendNotification);
 
 		// Get median
 		m_regionLenghtMedian = getMedian(m_regions);
@@ -871,7 +916,7 @@ public:
 		for (int i = 0; i < m_regions.size(); i++)
 		{
 			const float value = channelData[m_regions[i].m_sampleIndex];
-			
+
 			maxZeroCrossing = std::fmaxf(maxZeroCrossing, value);
 		}
 
@@ -1040,6 +1085,7 @@ public:
 	juce::Slider m_thresholdSlider;
 	juce::Slider m_maximumFrequencySlider;
 	juce::Slider m_SpectrumDifferenceSlider;
+	juce::Slider m_zeroCrossingCountSlider;
 	juce::Slider m_regionLenghtExportSlider;
 
 	juce::Slider m_exportRegionLeftSlider;
@@ -1054,6 +1100,7 @@ public:
 	juce::Label m_thresholdLabel;
 	juce::Label m_maximumFrequencyLabel;
 	juce::Label m_SpectrumDifferenceLabel;
+	juce::Label m_zeroCrossingCountLabel;
 
 	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionLengthDiffLabel;
