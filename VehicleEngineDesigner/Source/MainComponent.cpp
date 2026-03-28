@@ -39,6 +39,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_detectedFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
 	m_detectedFrequencySlider.setRange(2.0, 1000.0, 0.1);   // min, max, step
 	m_detectedFrequencySlider.setValue(50.0);              // initial value
+	m_detectedFrequencySlider.setVisible(false);            // hidden by default (Default detection type)
 
 	addAndMakeVisible(m_detectedFrequencyLabel);
 	m_detectedFrequencyLabel.setText("Filter Freq", juce::dontSendNotification);
@@ -61,7 +62,8 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_SpectrumDifferenceSlider);
 	m_SpectrumDifferenceSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_SpectrumDifferenceSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_SpectrumDifferenceSlider.setRange(0.0, 100.0, 1.0);
+	m_SpectrumDifferenceSlider.setRange(0.0, 100.0, 0.1);
+	m_SpectrumDifferenceSlider.setSkewFactorFromMidPoint(10.0);
 	m_SpectrumDifferenceSlider.setValue(100.0);
 
 	addAndMakeVisible(m_SpectrumDifferenceLabel);
@@ -185,20 +187,18 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_detectionTypeComboBox.addItem("Default", 1);
 	m_detectionTypeComboBox.addItem("Filter", 2);
 	m_detectionTypeComboBox.setSelectedId(1);
+	m_detectionTypeComboBox.onChange = [this]
+	{
+		const bool showSlider = (m_detectionTypeComboBox.getSelectedId() != 1);
+		m_detectedFrequencySlider.setVisible(showSlider);
+	};
 	addAndMakeVisible(m_detectionTypeComboBox);
 
 	m_generationTypeComboBox.addItem("Flat", 1);
 	m_generationTypeComboBox.addItem("Random Regions", 2);
 	m_generationTypeComboBox.setSelectedId(1);
 	addAndMakeVisible(m_generationTypeComboBox);
-
-	// Setup slider callbacks to clear random selections when generation parameters change
-	m_regionLenghtExportSlider.onValueChange = [this] { clearRandomSelections(); };
-	m_exportRegionLeftSlider.onValueChange = [this] { clearRandomSelections(); };
-	m_exportRegionRightSlider.onValueChange = [this] { clearRandomSelections(); };
-	m_exportRegionCountSlider.onValueChange = [this] { clearRandomSelections(); };
-	m_generationTypeComboBox.onChange = [this] { clearRandomSelections(); };
-
+	
 	// Canvas size
 	const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
 	const int canvasHeight = CANVAS_HEIGHT * PIXEL_SIZE;
