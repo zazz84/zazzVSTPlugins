@@ -191,7 +191,14 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_generationTypeComboBox.addItem("Random Regions", 2);
 	m_generationTypeComboBox.setSelectedId(1);
 	addAndMakeVisible(m_generationTypeComboBox);
-	
+
+	// Setup slider callbacks to clear random selections when generation parameters change
+	m_regionLenghtExportSlider.onValueChange = [this] { clearRandomSelections(); };
+	m_exportRegionLeftSlider.onValueChange = [this] { clearRandomSelections(); };
+	m_exportRegionRightSlider.onValueChange = [this] { clearRandomSelections(); };
+	m_exportRegionCountSlider.onValueChange = [this] { clearRandomSelections(); };
+	m_generationTypeComboBox.onChange = [this] { clearRandomSelections(); };
+
 	// Canvas size
 	const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
 	const int canvasHeight = CANVAS_HEIGHT * PIXEL_SIZE;

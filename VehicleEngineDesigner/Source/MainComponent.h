@@ -119,6 +119,13 @@ public:
 	//==========================================================================
 	void generateButtonClicked()
 	{
+		clearRandomSelections();
+
+		generateOutput();
+	}
+
+	void generateOutput()
+	{
 		if (static_cast<GenerationType>(m_generationTypeComboBox.getSelectedId()) == GenerationType::RandomRegion)
 		{
 			randomRegionsGenerate();
@@ -262,7 +269,7 @@ public:
 		const int tempBufferLength = tempBufferRegionCount * exportRegionLength;
 		const int channels = m_bufferSource.getNumChannels();
 		tempBuffer.setSize(channels, tempBufferLength);
-		
+
 		for (int channel = 0; channel < channels; channel++)
 		{
 			auto* pBufferSource = m_bufferSource.getWritePointer(channel);
@@ -314,21 +321,44 @@ public:
 			m_bufferOutput.setSize(channels, exportRegionCount * exportRegionLength);
 			m_bufferOutput.clear();
 
-			// Writte to out buffer
-			RandomNoRepeat randomNoRepeat(0, tempBufferRegionCount - 1, tempBufferRegionCount / 2);
-
-			for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
+			// Use saved random selections if available, otherwise generate new ones
+			if (!m_randomRegionSelections.empty() && (int)m_randomRegionSelections.size() == exportRegionCount)
 			{
-				for (int channel = 0; channel < channels; channel++)
+				// Use saved selections
+				for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
 				{
-					m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, randomNoRepeat.get() * exportRegionLength, exportRegionLength);
+					const int selectedIndex = m_randomRegionSelections[outRegionIdx];
+					if (selectedIndex >= 0 && selectedIndex < tempBufferRegionCount)
+					{
+						for (int channel = 0; channel < channels; channel++)
+						{
+							m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, selectedIndex * exportRegionLength, exportRegionLength);
+						}
+					}
+				}
+			}
+			else
+			{
+				// Generate new random selections
+				m_randomRegionSelections.clear();
+				RandomNoRepeat randomNoRepeat(0, tempBufferRegionCount - 1, tempBufferRegionCount / 2);
+
+				for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
+				{
+					const int selectedIndex = randomNoRepeat.get();
+					m_randomRegionSelections.push_back(selectedIndex);
+
+					for (int channel = 0; channel < channels; channel++)
+					{
+						m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, selectedIndex * exportRegionLength, exportRegionLength);
+					}
 				}
 			}
 		}
 
 		// Set output waveform
 		std::vector<Region> regionsExport;
-		
+
 		regionsExport.resize(exportRegionCount);
 
 		for (int i = 0; i < exportRegionCount; i++)
@@ -369,6 +399,7 @@ public:
 			m_bufferOutput.setSize(0, 0);
 		}
 		m_regions.clear();
+		m_randomRegionSelections.clear();
 
 		// Clear file information
 		m_fileName = "";
@@ -458,6 +489,13 @@ public:
 
 			// Save interpolation type
 			projectObject->setProperty("interpolationType", (int)m_interpolationType);
+
+			// Save detection results
+			projectObject->setProperty("regionLenghtMedian", m_regionLenghtMedian);
+			projectObject->setProperty("regions", serializeRegions());
+
+			// Save generation results
+			projectObject->setProperty("randomRegionSelections", serializeRandomSelections());
 
 			juce::var jsonVar(projectObject.release());
 			projectFile.replaceWithText(juce::JSON::toString(jsonVar, true));
@@ -551,13 +589,72 @@ public:
 				if (obj->hasProperty("interpolationType"))
 					m_interpolationType = static_cast<InterpolationType>((int)obj->getProperty("interpolationType"));
 
-				// Run detect regions with loaded parameters
-				if (m_bufferSource.getNumSamples() > 0)
-				{
-					detectRegionsButtonClicked();
+				// Load detection results if they exist
+				if (obj->hasProperty("regionLenghtMedian"))
+					m_regionLenghtMedian = (int)obj->getProperty("regionLenghtMedian");
 
-					// Run generate with loaded parameters
-					generateButtonClicked();
+				if (obj->hasProperty("regions"))
+					deserializeRegions(obj->getProperty("regions"));
+
+				// Load generation results if they exist
+				if (obj->hasProperty("randomRegionSelections"))
+					deserializeRandomSelections(obj->getProperty("randomRegionSelections"));
+
+				// Update UI labels and displays
+				if (m_bufferSource.getNumSamples() > 0 && !m_regions.empty())
+				{
+					m_regionsCountLabel.setText("Regions count: " + juce::String((float)m_regions.size(), 0), juce::dontSendNotification);
+					m_regionLenghtMedianLabel.setText("Lenght median: " + juce::String((float)m_regionLenghtMedian, 0), juce::dontSendNotification);
+
+					// Get max median diff
+					int maxDiff = 0;
+					for (int i = 0; i < m_regions.size(); i++)
+					{
+						const int medianDiff = std::abs(m_regionLenghtMedian - m_regions[i].m_length);
+						if (medianDiff > maxDiff)
+						{
+							maxDiff = medianDiff;
+						}
+					}
+					m_regionLengthDiffLabel.setText("Max median diff: " + juce::String((float)maxDiff, 0), juce::dontSendNotification);
+
+					// Handle max zero crossing
+					float maxZeroCrossing = 0.0f;
+					auto* channelData = m_bufferSource.getReadPointer(0);
+					for (int i = 0; i < m_regions.size(); i++)
+					{
+						const float value = channelData[m_regions[i].m_sampleIndex];
+						maxZeroCrossing = std::fmaxf(maxZeroCrossing, value);
+					}
+					m_maxZeroCrossingGainLabel.setText("Max. zero crossing: " + juce::String((float)juce::Decibels::gainToDecibels(maxZeroCrossing), 1), juce::dontSendNotification);
+
+					// Update valid regions count
+					auto validRegionsCount = getValidRegionsCount();
+					m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)validRegionsCount, 0), juce::dontSendNotification);
+
+					// Update waveform display
+					m_waveformDisplaySource.setRegions(m_regions);
+
+					// Update slider ranges
+					if (const size_t size = m_regions.size(); size > 1)
+					{
+						m_exportRegionLeftSlider.setRange(0.0, (double)(size - 1), 1.0);
+						m_exportRegionRightSlider.setRange(0.0, (double)(size - 1), 1.0);
+						m_exportRegionLeftSlider.setValue(0.0);
+						m_exportRegionRightSlider.setValue((double)(size - 1));
+					}
+					else
+					{
+						m_exportRegionLeftSlider.setRange(0.0, 1.0, 1.0);
+						m_exportRegionRightSlider.setRange(0.0, 1.0, 1.0);
+						m_exportRegionLeftSlider.setValue(0.0);
+						m_exportRegionRightSlider.setValue(0.0);
+					}
+
+					// Run generate with loaded parameters to create output buffer
+					generateOutput();
+
+					repaint();
 				}
 			}
 		});
@@ -835,6 +932,94 @@ public:
 
 		return zazzDSP::Statistics::getMedian(input);
 	}
+
+	//==========================================================================
+	juce::var serializeRegions()
+	{
+		auto regionsArray = std::make_unique<juce::DynamicObject>();
+		juce::Array<juce::var> regionsVarArray;
+
+		for (const auto& region : m_regions)
+		{
+			auto regionObject = std::make_unique<juce::DynamicObject>();
+			regionObject->setProperty("sampleIndex", region.m_sampleIndex);
+			regionObject->setProperty("isValid", region.m_isValid);
+			regionObject->setProperty("length", region.m_length);
+			regionObject->setProperty("difference", region.m_difference);
+
+			regionsVarArray.add(juce::var(regionObject.release()));
+		}
+
+		return regionsVarArray;
+	}
+
+	//==========================================================================
+	void deserializeRegions(const juce::var& regionsVar)
+	{
+		m_regions.clear();
+
+		if (regionsVar.isArray())
+		{
+			const juce::Array<juce::var>* regionsArray = regionsVar.getArray();
+			if (regionsArray != nullptr)
+			{
+				for (const auto& regionVar : *regionsArray)
+				{
+					if (regionVar.isObject())
+					{
+						auto* regionObj = regionVar.getDynamicObject();
+						if (regionObj != nullptr)
+						{
+							Region region;
+							region.m_sampleIndex = (int)regionObj->getProperty("sampleIndex");
+							region.m_isValid = (bool)regionObj->getProperty("isValid");
+							region.m_length = (int)regionObj->getProperty("length");
+							region.m_difference = (float)regionObj->getProperty("difference");
+
+							m_regions.push_back(region);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//==========================================================================
+	juce::var serializeRandomSelections()
+	{
+		juce::Array<juce::var> selectionsArray;
+
+		for (const auto& selection : m_randomRegionSelections)
+		{
+			selectionsArray.add(selection);
+		}
+
+		return selectionsArray;
+	}
+
+	//==========================================================================
+	void deserializeRandomSelections(const juce::var& selectionsVar)
+	{
+		m_randomRegionSelections.clear();
+
+		if (selectionsVar.isArray())
+		{
+			const juce::Array<juce::var>* selectionsArray = selectionsVar.getArray();
+			if (selectionsArray != nullptr)
+			{
+				for (const auto& selectionVar : *selectionsArray)
+				{
+					m_randomRegionSelections.push_back((int)selectionVar);
+				}
+			}
+		}
+	}
+
+	//==========================================================================
+	void clearRandomSelections()
+	{
+		m_randomRegionSelections.clear();
+	}
 	
 	//==========================================================================
 	// Buttons
@@ -896,6 +1081,9 @@ public:
 
 	//! Stores zero crossing points in source audio buffer
 	std::vector<Region> m_regions{};
+
+	//! Stores random region selections for reproducible generation
+	std::vector<int> m_randomRegionSelections{};
 
 	juce::AudioBuffer<float> m_bufferSource;
 	juce::AudioBuffer<float> m_bufferOutput;
