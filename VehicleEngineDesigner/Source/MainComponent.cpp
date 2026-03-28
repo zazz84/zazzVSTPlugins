@@ -37,12 +37,12 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_detectedFrequencySlider);
 	m_detectedFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_detectedFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_detectedFrequencySlider.setRange(2.0, 1000.0, 0.1);   // min, max, step
-	m_detectedFrequencySlider.setValue(50.0);              // initial value
+	m_detectedFrequencySlider.setRange(1.0, 1000.0, 1.0);   // min, max, step (in samples)
+	m_detectedFrequencySlider.setValue(100.0);              // initial value
 	m_detectedFrequencySlider.setVisible(false);            // hidden by default (Default detection type)
 
 	addAndMakeVisible(m_detectedFrequencyLabel);
-	m_detectedFrequencyLabel.setText("Filter Freq", juce::dontSendNotification);
+	m_detectedFrequencyLabel.setText("Filter Samples", juce::dontSendNotification);
 
 	m_detectedFrequencyLabel.attachToComponent(&m_detectedFrequencySlider, true);
 
@@ -84,22 +84,22 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_zeroCrossingCountLabel.attachToComponent(&m_zeroCrossingCountSlider, true);
 
 	//
-	addAndMakeVisible(m_maximumFrequencySlider);
-	m_maximumFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_maximumFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_maximumFrequencySlider.setRange( 2.0, 1000.0, 0.1);
-	m_maximumFrequencySlider.setValue( 200.0);
+	addAndMakeVisible(m_minimumLengthSlider);
+	m_minimumLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_minimumLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_minimumLengthSlider.setRange(1.0, 10000.0, 1.0);   // min, max, step (in samples)
+	m_minimumLengthSlider.setValue(100.0);              // initial value
 
 	addAndMakeVisible(m_maximumFrequencyLabel);
-	m_maximumFrequencyLabel.setText("Max Freq", juce::dontSendNotification);
+	m_maximumFrequencyLabel.setText("Min Length", juce::dontSendNotification);
 
-	m_maximumFrequencyLabel.attachToComponent(&m_maximumFrequencySlider, true);
+	m_maximumFrequencyLabel.attachToComponent(&m_minimumLengthSlider, true);
 
 	//
 	addAndMakeVisible(m_regionLenghtExportSlider);
 	m_regionLenghtExportSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_regionLenghtExportSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_regionLenghtExportSlider.setRange(0.0, 10000.0, 1.0);        // min, max, step
+	m_regionLenghtExportSlider.setRange(1.0, 10000.0, 1.0);        // min, max, step
 	m_regionLenghtExportSlider.setValue(1000.0);                     // initial value
 
 	addAndMakeVisible(m_regionLenghtExportLabel);
@@ -334,7 +334,7 @@ void MainComponent::resized()
 	m_detectionTypeComboBox.setSize(pixelSize3, pixelSize);
 	m_detectedFrequencySlider.setSize(pixelSize6, pixelSize);
 	m_thresholdSlider.setSize(pixelSize6, pixelSize);
-	m_maximumFrequencySlider.setSize(pixelSize6, pixelSize);
+	m_minimumLengthSlider.setSize(pixelSize6, pixelSize);
 	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
 	m_SpectrumDifferenceSlider.setSize(pixelSize6, pixelSize);
 	m_zeroCrossingCountSlider.setSize(pixelSize6, pixelSize);
@@ -377,7 +377,7 @@ void MainComponent::resized()
 	m_detectionTypeComboBox.setTopLeftPosition(column9, row3);
 
 	m_thresholdSlider.setTopLeftPosition(column11, row3);
-	m_maximumFrequencySlider.setTopLeftPosition(column11, row4);
+	m_minimumLengthSlider.setTopLeftPosition(column11, row4);
 	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
 	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column11, row6);
 	m_SpectrumDifferenceSlider.setTopLeftPosition(column11, row7);

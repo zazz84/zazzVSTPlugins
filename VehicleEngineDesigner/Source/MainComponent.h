@@ -422,9 +422,9 @@ public:
 		m_regionLenghtMedian = 0;
 
 		// Reset all sliders to default values
-		m_detectedFrequencySlider.setValue(50.0);
+		m_detectedFrequencySlider.setValue(100.0);
 		m_thresholdSlider.setValue(-60.0);
-		m_maximumFrequencySlider.setValue(200.0);
+		m_minimumLengthSlider.setValue(100.0);
 		m_SpectrumDifferenceSlider.setValue(100.0);
 		m_zeroCrossingCountSlider.setValue(1.0);
 		m_regionLenghtExportSlider.setValue(1000.0);
@@ -476,7 +476,7 @@ public:
 			// Save all slider values
 			projectObject->setProperty("detectedFrequency", m_detectedFrequencySlider.getValue());
 			projectObject->setProperty("threshold", m_thresholdSlider.getValue());
-			projectObject->setProperty("maximumFrequency", m_maximumFrequencySlider.getValue());
+			projectObject->setProperty("minimumLength", m_minimumLengthSlider.getValue());
 			projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
 			projectObject->setProperty("zeroCrossingCount", m_zeroCrossingCountSlider.getValue());
 			projectObject->setProperty("regionLenghtExport", m_regionLenghtExportSlider.getValue());
@@ -566,8 +566,8 @@ public:
 					m_detectedFrequencySlider.setValue(obj->getProperty("detectedFrequency"));
 				if (obj->hasProperty("threshold"))
 					m_thresholdSlider.setValue(obj->getProperty("threshold"));
-				if (obj->hasProperty("maximumFrequency"))
-					m_maximumFrequencySlider.setValue(obj->getProperty("maximumFrequency"));
+				if (obj->hasProperty("minimumLength"))
+					m_minimumLengthSlider.setValue(obj->getProperty("minimumLength"));
 				if (obj->hasProperty("spectrumDifference"))
 					m_SpectrumDifferenceSlider.setValue(obj->getProperty("spectrumDifference"));
 				if (obj->hasProperty("zeroCrossingCount"))
@@ -819,7 +819,15 @@ public:
 
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
-		zeroCrossing.set((float)m_detectedFrequencySlider.getValue(), 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), (float)m_maximumFrequencySlider.getValue());
+
+		// Convert samples to Hz: frequency_Hz = sampleRate / samples
+		const float filterSamples = (float)m_detectedFrequencySlider.getValue();
+		const float filterFrequencyHz = m_sampleRate / filterSamples;
+
+		const float maximumFrequencySamples = (float)m_minimumLengthSlider.getValue();
+		const float maximumFrequencyHz = m_sampleRate / maximumFrequencySamples;
+
+		zeroCrossing.set(filterFrequencyHz, 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
 
 		std::vector<int> zeroCrossingIdxs;
@@ -1083,7 +1091,7 @@ public:
 	// Sliders
 	juce::Slider m_detectedFrequencySlider;
 	juce::Slider m_thresholdSlider;
-	juce::Slider m_maximumFrequencySlider;
+	juce::Slider m_minimumLengthSlider;
 	juce::Slider m_SpectrumDifferenceSlider;
 	juce::Slider m_zeroCrossingCountSlider;
 	juce::Slider m_regionLenghtExportSlider;
