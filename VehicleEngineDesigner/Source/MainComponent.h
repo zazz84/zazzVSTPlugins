@@ -4,6 +4,7 @@
 #include "juce_dsp/juce_dsp.h"
 
 #include <vector>
+#include <mutex>
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
@@ -73,32 +74,17 @@ public:
 	//==========================================================================
 	void openSourceButtonClicked()
 	{
-		m_sourceFileChooser = std::make_unique<juce::FileChooser>(
-			"Select a Wave file to play...",
-			juce::File{},
-			"*.wav");
-
-		auto flags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
-
-		m_sourceFileChooser->launchAsync(flags, [this](const juce::FileChooser& fc)
-		{
-			juce::File file = fc.getResult();
-			if (file == juce::File{})
-				return;
-
-			// Store full file path
-			m_sourceFilePath = file.getFullPathName();
-
-			auto* reader = m_formatManager.createReaderFor(file);
-			if (reader != nullptr)
+		zazzDSP::FileIO::openWavFile(
+			m_bufferSource,
+			m_sampleRate,
+			m_formatManager,
+			m_sourceFilePath,
+			m_wavOpenChooser,
+			[this]()
 			{
-				const int samples = (int)reader->lengthInSamples;
-				if (samples != 0)
+				if (m_bufferSource.getNumSamples() > 0)
 				{
-					m_sampleRate = static_cast<int>(reader->sampleRate);
-					m_fileName = file.getFileName();
-					m_bufferSource.setSize((int)reader->numChannels, (int)reader->lengthInSamples);
-					reader->read(&m_bufferSource, 0, (int)reader->lengthInSamples, 0, true, true);
+					m_fileName = juce::File(m_sourceFilePath).getFileName();
 
 					// Draw waveform
 					const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
@@ -108,10 +94,7 @@ public:
 					// Set filename label
 					m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
 				}
-
-				delete reader;
-			}
-		});
+			});
 	}
 
 	//==========================================================================
@@ -166,11 +149,15 @@ public:
 		{
 			return;
 		}
-		
+
 		// Prepare out buffer
 		const auto outputSize = validRegionsCount * exportRegionLength;
 		const auto channels = m_bufferSource.getNumChannels();
-		m_bufferOutput.setSize(channels, outputSize);
+
+		{
+			std::lock_guard<std::mutex> lock(m_bufferMutex);
+			m_bufferOutput.setSize(channels, outputSize);
+		}
 
 		for (int channel = 0; channel < channels; channel++)
 		{
@@ -322,17 +309,20 @@ public:
 		}
 
 		// Prepare out buffer
-		m_bufferOutput.setSize(channels, exportRegionCount * exportRegionLength);
-		m_bufferOutput.clear();
-
-		// Writte to out buffer
-		RandomNoRepeat randomNoRepeat(0, tempBufferRegionCount - 1, tempBufferRegionCount / 2);
-
-		for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
 		{
-			for (int channel = 0; channel < channels; channel++)
+			std::lock_guard<std::mutex> lock(m_bufferMutex);
+			m_bufferOutput.setSize(channels, exportRegionCount * exportRegionLength);
+			m_bufferOutput.clear();
+
+			// Writte to out buffer
+			RandomNoRepeat randomNoRepeat(0, tempBufferRegionCount - 1, tempBufferRegionCount / 2);
+
+			for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
 			{
-				m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, randomNoRepeat.get() * exportRegionLength, exportRegionLength);
+				for (int channel = 0; channel < channels; channel++)
+				{
+					m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, randomNoRepeat.get() * exportRegionLength, exportRegionLength);
+				}
 			}
 		}
 
@@ -354,17 +344,30 @@ public:
 	}
 	
 	//==========================================================================
-	void saveButtonClicked()
+	void saveWavButtonClicked()
 	{
-		zazzDSP::FileIO::saveWavFile(m_bufferOutput, m_sampleRate, m_chooser, WRITTE_BIT_DEPTH);
+		if (const int samples = m_bufferOutput.getNumSamples(); samples != 0)
+		{
+			zazzDSP::FileIO::saveWavFile(m_bufferOutput, m_sampleRate, m_wavSaveChooser, WRITTE_BIT_DEPTH);
+		}
+		else
+		{
+			juce::AlertWindow::showMessageBoxAsync(
+				juce::AlertWindow::WarningIcon,
+				"Error",
+				"Output is empty!");
+		}
 	}
 
 	//==========================================================================
 	void newProjectButtonClicked()
 	{
 		// Clear all buffers
-		m_bufferSource.clear();
-		m_bufferOutput.clear();
+		{
+			std::lock_guard<std::mutex> lock(m_bufferMutex);
+			m_bufferSource.setSize(0, 0);
+			m_bufferOutput.setSize(0, 0);
+		}
 		m_regions.clear();
 
 		// Clear file information
@@ -912,14 +915,17 @@ public:
 
 	// From MainComponentBase
 	juce::AudioFormatManager m_formatManager;
-	std::unique_ptr<juce::FileChooser> m_chooser;
-	std::unique_ptr<juce::FileChooser> m_sourceFileChooser;		// File chooser for loading source files
 	juce::String m_fileName;						// TODO: Figure out how to pass it in callbacl
 	juce::String m_sourceFilePath;					// Full path to loaded source file
 
-	// Project file choosers
+	// File choosers
+	std::unique_ptr<juce::FileChooser> m_wavOpenChooser;
+	std::unique_ptr<juce::FileChooser> m_wavSaveChooser;
 	std::unique_ptr<juce::FileChooser> m_projectSaveChooser;
 	std::unique_ptr<juce::FileChooser> m_projectLoadChooser;
+
+	// Thread synchronization
+	std::mutex m_bufferMutex;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

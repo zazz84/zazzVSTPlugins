@@ -157,7 +157,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	addAndMakeVisible(&m_saveButton);
 	m_saveButton.setButtonText("Save");
-	m_saveButton.onClick = [this] { saveButtonClicked(); };
+	m_saveButton.onClick = [this] { saveWavButtonClicked(); };
 
 	addAndMakeVisible(&m_saveProjectButton);
 	m_saveProjectButton.setButtonText("Save Project");
@@ -215,27 +215,29 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
 {
 	if (m_sourceState == TransportState::Playing)
 	{
+		std::lock_guard<std::mutex> lock(m_bufferMutex);
+
 		auto& buffer = m_sourceType == SourceType::Source ? m_bufferSource : m_bufferOutput;
 
 		auto numInputChannels = buffer.getNumChannels();
 		auto numOutputChannels = bufferToFill.buffer->getNumChannels();
 		auto outputSamplesRemaining = bufferToFill.numSamples;
 		auto outputSamplesOffset = bufferToFill.startSample;
-		
+
 		while (outputSamplesRemaining > 0)
 		{
 			auto bufferSamplesRemaining = buffer.getNumSamples() - m_playbackIndex;
 			auto samplesThisTime = juce::jmin(outputSamplesRemaining, bufferSamplesRemaining);
-			
+
 			for (auto channel = 0; channel < numOutputChannels; ++channel)
 			{
 				bufferToFill.buffer->copyFrom(channel, outputSamplesOffset, buffer, channel % numInputChannels, m_playbackIndex, samplesThisTime);
 			}
-			
+
 			outputSamplesRemaining -= samplesThisTime;
 			outputSamplesOffset += samplesThisTime;
 			m_playbackIndex += samplesThisTime;
-			
+
 			if (m_playbackIndex >= buffer.getNumSamples())
 			{
 				TransportState::Stopped;

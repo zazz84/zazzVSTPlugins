@@ -13,25 +13,25 @@ namespace zazzDSP
             juce::AudioBuffer<float>& buffer,
             int& sampleRate,
             juce::AudioFormatManager& formatManager,
-            juce::String& fileName,
+            juce::String& fileFullPathName,
             std::unique_ptr<juce::FileChooser>& chooser,
             std::function<void()> onLoaded = nullptr)
         {
             chooser = std::make_unique<juce::FileChooser>(
-                "Select a Wave file to play...",
+                "Select a Wave file ...",
                 juce::File{},
                 "*.wav");
 
             auto chooserFlags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles;
 
-            chooser->launchAsync(chooserFlags, [&buffer, &sampleRate, &formatManager, &fileName, onLoaded](const juce::FileChooser& fc)
+            chooser->launchAsync(chooserFlags, [&buffer, &sampleRate, &formatManager, &fileFullPathName, onLoaded](const juce::FileChooser& fc)
             {
                 auto file = fc.getResult();
 
                 if (file != juce::File{})
                 {
                     // Set file name
-                    fileName = file.getFileName();
+                    fileFullPathName = file.getFullPathName();
 
                     auto* reader = formatManager.createReaderFor(file);
 
@@ -67,7 +67,7 @@ namespace zazzDSP
             int bitDepth = 32)
         {
             chooser = std::make_unique<juce::FileChooser>(
-                "Save processed file as...",
+                "Save processed Wav file as...",
                 juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
                 "*.wav");
 
