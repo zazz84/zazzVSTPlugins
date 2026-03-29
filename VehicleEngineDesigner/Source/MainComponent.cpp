@@ -81,6 +81,18 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_zeroCrossingCountLabel.attachToComponent(&m_zeroCrossingCountSlider, true);
 
 	//
+	addAndMakeVisible(m_crossfadeLengthSlider);
+	m_crossfadeLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_crossfadeLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_crossfadeLengthSlider.setRange(0.0, 50.0, 1.0);
+	m_crossfadeLengthSlider.setValue(0.0);
+
+	addAndMakeVisible(m_crossfadeLengthLabel);
+	m_crossfadeLengthLabel.setText("Crossfade", juce::dontSendNotification);
+
+	m_crossfadeLengthLabel.attachToComponent(&m_crossfadeLengthSlider, true);
+
+	//
 	addAndMakeVisible(m_minimumLengthSlider);
 	m_minimumLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_minimumLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
@@ -136,8 +148,8 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_exportMaxRegionOffsetSlider);
 	m_exportMaxRegionOffsetSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_exportMaxRegionOffsetSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_exportMaxRegionOffsetSlider.setRange(0.0, 1000.0, 1.0);
-	m_exportMaxRegionOffsetSlider.setValue(1000.0);
+	m_exportMaxRegionOffsetSlider.setRange(0.0, 400.0, 1.0);
+	m_exportMaxRegionOffsetSlider.setValue(100.0);
 
 	addAndMakeVisible(m_exportMaxRegionOffsetLabel);
 	m_exportMaxRegionOffsetLabel.setText("Max Offset", juce::dontSendNotification);
@@ -146,8 +158,8 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_exportRegionCountSlider);
 	m_exportRegionCountSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_exportRegionCountSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_exportRegionCountSlider.setRange(0.0, 200.0, 1.0);
-	m_exportRegionCountSlider.setValue(200.0);
+	m_exportRegionCountSlider.setRange(0.0, 256.0, 1.0);
+	m_exportRegionCountSlider.setValue(64.0);
 
 	addAndMakeVisible(m_exportRegionCountLabel);
 	m_exportRegionCountLabel.setText("Reg Count", juce::dontSendNotification);
@@ -335,7 +347,7 @@ void MainComponent::resized()
 	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
 	m_SpectrumDifferenceSlider.setSize(pixelSize6, pixelSize);
 	m_zeroCrossingCountSlider.setSize(pixelSize6, pixelSize);
-	 
+
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_validRegionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_regionLenghtMedianLabel.setSize(pixelSize6, pixelSize);
@@ -353,6 +365,7 @@ void MainComponent::resized()
 	m_exportRegionLeftSlider.setSize(pixelSize12, pixelSize);
 	m_exportRegionRightSlider.setSize(pixelSize12, pixelSize);
 	m_exportRegionCountSlider.setSize(pixelSize12, pixelSize);
+	m_crossfadeLengthSlider.setSize(pixelSize12, pixelSize);
 
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
@@ -401,6 +414,7 @@ void MainComponent::resized()
 	m_exportRegionLeftSlider.setTopLeftPosition(column3, row7);
 	m_exportRegionRightSlider.setTopLeftPosition(column3, row8);
 	m_exportRegionCountSlider.setTopLeftPosition(column3, row9);
+	m_crossfadeLengthSlider.setTopLeftPosition(column3, row10);
 
 	m_sourceButton.setTopLeftPosition(column8, row10);
 	m_playButton.setTopLeftPosition(column9, row10);

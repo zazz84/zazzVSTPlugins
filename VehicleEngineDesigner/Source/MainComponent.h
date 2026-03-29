@@ -244,6 +244,13 @@ public:
 	//==========================================================================
 	void randomRegionsGenerate()
 	{
+		const int crossfadeLength = static_cast<int>(m_crossfadeLengthSlider.getValue());
+		randomRegionsGenerateWithCrossfade(2 * crossfadeLength);
+	}
+
+	//==========================================================================
+	void randomRegionsGenerateWithCrossfade(int crossfadeLength)
+	{
 		const auto exportRegionLeftIdx = (int)m_exportRegionLeftSlider.getValue();
 		const auto exportRegionRightIdx = (int)m_exportRegionRightSlider.getValue();
 		const auto exportRegionCount = (int)m_exportRegionCountSlider.getValue();
@@ -263,6 +270,12 @@ public:
 			tempBufferRegionCount += static_cast<int>(m_regions[i].m_isValid);
 		}	
 
+		// Early return if no valid regions exist
+		if (tempBufferRegionCount == 0)
+		{
+			return;
+		}
+
 		const auto sourceRegionCount = (int)m_regions.size();
 		const auto sourceSampleCount = m_bufferSource.getNumSamples();
 		const auto exportRegionLength = (int)m_regionLenghtExportSlider.getValue();
@@ -276,9 +289,12 @@ public:
 			return;
 		}
 
-		// Temp audio buffer
+		const int halfCrossfade = crossfadeLength / 2;
+
+		// Temp audio buffer - allocate extra space for crossfade samples before and after each segment
 		juce::AudioBuffer<float> tempBuffer;
-		const int tempBufferLength = tempBufferRegionCount * exportRegionLength;
+		const int tempRegionLength = exportRegionLength + crossfadeLength;
+		const int tempBufferLength = tempBufferRegionCount * tempRegionLength;
 		const int channels = m_bufferSource.getNumChannels();
 		tempBuffer.setSize(channels, tempBufferLength);
 
@@ -286,70 +302,123 @@ public:
 		{
 			auto* pBufferSource = m_bufferSource.getWritePointer(channel);
 			auto* pTempBuffer = tempBuffer.getWritePointer(channel);
-			int tempOutIndex = 0;
+			int writeIndex = 0;
 
 			for (int regionIdx = exportRegionLeftIdx; regionIdx < exportRegionRightIdx; regionIdx++)
 			{
+				// Ignore invalid regions
 				if (m_regions[regionIdx].m_isValid == false)
 				{
 					continue;
 				}
 
-				const int segmentStartIndex = m_regions[regionIdx].m_sampleIndex;
+				float readIndex = (float)m_regions[regionIdx].m_sampleIndex;
 				const int regionLenghtSource = m_regions[regionIdx].m_length;
 				const float indexIncrement = (float)regionLenghtSource / (float)exportRegionLength;
-				float sourceIndex = 0.0f;
 
+				readIndex -= halfCrossfade * indexIncrement;
+
+				// Fade in data
+				for (int i = 0; i < halfCrossfade; i++)
+				{
+					float sample = 0.0f;
+					if (m_interpolationType == InterpolationType::Point)
+					{
+						sample = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
+					}
+					else if (m_interpolationType == InterpolationType::Linear)
+					{
+						const int indexLeft = (int)readIndex;
+						const int indexRight = indexLeft + 1;
+
+						float valueLeft = 0.0f;
+						float valueRight = 0.0f;
+
+						if (indexLeft >= 0 && indexLeft < sourceSampleCount)
+							valueLeft = pBufferSource[indexLeft];
+						if (indexRight >= 0 && indexRight < sourceSampleCount)
+							valueRight = pBufferSource[indexRight];
+
+						const float delta = readIndex - std::floor(readIndex);
+						sample = valueLeft * (1.0f - delta) + valueRight * delta;
+					}
+
+					pTempBuffer[writeIndex] = ((float)i / (float)halfCrossfade) * sample;
+
+					readIndex += indexIncrement;
+					writeIndex++;
+				}
+
+				// Region data
 				for (int i = 0; i < exportRegionLength; i++)
 				{
 					if (m_interpolationType == InterpolationType::Point)
 					{
-						pTempBuffer[tempOutIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
+						pTempBuffer[writeIndex] = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
 					}
 					else if (m_interpolationType == InterpolationType::Linear)
 					{
-						const int indexLeft = segmentStartIndex + (int)sourceIndex;
-						const int indexRight = indexLeft < sourceSampleCount - 1 ? indexLeft + 1 : indexLeft;
+						const int indexLeft = readIndex;
+						const int indexRight = indexLeft + 1;
 
-						const float valueLeft = pBufferSource[indexLeft];
-						const float valueRight = pBufferSource[indexRight];
+						float valueLeft = 0.0f;
+						float valueRight = 0.0f;
 
-						const float delta = sourceIndex - std::floor(sourceIndex);
+						if (indexLeft >= 0 && indexLeft < sourceSampleCount)
+							valueLeft = pBufferSource[indexLeft];
+						if (indexRight >= 0 && indexRight < sourceSampleCount)
+							valueRight = pBufferSource[indexRight];
+
+						const float delta = readIndex - std::floor(readIndex);
 						const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
 
-						pTempBuffer[tempOutIndex] = interpolated;
-
+						pTempBuffer[writeIndex] = interpolated;
 					}
 
-					sourceIndex += indexIncrement;
-					tempOutIndex++;
+					readIndex += indexIncrement;
+					writeIndex++;
 				}
+
+				// Fade out data
+				for (int i = 0; i < halfCrossfade; i++)
+				{
+					float sample = 0.0f;
+					if (m_interpolationType == InterpolationType::Point)
+					{
+						sample = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
+					}
+					else if (m_interpolationType == InterpolationType::Linear)
+					{
+						const int indexLeft = readIndex;
+						const int indexRight = indexLeft + 1;
+
+						float valueLeft = 0.0f;
+						float valueRight = 0.0f;
+
+						if (indexLeft >= 0 && indexLeft < sourceSampleCount)
+							valueLeft = pBufferSource[indexLeft];
+						if (indexRight >= 0 && indexRight < sourceSampleCount)
+							valueRight = pBufferSource[indexRight];
+
+						const float delta = readIndex - std::floor(readIndex);
+						sample = valueLeft * (1.0f - delta) + valueRight * delta;
+					}
+
+					pTempBuffer[writeIndex] = (1.0f - ((float)i / (float)halfCrossfade)) * sample;
+
+					readIndex += indexIncrement;
+					writeIndex++;
+				}
+				
 			}
 		}
 
-		// Prepare out buffer
+		// Prepare out buffer with overlapping regions
 		{
 			std::lock_guard<std::mutex> lock(m_bufferMutex);
-			m_bufferOutput.setSize(channels, exportRegionCount * exportRegionLength);
-			m_bufferOutput.clear();
 
 			// Use saved random selections if available, otherwise generate new ones
-			if (!m_randomRegionSelections.empty() && (int)m_randomRegionSelections.size() == exportRegionCount)
-			{
-				// Use saved selections
-				for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
-				{
-					const int selectedIndex = m_randomRegionSelections[outRegionIdx];
-					if (selectedIndex >= 0 && selectedIndex < tempBufferRegionCount)
-					{
-						for (int channel = 0; channel < channels; channel++)
-						{
-							m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, selectedIndex * exportRegionLength, exportRegionLength);
-						}
-					}
-				}
-			}
-			else
+			if (m_randomRegionSelections.empty() || (int)m_randomRegionSelections.size() != exportRegionCount)
 			{
 				// Generate new random selections
 				m_randomRegionSelections.clear();
@@ -357,28 +426,65 @@ public:
 
 				for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
 				{
-					const int selectedIndex = randomNoRepeat.get();
-					m_randomRegionSelections.push_back(selectedIndex);
+					m_randomRegionSelections.push_back(randomNoRepeat.get());
+				}
+			}
 
-					for (int channel = 0; channel < channels; channel++)
+			// Calculate output size accounting for crossfade overlaps
+			const int outputSize = exportRegionCount * exportRegionLength;
+			m_bufferOutput.setSize(channels, outputSize);
+			m_bufferOutput.clear();
+
+			for (int outRegionIdx = 0; outRegionIdx < exportRegionCount; outRegionIdx++)
+			{
+				if (outRegionIdx >= (int)m_randomRegionSelections.size())
+				{
+					break;  // Safety check to prevent out-of-bounds access
+				}
+				const int regionIndex = m_randomRegionSelections[outRegionIdx];
+				
+				for (int channel = 0; channel < channels; channel++)
+				{
+					auto* pTempBuffer = tempBuffer.getReadPointer(channel);
+					auto* pOutBuffer = m_bufferOutput.getWritePointer(channel);
+
+					int readIndex = regionIndex * tempRegionLength;
+					int writeIndex = outRegionIdx * exportRegionLength - halfCrossfade;
+
+					for (int sample = 0; sample < tempRegionLength; sample++)
 					{
-						m_bufferOutput.copyFrom(channel, outRegionIdx * exportRegionLength, tempBuffer, channel, selectedIndex * exportRegionLength, exportRegionLength);
+						if (writeIndex >= 0 && writeIndex < outputSize)
+						{
+							pOutBuffer[writeIndex] = pOutBuffer[writeIndex] + pTempBuffer[readIndex];
+						}
+							
+						readIndex++;
+						writeIndex++;
 					}
 				}
 			}
 		}
 
-		// Set output waveform
+		// Set output waveform display
 		std::vector<Region> regionsExport;
-
 		regionsExport.resize(exportRegionCount);
 
+		int currentPos = 0;
 		for (int i = 0; i < exportRegionCount; i++)
 		{
-			regionsExport[i].m_sampleIndex = i * exportRegionLength;
+			regionsExport[i].m_sampleIndex = currentPos;
 			regionsExport[i].m_isValid = true;
-			regionsExport[i].m_length = exportRegionLength;
 
+			// Calculate region length accounting for crossfades
+			if (i < exportRegionCount - 1)
+			{
+				regionsExport[i].m_length = exportRegionLength;
+				currentPos += exportRegionLength;  // Full length for position calculation
+			}
+			else
+			{
+				regionsExport[i].m_length = m_bufferOutput.getNumSamples() - currentPos;
+			}
 		}
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
@@ -439,6 +545,7 @@ public:
 		m_minimumLengthSlider.setValue(100.0);
 		m_SpectrumDifferenceSlider.setValue(100.0);
 		m_zeroCrossingCountSlider.setValue(1.0);
+		m_crossfadeLengthSlider.setValue(100.0);
 		m_regionLenghtExportSlider.setValue(1000.0);
 		m_exportRegionLeftSlider.setValue(0.0);
 		m_exportRegionRightSlider.setValue(0.0);
@@ -490,6 +597,7 @@ public:
 			projectObject->setProperty("minimumLength", m_minimumLengthSlider.getValue());
 			projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
 			projectObject->setProperty("zeroCrossingCount", m_zeroCrossingCountSlider.getValue());
+			projectObject->setProperty("crossfadeLength", m_crossfadeLengthSlider.getValue());
 			projectObject->setProperty("regionLenghtExport", m_regionLenghtExportSlider.getValue());
 			projectObject->setProperty("exportRegionLeft", m_exportRegionLeftSlider.getValue());
 			projectObject->setProperty("exportRegionRight", m_exportRegionRightSlider.getValue());
@@ -584,6 +692,8 @@ public:
 					m_SpectrumDifferenceSlider.setValue(obj->getProperty("spectrumDifference"));
 				if (obj->hasProperty("zeroCrossingCount"))
 					m_zeroCrossingCountSlider.setValue(obj->getProperty("zeroCrossingCount"));
+				if (obj->hasProperty("crossfadeLength"))
+					m_crossfadeLengthSlider.setValue(obj->getProperty("crossfadeLength"));
 				if (obj->hasProperty("regionLenghtExport"))
 					m_regionLenghtExportSlider.setValue(obj->getProperty("regionLenghtExport"));
 				if (obj->hasProperty("exportRegionLeft"))
@@ -1140,6 +1250,7 @@ public:
 	juce::Slider m_minimumLengthSlider;
 	juce::Slider m_SpectrumDifferenceSlider;
 	juce::Slider m_zeroCrossingCountSlider;
+	juce::Slider m_crossfadeLengthSlider;
 	juce::Slider m_regionLenghtExportSlider;
 
 	juce::Slider m_exportRegionLeftSlider;
@@ -1155,6 +1266,7 @@ public:
 	juce::Label m_maximumFrequencyLabel;
 	juce::Label m_SpectrumDifferenceLabel;
 	juce::Label m_zeroCrossingCountLabel;
+	juce::Label m_crossfadeLengthLabel;
 
 	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionLengthDiffLabel;
