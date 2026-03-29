@@ -21,7 +21,7 @@
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 
-class SpectrogramDisplayComponent : public juce::Component
+class SpectrogramDisplayComponent : public juce::Component, public juce::TooltipClient
 {
 public:
 	SpectrogramDisplayComponent(juce::String name) : m_nameGroupComponent(name)
@@ -30,14 +30,19 @@ public:
 	}
 
 	~SpectrogramDisplayComponent() = default;
+	
+	juce::String getTooltip() override
+	{
+		return "";  // Tooltip is drawn in paint() instead of using the tooltip system
+	}
 
 	void setAudioBuffer(const juce::AudioBuffer<float> buffer)
 	{
 		m_audioBuffer = buffer;
 		computeSpectrogram();
-		repaint();
+		updateSpectrogramImage();
 	}
-
+	
 private:
 	static constexpr int FFT_ORDER = 14;  // 4096 samples for good low-frequency resolution
 	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
@@ -143,26 +148,36 @@ private:
 		}
 	}
 
-	void paint(juce::Graphics& g) override
+	void updateSpectrogramImage()
 	{
-		const auto width = getWidth();
-		const auto height = getHeight();
+		const int width = getWidth();
+		const int height = getHeight();
+
+		if (width <= 0 || height <= 0)
+		{
+			return;
+		}
+
+		// Create image to cache the spectrogram
+		m_spectrogramImage = juce::Image(juce::Image::RGB, width, height, true);
+		juce::Graphics g(m_spectrogramImage);
+
 		const auto pixelSize = height / 11;
 
-		const auto spectogramX = 0;
-		const auto spectogramY = pixelSize;
-		const auto spectogramWidth = width;
-		const auto spectogramHeight = height - pixelSize;
+		const int spectrogramX = 0;
+		const int spectrogramY = pixelSize;
+		const int spectrogramWidth = width;
+		const int spectrogramHeight = height - pixelSize;
 
 		// Draw background
 		g.setColour(juce::Colours::black);
-		g.fillRect(spectogramX, spectogramY, spectogramWidth, spectogramHeight);
+		g.fillRect(spectrogramX, spectrogramY, spectrogramWidth, spectrogramHeight);
 
 		// Draw spectrogram
 		if (m_spectrogram.validTimeSteps > 0)
 		{
-			const float pixelWidth = (float)spectogramWidth / (float)m_spectrogram.validTimeSteps;
-			const float pixelHeight = (float)spectogramHeight / (float)NUM_FREQUENCY_BINS;
+			const float pixelWidth = (float)spectrogramWidth / (float)m_spectrogram.validTimeSteps;
+			const float pixelHeight = (float)spectrogramHeight / (float)NUM_FREQUENCY_BINS;
 
 			for (int timeIdx = 0; timeIdx < m_spectrogram.validTimeSteps; ++timeIdx)
 			{
@@ -172,18 +187,44 @@ private:
 					const juce::Colour colour = getColourForValue(value);
 
 					g.setColour(colour);
-					const float x = (float)spectogramX + (float)timeIdx * pixelWidth;
-					const float y = (float)spectogramY + (float)freqIdx * pixelHeight;
+					const float x = (float)spectrogramX + (float)timeIdx * pixelWidth;
+					const float y = (float)spectrogramY + (float)freqIdx * pixelHeight;
 					g.fillRect(x, y, pixelWidth, pixelHeight);
 				}
 			}
 		}
+	}
 
-		// Draw frequency labels on the left side
-		g.setColour(juce::Colours::white);
-		g.setFont(10.0f);
-		g.drawText("200Hz", 0, spectogramY + 15, 45, 15, juce::Justification::topRight);
-		g.drawText("20Hz", 0, spectogramY + spectogramHeight - 30, 45, 15, juce::Justification::bottomRight);
+	void paint(juce::Graphics& g) override
+	{
+		// Draw cached spectrogram image
+		if (!m_spectrogramImage.isNull())
+		{
+			g.drawImageAt(m_spectrogramImage, 0, 0);
+		}
+
+		// Draw tooltip in the bottom right corner with frequency and samples on separate lines
+		if (m_tooltipFrequency >= 0.0f)
+		{
+			const int sampleRate = 48000;
+			const int samplesPerCycle = (int)(sampleRate / m_tooltipFrequency);
+
+			g.setColour(juce::Colours::white);
+			g.setFont(12.0f);
+
+			const int tooltipX = getWidth() - 100;
+			const int tooltipY = getHeight() - 35;
+			const int tooltipWidth = 95;
+			const int lineHeight = 15;
+
+			// Draw frequency on first line
+			juce::String frequencyLine = juce::String(m_tooltipFrequency, 1) + " Hz";
+			g.drawText(frequencyLine, tooltipX, tooltipY, tooltipWidth, lineHeight, juce::Justification::right);
+
+			// Draw samples on second line
+			juce::String samplesLine = juce::String(samplesPerCycle) + " samples";
+			g.drawText(samplesLine, tooltipX, tooltipY + lineHeight, tooltipWidth, lineHeight, juce::Justification::right);
+		}
 	}
 
 	void resized() override
@@ -197,10 +238,37 @@ private:
 
 		// Set position
 		const auto column1 = 0;
-
 		const auto row1 = 0;
 
 		m_nameGroupComponent.setTopLeftPosition(column1, row1);
+
+		// Regenerate cached spectrogram image when component is resized
+		updateSpectrogramImage();
+	}
+
+	void mouseMove(const juce::MouseEvent& event) override
+	{
+		// Calculate spectrogram display area bounds
+		const int pixelSize = getHeight() / 11;
+		const int spectrogramX = 0;
+		const int spectrogramY = pixelSize;
+		const int spectrogramWidth = getWidth();
+		const int spectrogramHeight = getHeight() - pixelSize;
+
+		// Check if mouse is over the spectrogram display area
+		if (event.x >= spectrogramX && event.x < spectrogramX + spectrogramWidth &&
+			event.y >= spectrogramY && event.y < spectrogramY + spectrogramHeight)
+		{
+			// Calculate frequency from Y position
+			const float relativY = (float)(event.y - spectrogramY);
+			m_tooltipFrequency = MIN_FREQUENCY + (MAX_FREQUENCY - MIN_FREQUENCY) * (1.0f - (relativY / (float)spectrogramHeight));
+		}
+		else
+		{
+			m_tooltipFrequency = -1.0f;  // Invalid frequency to indicate no tooltip
+		}
+
+		repaint();  // Only repaint the tooltip overlay, spectrogram is cached
 	}
 
 	juce::Colour getColourForValue(float value)
@@ -229,4 +297,7 @@ private:
 	juce::AudioBuffer<float> m_audioBuffer;
 	SpectrogramData m_spectrogram;
 	zazzGUI::GroupLabel m_nameGroupComponent;
+	juce::Image m_spectrogramImage;  // Cached spectrogram rendering
+	float m_tooltipFrequency = -1.0f;  // Current frequency at mouse position (-1 = no tooltip)
+
 };
