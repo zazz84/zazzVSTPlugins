@@ -22,6 +22,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_regionGroupLableComponent);
 	addAndMakeVisible(m_exportGroupLableComponent);
 	addAndMakeVisible(m_playbackGroupLableComponent);
+	addAndMakeVisible(m_displayGroupLableComponent);
 	
 	// Labels
 	//
@@ -336,7 +337,8 @@ void MainComponent::resized()
 	m_sourceGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_regionGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_exportGroupLableComponent.setSize(pixelSize15, pixelSize);
-	m_playbackGroupLableComponent.setSize(pixelSize15, pixelSize);
+	m_playbackGroupLableComponent.setSize(pixelSize6, pixelSize);
+	m_displayGroupLableComponent.setSize(pixelSize3, pixelSize);
 
 	m_openSourceButton.setSize(pixelSize3, pixelSize);
 	m_sourceFileNameLabel.setSize(pixelSize12, pixelSize);
@@ -383,6 +385,7 @@ void MainComponent::resized()
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row2);
 	m_exportGroupLableComponent.setTopLeftPosition(column2, row4);
 	m_playbackGroupLableComponent.setTopLeftPosition(column8, row9);
+	m_displayGroupLableComponent.setTopLeftPosition(column11, row9);
 
 	m_openSourceButton.setTopLeftPosition(column2, row3);
 	m_sourceFileNameLabel.setTopLeftPosition(column3, row3);
@@ -416,9 +419,9 @@ void MainComponent::resized()
 	m_exportRegionRightSlider.setTopLeftPosition(column3, row8);
 	m_exportRegionCountSlider.setTopLeftPosition(column3, row9);
 
-	m_sourceButton.setTopLeftPosition(column9, row10);
-	m_playButton.setTopLeftPosition(column11, row10);
-	m_displayModeButton.setTopLeftPosition(column8, row10);
+	m_sourceButton.setTopLeftPosition(column8, row10);
+	m_playButton.setTopLeftPosition(column9, row10);
+	m_displayModeButton.setTopLeftPosition(column11, row10);
 
 	m_waveformDisplaySource.setTopLeftPosition(column2, row11);
 	m_waveformDisplayOutput.setTopLeftPosition(column2, row12);

@@ -1162,6 +1162,7 @@ public:
 	zazzGUI::GroupLabel m_regionGroupLableComponent{ "Regions Detection" };
 	zazzGUI::GroupLabel m_exportGroupLableComponent{ "Output" };
 	zazzGUI::GroupLabel m_playbackGroupLableComponent{ "Playback" };
+	zazzGUI::GroupLabel m_displayGroupLableComponent{ "Display" };
 
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;

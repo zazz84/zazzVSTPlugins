@@ -44,12 +44,12 @@ public:
 	}
 	
 private:
-	static constexpr int FFT_ORDER = 14;  // 4096 samples for good low-frequency resolution
+	static constexpr int FFT_ORDER = 15;  // 4096 samples for good low-frequency resolution
 	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
 	static constexpr float MIN_FREQUENCY = 20.0f;
 	static constexpr float MAX_FREQUENCY = 200.0f;
-	static constexpr int NUM_FREQUENCY_BINS = 256;  // Number of pixels on Y axis
-	static constexpr int NUM_TIME_BINS = 1024;       // Number of pixels on X axis
+	static constexpr int NUM_FREQUENCY_BINS = 128;  // Number of pixels on Y axis
+	static constexpr int NUM_TIME_BINS = 2048;      // Number of pixels on X axis
 
 	struct SpectrogramData
 	{
@@ -259,9 +259,24 @@ private:
 		if (event.x >= spectrogramX && event.x < spectrogramX + spectrogramWidth &&
 			event.y >= spectrogramY && event.y < spectrogramY + spectrogramHeight)
 		{
-			// Calculate frequency from Y position
+			// Calculate which frequency bin this pixel corresponds to
 			const float relativY = (float)(event.y - spectrogramY);
-			m_tooltipFrequency = MIN_FREQUENCY + (MAX_FREQUENCY - MIN_FREQUENCY) * (1.0f - (relativY / (float)spectrogramHeight));
+			const int freqIdx = (int)((relativY / (float)spectrogramHeight) * NUM_FREQUENCY_BINS);
+			const int clampedFreqIdx = juce::jlimit(0, NUM_FREQUENCY_BINS - 1, freqIdx);
+
+			// Convert pixel index back to FFT bin using the same logic as computeSpectrogram
+			const int sampleRate = 48000;
+			const float binFrequencyResolution = (float)sampleRate / FFT_SIZE;
+			const int minBin = (int)(MIN_FREQUENCY / binFrequencyResolution);
+			const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
+			const int freqBinRange = maxBin - minBin;
+
+			// Map from pixel index to FFT bin (accounting for display inversion)
+			const int displayFreqIdx = NUM_FREQUENCY_BINS - 1 - clampedFreqIdx;
+			const int fftBin = minBin + (displayFreqIdx * freqBinRange) / NUM_FREQUENCY_BINS;
+
+			// Convert FFT bin back to frequency
+			 q = fftBin * binFrequencyResolution;
 		}
 		else
 		{
