@@ -88,6 +88,7 @@ private:
 		// First pass: compute all FFT data and find maximum magnitude
 		float maxMagnitudeLocal = 0.0f;
 		std::vector<std::vector<float>> tempData(NUM_TIME_BINS, std::vector<float>(NUM_FREQUENCY_BINS, 0.0f));
+		std::vector<int> dominantBins(NUM_TIME_BINS);
 
 		for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
 		{
@@ -117,6 +118,9 @@ private:
 			const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
 			const int freqBinRange = maxBin - minBin;
 
+			int maxFreqIdx = 0;
+			float maxMagnitudeFrame = 0.0f;
+
 			for (int freqIdx = 0; freqIdx < NUM_FREQUENCY_BINS; ++freqIdx)
 			{
 				const int fftBin = minBin + (freqIdx * freqBinRange) / NUM_FREQUENCY_BINS;
@@ -126,9 +130,16 @@ private:
 					const float magnitude = std::sqrt(fftData[fftBin] * fftData[fftBin] + fftData[fftBin + FFT_SIZE] * fftData[fftBin + FFT_SIZE]);
 					tempData[timeIdx][freqIdx] = magnitude;
 					maxMagnitudeLocal = std::max(maxMagnitudeLocal, magnitude);
+
+					if (magnitude > maxMagnitudeFrame)
+					{
+						maxMagnitudeFrame = magnitude;
+						maxFreqIdx = freqIdx;
+					}
 				}
 			}
 
+			dominantBins[timeIdx] = maxFreqIdx;
 			m_spectrogram.validTimeSteps++;
 		}
 
@@ -146,6 +157,39 @@ private:
 				}
 			}
 		}
+
+		// Apply smoothing to dominant frequency bins to avoid rapid jumps
+		smoothDominantFrequencies(dominantBins);
+	}
+
+	void smoothDominantFrequencies(std::vector<int>& dominantBins)
+	{
+		if (dominantBins.empty())
+			return;
+
+		const int smoothingWindow = 7;  // Median filter window size
+		std::vector<int> smoothedBins(dominantBins.size());
+
+		for (int timeIdx = 0; timeIdx < (int)dominantBins.size(); ++timeIdx)
+		{
+			std::vector<int> window;
+
+			// Gather values within the smoothing window
+			for (int i = -smoothingWindow / 2; i <= smoothingWindow / 2; ++i)
+			{
+				int idx = timeIdx + i;
+				if (idx >= 0 && idx < (int)dominantBins.size())
+				{
+					window.push_back(dominantBins[idx]);
+				}
+			}
+
+			// Sort and take median
+			std::sort(window.begin(), window.end());
+			smoothedBins[timeIdx] = window[window.size() / 2];
+		}
+
+		m_dominantFrequencyBins = smoothedBins;
 	}
 
 	void updateSpectrogramImage()
@@ -201,6 +245,44 @@ private:
 		if (!m_spectrogramImage.isNull())
 		{
 			g.drawImageAt(m_spectrogramImage, 0, 0);
+		}
+
+		// Draw dominant frequency line
+		if (!m_dominantFrequencyBins.empty() && m_spectrogram.validTimeSteps > 1)
+		{
+			const int pixelSize = getHeight() / 11;
+			const int spectrogramY = pixelSize;
+			const int spectrogramHeight = getHeight() - pixelSize;
+			const float pixelHeight = (float)spectrogramHeight / (float)NUM_FREQUENCY_BINS;
+			const float pixelWidth = (float)getWidth() / (float)m_spectrogram.validTimeSteps;
+
+			g.setColour(juce::Colours::red);
+
+			juce::Path frequencyPath;
+			bool firstPoint = true;
+
+			for (int timeIdx = 0; timeIdx < m_spectrogram.validTimeSteps; ++timeIdx)
+			{
+				if (timeIdx < (int)m_dominantFrequencyBins.size())
+				{
+					const int dominantDataIdx = m_dominantFrequencyBins[timeIdx];
+					const int screenFreqIdx = NUM_FREQUENCY_BINS - 1 - dominantDataIdx;
+					const float x = (float)timeIdx * pixelWidth;
+					const float y = (float)spectrogramY + (float)screenFreqIdx * pixelHeight;
+
+					if (firstPoint)
+					{
+						frequencyPath.startNewSubPath(x, y);
+						firstPoint = false;
+					}
+					else
+					{
+						frequencyPath.lineTo(x, y);
+					}
+				}
+			}
+
+			g.strokePath(frequencyPath, juce::PathStrokeType(4.0f));
 		}
 
 		// Draw tooltip in the bottom right corner with frequency and samples on separate lines
@@ -276,7 +358,7 @@ private:
 			const int fftBin = minBin + (displayFreqIdx * freqBinRange) / NUM_FREQUENCY_BINS;
 
 			// Convert FFT bin back to frequency
-			 q = fftBin * binFrequencyResolution;
+			m_tooltipFrequency = fftBin * binFrequencyResolution;
 		}
 		else
 		{
@@ -314,5 +396,6 @@ private:
 	zazzGUI::GroupLabel m_nameGroupComponent;
 	juce::Image m_spectrogramImage;  // Cached spectrogram rendering
 	float m_tooltipFrequency = -1.0f;  // Current frequency at mouse position (-1 = no tooltip)
+	std::vector<int> m_dominantFrequencyBins;  // Smoothed dominant frequency bins for each time step
 
 };
