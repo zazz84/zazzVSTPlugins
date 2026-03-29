@@ -49,7 +49,14 @@ public:
 		Point,
 		Linear
 	};
-	
+
+	enum DisplayMode
+	{
+		Waveform = 0,
+		Spectrogram = 1,
+		DominantFrequency = 2
+	};
+
 	//==============================================================================
 	MainComponent();
 	~MainComponent() override;
@@ -1086,23 +1093,37 @@ public:
 	//==========================================================================
 	void displayModeButtonClicked()
 	{
-		m_showSpectrogram = !m_showSpectrogram;
+		m_displayMode = (DisplayMode)((m_displayMode + 1) % 3);
 
-		if (m_showSpectrogram)
+		// Update spectrogram components with new display mode
+		m_spectrogramDisplaySource.setDisplayMode((SpectrogramDisplayComponent::DisplayMode)m_displayMode);
+		m_spectrogramDisplayOutput.setDisplayMode((SpectrogramDisplayComponent::DisplayMode)m_displayMode);
+
+		switch (m_displayMode)
 		{
-			m_displayModeButton.setButtonText("Spectrogram");
-			m_waveformDisplaySource.setVisible(false);
-			m_waveformDisplayOutput.setVisible(false);
-			m_spectrogramDisplaySource.setVisible(true);
-			m_spectrogramDisplayOutput.setVisible(true);
-		}
-		else
-		{
-			m_displayModeButton.setButtonText("Waveform");
-			m_waveformDisplaySource.setVisible(true);
-			m_waveformDisplayOutput.setVisible(true);
-			m_spectrogramDisplaySource.setVisible(false);
-			m_spectrogramDisplayOutput.setVisible(false);
+			case DisplayMode::Waveform:
+				m_displayModeButton.setButtonText("Waveform");
+				m_waveformDisplaySource.setVisible(true);
+				m_waveformDisplayOutput.setVisible(true);
+				m_spectrogramDisplaySource.setVisible(false);
+				m_spectrogramDisplayOutput.setVisible(false);
+				break;
+
+			case DisplayMode::Spectrogram:
+				m_displayModeButton.setButtonText("Spectrogram");
+				m_waveformDisplaySource.setVisible(false);
+				m_waveformDisplayOutput.setVisible(false);
+				m_spectrogramDisplaySource.setVisible(true);
+				m_spectrogramDisplayOutput.setVisible(true);
+				break;
+
+			case DisplayMode::DominantFrequency:
+				m_displayModeButton.setButtonText("Frequency");
+				m_waveformDisplaySource.setVisible(false);
+				m_waveformDisplayOutput.setVisible(false);
+				m_spectrogramDisplaySource.setVisible(true);
+				m_spectrogramDisplayOutput.setVisible(true);
+				break;
 		}
 	}
 
@@ -1189,6 +1210,7 @@ public:
 	SourceType m_sourceType = SourceType::Source;
 	InterpolationType m_interpolationType = InterpolationType::Linear;
 	bool m_showSpectrogram = false;
+	DisplayMode m_displayMode = DisplayMode::Waveform;
 
 	int m_regionLenghtMedian = 0;
 	int m_playbackIndex = 0;

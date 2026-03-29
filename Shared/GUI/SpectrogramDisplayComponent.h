@@ -24,13 +24,20 @@
 class SpectrogramDisplayComponent : public juce::Component, public juce::TooltipClient
 {
 public:
+	enum DisplayMode
+	{
+		Waveform = 0,
+		Spectrogram = 1,
+		DominantFrequency = 2
+	};
+
 	SpectrogramDisplayComponent(juce::String name) : m_nameGroupComponent(name)
 	{
 		addAndMakeVisible(m_nameGroupComponent);
 	}
 
 	~SpectrogramDisplayComponent() = default;
-	
+
 	juce::String getTooltip() override
 	{
 		return "";  // Tooltip is drawn in paint() instead of using the tooltip system
@@ -41,6 +48,12 @@ public:
 		m_audioBuffer = buffer;
 		computeSpectrogram();
 		updateSpectrogramImage();
+	}
+
+	void setDisplayMode(DisplayMode mode)
+	{
+		m_displayMode = mode;
+		repaint();
 	}
 	
 private:
@@ -241,14 +254,20 @@ private:
 
 	void paint(juce::Graphics& g) override
 	{
-		// Draw cached spectrogram image
-		if (!m_spectrogramImage.isNull())
+		// Draw cached spectrogram image (only for Spectrogram and DominantFrequency modes)
+		if ((m_displayMode == DisplayMode::Spectrogram || m_displayMode == DisplayMode::DominantFrequency) && !m_spectrogramImage.isNull())
 		{
+			// Reduce opacity to 50% when showing dominant frequency line for better visibility
+			if (m_displayMode == DisplayMode::DominantFrequency)
+			{
+				g.setOpacity(0.5f);
+			}
 			g.drawImageAt(m_spectrogramImage, 0, 0);
+			g.setOpacity(1.0f);  // Always reset opacity
 		}
 
-		// Draw dominant frequency line
-		if (!m_dominantFrequencyBins.empty() && m_spectrogram.validTimeSteps > 1)
+		// Draw dominant frequency line (only for DominantFrequency mode)
+		if (m_displayMode == DisplayMode::DominantFrequency && !m_dominantFrequencyBins.empty() && m_spectrogram.validTimeSteps > 1)
 		{
 			const int pixelSize = getHeight() / 11;
 			const int spectrogramY = pixelSize;
@@ -256,7 +275,7 @@ private:
 			const float pixelHeight = (float)spectrogramHeight / (float)NUM_FREQUENCY_BINS;
 			const float pixelWidth = (float)getWidth() / (float)m_spectrogram.validTimeSteps;
 
-			g.setColour(juce::Colours::red);
+			g.setColour(juce::Colours::lime);
 
 			juce::Path frequencyPath;
 			bool firstPoint = true;
@@ -282,7 +301,7 @@ private:
 				}
 			}
 
-			g.strokePath(frequencyPath, juce::PathStrokeType(4.0f));
+			g.strokePath(frequencyPath, juce::PathStrokeType(2.0f));
 		}
 
 		// Draw tooltip in the bottom right corner with frequency and samples on separate lines
@@ -397,5 +416,6 @@ private:
 	juce::Image m_spectrogramImage;  // Cached spectrogram rendering
 	float m_tooltipFrequency = -1.0f;  // Current frequency at mouse position (-1 = no tooltip)
 	std::vector<int> m_dominantFrequencyBins;  // Smoothed dominant frequency bins for each time step
+	DisplayMode m_displayMode = DisplayMode::Spectrogram;  // Current display mode
 
 };
