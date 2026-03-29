@@ -8,6 +8,7 @@
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/SpectrogramDisplayComponent.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRateOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
@@ -90,6 +91,9 @@ public:
 					const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
 					m_waveformDisplaySource.setVerticalZoom(verticalZoom);
 					m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+
+					// Draw spectrogram
+					m_spectrogramDisplaySource.setAudioBuffer(m_bufferSource);
 
 					// Set filename label
 					m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
@@ -227,6 +231,7 @@ public:
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
 		m_waveformDisplayOutput.setRegions(regionsExport);
+		m_spectrogramDisplayOutput.setAudioBuffer(m_bufferOutput);
 	}
 
 	//==========================================================================
@@ -371,8 +376,9 @@ public:
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
 		m_waveformDisplayOutput.setRegions(regionsExport);
+		m_spectrogramDisplayOutput.setAudioBuffer(m_bufferOutput);
 	}
-	
+
 	//==========================================================================
 	void saveWavButtonClicked()
 	{
@@ -547,16 +553,19 @@ public:
 								m_bufferSource.setSize((int)reader->numChannels, (int)reader->lengthInSamples);
 								reader->read(&m_bufferSource, 0, (int)reader->lengthInSamples, 0, true, true);
 
-								// Draw waveform
-								const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
-								m_waveformDisplaySource.setVerticalZoom(verticalZoom);
-								m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
+									// Draw waveform
+									const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
+									m_waveformDisplaySource.setVerticalZoom(verticalZoom);
+									m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
 
-								// Set filename label
-								m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
-							}
+									// Draw spectrogram
+									m_spectrogramDisplaySource.setAudioBuffer(m_bufferSource);
 
-							delete reader;
+									// Set filename label
+									m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
+								}
+
+								delete reader;
 						}
 					}
 				}
@@ -1073,7 +1082,30 @@ public:
 	{
 		m_randomRegionSelections.clear();
 	}
-	
+
+	//==========================================================================
+	void displayModeButtonClicked()
+	{
+		m_showSpectrogram = !m_showSpectrogram;
+
+		if (m_showSpectrogram)
+		{
+			m_displayModeButton.setButtonText("Spectrogram");
+			m_waveformDisplaySource.setVisible(false);
+			m_waveformDisplayOutput.setVisible(false);
+			m_spectrogramDisplaySource.setVisible(true);
+			m_spectrogramDisplayOutput.setVisible(true);
+		}
+		else
+		{
+			m_displayModeButton.setButtonText("Waveform");
+			m_waveformDisplaySource.setVisible(true);
+			m_waveformDisplayOutput.setVisible(true);
+			m_spectrogramDisplaySource.setVisible(false);
+			m_spectrogramDisplayOutput.setVisible(false);
+		}
+	}
+
 	//==========================================================================
 	// Buttons
 	juce::TextButton m_openSourceButton;
@@ -1087,6 +1119,7 @@ public:
 
 	juce::TextButton m_playButton;
 	juce::TextButton m_sourceButton;
+	juce::TextButton m_displayModeButton;
 
 	// Sliders
 	juce::Slider m_detectedFrequencySlider;
@@ -1146,11 +1179,15 @@ public:
 	WaveformDisplayComponent m_waveformDisplaySource;
 	WaveformDisplayComponent m_waveformDisplayOutput;
 
+	SpectrogramDisplayComponent m_spectrogramDisplaySource;
+	SpectrogramDisplayComponent m_spectrogramDisplayOutput;
+
 	float m_detectedFrequency = 0.0f;
 
 	TransportState m_sourceState = TransportState::Stopped;
 	SourceType m_sourceType = SourceType::Source;
 	InterpolationType m_interpolationType = InterpolationType::Linear;
+	bool m_showSpectrogram = false;
 
 	int m_regionLenghtMedian = 0;
 	int m_playbackIndex = 0;

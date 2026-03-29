@@ -1,7 +1,8 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
+MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output"),
+								  m_spectrogramDisplaySource("Source"), m_spectrogramDisplayOutput("Output")
 {
 	m_formatManager.registerBasicFormats();
 
@@ -9,6 +10,12 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
+	addAndMakeVisible(m_spectrogramDisplaySource);
+	addAndMakeVisible(m_spectrogramDisplayOutput);
+
+	// Initially hide spectrograms, show waveforms
+	m_spectrogramDisplaySource.setVisible(false);
+	m_spectrogramDisplayOutput.setVisible(false);
 
 	addAndMakeVisible(m_fileGroupLableComponent);
 	addAndMakeVisible(m_sourceGroupLableComponent);
@@ -194,6 +201,10 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_sourceButton.setButtonText("Source");
 	m_sourceButton.onClick = [this] { sourceButtonClicked(); };
 
+	addAndMakeVisible(&m_displayModeButton);
+	m_displayModeButton.setButtonText("Waveform");
+	m_displayModeButton.onClick = [this] { displayModeButtonClicked(); };
+
 	// Combo boxes
 	//
 	m_detectionTypeComboBox.addItem("Default", 1);
@@ -359,9 +370,12 @@ void MainComponent::resized()
 
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
+	m_displayModeButton.setSize(pixelSize3, pixelSize);
 
 	m_waveformDisplaySource.setSize(pixelSize31, pixelSize11);
 	m_waveformDisplayOutput.setSize(pixelSize31, pixelSize11);
+	m_spectrogramDisplaySource.setSize(pixelSize31, pixelSize11);
+	m_spectrogramDisplayOutput.setSize(pixelSize31, pixelSize11);
 
 	// Set position
 	m_fileGroupLableComponent.setTopLeftPosition(column2, row1);
@@ -404,7 +418,10 @@ void MainComponent::resized()
 
 	m_sourceButton.setTopLeftPosition(column9, row10);
 	m_playButton.setTopLeftPosition(column11, row10);
+	m_displayModeButton.setTopLeftPosition(column8, row10);
 
 	m_waveformDisplaySource.setTopLeftPosition(column2, row11);
 	m_waveformDisplayOutput.setTopLeftPosition(column2, row12);
+	m_spectrogramDisplaySource.setTopLeftPosition(column2, row11);
+	m_spectrogramDisplayOutput.setTopLeftPosition(column2, row12);
 }
