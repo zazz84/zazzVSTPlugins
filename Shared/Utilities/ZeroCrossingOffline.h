@@ -202,7 +202,7 @@ private:
 		auto* bufferData = audioBuffer.getReadPointer(0);
 
 		// FFT setup (same as SpectrogramDisplayComponent)
-		constexpr int FFT_ORDER = 15;
+		constexpr int FFT_ORDER = 12;
 		constexpr int FFT_SIZE = 1 << FFT_ORDER;
 		constexpr float MIN_FREQUENCY = 20.0f;
 		constexpr float MAX_FREQUENCY = 200.0f;
@@ -215,8 +215,10 @@ private:
 		const float binFrequencyResolution = (float)m_sampleRate / FFT_SIZE;
 		const int hopSize = std::max(1, (samples - FFT_SIZE) / (NUM_TIME_BINS - 1));
 
-		// Compute dominant frequency bins
-		std::vector<int> dominantBins;
+		// Compute dominant frequency bins and phase information
+		std::vector<float> phaseTrajectory;
+		std::vector<int> frameStartSamples;
+		std::vector<int> frameDominantFreqBins;
 		int validTimeSteps = 0;
 
 		for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
@@ -239,8 +241,8 @@ private:
 			// Apply windowing
 			window.multiplyWithWindowingTable(fftData, FFT_SIZE);
 
-			// Perform FFT
-			forwardFFT.performFrequencyOnlyForwardTransform(fftData);
+			// Perform FFT - need full complex output for phase extraction
+			forwardFFT.performRealOnlyForwardTransform(fftData);
 
 			// Map FFT bins to frequency range [20Hz, 200Hz]
 			const int minBin = (int)(MIN_FREQUENCY / binFrequencyResolution);
@@ -248,6 +250,7 @@ private:
 			const int freqBinRange = maxBin - minBin;
 
 			int maxFreqIdx = 0;
+			int maxFftBin = minBin;
 			float maxMagnitudeFrame = 0.0f;
 
 			for (int freqIdx = 0; freqIdx < NUM_FREQUENCY_BINS; ++freqIdx)
@@ -256,39 +259,94 @@ private:
 
 				if (fftBin >= 0 && fftBin < FFT_SIZE)
 				{
-					const float magnitude = std::sqrt(fftData[fftBin] * fftData[fftBin] + fftData[fftBin + FFT_SIZE] * fftData[fftBin + FFT_SIZE]);
+					const float real = fftData[2 * fftBin];
+					const float imag = fftData[2 * fftBin + 1];
+					const float magnitude = std::sqrt(real * real + imag * imag);
 
 					if (magnitude > maxMagnitudeFrame)
 					{
 						maxMagnitudeFrame = magnitude;
 						maxFreqIdx = freqIdx;
+						maxFftBin = fftBin;
 					}
 				}
 			}
 
-			dominantBins.push_back(maxFreqIdx);
+			frameStartSamples.push_back(startSample);
+			frameDominantFreqBins.push_back(maxFftBin);
+
+			// Extract phase from dominant frequency bin
+			const float real = fftData[2 * maxFftBin];
+			const float imag = fftData[2 * maxFftBin + 1];
+			const float phase = std::atan2(imag, real);
+			phaseTrajectory.push_back(phase);
+
 			validTimeSteps++;
 		}
 
-		if (dominantBins.empty() || validTimeSteps == 0)
+		if (phaseTrajectory.empty() || validTimeSteps == 0)
 		{
 			regions.push_back(0);
 			return;
 		}
 
-		// Detect zero crossings using computed dominant frequencies
+		// Detect upward zero crossings using interpolated phase per sample
 		regions.push_back(0);
 
 		int sinceLast = 0;
 		const int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
+		const float PI = 3.14159265359f;
+
+		// Helper lambda to wrap phase to [-π, π]
+		auto wrapPhase = [PI](float phase) -> float {
+			while (phase > PI)
+				phase -= 2.0f * PI;
+			while (phase < -PI)
+				phase += 2.0f * PI;
+			return phase;
+		};
+
+		float lastPhase = wrapPhase(phaseTrajectory[0]);
 
 		for (int sample = 1; sample < samples; ++sample)
 		{
-			const float prevSample = bufferData[sample - 1];
-			const float currSample = bufferData[sample];
+			// Find which FFT frames this sample is between
+			int frameIdx = std::min((sample - frameStartSamples[0]) / hopSize, (int)phaseTrajectory.size() - 1);
+			frameIdx = std::max(0, frameIdx);
 
-			// Detect zero crossing: negative to positive only
-			if (prevSample < 0.0f && currSample >= 0.0f && sinceLast > SINCE_LAST_MIN)
+			// Interpolate phase between frames
+			float currentPhase = phaseTrajectory[frameIdx];
+
+			if (frameIdx + 1 < (int)phaseTrajectory.size())
+			{
+				// Linear interpolation between current and next frame
+				int nextFrameStart = frameStartSamples[frameIdx + 1];
+				int currentFrameStart = frameStartSamples[frameIdx];
+				int frameDuration = nextFrameStart - currentFrameStart;
+
+				if (frameDuration > 0)
+				{
+					float samplePositionInFrame = (float)(sample - currentFrameStart) / frameDuration;
+					samplePositionInFrame = std::max(0.0f, std::min(1.0f, samplePositionInFrame));
+
+					float nextPhase = phaseTrajectory[frameIdx + 1];
+
+					// Interpolate accounting for phase wrapping
+					float phaseDiff = nextPhase - currentPhase;
+					if (phaseDiff > PI)
+						phaseDiff -= 2.0f * PI;
+					else if (phaseDiff < -PI)
+						phaseDiff += 2.0f * PI;
+
+					currentPhase = currentPhase + samplePositionInFrame * phaseDiff;
+				}
+			}
+
+			// Wrap phase to [-π, π]
+			currentPhase = wrapPhase(currentPhase);
+
+			// Detect upward zero crossing: phase crosses from negative to positive through 0
+			if (lastPhase < 0.0f && currentPhase >= 0.0f && sinceLast > SINCE_LAST_MIN)
 			{
 				regions.push_back(sample);
 				sinceLast = 0;
@@ -297,6 +355,8 @@ private:
 			{
 				sinceLast++;
 			}
+
+			lastPhase = currentPhase;
 		}
 
 		// Ensure we have at least beginning marker
