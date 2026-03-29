@@ -218,8 +218,21 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_generationTypeComboBox.addItem("Flat", 1);
 	m_generationTypeComboBox.addItem("Random Regions", 2);
 	m_generationTypeComboBox.setSelectedId(1);
+	m_generationTypeComboBox.onChange = [this] {
+		const int generationTypeId = m_generationTypeComboBox.getSelectedId();
+
+		// Show crossfade slider only for "Random Regions" mode (id = 2)
+		const bool showCrossfade = (generationTypeId == 2);
+
+		m_crossfadeLengthSlider.setVisible(showCrossfade);
+		m_crossfadeLengthLabel.setVisible(showCrossfade);
+	};
 	addAndMakeVisible(m_generationTypeComboBox);
-	
+
+	// Initially hide crossfade slider for Flat mode
+	m_crossfadeLengthSlider.setVisible(false);
+	m_crossfadeLengthLabel.setVisible(false);
+
 	// Canvas size
 	const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
 	const int canvasHeight = CANVAS_HEIGHT * PIXEL_SIZE;
