@@ -435,7 +435,6 @@ public:
 		m_regionLenghtMedian = 0;
 
 		// Reset all sliders to default values
-		m_detectedFrequencySlider.setValue(100.0);
 		m_thresholdSlider.setValue(-60.0);
 		m_minimumLengthSlider.setValue(100.0);
 		m_SpectrumDifferenceSlider.setValue(100.0);
@@ -487,7 +486,6 @@ public:
 			projectObject->setProperty("sourceFilePath", m_sourceFilePath);
 
 			// Save all slider values
-			projectObject->setProperty("detectedFrequency", m_detectedFrequencySlider.getValue());
 			projectObject->setProperty("threshold", m_thresholdSlider.getValue());
 			projectObject->setProperty("minimumLength", m_minimumLengthSlider.getValue());
 			projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
@@ -578,8 +576,6 @@ public:
 				}
 
 				// Load slider values if they exist
-				if (obj->hasProperty("detectedFrequency"))
-					m_detectedFrequencySlider.setValue(obj->getProperty("detectedFrequency"));
 				if (obj->hasProperty("threshold"))
 					m_thresholdSlider.setValue(obj->getProperty("threshold"));
 				if (obj->hasProperty("minimumLength"))
@@ -836,12 +832,9 @@ public:
 		ZeroCrossingOffline zeroCrossing{};
 		zeroCrossing.init(m_sampleRate);
 
-		// Convert samples to Hz: frequency_Hz = sampleRate / samples
-		const float filterSamples = (float)m_detectedFrequencySlider.getValue();
-		const float filterFrequencyHz = m_sampleRate / filterSamples;
-
 		const float maximumFrequencySamples = (float)m_minimumLengthSlider.getValue();
 		const float maximumFrequencyHz = m_sampleRate / maximumFrequencySamples;
+		const float filterFrequencyHz = 2.0f * maximumFrequencyHz;
 
 		zeroCrossing.set(filterFrequencyHz, 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
@@ -1143,7 +1136,6 @@ public:
 	juce::TextButton m_displayModeButton;
 
 	// Sliders
-	juce::Slider m_detectedFrequencySlider;
 	juce::Slider m_thresholdSlider;
 	juce::Slider m_minimumLengthSlider;
 	juce::Slider m_SpectrumDifferenceSlider;

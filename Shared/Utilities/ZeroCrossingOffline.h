@@ -35,6 +35,7 @@ public:
 	{
 		Default,
 		Filter,
+		DominantFrequency
 	};
 
 	void init(const int sampleRate)
@@ -142,22 +143,6 @@ public:
 		// Remove false positive first and last
 		const int testRangeHalf = m_searchRange / 2;
 
-		/*if (zeroCrossingEstimatedIdx.size() > 1)
-		{
-			if (zeroCrossingEstimatedIdx[1] - testRangeHalf <= 0)
-			{
-				zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.begin() + 1);
-			}
-		}
-
-		if (zeroCrossingEstimatedIdx.size() > 1)
-		{
-			if (zeroCrossingEstimatedIdx[zeroCrossingEstimatedIdx.size() - 1] + testRangeHalf >= samples)
-			{
-				zeroCrossingEstimatedIdx.erase(zeroCrossingEstimatedIdx.end());
-			}
-		}*/
-
 		// Handle final zero crossing
 		regions.resize(zeroCrossingEstimatedIdx.size());
 
@@ -165,7 +150,7 @@ public:
 		{
 			regions = zeroCrossingEstimatedIdx;
 		}
-		else
+		else if (m_type == Type::Filter)
 		{
 			// Final zero corssing with smaller amplitude
 			regions[0] = 0;
@@ -196,57 +181,130 @@ public:
 
 				regions[segmentId] = closestIndex;
 			}
-
-			//regions[regions.size() - 1] = samples;
-
-			// Try to find better zero crossings by comparing region length to its median
-			/*std::vector<int> diff;
-			diff.resize(regions.size() - 1);
-
-			for (int segmentId = 0; segmentId < regions.size() - 1; segmentId++)
-			{
-				diff[segmentId] = regions[segmentId + 1] - regions[segmentId];
-			}
-
-			const int median = getMedian(diff);
-
-			for (int i = 0; i < regions.size() - 2; i++)
-			{
-				const int currentCrossing = regions[i + 1];
-				const int size = currentCrossing - regions[i];
-				const int idealZeroCrossing = regions[i] + median;
-				const int diff2 = std::abs(median - size);
-
-				int indexLeft = idealZeroCrossing - diff2;
-				for (int j = idealZeroCrossing - diff2; j < idealZeroCrossing; j++)
-				{
-					if (bufferSum[j - 1] < 0.0f && bufferSum[j] >= 0.0f)
-					{
-						indexLeft = j;
-					}
-				}
-
-				int indexRight = idealZeroCrossing + diff2;
-				for (int j = idealZeroCrossing + diff2; j >= idealZeroCrossing; j--)
-				{
-					if (bufferSum[j - 1] < 0.0f && bufferSum[j] >= 0.0f)
-					{
-						indexRight = j;
-					}
-				}
-
-				const int betterIndex = idealZeroCrossing - indexLeft < indexRight - idealZeroCrossing ? indexLeft : indexRight;
-				const int diffBetter = std::abs(idealZeroCrossing - betterIndex);
-
-				if (diffBetter < diff2)
-				{
-					regions[i + 1] = betterIndex;
-				}
-			}*/
+		}
+		else if (m_type == Type::DominantFrequency)
+		{
+			processDominantFrequencyDetection(sumAudioBuffer, regions);
 		}
 	}
 
 private:
+	void processDominantFrequencyDetection(const juce::AudioBuffer<float>& audioBuffer, std::vector<int>& regions)
+	{
+		regions.clear();
+
+		const int samples = audioBuffer.getNumSamples();
+		if (samples == 0)
+		{
+			return;
+		}
+
+		auto* bufferData = audioBuffer.getReadPointer(0);
+
+		// FFT setup (same as SpectrogramDisplayComponent)
+		constexpr int FFT_ORDER = 15;
+		constexpr int FFT_SIZE = 1 << FFT_ORDER;
+		constexpr float MIN_FREQUENCY = 20.0f;
+		constexpr float MAX_FREQUENCY = 200.0f;
+		constexpr int NUM_FREQUENCY_BINS = 128;
+		constexpr int NUM_TIME_BINS = 2048;
+
+		juce::dsp::FFT forwardFFT(FFT_ORDER);
+		juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
+
+		const float binFrequencyResolution = (float)m_sampleRate / FFT_SIZE;
+		const int hopSize = std::max(1, (samples - FFT_SIZE) / (NUM_TIME_BINS - 1));
+
+		// Compute dominant frequency bins
+		std::vector<int> dominantBins;
+		int validTimeSteps = 0;
+
+		for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
+		{
+			int startSample = timeIdx * hopSize;
+
+			if (startSample + FFT_SIZE > samples)
+			{
+				break;
+			}
+
+			float fftData[2 * FFT_SIZE]{};
+
+			// Copy audio data
+			for (int i = 0; i < FFT_SIZE; ++i)
+			{
+				fftData[i] = bufferData[startSample + i];
+			}
+
+			// Apply windowing
+			window.multiplyWithWindowingTable(fftData, FFT_SIZE);
+
+			// Perform FFT
+			forwardFFT.performFrequencyOnlyForwardTransform(fftData);
+
+			// Map FFT bins to frequency range [20Hz, 200Hz]
+			const int minBin = (int)(MIN_FREQUENCY / binFrequencyResolution);
+			const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
+			const int freqBinRange = maxBin - minBin;
+
+			int maxFreqIdx = 0;
+			float maxMagnitudeFrame = 0.0f;
+
+			for (int freqIdx = 0; freqIdx < NUM_FREQUENCY_BINS; ++freqIdx)
+			{
+				const int fftBin = minBin + (freqIdx * freqBinRange) / NUM_FREQUENCY_BINS;
+
+				if (fftBin >= 0 && fftBin < FFT_SIZE)
+				{
+					const float magnitude = std::sqrt(fftData[fftBin] * fftData[fftBin] + fftData[fftBin + FFT_SIZE] * fftData[fftBin + FFT_SIZE]);
+
+					if (magnitude > maxMagnitudeFrame)
+					{
+						maxMagnitudeFrame = magnitude;
+						maxFreqIdx = freqIdx;
+					}
+				}
+			}
+
+			dominantBins.push_back(maxFreqIdx);
+			validTimeSteps++;
+		}
+
+		if (dominantBins.empty() || validTimeSteps == 0)
+		{
+			regions.push_back(0);
+			return;
+		}
+
+		// Detect zero crossings using computed dominant frequencies
+		regions.push_back(0);
+
+		int sinceLast = 0;
+		const int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
+
+		for (int sample = 1; sample < samples; ++sample)
+		{
+			const float prevSample = bufferData[sample - 1];
+			const float currSample = bufferData[sample];
+
+			// Detect zero crossing: negative to positive only
+			if (prevSample < 0.0f && currSample >= 0.0f && sinceLast > SINCE_LAST_MIN)
+			{
+				regions.push_back(sample);
+				sinceLast = 0;
+			}
+			else
+			{
+				sinceLast++;
+			}
+		}
+
+		// Ensure we have at least beginning marker
+		if (regions.empty())
+		{
+			regions.push_back(0);
+		}
+	}
 	int getMedian(std::vector<int> input)
 	{
 		if (input.empty())

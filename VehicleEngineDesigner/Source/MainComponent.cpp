@@ -42,17 +42,6 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_validRegionsCountLabel.setText("", juce::dontSendNotification);
 	m_validRegionsCountLabel.setJustificationType(juce::Justification::centred);
 	//
-	addAndMakeVisible(m_detectedFrequencySlider);
-	m_detectedFrequencySlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_detectedFrequencySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_detectedFrequencySlider.setRange(1.0, 1000.0, 1.0);   // min, max, step (in samples)
-	m_detectedFrequencySlider.setValue(100.0);              // initial value
-	m_detectedFrequencySlider.setVisible(false);            // hidden by default (Default detection type)
-
-	addAndMakeVisible(m_detectedFrequencyLabel);
-	m_detectedFrequencyLabel.setText("Filter Samples", juce::dontSendNotification);
-
-	m_detectedFrequencyLabel.attachToComponent(&m_detectedFrequencySlider, true);
 
 	//
 	addAndMakeVisible(m_thresholdSlider);
@@ -210,12 +199,8 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	//
 	m_detectionTypeComboBox.addItem("Default", 1);
 	m_detectionTypeComboBox.addItem("Filter", 2);
+	m_detectionTypeComboBox.addItem("DominantFrequency", 3);
 	m_detectionTypeComboBox.setSelectedId(1);
-	m_detectionTypeComboBox.onChange = [this]
-	{
-		const bool showSlider = (m_detectionTypeComboBox.getSelectedId() != 1);
-		m_detectedFrequencySlider.setVisible(showSlider);
-	};
 	addAndMakeVisible(m_detectionTypeComboBox);
 
 	m_generationTypeComboBox.addItem("Flat", 1);
@@ -345,7 +330,6 @@ void MainComponent::resized()
 
 	m_detectRegionsButton.setSize(pixelSize3, pixelSize);
 	m_detectionTypeComboBox.setSize(pixelSize3, pixelSize);
-	m_detectedFrequencySlider.setSize(pixelSize6, pixelSize);
 	m_thresholdSlider.setSize(pixelSize6, pixelSize);
 	m_minimumLengthSlider.setSize(pixelSize6, pixelSize);
 	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
@@ -395,10 +379,9 @@ void MainComponent::resized()
 
 	m_thresholdSlider.setTopLeftPosition(column11, row3);
 	m_minimumLengthSlider.setTopLeftPosition(column11, row4);
-	m_detectedFrequencySlider.setTopLeftPosition(column11, row5);
-	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column11, row6);
-	m_SpectrumDifferenceSlider.setTopLeftPosition(column11, row7);
-	m_zeroCrossingCountSlider.setTopLeftPosition(column11, row8);
+	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column11, row5);
+	m_SpectrumDifferenceSlider.setTopLeftPosition(column11, row6);
+	m_zeroCrossingCountSlider.setTopLeftPosition(column11, row7);
 
 	m_regionsCountLabel.setTopLeftPosition(column8, row4);
 	m_validRegionsCountLabel.setTopLeftPosition(column8, row5);

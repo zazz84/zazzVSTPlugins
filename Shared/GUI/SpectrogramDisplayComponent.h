@@ -55,7 +55,7 @@ public:
 		m_displayMode = mode;
 		repaint();
 	}
-	
+
 private:
 	static constexpr int FFT_ORDER = 15;  // 4096 samples for good low-frequency resolution
 	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
