@@ -596,6 +596,7 @@ public:
 			projectObject->setProperty("threshold", m_thresholdSlider.getValue());
 			projectObject->setProperty("minimumLength", m_minimumLengthSlider.getValue());
 			projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
+			projectObject->setProperty("fftPhaseThreshold", m_fftPhaseThresholdSlider.getValue());
 			projectObject->setProperty("zeroCrossingCount", m_zeroCrossingCountSlider.getValue());
 			projectObject->setProperty("crossfadeLength", m_crossfadeLengthSlider.getValue());
 			projectObject->setProperty("regionLenghtExport", m_regionLenghtExportSlider.getValue());
@@ -690,6 +691,8 @@ public:
 					m_minimumLengthSlider.setValue(obj->getProperty("minimumLength"));
 				if (obj->hasProperty("spectrumDifference"))
 					m_SpectrumDifferenceSlider.setValue(obj->getProperty("spectrumDifference"));
+				if (obj->hasProperty("fftPhaseThreshold"))
+					m_fftPhaseThresholdSlider.setValue(obj->getProperty("fftPhaseThreshold"));
 				if (obj->hasProperty("zeroCrossingCount"))
 					m_zeroCrossingCountSlider.setValue(obj->getProperty("zeroCrossingCount"));
 				if (obj->hasProperty("crossfadeLength"))
@@ -948,6 +951,7 @@ public:
 
 		zeroCrossing.set(filterFrequencyHz, 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
+		zeroCrossing.setFFTPhaseThreshold((float)m_fftPhaseThresholdSlider.getValue());
 
 		std::vector<int> zeroCrossingIdxs;
 		zeroCrossing.process(m_bufferSource, zeroCrossingIdxs);
@@ -1249,6 +1253,7 @@ public:
 	juce::Slider m_thresholdSlider;
 	juce::Slider m_minimumLengthSlider;
 	juce::Slider m_SpectrumDifferenceSlider;
+	juce::Slider m_fftPhaseThresholdSlider;
 	juce::Slider m_zeroCrossingCountSlider;
 	juce::Slider m_crossfadeLengthSlider;
 	juce::Slider m_regionLenghtExportSlider;
@@ -1265,6 +1270,7 @@ public:
 	juce::Label m_thresholdLabel;
 	juce::Label m_maximumFrequencyLabel;
 	juce::Label m_SpectrumDifferenceLabel;
+	juce::Label m_fftPhaseThresholdLabel;
 	juce::Label m_zeroCrossingCountLabel;
 	juce::Label m_crossfadeLengthLabel;
 

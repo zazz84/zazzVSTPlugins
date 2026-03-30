@@ -56,6 +56,11 @@ public:
 	{
 		m_type = static_cast<Type>(type - 1);
 	}
+	void setFFTPhaseThreshold(const float thresholdDegrees)
+	{
+		// Convert degrees to radians: threshold is in range [-180, 180]
+		m_fftPhaseThresholdRadians = thresholdDegrees * 3.14159265359f / 180.0f;
+	}
 	void process(const juce::AudioBuffer<float>& audioBuffer, std::vector<int>& regions)
 	{
 		regions.clear();
@@ -345,8 +350,8 @@ private:
 			// Wrap phase to [-π, π]
 			currentPhase = wrapPhase(currentPhase);
 
-			// Detect upward zero crossing: phase crosses from negative to positive through 0
-			if (lastPhase < 0.0f && currentPhase >= 0.0f && sinceLast > SINCE_LAST_MIN)
+			// Detect upward zero crossing: phase crosses threshold from below to above
+			if (lastPhase < m_fftPhaseThresholdRadians && currentPhase >= m_fftPhaseThresholdRadians && sinceLast > SINCE_LAST_MIN)
 			{
 				regions.push_back(sample);
 				sinceLast = 0;
@@ -388,4 +393,5 @@ private:
 	int m_sampleRate = 48000;
 	int m_searchRange = 100;
 	Type m_type = Type::Default;
+	float m_fftPhaseThresholdRadians = 0.0f; // Default to 0 degrees (crossing through 0)
 };
