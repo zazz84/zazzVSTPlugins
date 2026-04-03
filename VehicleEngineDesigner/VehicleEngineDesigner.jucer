@@ -5,12 +5,14 @@
               jucerFormatVersion="1" companyName="zazz" version="0.0.5">
   <MAINGROUP id="mkvuHv" name="VehicleEngineDesigner">
     <GROUP id="{F2D151BB-A00D-9D60-6DFB-DB3C87000671}" name="Source">
+      <FILE id="IMiUFQ" name="SpectrumMatchFFTApplyNoWindow.h" compile="0"
+            resource="0" file="Source/SpectrumMatchFFTApplyNoWindow.h"/>
+      <FILE id="x3WxCv" name="SpectrumMatchRegionProcessor.h" compile="0"
+            resource="0" file="Source/SpectrumMatchRegionProcessor.h"/>
       <FILE id="R9V7gt" name="SpectrogramDisplayComponent.h" compile="0"
             resource="0" file="../Shared/GUI/SpectrogramDisplayComponent.h"/>
       <FILE id="lOSKRu" name="RandomNoRepeat.h" compile="0" resource="0"
             file="../Shared/Utilities/RandomNoRepeat.h"/>
-      <FILE id="zbKwPq" name="ZeroCrossingRateOffline.h" compile="0" resource="0"
-            file="../Shared/Utilities/ZeroCrossingRateOffline.h"/>
       <FILE id="McfIkb" name="ZeroCrossingOffline.h" compile="0" resource="0"
             file="../Shared/Utilities/ZeroCrossingOffline.h"/>
       <FILE id="XPNdJ4" name="WaveformDisplayComponent.h" compile="0" resource="0"

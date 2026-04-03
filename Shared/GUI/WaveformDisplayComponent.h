@@ -190,6 +190,15 @@ public:
 			repaint();
 		};
 
+		addAndMakeVisible(&m_showFilteredButton);
+		m_showFilteredButton.setButtonText("F");
+		m_showFilteredButton.setClickingTogglesState(true);
+		m_showFilteredButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+		m_showFilteredButton.onClick = [this]
+		{
+			repaint();
+		};
+
 	}
 	~WaveformDisplayComponent() = default;
 
@@ -210,6 +219,10 @@ public:
 			m_verticalZoom = 1.0f;
 		}
 
+		// Clear filtered buffer and its zoom
+		m_filteredAudioBuffer = juce::AudioBuffer<float>();
+		m_filteredVerticalZoom = 1.0f;
+
 		// Clear
 		m_leftRegionIndex = -1;
 		m_rightRegionIndex = -1;
@@ -220,6 +233,38 @@ public:
 		m_regions.clear();
 
 		repaint();
+	}
+	void setFilteredAudioBuffer(const juce::AudioBuffer<float> buffer, const bool shouldDisplay = true)
+	{
+		if (shouldDisplay && buffer.getNumSamples() > 0)
+		{
+			// Sanitize buffer: replace NaN values with 0
+			auto sanitizedBuffer = buffer;
+			for (int channel = 0; channel < sanitizedBuffer.getNumChannels(); ++channel)
+			{
+				auto* data = sanitizedBuffer.getWritePointer(channel);
+				for (int i = 0; i < sanitizedBuffer.getNumSamples(); ++i)
+				{
+					if (std::isnan(data[i]) || std::isinf(data[i]))
+						data[i] = 0.0f;
+				}
+			}
+
+			m_filteredAudioBuffer = sanitizedBuffer;
+
+			// Calculate vertical zoom for filtered buffer to match canvas peak
+			const float magnitude = m_filteredAudioBuffer.getMagnitude(0, m_filteredAudioBuffer.getNumSamples());
+			const float verticalZoom = (magnitude > 0.0f) ? 1.0f / magnitude : 1.0f;
+			m_filteredVerticalZoom = verticalZoom;
+
+			repaint();
+		}
+		else
+		{
+			// Clear the filtered buffer
+			m_filteredAudioBuffer = juce::AudioBuffer<float>();
+			m_filteredVerticalZoom = 1.0f;
+		}
 	}
 	void setRegions(const std::vector<Region> regions)
 	{
@@ -280,6 +325,7 @@ public:
 		m_scrollRightButton.setSize(pixelSize, pixelSize);
 		m_resetZoomButton.setSize(pixelSize, pixelSize);
 		m_showDetailsButton.setSize(pixelSize, pixelSize);
+		m_showFilteredButton.setSize(pixelSize, pixelSize);
 
 		// Set position
 		const auto column1 = 0;	
@@ -289,6 +335,7 @@ public:
 		const auto column5 = column4 + pixelSize;
 		const auto column6 = column5 + pixelSize2;
 		const auto column7 = column6 + pixelSize8;
+		const auto column8 = column7 + pixelSize;
 
 		const auto row1 = 0;
 		const auto row2 = row1 + pixelSize;
@@ -298,12 +345,14 @@ public:
 		m_nameGroupComponent.setTopLeftPosition(column1, row1);
 		m_zoomGroupComponent.setTopLeftPosition(column2, row3);
 
+
 		m_scrollLeftButton.setTopLeftPosition		(column2, row4);
 		m_zoomRegionLeftLabel.setTopLeftPosition	(column3, row4);
 		m_zoomRegionRightLabel.setTopLeftPosition	(column4, row4);
 		m_scrollRightButton.setTopLeftPosition		(column5, row4);
 		m_resetZoomButton.setTopLeftPosition		(column6, row4);
 		m_showDetailsButton.setTopLeftPosition		(column7, row4);
+		m_showFilteredButton.setTopLeftPosition		(column8, row4);
 	}
 	void paint(juce::Graphics& g) override
 	{
@@ -331,7 +380,7 @@ public:
 		g.setColour(juce::Colours::whitesmoke);
 		g.drawLine(0.0f, (float)pixelSize5, (float)width, (float)pixelSize5, 1.0f);
 
-		// Draw waveform
+		// Draw original waveform
 		if (m_audioBuffer.getNumSamples() != 0)
 		{
 			auto* channelData = m_audioBuffer.getReadPointer(0); // take first channel
@@ -355,7 +404,38 @@ public:
 				path.lineTo((float)x, y);
 			}
 
+			// Reduce opacity when displaying filtered waveform
+			const bool showFiltered = m_showFilteredButton.getToggleState() && m_filteredAudioBuffer.getNumSamples() != 0;
+			g.setColour(juce::Colour(juce::Colours::white).withAlpha(showFiltered ? 0.4f : 1.0f));
 			g.strokePath(path, juce::PathStrokeType(1.0f));
+		}
+
+		// Draw filtered waveform (if available and toggle is on)
+		if (m_showFilteredButton.getToggleState() && m_filteredAudioBuffer.getNumSamples() != 0)
+		{
+			auto* filteredData = m_filteredAudioBuffer.getReadPointer(0); // take first channel
+
+			juce::Path filteredPath;
+			filteredPath.preallocateSpace(3 * (int)width);
+
+			// Start path at left edge
+			filteredPath.startNewSubPath(0.0f, (float)pixelSize5);
+
+			// Step through samples, mapping them to pixel positions
+			for (int x = 0; x < (int)width; ++x)
+			{
+				// Find sample corresponding to this pixel (nearest-neighbour downsampling)
+				const auto sampleIndex = juce::jmap<int>(x, 0, (int)width, m_leftSampleIndex, m_rightSampleIndex - 1);
+				const float level = m_filteredVerticalZoom * filteredData[sampleIndex];
+
+				// Map sample value (-1..1) to vertical pixel position
+				float y = juce::jmap(level, -1.0f, 1.0f, (float)pixelSize9, (float)pixelSize);
+
+				filteredPath.lineTo((float)x, y);
+			}
+
+			g.setColour(juce::Colours::cyan);
+			g.strokePath(filteredPath, juce::PathStrokeType(1.5f));
 		}
 
 		// Draw regions
@@ -449,8 +529,29 @@ public:
 		setHorizontalZoom(leftRegion, rightRegion);
 	}
 
+	std::vector<Region> getExportedRegions() const
+	{
+		std::vector<Region> exportedRegions;
+		
+		// If no zoom range is set, export all regions
+		if (m_leftRegionIndex < 0 || m_rightRegionIndex < 0 || m_leftRegionIndex > m_rightRegionIndex)
+		{
+			return m_regions;
+		}
+		
+		// Export only regions within the current zoom range
+		for (int i = m_leftRegionIndex; i <= m_rightRegionIndex && i < (int)m_regions.size(); ++i)
+		{
+			if (i >= 0)
+				exportedRegions.push_back(m_regions[i]);
+		}
+		
+		return exportedRegions;
+	}
+
 private:
 	juce::AudioBuffer<float> m_audioBuffer;
+	juce::AudioBuffer<float> m_filteredAudioBuffer;
 
 	std::vector<Region> m_regions;
 
@@ -462,8 +563,10 @@ private:
 	juce::TextButton m_scrollRightButton;
 	juce::TextButton m_resetZoomButton;
 	juce::TextButton m_showDetailsButton;
+	juce::TextButton m_showFilteredButton;
 
 	float m_verticalZoom = 1.0f;
+	float m_filteredVerticalZoom = 1.0f;
 	int m_leftSampleIndex = 0;
 	int m_rightSampleIndex = 0;
 	int m_leftRegionIndex = 0;

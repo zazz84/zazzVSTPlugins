@@ -57,12 +57,19 @@ public:
 	}
 
 private:
-	static constexpr int FFT_ORDER = 15;  // 4096 samples for good low-frequency resolution
+	/*static constexpr int FFT_ORDER = 15;  // 4096 samples for good low-frequency resolution
 	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
 	static constexpr float MIN_FREQUENCY = 20.0f;
 	static constexpr float MAX_FREQUENCY = 200.0f;
 	static constexpr int NUM_FREQUENCY_BINS = 128;  // Number of pixels on Y axis
-	static constexpr int NUM_TIME_BINS = 2048;      // Number of pixels on X axis
+	static constexpr int NUM_TIME_BINS = 2048;      // Number of pixels on X axis*/
+
+	static constexpr int FFT_ORDER = 15;
+	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
+	static constexpr float MIN_FREQUENCY = 48000.0f / (float)FFT_SIZE; // = Bins size in Hz, so 48000/4096 = ~11.7Hz
+	static constexpr int NUM_FREQUENCY_BINS = 256;
+	static constexpr float MAX_FREQUENCY = MIN_FREQUENCY * (float)NUM_FREQUENCY_BINS;
+	static constexpr int NUM_TIME_BINS = 2048;
 
 	struct SpectrogramData
 	{

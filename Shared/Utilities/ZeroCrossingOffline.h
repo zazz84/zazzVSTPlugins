@@ -21,8 +21,6 @@
 
 #include <vector>
 
-#include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
-
 class ZeroCrossingOffline
 {
 public:
@@ -40,15 +38,10 @@ public:
 
 	void init(const int sampleRate)
 	{
-		m_filter.init(sampleRate);
 		m_sampleRate = sampleRate;
 	}
-	void set(const float frequency, const int searchRange, const float threshold, const float maximumFrequency)
+	void set(const float threshold, const float maximumFrequency)
 	{
-		//m_filter.setBandPassPeakGain(frequency, 2.0f);
-		m_filter.setLowPass(frequency, 4.0f);
-		m_frequency = frequency;
-		m_searchRange = searchRange;
 		m_threshold = threshold;
 		m_maximumFrequency = maximumFrequency;
 	}
@@ -66,53 +59,48 @@ public:
 		regions.clear();
 
 		const auto samples = audioBuffer.getNumSamples();
-		const auto channels = std::min(audioBuffer.getNumChannels(), N_CHANNELS);
-
-		// Create sum buffer to handle stereo input
-		juce::AudioBuffer<float> sumAudioBuffer(1, samples);
-
-		sumAudioBuffer.copyFrom(0, 0, audioBuffer.getReadPointer(0), audioBuffer.getNumSamples());
-
-		/*if (channels == 1)
+		if (samples == 0)
 		{
-			sumAudioBuffer.makeCopyOf(audioBuffer, true);
+			return;
 		}
-		else
+
+		// Create temporary sum buffer
+		// TODO - Handle multichannel buffers better
+		juce::AudioBuffer<float> sumBuffer(1, samples);
+		sumBuffer.copyFrom(0, 0, audioBuffer.getReadPointer(0), samples);
+
+		// Delegate to appropriate detection method based on type
+		if (m_type == Type::Default || m_type == Type::Filter)
 		{
-			auto* bufferLeft = audioBuffer.getReadPointer(0);
-			auto* bufferRight = audioBuffer.getReadPointer(1);
-			auto* bufferSum = sumAudioBuffer.getWritePointer(0);
+			processTimeDomainDetection(sumBuffer, regions);
+		}
+		else if (m_type == Type::DominantFrequency)
+		{
+			processDominantFrequencyDetection(sumBuffer, regions);
+		}
+	}
 
-			for (int sample = 0; sample < samples; sample++)
-			{
-				bufferSum[sample] = 0.5f * (bufferLeft[sample] + bufferRight[sample]);
-			}
-		}*/
+private:
+	void processTimeDomainDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
+	{
+		const auto samples = buffer.getNumSamples();
+		auto* pBuffer = buffer.getReadPointer(0);
 
-		// Estimated zero crossing extracted from filtered signal
-		m_filter.reset();
-		
-		std::vector<int> zeroCrossingEstimatedIdx;
-		auto* bufferSum = sumAudioBuffer.getWritePointer(0);
-		
+		std::vector<int> zeroCrossingIdx;
+
 		// Dont allow zero crosing too often
 		int sinceLast = 0;
 		const int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
-			
+
 		bool wasPositive = false;
 		bool wasNegative = false;
-	
-		zeroCrossingEstimatedIdx.push_back(0);
-		float inLast = bufferSum[0];
+
+		zeroCrossingIdx.push_back(0);
+		float inLast = pBuffer[0];
 
 		for (int sample = 1; sample < samples; sample++)
 		{
-			float in = bufferSum[sample];
-
-			if (m_type == Type::Filter)
-			{
-				in = m_filter.processDF1(in);
-			}
+			float in = pBuffer[sample];
 
 			if (in > m_threshold)
 			{
@@ -129,13 +117,13 @@ public:
 				// Choose sample closer to 0
 				if (std::fabsf(inLast) > std::fabsf(in))
 				{
-					zeroCrossingEstimatedIdx.push_back(sample);
+					zeroCrossingIdx.push_back(sample);
 				}
 				else
 				{
-					zeroCrossingEstimatedIdx.push_back(sample - 1);
+					zeroCrossingIdx.push_back(sample - 1);
 				}
-										
+
 				wasPositive = false;
 				wasNegative = false;
 				sinceLast = 0;
@@ -145,80 +133,28 @@ public:
 			sinceLast++;
 		}
 
-		// Remove false positive first and last
-		const int testRangeHalf = m_searchRange / 2;
-
-		// Handle final zero crossing
-		regions.resize(zeroCrossingEstimatedIdx.size());
-
-		if (m_type == Type::Default)
-		{
-			regions = zeroCrossingEstimatedIdx;
-		}
-		else if (m_type == Type::Filter)
-		{
-			// Final zero corssing with smaller amplitude
-			regions[0] = 0;
-
-			for (int segmentId = 1; segmentId < regions.size(); segmentId++)
-			{
-				const int sampleStart = zeroCrossingEstimatedIdx[segmentId] - testRangeHalf;
-				const int sampleEnd = zeroCrossingEstimatedIdx[segmentId] + testRangeHalf;
-
-				float inLast2 = bufferSum[sampleStart - 1];
-				int closestIndex = sampleStart;
-
-				for (int sample = sampleStart; sample < sampleEnd; sample++)
-				{
-					const float in = bufferSum[sample];
-
-					if (inLast2 < 0.0f && in >= 0.0f)
-					{
-						// Find closes sample to estimated zero crossing
-						if (std::abs(zeroCrossingEstimatedIdx[segmentId] - sample) < std::abs(zeroCrossingEstimatedIdx[segmentId] - closestIndex))
-						{
-							closestIndex = sample;
-						}
-					}
-
-					inLast2 = in;
-				}
-
-				regions[segmentId] = closestIndex;
-			}
-		}
-		else if (m_type == Type::DominantFrequency)
-		{
-			processDominantFrequencyDetection(sumAudioBuffer, regions);
-		}
+		// Output results
+		regions = zeroCrossingIdx;
 	}
 
-private:
-	void processDominantFrequencyDetection(const juce::AudioBuffer<float>& audioBuffer, std::vector<int>& regions)
+
+	void processDominantFrequencyDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
 	{
-		regions.clear();
-
-		const int samples = audioBuffer.getNumSamples();
-		if (samples == 0)
-		{
-			return;
-		}
-
-		auto* bufferData = audioBuffer.getReadPointer(0);
+		const auto samples = buffer.getNumSamples();
+		auto* pBuffer = buffer.getReadPointer(0);
 
 		// FFT setup (same as SpectrogramDisplayComponent)
-		constexpr int FFT_ORDER = 12;
+		constexpr int FFT_ORDER = 14;
 		constexpr int FFT_SIZE = 1 << FFT_ORDER;
-		constexpr float MIN_FREQUENCY = 20.0f;
-		constexpr float MAX_FREQUENCY = 200.0f;
+		constexpr float MIN_FREQUENCY =48000.0f / (float)FFT_SIZE; // = Bins size in Hz, so 48000/4096 = ~11.7Hz
 		constexpr int NUM_FREQUENCY_BINS = 128;
-		constexpr int NUM_TIME_BINS = 2048;
+		constexpr float MAX_FREQUENCY = MIN_FREQUENCY * (float)NUM_FREQUENCY_BINS;
+		const int NUM_TIME_BINS = std::max(1, (samples * 2048) / m_sampleRate);
 
 		juce::dsp::FFT forwardFFT(FFT_ORDER);
 		juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
 
 		const float binFrequencyResolution = (float)m_sampleRate / FFT_SIZE;
-		const int hopSize = std::max(1, (samples - FFT_SIZE) / (NUM_TIME_BINS - 1));
 
 		// Compute dominant frequency bins and phase information
 		std::vector<float> phaseTrajectory;
@@ -226,21 +162,28 @@ private:
 		std::vector<int> frameDominantFreqBins;
 		int validTimeSteps = 0;
 
+		// Divide buffer into NUM_TIME_BINS equal blocks
+		const float blockSize = (float)samples / NUM_TIME_BINS;
+
 		for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
 		{
-			int startSample = timeIdx * hopSize;
+			// Calculate center sample of this block
+			float centerSampleFloat = blockSize * (timeIdx + 0.5f);
+			int centerSample = (int)centerSampleFloat;
 
-			if (startSample + FFT_SIZE > samples)
-			{
-				break;
-			}
+			// Start of FFT window (centered at centerSample)
+			int startSample = centerSample - FFT_SIZE / 2;
 
 			float fftData[2 * FFT_SIZE]{};
 
-			// Copy audio data
+			// Copy audio data with circular wrapping
 			for (int i = 0; i < FFT_SIZE; ++i)
 			{
-				fftData[i] = bufferData[startSample + i];
+				int sampleIdx = (startSample + i) % samples;
+				// Handle negative modulo for C++
+				if (sampleIdx < 0)
+					sampleIdx += samples;
+				fftData[i] = pBuffer[sampleIdx];
 			}
 
 			// Apply windowing
@@ -277,7 +220,7 @@ private:
 				}
 			}
 
-			frameStartSamples.push_back(startSample);
+			frameStartSamples.push_back(centerSample);
 			frameDominantFreqBins.push_back(maxFftBin);
 
 			// Extract phase from dominant frequency bin
@@ -316,8 +259,9 @@ private:
 		for (int sample = 1; sample < samples; ++sample)
 		{
 			// Find which FFT frames this sample is between
-			int frameIdx = std::min((sample - frameStartSamples[0]) / hopSize, (int)phaseTrajectory.size() - 1);
-			frameIdx = std::max(0, frameIdx);
+			float sampleBlockPosition = (float)sample / blockSize;
+			int frameIdx = (int)sampleBlockPosition;
+			frameIdx = std::max(0, std::min(frameIdx, (int)phaseTrajectory.size() - 1));
 
 			// Interpolate phase between frames
 			float currentPhase = phaseTrajectory[frameIdx];
@@ -325,13 +269,13 @@ private:
 			if (frameIdx + 1 < (int)phaseTrajectory.size())
 			{
 				// Linear interpolation between current and next frame
-				int nextFrameStart = frameStartSamples[frameIdx + 1];
-				int currentFrameStart = frameStartSamples[frameIdx];
-				int frameDuration = nextFrameStart - currentFrameStart;
+				float currentFrameCenter = frameStartSamples[frameIdx];
+				float nextFrameCenter = frameStartSamples[frameIdx + 1];
+				float frameDuration = nextFrameCenter - currentFrameCenter;
 
-				if (frameDuration > 0)
+				if (frameDuration > 0.0f)
 				{
-					float samplePositionInFrame = (float)(sample - currentFrameStart) / frameDuration;
+					float samplePositionInFrame = (float)(sample - currentFrameCenter) / frameDuration;
 					samplePositionInFrame = std::max(0.0f, std::min(1.0f, samplePositionInFrame));
 
 					float nextPhase = phaseTrajectory[frameIdx + 1];
@@ -370,28 +314,10 @@ private:
 			regions.push_back(0);
 		}
 	}
-	int getMedian(std::vector<int> input)
-	{
-		if (input.empty())
-		{
-			return 0;
-		}
 
-		std::sort(input.begin(), input.end());
-		size_t n = input.size();
-
-		if (n % 2 == 1) // odd number of elements
-			return input[n / 2];
-		else // even number of elements
-			return (input[n / 2 - 1] + input[n / 2]) / 2;
-	}
-
-	BiquadFilter m_filter;
-	float m_frequency = 20.0f;
 	float m_maximumFrequency = 200.0f;
 	float m_threshold = -60.0f;
 	int m_sampleRate = 48000;
-	int m_searchRange = 100;
 	Type m_type = Type::Default;
 	float m_fftPhaseThresholdRadians = 0.0f; // Default to 0 degrees (crossing through 0)
 };

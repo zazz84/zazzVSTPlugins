@@ -5,13 +5,15 @@
 
 #include <vector>
 #include <mutex>
+#include <algorithm>
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/SpectrogramDisplayComponent.h"
-#include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingRateOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
+#include "SpectrumMatchRegionProcessor.h"
+#include "SpectrumMatchFFTApplyNoWindow.h"
 
 
 //==============================================================================
@@ -61,7 +63,7 @@ public:
 	MainComponent();
 	~MainComponent() override;
 
-	static const int CANVAS_WIDTH = 1 + 15 + 1 + 15 + 1;
+	static const int CANVAS_WIDTH = 1 + 15 + 1 + 15 + 1 + 15 + 1 + 15 + 1;
 	static const int CANVAS_HEIGHT = 2 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 11 + 11 + 1 + 1;
 	static const int PIXEL_SIZE = 27;
 	static const int WRITTE_BIT_DEPTH = 32;		// 32-bit float
@@ -168,6 +170,12 @@ public:
 			return;
 		}
 
+		// Initialize spectrum matching if enabled
+		if (m_useSpectrumMatching)
+		{
+			initializeSpectrumMatching();
+		}
+
 		// Prepare out buffer
 		const auto outputSize = validRegionsCount * exportRegionLength;
 		const auto channels = m_bufferSource.getNumChannels();
@@ -179,7 +187,7 @@ public:
 
 		for (int channel = 0; channel < channels; channel++)
 		{
-			auto* pBufferSource = m_bufferSource.getWritePointer(channel);
+			auto* pBufferSource = m_bufferSource.getReadPointer(channel);
 			auto* pBufferOut = m_bufferOutput.getWritePointer(channel);
 
 			int outIndex = 0;
@@ -193,33 +201,24 @@ public:
 
 				const int segmentStartIndex = region.m_sampleIndex;
 				const int sourceRegionLength = region.m_length;
-				const float indexIncrement = (float)sourceRegionLength / (float)exportRegionLength;
 
-				float sourceIndex = 0.0f;
+				// Get resampled region data
+				std::vector<float> resampledRegion;
+				getResampledRegionData(pBufferSource, segmentStartIndex, sourceRegionLength, exportRegionLength, sourceSize, resampledRegion);
 
-				for (int i = 0; i < exportRegionLength; i++)
+				// Apply spectrum matching if enabled
+				if (m_useSpectrumMatching && m_spectrumRegionProcessor)
 				{
-					if (m_interpolationType == InterpolationType::Point)
-					{
-						pBufferOut[outIndex] = pBufferSource[segmentStartIndex + (int)sourceIndex];
-					}
-					else if (m_interpolationType == InterpolationType::Linear)
-					{
-						const int indexLeft = segmentStartIndex + (int)sourceIndex;
-						const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
-
-						const float valueLeft = pBufferSource[indexLeft];
-						const float valueRight = pBufferSource[indexRight];
-
-						const float delta = sourceIndex - std::floor(sourceIndex);
-						const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
-
-						pBufferOut[outIndex] = interpolated;
-					}
-
-					sourceIndex += indexIncrement;
-					outIndex++;
+					std::vector<float> adjustedRegion(exportRegionLength);
+					m_spectrumRegionProcessor->applySpectrumAdjustment(resampledRegion.data(), exportRegionLength, adjustedRegion.data());
+					std::copy(adjustedRegion.begin(), adjustedRegion.end(), pBufferOut + outIndex);
 				}
+				else
+				{
+					std::copy(resampledRegion.begin(), resampledRegion.end(), pBufferOut + outIndex);
+				}
+
+				outIndex += exportRegionLength;
 			}
 		}
 
@@ -274,6 +273,12 @@ public:
 		if (tempBufferRegionCount == 0)
 		{
 			return;
+		}
+
+		// Initialize spectrum matching if enabled
+		if (m_useSpectrumMatching)
+		{
+			initializeSpectrumMatching();
 		}
 
 		const auto sourceRegionCount = (int)m_regions.size();
@@ -349,16 +354,17 @@ public:
 					writeIndex++;
 				}
 
-				// Region data
+				// Region data - collect for potential spectrum matching
+				std::vector<float> regionData(exportRegionLength);
 				for (int i = 0; i < exportRegionLength; i++)
 				{
 					if (m_interpolationType == InterpolationType::Point)
 					{
-						pTempBuffer[writeIndex] = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
+						regionData[i] = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
 					}
 					else if (m_interpolationType == InterpolationType::Linear)
 					{
-						const int indexLeft = readIndex;
+						const int indexLeft = (int)readIndex;
 						const int indexRight = indexLeft + 1;
 
 						float valueLeft = 0.0f;
@@ -372,12 +378,24 @@ public:
 						const float delta = readIndex - std::floor(readIndex);
 						const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
 
-						pTempBuffer[writeIndex] = interpolated;
+						regionData[i] = interpolated;
 					}
 
 					readIndex += indexIncrement;
-					writeIndex++;
 				}
+
+				// Apply spectrum matching if enabled
+				if (m_useSpectrumMatching && m_spectrumRegionProcessor)
+				{
+					std::vector<float> adjustedRegion(exportRegionLength);
+					m_spectrumRegionProcessor->applySpectrumAdjustment(regionData.data(), exportRegionLength, adjustedRegion.data());
+					std::copy(adjustedRegion.begin(), adjustedRegion.end(), pTempBuffer + writeIndex);
+				}
+				else
+				{
+					std::copy(regionData.begin(), regionData.end(), pTempBuffer + writeIndex);
+				}
+				writeIndex += exportRegionLength;
 
 				// Fade out data
 				for (int i = 0; i < halfCrossfade; i++)
@@ -506,6 +524,191 @@ public:
 				"Error",
 				"Output is empty!");
 		}
+	}
+
+	//==========================================================================
+	void getResampledRegionData(const float* pBufferChan, int segmentStartIndex, int sourceRegionLength, 
+								int exportRegionLength, const int sourceSize, std::vector<float>& outData)
+	{
+		outData.resize(exportRegionLength);
+		const float indexIncrement = (float)sourceRegionLength / (float)exportRegionLength;
+		float sourceIndex = 0.0f;
+
+		for (int i = 0; i < exportRegionLength; i++)
+		{
+			if (m_interpolationType == InterpolationType::Point)
+			{
+				outData[i] = pBufferChan[segmentStartIndex + (int)sourceIndex];
+			}
+			else if (m_interpolationType == InterpolationType::Linear)
+			{
+				const int indexLeft = segmentStartIndex + (int)sourceIndex;
+				const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
+
+				const float valueLeft = pBufferChan[indexLeft];
+				const float valueRight = pBufferChan[indexRight];
+
+				const float delta = sourceIndex - std::floor(sourceIndex);
+				const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
+
+				outData[i] = interpolated;
+			}
+
+			sourceIndex += indexIncrement;
+		}
+	}
+
+	//==========================================================================
+	void exportRegionsButtonClicked()
+	{
+		// Check if there are valid regions to export
+		int validRegionsCount = 0;
+		for (const auto& region : m_regions)
+		{
+			if (region.m_isValid)
+				validRegionsCount++;
+		}
+
+		if (validRegionsCount == 0)
+		{
+			juce::AlertWindow::showMessageBoxAsync(
+				juce::AlertWindow::WarningIcon,
+				"Error",
+				"No valid regions to export!");
+			return;
+		}
+
+		if (m_bufferSource.getNumSamples() == 0)
+		{
+			juce::AlertWindow::showMessageBoxAsync(
+				juce::AlertWindow::WarningIcon,
+				"Error",
+				"Source buffer is empty!");
+			return;
+		}
+
+		// Get export region length
+		const int exportRegionLength = static_cast<int>(m_regionLenghtExportSlider.getValue());
+		if (exportRegionLength == 0)
+		{
+			juce::AlertWindow::showMessageBoxAsync(
+				juce::AlertWindow::WarningIcon,
+				"Error",
+				"Export region length must be greater than 0!");
+			return;
+		}
+
+		// Open directory chooser
+		if (!m_regionsExportChooser)
+		{
+			m_regionsExportChooser = std::make_unique<juce::FileChooser>(
+				"Select directory to export regions",
+				juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
+				"");
+		}
+
+		auto flags = juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories;
+
+		m_regionsExportChooser->launchAsync(flags, [this, exportRegionLength](const juce::FileChooser& fc)
+		{
+			juce::File selectedDirectory = fc.getResult();
+			if (selectedDirectory == juce::File())
+				return;
+
+			if (!selectedDirectory.isDirectory())
+				return;
+
+			// Extract base filename from source file (without extension)
+			juce::String baseFileName = juce::File(m_sourceFilePath).getFileNameWithoutExtension();
+
+			// Initialize spectrum matching if enabled
+			if (m_useSpectrumMatching)
+			{
+				initializeSpectrumMatching();
+			}
+
+			// Calculate padding width based on total number of regions
+			// Use the index of the last region to determine padding
+			// 1-9 regions: no padding (0, 1, ..., 9)
+			// 10-99 regions: 2 digits (00, 01, ..., 99)
+			// 100-999 regions: 3 digits (000, 001, ..., 999)
+			// etc.
+			int paddingWidth = juce::String((int)m_regions.size() - 1).length();
+
+			const auto channels = m_bufferSource.getNumChannels();
+			auto* pBufferSource = m_bufferSource.getWritePointer(0);
+			const int sourceSize = m_bufferSource.getNumSamples();
+
+			int exportedCount = 0;
+
+			// Export each valid region
+			for (int regionIdx = 0; regionIdx < (int)m_regions.size(); ++regionIdx)
+			{
+				const auto& region = m_regions[regionIdx];
+
+				if (!region.m_isValid)
+					continue;
+
+				// Create buffer for this region
+				juce::AudioBuffer<float> regionBuffer(channels, exportRegionLength);
+
+				const int segmentStartIndex = region.m_sampleIndex;
+				const int sourceRegionLength = region.m_length;
+				const float indexIncrement = (float)sourceRegionLength / (float)exportRegionLength;
+
+				// Resample and interpolate region data
+				for (int channel = 0; channel < channels; channel++)
+				{
+					auto* pBufferChan = m_bufferSource.getReadPointer(channel);
+					auto* pRegionBuffer = regionBuffer.getWritePointer(channel);
+
+					// Get resampled region
+					std::vector<float> resampledRegion;
+					getResampledRegionData(pBufferChan, segmentStartIndex, sourceRegionLength, exportRegionLength, sourceSize, resampledRegion);
+
+					// Apply spectrum matching if enabled
+					if (m_useSpectrumMatching && m_spectrumRegionProcessor)
+					{
+						m_spectrumRegionProcessor->applySpectrumAdjustment(resampledRegion.data(), exportRegionLength, pRegionBuffer);
+					}
+					else
+					{
+						std::copy(resampledRegion.begin(), resampledRegion.end(), pRegionBuffer);
+					}
+				}
+
+				// Create filename with dynamic padding using region's actual ID: <basename>_<padded_region_id>.wav
+				juce::String paddedRegionId = juce::String(regionIdx);
+				while (paddedRegionId.length() < paddingWidth)
+					paddedRegionId = "0" + paddedRegionId;
+				juce::String filename = baseFileName + "_" + paddedRegionId + ".wav";
+				juce::File outputFile = selectedDirectory.getChildFile(filename);
+
+				// Save region as WAV file
+				if (outputFile.create() || outputFile.exists())
+				{
+					if (auto stream = outputFile.createOutputStream())
+					{
+						juce::WavAudioFormat wavFormat;
+						if (auto writer = std::unique_ptr<juce::AudioFormatWriter>(
+							wavFormat.createWriterFor(stream.get(), m_sampleRate, regionBuffer.getNumChannels(), 16, {}, 0)))
+						{
+							writer->writeFromAudioSampleBuffer(regionBuffer, 0, regionBuffer.getNumSamples());
+							writer.reset();
+							stream.release();
+						}
+					}
+				}
+
+				exportedCount++;
+			}
+
+			// Show confirmation
+			juce::AlertWindow::showMessageBoxAsync(
+				juce::AlertWindow::InfoIcon,
+				"Success",
+				juce::String(exportedCount) + " regions exported successfully!");
+		});
 	}
 
 	//==========================================================================
@@ -916,10 +1119,108 @@ public:
 			}
 		}
 
-		
+
 		validRegionsCount = getValidRegionsCount();
 		m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)validRegionsCount, 0), juce::dontSendNotification);
 		m_waveformDisplaySource.setRegions(m_regions);
+
+		// Update spectrum source combo box with valid regions
+		m_spectrumSourceComboBox.clear(juce::dontSendNotification);
+		m_spectrumSourceComboBox.addItem("Average", 1);
+		int validRegionIdx = 0;
+		for (size_t i = 0; i < m_regions.size(); ++i)
+		{
+			if (m_regions[i].m_isValid)
+			{
+				m_spectrumSourceComboBox.addItem("Region " + juce::String(static_cast<int>(i)), 2 + validRegionIdx);
+				validRegionIdx++;
+			}
+		}
+		m_spectrumSourceComboBox.setSelectedId(1, juce::dontSendNotification); // Default to "Average"
+	}
+
+	//==========================================================================
+	void spectrumSourceComboBoxChanged()
+	{
+		int selectedId = m_spectrumSourceComboBox.getSelectedId();
+
+		if (selectedId == 1)
+		{
+			// "Average" mode
+			m_selectedSpectrumRegionIndex = -1;
+		}
+		else
+		{
+			// Specific region selected (selectedId - 2 because ID 1 is "Average")
+			m_selectedSpectrumRegionIndex = selectedId - 2;
+		}
+
+		// Note: Spectrum matching will be initialized only when Generate or Export buttons are pressed
+	}
+
+	//==========================================================================
+	void spectrumMatchToggleClicked()
+	{
+		m_useSpectrumMatching = m_spectrumMatchToggle.getToggleState();
+
+		// If enabling and we have valid regions, initialize spectrum processor
+		if (m_useSpectrumMatching && getValidRegionsCount() > 0)
+		{
+			initializeSpectrumMatching();
+		}
+	}
+
+	//==========================================================================
+	void initializeSpectrumMatching()
+	{
+		if (getValidRegionsCount() == 0 || m_bufferSource.getNumSamples() == 0)
+		{
+			return;
+		}
+
+		// Create processor if not already created
+		if (!m_spectrumRegionProcessor)
+		{
+			const int FFT_SIZE = 2048;
+			m_spectrumRegionProcessor = std::make_unique<SpectrumMatchRegionProcessor>(FFT_SIZE);
+		}
+
+		auto* pBufferSource = m_bufferSource.getReadPointer(0);
+
+		// Check if using average or specific region
+		if (m_selectedSpectrumRegionIndex < 0)
+		{
+			// Use average spectrum from all valid regions
+			std::vector<int> validRegionSizes;
+			std::vector<int> validRegionPositions;
+
+			for (const auto& region : m_regions)
+			{
+				if (region.m_isValid)
+				{
+					validRegionSizes.push_back(region.m_length);
+					validRegionPositions.push_back(region.m_sampleIndex);
+				}
+			}
+
+			// Calculate average spectrum from valid regions
+			m_spectrumRegionProcessor->calculateAverageSpectrum(validRegionSizes, pBufferSource, validRegionPositions);
+		}
+		else
+		{
+			// Use spectrum from selected region
+			if (m_selectedSpectrumRegionIndex < static_cast<int>(m_regions.size()))
+			{
+				const auto& selectedRegion = m_regions[m_selectedSpectrumRegionIndex];
+				if (selectedRegion.m_isValid && selectedRegion.m_length > 0)
+				{
+					m_spectrumRegionProcessor->calculateRegionSpectrum(
+						pBufferSource + selectedRegion.m_sampleIndex,
+						selectedRegion.m_length
+					);
+				}
+			}
+		}
 	}
 
 	//==========================================================================
@@ -947,14 +1248,87 @@ public:
 
 		const float maximumFrequencySamples = (float)m_minimumLengthSlider.getValue();
 		const float maximumFrequencyHz = m_sampleRate / maximumFrequencySamples;
-		const float filterFrequencyHz = 2.0f * maximumFrequencyHz;
 
-		zeroCrossing.set(filterFrequencyHz, 100, (float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
+		zeroCrossing.set((float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
 		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
 		zeroCrossing.setFFTPhaseThreshold((float)m_fftPhaseThresholdSlider.getValue());
 
+		// Check if using Filter detection type to prepare filtered buffer
+		const bool isFilterType = (m_detectionTypeComboBox.getSelectedId() == 2); // 2 = "Filter"
+		juce::AudioBuffer<float> filteredBuffer;
+		juce::AudioBuffer<float> bufferForProcessing;
+
+		if (isFilterType && m_bufferSource.getNumSamples() > 0)
+		{
+			// Create filtered copy with zero-phase filtering
+			const float highPassFrequency = maximumFrequencyHz * 0.7f;
+			const float lowPassFrequency = maximumFrequencyHz * 1.3f;
+
+			// Forward filtering pass
+			juce::AudioBuffer<float> tempBuffer;
+			tempBuffer.makeCopyOf(m_bufferSource, true);
+
+			BiquadFilter filterHP, filterLP;
+			filterHP.init(m_sampleRate);
+			filterLP.init(m_sampleRate);
+			filterHP.setHighPass(highPassFrequency, 2.0f);
+			filterLP.setLowPass(lowPassFrequency, 2.0f);
+
+			// Forward pass
+			for (int channel = 0; channel < tempBuffer.getNumChannels(); ++channel)
+			{
+				auto* data = tempBuffer.getWritePointer(channel);
+				for (int i = 0; i < tempBuffer.getNumSamples(); ++i)
+				{
+					float sample = data[i];
+					sample = filterHP.processDF1(sample);
+					sample = filterLP.processDF1(sample);
+					data[i] = sample;
+				}
+				filterHP.reset();
+				filterLP.reset();
+			}
+
+			// Reverse for backward pass
+			for (int channel = 0; channel < tempBuffer.getNumChannels(); ++channel)
+			{
+				auto* data = tempBuffer.getWritePointer(channel);
+				std::reverse(data, data + tempBuffer.getNumSamples());
+			}
+
+			// Backward pass
+			for (int channel = 0; channel < tempBuffer.getNumChannels(); ++channel)
+			{
+				auto* data = tempBuffer.getWritePointer(channel);
+				for (int i = 0; i < tempBuffer.getNumSamples(); ++i)
+				{
+					float sample = data[i];
+					sample = filterHP.processDF1(sample);
+					sample = filterLP.processDF1(sample);
+					data[i] = sample;
+				}
+				filterHP.reset();
+				filterLP.reset();
+			}
+
+			// Reverse back to original order
+			for (int channel = 0; channel < tempBuffer.getNumChannels(); ++channel)
+			{
+				auto* data = tempBuffer.getWritePointer(channel);
+				std::reverse(data, data + tempBuffer.getNumSamples());
+			}
+
+			filteredBuffer.makeCopyOf(tempBuffer, true);
+			bufferForProcessing.makeCopyOf(filteredBuffer, true);
+		}
+		else
+		{
+			// Use original buffer for processing
+			bufferForProcessing.makeCopyOf(m_bufferSource, true);
+		}
+
 		std::vector<int> zeroCrossingIdxs;
-		zeroCrossing.process(m_bufferSource, zeroCrossingIdxs);
+		zeroCrossing.process(bufferForProcessing, zeroCrossingIdxs);
 
 		const size_t size = zeroCrossingIdxs.size();
 
@@ -1056,6 +1430,9 @@ public:
 		updateValidZeroCrossingIdx();
 
 		m_waveformDisplaySource.setRegions(m_regions);
+
+		// Pass filtered buffer to waveform display when available
+		m_waveformDisplaySource.setFilteredAudioBuffer(filteredBuffer, isFilterType);
 
 		if (const size_t size = m_regions.size(); size > 1)
 		{
@@ -1241,6 +1618,7 @@ public:
 
 	juce::TextButton m_generateButton;
 	juce::TextButton m_saveButton;
+	juce::TextButton m_exportRegionsButton;
 	juce::TextButton m_saveProjectButton;
 	juce::TextButton m_loadProjectButton;
 	juce::TextButton m_newProjectButton;
@@ -1262,6 +1640,9 @@ public:
 	juce::Slider m_exportRegionRightSlider;
 	juce::Slider m_exportMaxRegionOffsetSlider;
 	juce::Slider m_exportRegionCountSlider;
+
+	// Toggle button
+	juce::ToggleButton m_spectrumMatchToggle;
 
 	// Labels
 	juce::Label m_sourceFileNameLabel;
@@ -1287,6 +1668,7 @@ public:
 	juce::Label m_exportRegionRightLabel;
 	juce::Label m_exportMaxRegionOffsetLabel;
 	juce::Label m_exportRegionCountLabel;
+	juce::Label m_spectrumSourceLabel;
 
 	zazzGUI::GroupLabel m_fileGroupLableComponent{ "File" };
 	zazzGUI::GroupLabel m_sourceGroupLableComponent{ "Source" };
@@ -1298,6 +1680,7 @@ public:
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;
 	juce::ComboBox m_generationTypeComboBox;
+	juce::ComboBox m_spectrumSourceComboBox;
 
 	//! Stores zero crossing points in source audio buffer
 	std::vector<Region> m_regions{};
@@ -1313,6 +1696,12 @@ public:
 
 	SpectrogramDisplayComponent m_spectrogramDisplaySource;
 	SpectrogramDisplayComponent m_spectrogramDisplayOutput;
+
+	// Spectrum matching
+	std::unique_ptr<SpectrumMatchRegionProcessor> m_spectrumRegionProcessor;
+	bool m_useSpectrumMatching = false;
+	int m_selectedSpectrumRegionIndex = 0;
+
 
 	float m_detectedFrequency = 0.0f;
 
@@ -1336,6 +1725,7 @@ public:
 	std::unique_ptr<juce::FileChooser> m_wavSaveChooser;
 	std::unique_ptr<juce::FileChooser> m_projectSaveChooser;
 	std::unique_ptr<juce::FileChooser> m_projectLoadChooser;
+	std::unique_ptr<juce::FileChooser> m_regionsExportChooser;
 
 	// Thread synchronization
 	std::mutex m_bufferMutex;

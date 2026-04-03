@@ -109,6 +109,12 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_crossfadeLengthLabel.attachToComponent(&m_crossfadeLengthSlider, true);
 
 	//
+	addAndMakeVisible(&m_spectrumMatchToggle);
+	m_spectrumMatchToggle.setButtonText("Spectrum Match");
+	m_spectrumMatchToggle.setToggleState(false, juce::dontSendNotification);
+	m_spectrumMatchToggle.onClick = [this] { spectrumMatchToggleClicked(); };
+
+
 	addAndMakeVisible(m_minimumLengthSlider);
 	m_minimumLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_minimumLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
@@ -198,6 +204,10 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_saveButton.setButtonText("Save");
 	m_saveButton.onClick = [this] { saveWavButtonClicked(); };
 
+	addAndMakeVisible(&m_exportRegionsButton);
+	m_exportRegionsButton.setButtonText("Export Regions");
+	m_exportRegionsButton.onClick = [this] { exportRegionsButtonClicked(); };
+
 	addAndMakeVisible(&m_saveProjectButton);
 	m_saveProjectButton.setButtonText("Save Project");
 	m_saveProjectButton.onClick = [this] { saveProjectButtonClicked(); };
@@ -237,6 +247,11 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 		m_fftPhaseThresholdSlider.setVisible(showFFTPhaseThreshold);
 		m_fftPhaseThresholdLabel.setVisible(showFFTPhaseThreshold);
+
+		// Hide threshold slider in FFT detection mode (DominantFrequency)
+		const bool showThresholdSlider = (detectionTypeId != 3);
+		m_thresholdSlider.setVisible(showThresholdSlider);
+		m_thresholdLabel.setVisible(showThresholdSlider);
 	};
 	addAndMakeVisible(m_detectionTypeComboBox);
 
@@ -256,6 +271,16 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	};
 	addAndMakeVisible(m_generationTypeComboBox);
+
+	// Spectrum source combo box
+	m_spectrumSourceComboBox.addItem("Average", 1);
+	m_spectrumSourceComboBox.setSelectedId(1);
+	m_spectrumSourceComboBox.onChange = [this] { spectrumSourceComboBoxChanged(); };
+	addAndMakeVisible(m_spectrumSourceComboBox);
+
+	addAndMakeVisible(m_spectrumSourceLabel);
+	m_spectrumSourceLabel.setText("Spectrum Source", juce::dontSendNotification);
+	m_spectrumSourceLabel.attachToComponent(&m_spectrumSourceComboBox, true);
 
 	// Initially hide crossfade slider for Flat mode
 	m_crossfadeLengthSlider.setVisible(false);
@@ -342,20 +367,33 @@ void MainComponent::resized()
 	const int pixelSize11 = pixelSize9 + pixelSize2;
 	const int pixelSize12 = pixelSize6 + pixelSize6;
 	const int pixelSize15 = pixelSize9 + pixelSize6;
-	const int pixelSize31 = pixelSize15 + pixelSize15 + pixelSize;
+	const int pizelSize63 = 4 * pixelSize15 + pixelSize3;
 
-	const int column1 = 0;							// Left edge
-	const int column2 = column1 + pixelSize;		// First main column
+	const int column1 = 0;								
+	const int column2 = column1 + pixelSize;			// First main column	
 	const int column3 = column2 + pixelSize3;
 	const int column4 = column3 + pixelSize3;
 	const int column5 = column4 + pixelSize3;
 	const int column6 = column5 + pixelSize3;
-	const int column7 = column6 + pixelSize3;		// Gap
-	const int column8 = column7 + pixelSize;		// Second main column
+	const int column7 = column6 + pixelSize3;			// Gap
+	const int column8 = column7 + pixelSize;			// Second main column
 	const int column9 = column8 + pixelSize3;		
 	const int column10 = column9 + pixelSize3;
 	const int column11 = column10 + pixelSize3;
 	const int column12 = column11 + pixelSize3;
+	const int column13 = column12 + pixelSize3;			// Gap
+	const int column14 = column13 + pixelSize;			// Third main column
+	const int column15 = column14 + pixelSize3;
+	const int column16 = column15 + pixelSize3;
+	const int column17 = column16 + pixelSize3;
+	const int column18 = column17 + pixelSize3;
+	const int column19 = column18 + pixelSize3;			// Gap
+	const int column20 = column19 + pixelSize;			// Forth main column
+	const int column21 = column20 + pixelSize3;
+	const int column22 = column21 + pixelSize3;
+	const int column23 = column22 + pixelSize3;
+	const int column24 = column23 + pixelSize3;
+
 
 	const int row1 = 0;
 	const int row2 = row1 + pixelSize;
@@ -383,13 +421,13 @@ void MainComponent::resized()
 	m_sourceFileNameLabel.setSize(pixelSize12, pixelSize);
 
 	m_detectRegionsButton.setSize(pixelSize3, pixelSize);
-	m_detectionTypeComboBox.setSize(pixelSize3, pixelSize);
-	m_thresholdSlider.setSize(pixelSize6, pixelSize);
-	m_minimumLengthSlider.setSize(pixelSize6, pixelSize);
-	m_exportMaxRegionOffsetSlider.setSize(pixelSize6, pixelSize);
-	m_SpectrumDifferenceSlider.setSize(pixelSize6, pixelSize);
-	m_fftPhaseThresholdSlider.setSize(pixelSize6, pixelSize);
-	m_zeroCrossingCountSlider.setSize(pixelSize6, pixelSize);
+	m_detectionTypeComboBox.setSize(pixelSize15, pixelSize);
+	m_thresholdSlider.setSize(pixelSize12, pixelSize);
+	m_minimumLengthSlider.setSize(pixelSize12, pixelSize);
+	m_exportMaxRegionOffsetSlider.setSize(pixelSize12, pixelSize);
+	m_SpectrumDifferenceSlider.setSize(pixelSize12, pixelSize);
+	m_fftPhaseThresholdSlider.setSize(pixelSize12, pixelSize);
+	m_zeroCrossingCountSlider.setSize(pixelSize12, pixelSize);
 
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_validRegionsCountLabel.setSize(pixelSize6, pixelSize);
@@ -398,8 +436,9 @@ void MainComponent::resized()
 	m_maxZeroCrossingGainLabel.setSize(pixelSize6, pixelSize);
 
 	m_generateButton.setSize(pixelSize3, pixelSize);
-	m_generationTypeComboBox.setSize(pixelSize9, pixelSize);	
+	m_generationTypeComboBox.setSize(pixelSize15, pixelSize);	
 	m_saveButton.setSize(pixelSize3, pixelSize);
+	m_exportRegionsButton.setSize(pixelSize3, pixelSize);
 	m_saveProjectButton.setSize(pixelSize3, pixelSize);
 	m_loadProjectButton.setSize(pixelSize3, pixelSize);
 	m_newProjectButton.setSize(pixelSize3, pixelSize);
@@ -410,17 +449,21 @@ void MainComponent::resized()
 	m_exportRegionCountSlider.setSize(pixelSize12, pixelSize);
 	m_crossfadeLengthSlider.setSize(pixelSize12, pixelSize);
 
+	m_spectrumSourceComboBox.setSize(pixelSize9, pixelSize);
+	m_spectrumMatchToggle.setSize(pixelSize15, pixelSize);
+
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
 	m_displayModeButton.setSize(pixelSize3, pixelSize);
 
-	m_waveformDisplaySource.setSize(pixelSize31, pixelSize11);
-	m_waveformDisplayOutput.setSize(pixelSize31, pixelSize11);
-	m_spectrogramDisplaySource.setSize(pixelSize31, pixelSize11);
-	m_spectrogramDisplayOutput.setSize(pixelSize31, pixelSize11);
+	m_waveformDisplaySource.setSize(pizelSize63, pixelSize11);
+	m_waveformDisplayOutput.setSize(pizelSize63, pixelSize11);
+	m_spectrogramDisplaySource.setSize(pizelSize63, pixelSize11);
+	m_spectrogramDisplayOutput.setSize(pizelSize63, pixelSize11);
 
 	// Set position
 	
+	// Main column 1
 	// File
 	m_fileGroupLableComponent.setTopLeftPosition(column2, row1);
 	m_newProjectButton.setTopLeftPosition(column3, row2);
@@ -428,53 +471,59 @@ void MainComponent::resized()
 	m_saveProjectButton.setTopLeftPosition(column5, row2);
 
 	// Source
-	m_sourceGroupLableComponent.setTopLeftPosition(column8, row1);
-	m_openSourceButton.setTopLeftPosition(column8, row2);
-	m_sourceFileNameLabel.setTopLeftPosition(column9, row2);
+	m_sourceGroupLableComponent.setTopLeftPosition(column2, row3);
+	m_openSourceButton.setTopLeftPosition(column2, row4);
+	m_sourceFileNameLabel.setTopLeftPosition(column3, row4);
 	
+	// Main column 2
 	// Detect regions
-	m_regionGroupLableComponent.setTopLeftPosition(column2, row3);
+	m_regionGroupLableComponent.setTopLeftPosition(column8, row1);
+	m_detectionTypeComboBox.setTopLeftPosition(column8, row2);
 	
-	m_detectRegionsButton.setTopLeftPosition(column2, row4);
-	m_detectionTypeComboBox.setTopLeftPosition(column3, row4);
+	m_minimumLengthSlider.setTopLeftPosition(column9, row3);
+	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column9, row4);
+	m_zeroCrossingCountSlider.setTopLeftPosition(column9, row5);
+	m_SpectrumDifferenceSlider.setTopLeftPosition(column9, row6);
+	m_thresholdSlider.setTopLeftPosition(column9, row7);	
+	m_fftPhaseThresholdSlider.setTopLeftPosition(column9, row7);
 	
-	m_thresholdSlider.setTopLeftPosition(column5, row4);
-	m_minimumLengthSlider.setTopLeftPosition(column5, row5);
-	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column5, row6);
-	m_SpectrumDifferenceSlider.setTopLeftPosition(column5, row7);
-	m_fftPhaseThresholdSlider.setTopLeftPosition(column5, row8);
-	m_zeroCrossingCountSlider.setTopLeftPosition(column5, row9);
-
-
 	// Info labels
-	m_regionsCountLabel.setTopLeftPosition(column2, row5);
-	m_validRegionsCountLabel.setTopLeftPosition(column2, row6);
-	m_regionLenghtMedianLabel.setTopLeftPosition(column2, row7);
-	m_regionLengthDiffLabel.setTopLeftPosition(column2, row8);
-	m_maxZeroCrossingGainLabel.setTopLeftPosition(column2, row9);
+	m_regionsCountLabel.setTopLeftPosition(column8, row8);
+	m_validRegionsCountLabel.setTopLeftPosition(column8, row9);
+	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row10);
+	m_regionLengthDiffLabel.setTopLeftPosition(column11, row8);
+	m_maxZeroCrossingGainLabel.setTopLeftPosition(column11, row9);
 
+	m_detectRegionsButton.setTopLeftPosition(column10, row11);
+
+	// Main column 3
 	// Generate
-	m_exportGroupLableComponent.setTopLeftPosition(column8, row3);
+	m_exportGroupLableComponent.setTopLeftPosition(column14, row1);
+	m_generationTypeComboBox.setTopLeftPosition(column14, row2);
+	
+	m_regionLenghtExportSlider.setTopLeftPosition(column15, row3);
+	m_exportRegionLeftSlider.setTopLeftPosition(column15, row4);
+	m_exportRegionRightSlider.setTopLeftPosition(column15, row5);
+	m_exportRegionCountSlider.setTopLeftPosition(column15, row6);
+	m_crossfadeLengthSlider.setTopLeftPosition(column15, row7);
+	m_spectrumSourceComboBox.setTopLeftPosition(column16, row8);
+	m_spectrumMatchToggle.setTopLeftPosition(column15, row9);
 
-	m_generateButton.setTopLeftPosition(column8, row4);
-	m_generationTypeComboBox.setTopLeftPosition(column9, row4);
-	m_saveButton.setTopLeftPosition(column12, row4);
+	m_generateButton.setTopLeftPosition(column15, row11);
+	m_saveButton.setTopLeftPosition(column16, row11);
+	m_exportRegionsButton.setTopLeftPosition(column17, row11);
 
-	m_regionLenghtExportSlider.setTopLeftPosition(column9, row5);
-	m_exportRegionLeftSlider.setTopLeftPosition(column9, row6);
-	m_exportRegionRightSlider.setTopLeftPosition(column9, row7);
-	m_exportRegionCountSlider.setTopLeftPosition(column9, row8);
-	m_crossfadeLengthSlider.setTopLeftPosition(column9, row9);
-
+	// Main column 4
 	// Playback
-	m_displayGroupLableComponent.setTopLeftPosition(column11, row10);
-	m_playButton.setTopLeftPosition(column9, row11);
-	m_displayModeButton.setTopLeftPosition(column11, row11);
+	m_playbackGroupLableComponent.setTopLeftPosition(column20, row1);	
+	m_sourceButton.setTopLeftPosition(column20, row2);
+	m_playButton.setTopLeftPosition(column21, row2);
 
 	//Display
-	m_playbackGroupLableComponent.setTopLeftPosition(column8, row10);
-	m_sourceButton.setTopLeftPosition(column8, row11);
+	m_displayGroupLableComponent.setTopLeftPosition(column20, row3);
+	m_displayModeButton.setTopLeftPosition(column20, row4);	
 	
+	// Waveform and spectrogram displays (overlapping, visibility controlled by display mode button)
 	m_waveformDisplaySource.setTopLeftPosition(column2, row12);
 	m_waveformDisplayOutput.setTopLeftPosition(column2, row13);
 	m_spectrogramDisplaySource.setTopLeftPosition(column2, row12);
