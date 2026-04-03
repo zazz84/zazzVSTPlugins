@@ -198,8 +198,10 @@ public:
 	 * @param inputSize Input region size
 	 * @param outputRegion Output buffer (should be same size as input)
 	 * @param intensity Spectrum matching intensity (0.0 = no adjustment, 1.0 = full ±24dB adjustment)
+	 * @param dcOffsetStartIdx Optional: start index for DC offset calculation (default: 0)
+	 * @param dcOffsetEndIdx Optional: end index for DC offset calculation (default: inputSize-1)
 	 */
-	void applySpectrumAdjustment(const float* inputRegion, int inputSize, float* outputRegion, float intensity = 1.0f)
+	void applySpectrumAdjustment(const float* inputRegion, int inputSize, float* outputRegion, float intensity = 1.0f, int dcOffsetStartIdx = -1, int dcOffsetEndIdx = -1)
 	{
 		jassert(inputRegion != nullptr);
 		jassert(outputRegion != nullptr);
@@ -223,6 +225,21 @@ public:
 
 		// Resample back to original size
 		resampleFromFFTSize(fftData.data(), outputRegion, inputSize);
+
+		// DC offset compensation to ensure smooth looping
+		// Calculate average of first and last samples and subtract it to make their sum close to zero
+		if (inputSize > 1)
+		{
+			// Use specified indices if provided, otherwise use full range
+			int startIdx = (dcOffsetStartIdx >= 0) ? dcOffsetStartIdx : 0;
+			int endIdx = (dcOffsetEndIdx >= 0) ? dcOffsetEndIdx : (inputSize - 1);
+
+			float dcOffset = (outputRegion[startIdx] + outputRegion[endIdx]) / 2.0f;
+			for (int i = 0; i < inputSize; ++i)
+			{
+				outputRegion[i] -= dcOffset;
+			}
+		}
 	}
 
 	/**

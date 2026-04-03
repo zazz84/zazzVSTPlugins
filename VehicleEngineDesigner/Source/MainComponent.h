@@ -155,7 +155,30 @@ public:
 	//==========================================================================
 	void flatRegionsGenerate()
 	{
-		auto validRegionsCount = getValidRegionsCount();			
+		const auto exportRegionLeftIdx = (int)m_exportRegionLeftSlider.getValue();
+		const auto exportRegionRightIdx = (int)m_exportRegionRightSlider.getValue();
+		const auto sourceRegionCount = (int)m_regions.size();
+
+		// Check if setup is valid
+		if (exportRegionLeftIdx < 0 ||
+			exportRegionRightIdx < 1 ||
+			exportRegionLeftIdx >= exportRegionRightIdx ||
+			exportRegionLeftIdx >= sourceRegionCount ||
+			exportRegionRightIdx > sourceRegionCount)
+		{
+			return;
+		}
+
+		// Count valid regions in the specified range
+		int validRegionsCount = 0;
+		for (int i = exportRegionLeftIdx; i < exportRegionRightIdx; i++)
+		{
+			if (m_regions[i].m_isValid)
+			{
+				validRegionsCount++;
+			}
+		}
+
 		if (validRegionsCount == 0)
 		{
 			return;
@@ -195,8 +218,11 @@ public:
 
 			int outIndex = 0;
 
-			for (Region& region : m_regions)
+			// Only process regions in the specified range
+			for (int regionIdx = exportRegionLeftIdx; regionIdx < exportRegionRightIdx; regionIdx++)
 			{
+				Region& region = m_regions[regionIdx];
+
 				if (!region.m_isValid)
 				{
 					continue;
@@ -227,10 +253,8 @@ public:
 
 		// Set output waveform
 		std::vector<Region> regionsExport;
-
 		regionsExport.resize(validRegionsCount);
 
-		int value = 0;
 		for (int i = 0; i < validRegionsCount; i++)
 		{
 			regionsExport[i].m_isValid = true;
@@ -426,7 +450,8 @@ public:
 				std::vector<float> processedSegment(tempRegionLength);
 				if (m_useSpectrumMatching && m_spectrumRegionProcessor)
 				{
-					m_spectrumRegionProcessor->applySpectrumAdjustment(fullSegmentData.data(), tempRegionLength, processedSegment.data(), m_spectrumMatchIntensity);
+					// DC offset should be calculated only from middle region (no envelopes) when crossfade > 0
+					m_spectrumRegionProcessor->applySpectrumAdjustment(fullSegmentData.data(), tempRegionLength, processedSegment.data(), m_spectrumMatchIntensity, halfCrossfade, halfCrossfade + exportRegionLength - 1);
 
 					// Apply fade envelopes AGAIN after spectrum matching to ensure smooth boundaries post-FFT
 					// Apply fade-in envelope to first halfCrossfade samples
