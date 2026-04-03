@@ -67,6 +67,9 @@ public:
 	static const int PIXEL_SIZE = 27;
 	static const int WRITTE_BIT_DEPTH = 32;		// 32-bit float
 
+	static const int FFT_ORDER = 14;
+	static const int FFT_SIZE = 1 << FFT_ORDER;
+
 	//==============================================================================
 	void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override;
 	void getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill) override;
@@ -75,6 +78,7 @@ public:
 	//==============================================================================
 	void paint (juce::Graphics& g) override;
 	void resized() override;
+	bool keyPressed(const juce::KeyPress& key) override;
 
 	void changeListenerCallback(juce::ChangeBroadcaster* source) override
 	{
@@ -422,7 +426,7 @@ public:
 				std::vector<float> processedSegment(tempRegionLength);
 				if (m_useSpectrumMatching && m_spectrumRegionProcessor)
 				{
-					m_spectrumRegionProcessor->applySpectrumAdjustment(fullSegmentData.data(), tempRegionLength, processedSegment.data());
+					m_spectrumRegionProcessor->applySpectrumAdjustment(fullSegmentData.data(), tempRegionLength, processedSegment.data(), m_spectrumMatchIntensity);
 
 					// Apply fade envelopes AGAIN after spectrum matching to ensure smooth boundaries post-FFT
 					// Apply fade-in envelope to first halfCrossfade samples
@@ -770,6 +774,7 @@ public:
 		m_exportRegionRightSlider.setValue(0.0);
 		m_exportMaxRegionOffsetSlider.setValue(1000.0);
 		m_exportRegionCountSlider.setValue(200.0);
+		m_spectrumMatchIntensitySlider.setValue(0.0);
 
 		// Reset combo boxes to default
 		m_detectionTypeComboBox.setSelectedId(1);
@@ -823,6 +828,7 @@ public:
 			projectObject->setProperty("exportRegionRight", m_exportRegionRightSlider.getValue());
 			projectObject->setProperty("exportMaxRegionOffset", m_exportMaxRegionOffsetSlider.getValue());
 			projectObject->setProperty("exportRegionCount", m_exportRegionCountSlider.getValue());
+			projectObject->setProperty("spectrumMatchIntensity", m_spectrumMatchIntensitySlider.getValue());
 
 			// Save combo box selections
 			projectObject->setProperty("detectionType", m_detectionTypeComboBox.getSelectedId());
@@ -1026,10 +1032,6 @@ public:
 			region.m_isValid = region.m_length > leftThreshold && region.m_length < rightThreshold;
 		}
 
-		// Compare spectrum
-		const int FFT_ORDER = 10;
-		const int FFT_SIZE = 1 << FFT_ORDER;
-
 		juce::dsp::FFT forwardFFT(FFT_ORDER);
 		juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
 		float tempBuffer[FFT_SIZE];
@@ -1143,12 +1145,13 @@ public:
 		// Update spectrum source combo box with valid regions
 		m_spectrumSourceComboBox.clear(juce::dontSendNotification);
 		m_spectrumSourceComboBox.addItem("Average", 1);
+		m_spectrumSourceComboBox.addItem("Median", 2);
 		int validRegionIdx = 0;
 		for (size_t i = 0; i < m_regions.size(); ++i)
 		{
 			if (m_regions[i].m_isValid)
 			{
-				m_spectrumSourceComboBox.addItem("Region " + juce::String(static_cast<int>(i)), 2 + validRegionIdx);
+				m_spectrumSourceComboBox.addItem("Region " + juce::String(static_cast<int>(i)), 3 + validRegionIdx);
 				validRegionIdx++;
 			}
 		}
@@ -1164,20 +1167,29 @@ public:
 		{
 			// "Average" mode
 			m_selectedSpectrumRegionIndex = -1;
+			m_useMedianSpectrum = false;
+		}
+		else if (selectedId == 2)
+		{
+			// "Median" mode
+			m_selectedSpectrumRegionIndex = -2;
+			m_useMedianSpectrum = true;
 		}
 		else
 		{
-			// Specific region selected (selectedId - 2 because ID 1 is "Average")
-			m_selectedSpectrumRegionIndex = selectedId - 2;
+			// Specific region selected (selectedId - 3 because ID 1 is "Average", ID 2 is "Median")
+			m_selectedSpectrumRegionIndex = selectedId - 3;
+			m_useMedianSpectrum = false;
 		}
 
 		// Note: Spectrum matching will be initialized only when Generate or Export buttons are pressed
 	}
 
 	//==========================================================================
-	void spectrumMatchToggleClicked()
+	void spectrumMatchIntensitySliderChanged()
 	{
-		m_useSpectrumMatching = m_spectrumMatchToggle.getToggleState();
+		m_spectrumMatchIntensity = m_spectrumMatchIntensitySlider.getValue() / 100.0f;
+		m_useSpectrumMatching = (m_spectrumMatchIntensity > 0.0f);
 
 		// If enabling and we have valid regions, initialize spectrum processor
 		if (m_useSpectrumMatching && getValidRegionsCount() > 0)
@@ -1197,15 +1209,31 @@ public:
 		// Create processor if not already created
 		if (!m_spectrumRegionProcessor)
 		{
-			static constexpr int FFT_ORDER = 14;
-			static constexpr int FFT_SIZE = 1 << FFT_ORDER;
 			m_spectrumRegionProcessor = std::make_unique<SpectrumMatchRegionProcessor>(FFT_SIZE);
 		}
 
 		auto* pBufferSource = m_bufferSource.getReadPointer(0);
 
-		// Check if using average or specific region
-		if (m_selectedSpectrumRegionIndex < 0)
+		// Check if using average, median, or specific region
+		if (m_selectedSpectrumRegionIndex == -2 && m_useMedianSpectrum)
+		{
+			// Use median spectrum from all valid regions
+			std::vector<int> validRegionSizes;
+			std::vector<int> validRegionPositions;
+
+			for (const auto& region : m_regions)
+			{
+				if (region.m_isValid)
+				{
+					validRegionSizes.push_back(region.m_length);
+					validRegionPositions.push_back(region.m_sampleIndex);
+				}
+			}
+
+			// Calculate median spectrum from valid regions
+			m_spectrumRegionProcessor->calculateMedianSpectrum(validRegionSizes, pBufferSource, validRegionPositions);
+		}
+		else if (m_selectedSpectrumRegionIndex < 0)
 		{
 			// Use average spectrum from all valid regions
 			std::vector<int> validRegionSizes;
@@ -1658,8 +1686,7 @@ public:
 	juce::Slider m_exportMaxRegionOffsetSlider;
 	juce::Slider m_exportRegionCountSlider;
 
-	// Toggle button
-	juce::ToggleButton m_spectrumMatchToggle;
+	juce::Slider m_spectrumMatchIntensitySlider;
 
 	// Labels
 	juce::Label m_sourceFileNameLabel;
@@ -1671,6 +1698,7 @@ public:
 	juce::Label m_fftPhaseThresholdLabel;
 	juce::Label m_zeroCrossingCountLabel;
 	juce::Label m_crossfadeLengthLabel;
+	juce::Label m_spectrumMatchIntensityLabel;
 
 	juce::Label m_regionLenghtMedianLabel;
 	juce::Label m_regionLengthDiffLabel;
@@ -1717,8 +1745,9 @@ public:
 	// Spectrum matching
 	std::unique_ptr<SpectrumMatchRegionProcessor> m_spectrumRegionProcessor;
 	bool m_useSpectrumMatching = false;
+	bool m_useMedianSpectrum = false;
 	int m_selectedSpectrumRegionIndex = 0;
-
+	float m_spectrumMatchIntensity = 0.0f;
 
 	float m_detectedFrequency = 0.0f;
 

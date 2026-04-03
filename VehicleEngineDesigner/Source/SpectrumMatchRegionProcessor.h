@@ -89,6 +89,67 @@ public:
 	}
 
 	/**
+	 * Calculate median spectrum from valid regions
+	 * @param regions Vector of region sizes (in samples)
+	 * @param audioData Pointer to the full audio buffer
+	 * @param regionStartPositions Vector of start sample positions for each region
+	 */
+	void calculateMedianSpectrum(const std::vector<int>& regions, 
+								 const float* audioData,
+								 const std::vector<int>& regionStartPositions)
+	{
+		jassert(regions.size() == regionStartPositions.size());
+
+		// Collect spectra from all valid regions
+		std::vector<std::vector<float>> spectra;
+
+		for (size_t i = 0; i < regions.size(); ++i)
+		{
+			if (regions[i] > 0)
+			{
+				std::vector<float> spectrum(numBins, 0.0f);
+				processRegionForSpectrum(audioData + regionStartPositions[i], 
+										regions[i], 
+										spectrum);
+				spectra.push_back(spectrum);
+			}
+		}
+
+		// Calculate median spectrum
+		if (spectra.size() > 0)
+		{
+			// For each frequency bin, calculate the median across all regions
+			for (int binIdx = 0; binIdx < numBins; ++binIdx)
+			{
+				std::vector<float> binValues;
+				for (const auto& spectrum : spectra)
+				{
+					binValues.push_back(spectrum[binIdx]);
+				}
+
+				// Sort to find median
+				std::sort(binValues.begin(), binValues.end());
+
+				if (binValues.size() % 2 == 1)
+				{
+					// Odd number of values - take middle value
+					m_averageSpectrum[binIdx] = binValues[binValues.size() / 2];
+				}
+				else
+				{
+					// Even number of values - take average of two middle values
+					int mid = binValues.size() / 2;
+					m_averageSpectrum[binIdx] = (binValues[mid - 1] + binValues[mid]) * 0.5f;
+				}
+			}
+		}
+		else
+		{
+			std::fill(m_averageSpectrum.begin(), m_averageSpectrum.end(), 1.0f);
+		}
+	}
+
+	/**
 	 * Calculate spectrum from a specific region
 	 * @param regionData Audio data for the region
 	 * @param regionSize Size of the region
@@ -136,8 +197,9 @@ public:
 	 * @param inputRegion Input audio region
 	 * @param inputSize Input region size
 	 * @param outputRegion Output buffer (should be same size as input)
+	 * @param intensity Spectrum matching intensity (0.0 = no adjustment, 1.0 = full ±24dB adjustment)
 	 */
-	void applySpectrumAdjustment(const float* inputRegion, int inputSize, float* outputRegion)
+	void applySpectrumAdjustment(const float* inputRegion, int inputSize, float* outputRegion, float intensity = 1.0f)
 	{
 		jassert(inputRegion != nullptr);
 		jassert(outputRegion != nullptr);
@@ -153,8 +215,8 @@ public:
 		// Perform FFT
 		fft.performRealOnlyForwardTransform(fftData.data(), true);
 
-		// Apply spectrum adjustment
-		applySpectrumGain(fftData.data());
+		// Apply spectrum adjustment with intensity scaling
+		applySpectrumGain(fftData.data(), intensity);
 
 		// Perform inverse FFT
 		fft.performRealOnlyInverseTransform(fftData.data());
@@ -238,10 +300,11 @@ private:
 	}
 
 	/**
-	 * Apply spectrum gain to FFT data in-place
-	 * Scales each frequency bin by the ratio of average spectrum to current spectrum
+	 * Apply spectrum gain to FFT data in-place with intensity scaling
+	 * Scales each frequency bin by the ratio of average spectrum to current spectrum,
+	 * with the adjustment amount controlled by intensity (0.0 = no adjustment, 1.0 = full adjustment)
 	 */
-	void applySpectrumGain(float* fftData)
+	void applySpectrumGain(float* fftData, float intensity = 1.0f)
 	{
 		auto* cdata = reinterpret_cast<std::complex<float>*>(fftData);
 
@@ -258,12 +321,16 @@ private:
 			{
 				// Scale by the ratio: average_spectrum / current_magnitude
 				// This makes quiet bins louder and loud bins quieter to match the average profile
-				gain = m_averageSpectrum[i] / magnitude;
+				float targetGain = m_averageSpectrum[i] / magnitude;
 
-				// Limit gain to prevent extreme amplification (±12 dB range)
-				const float maxGain = 4.0f;   // +12 dB
-				const float minGain = 0.25f;  // -12 dB
-				gain = juce::jlimit(minGain, maxGain, gain);
+				// Limit gain to prevent extreme amplification (±24 dB range)
+				const float maxGain = 15.85f;  // +24 dB
+				const float minGain = 0.0631f; // -24 dB
+				targetGain = juce::jlimit(minGain, maxGain, targetGain);
+
+				// Interpolate between unity gain (no adjustment) and target gain based on intensity
+				// gain = 1.0 + (targetGain - 1.0) * intensity
+				gain = 1.0f + (targetGain - 1.0f) * intensity;
 			}
 
 			// Apply gain while preserving phase

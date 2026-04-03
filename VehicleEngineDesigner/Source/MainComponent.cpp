@@ -109,10 +109,17 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_crossfadeLengthLabel.attachToComponent(&m_crossfadeLengthSlider, true);
 
 	//
-	addAndMakeVisible(&m_spectrumMatchToggle);
-	m_spectrumMatchToggle.setButtonText("Spectrum Match");
-	m_spectrumMatchToggle.setToggleState(false, juce::dontSendNotification);
-	m_spectrumMatchToggle.onClick = [this] { spectrumMatchToggleClicked(); };
+	addAndMakeVisible(m_spectrumMatchIntensitySlider);
+	m_spectrumMatchIntensitySlider.setSliderStyle(juce::Slider::LinearHorizontal);
+	m_spectrumMatchIntensitySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
+	m_spectrumMatchIntensitySlider.setRange(0.0, 100.0, 1.0);
+	m_spectrumMatchIntensitySlider.setValue(0.0);
+	m_spectrumMatchIntensitySlider.onValueChange = [this] { spectrumMatchIntensitySliderChanged(); };
+
+	addAndMakeVisible(m_spectrumMatchIntensityLabel);
+	m_spectrumMatchIntensityLabel.setText("FFT Match", juce::dontSendNotification);
+
+	m_spectrumMatchIntensityLabel.attachToComponent(&m_spectrumMatchIntensitySlider, true);
 
 
 	addAndMakeVisible(m_minimumLengthSlider);
@@ -235,9 +242,9 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	// Combo boxes
 	//
-	m_detectionTypeComboBox.addItem("Default", 1);
-	m_detectionTypeComboBox.addItem("Filter", 2);
-	m_detectionTypeComboBox.addItem("DominantFrequency", 3);
+	m_detectionTypeComboBox.addItem("Time Domain", 1);
+	m_detectionTypeComboBox.addItem("Time Domain + Filter", 2);
+	m_detectionTypeComboBox.addItem("FFT", 3);
 	m_detectionTypeComboBox.setSelectedId(1);
 	m_detectionTypeComboBox.onChange = [this] {
 		const int detectionTypeId = m_detectionTypeComboBox.getSelectedId();
@@ -274,12 +281,13 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	// Spectrum source combo box
 	m_spectrumSourceComboBox.addItem("Average", 1);
+	m_spectrumSourceComboBox.addItem("Median", 2);
 	m_spectrumSourceComboBox.setSelectedId(1);
 	m_spectrumSourceComboBox.onChange = [this] { spectrumSourceComboBoxChanged(); };
 	addAndMakeVisible(m_spectrumSourceComboBox);
 
 	addAndMakeVisible(m_spectrumSourceLabel);
-	m_spectrumSourceLabel.setText("Spectrum Source", juce::dontSendNotification);
+	m_spectrumSourceLabel.setText("FFT Source", juce::dontSendNotification);
 	m_spectrumSourceLabel.attachToComponent(&m_spectrumSourceComboBox, true);
 
 	// Initially hide crossfade slider for Flat mode
@@ -449,8 +457,8 @@ void MainComponent::resized()
 	m_exportRegionCountSlider.setSize(pixelSize12, pixelSize);
 	m_crossfadeLengthSlider.setSize(pixelSize12, pixelSize);
 
-	m_spectrumSourceComboBox.setSize(pixelSize9, pixelSize);
-	m_spectrumMatchToggle.setSize(pixelSize15, pixelSize);
+	m_spectrumSourceComboBox.setSize(pixelSize12, pixelSize);
+	m_spectrumMatchIntensitySlider.setSize(pixelSize12, pixelSize);
 
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
@@ -500,14 +508,14 @@ void MainComponent::resized()
 	// Generate
 	m_exportGroupLableComponent.setTopLeftPosition(column14, row1);
 	m_generationTypeComboBox.setTopLeftPosition(column14, row2);
-	
+
 	m_regionLenghtExportSlider.setTopLeftPosition(column15, row3);
 	m_exportRegionLeftSlider.setTopLeftPosition(column15, row4);
 	m_exportRegionRightSlider.setTopLeftPosition(column15, row5);
 	m_exportRegionCountSlider.setTopLeftPosition(column15, row6);
 	m_crossfadeLengthSlider.setTopLeftPosition(column15, row7);
-	m_spectrumSourceComboBox.setTopLeftPosition(column16, row8);
-	m_spectrumMatchToggle.setTopLeftPosition(column15, row9);
+	m_spectrumSourceComboBox.setTopLeftPosition(column15, row8);
+	m_spectrumMatchIntensitySlider.setTopLeftPosition(column15, row9);
 
 	m_generateButton.setTopLeftPosition(column15, row11);
 	m_saveButton.setTopLeftPosition(column16, row11);
@@ -528,4 +536,14 @@ void MainComponent::resized()
 	m_waveformDisplayOutput.setTopLeftPosition(column2, row13);
 	m_spectrogramDisplaySource.setTopLeftPosition(column2, row12);
 	m_spectrogramDisplayOutput.setTopLeftPosition(column2, row13);
+}
+
+bool MainComponent::keyPressed(const juce::KeyPress& key)
+{
+	if (key.getKeyCode() == juce::KeyPress::spaceKey)
+	{
+		playSourceButtonClicked();
+		return true;
+	}
+	return false;
 }
