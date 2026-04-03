@@ -100,7 +100,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_crossfadeLengthSlider);
 	m_crossfadeLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
 	m_crossfadeLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_crossfadeLengthSlider.setRange(0.0, 50.0, 1.0);
+	m_crossfadeLengthSlider.setRange(0.0, 200.0, 1.0);
 	m_crossfadeLengthSlider.setValue(0.0);
 
 	addAndMakeVisible(m_crossfadeLengthLabel);

@@ -13,7 +13,6 @@
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
 #include "SpectrumMatchRegionProcessor.h"
-#include "SpectrumMatchFFTApplyNoWindow.h"
 
 
 //==============================================================================
@@ -323,7 +322,11 @@ public:
 
 				readIndex -= halfCrossfade * indexIncrement;
 
-				// Fade in data
+				// Collect full segment data (fade in + region + fade out)
+				std::vector<float> fullSegmentData(tempRegionLength);
+				int segmentWriteIndex = 0;
+
+				// Fade in data - with envelope applied BEFORE FFT for proper windowing
 				for (int i = 0; i < halfCrossfade; i++)
 				{
 					float sample = 0.0f;
@@ -348,19 +351,18 @@ public:
 						sample = valueLeft * (1.0f - delta) + valueRight * delta;
 					}
 
-					pTempBuffer[writeIndex] = ((float)i / (float)halfCrossfade) * sample;
-
+					// Apply fade-in envelope (0 -> 1) BEFORE FFT for loopable segment
+					fullSegmentData[segmentWriteIndex] = sample * ((float)(i + 1) / (float)halfCrossfade);
+					segmentWriteIndex++;
 					readIndex += indexIncrement;
-					writeIndex++;
 				}
 
-				// Region data - collect for potential spectrum matching
-				std::vector<float> regionData(exportRegionLength);
+				// Region data (no envelope in middle section)
 				for (int i = 0; i < exportRegionLength; i++)
 				{
 					if (m_interpolationType == InterpolationType::Point)
 					{
-						regionData[i] = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
+						fullSegmentData[segmentWriteIndex] = (readIndex >= 0 && readIndex < sourceSampleCount) ? pBufferSource[(int)readIndex] : 0.0f;
 					}
 					else if (m_interpolationType == InterpolationType::Linear)
 					{
@@ -378,26 +380,14 @@ public:
 						const float delta = readIndex - std::floor(readIndex);
 						const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
 
-						regionData[i] = interpolated;
+						fullSegmentData[segmentWriteIndex] = interpolated;
 					}
 
+					segmentWriteIndex++;
 					readIndex += indexIncrement;
 				}
 
-				// Apply spectrum matching if enabled
-				if (m_useSpectrumMatching && m_spectrumRegionProcessor)
-				{
-					std::vector<float> adjustedRegion(exportRegionLength);
-					m_spectrumRegionProcessor->applySpectrumAdjustment(regionData.data(), exportRegionLength, adjustedRegion.data());
-					std::copy(adjustedRegion.begin(), adjustedRegion.end(), pTempBuffer + writeIndex);
-				}
-				else
-				{
-					std::copy(regionData.begin(), regionData.end(), pTempBuffer + writeIndex);
-				}
-				writeIndex += exportRegionLength;
-
-				// Fade out data
+				// Fade out data - with envelope applied BEFORE FFT for proper windowing
 				for (int i = 0; i < halfCrossfade; i++)
 				{
 					float sample = 0.0f;
@@ -407,7 +397,7 @@ public:
 					}
 					else if (m_interpolationType == InterpolationType::Linear)
 					{
-						const int indexLeft = readIndex;
+						const int indexLeft = (int)readIndex;
 						const int indexRight = indexLeft + 1;
 
 						float valueLeft = 0.0f;
@@ -422,12 +412,38 @@ public:
 						sample = valueLeft * (1.0f - delta) + valueRight * delta;
 					}
 
-					pTempBuffer[writeIndex] = (1.0f - ((float)i / (float)halfCrossfade)) * sample;
-
+					// Apply fade-out envelope (1 -> 0) BEFORE FFT for loopable segment
+					fullSegmentData[segmentWriteIndex] = sample * (1.0f - ((float)(i + 1) / (float)halfCrossfade));
+					segmentWriteIndex++;
 					readIndex += indexIncrement;
-					writeIndex++;
 				}
-				
+
+				// Apply spectrum matching to entire segment if enabled
+				std::vector<float> processedSegment(tempRegionLength);
+				if (m_useSpectrumMatching && m_spectrumRegionProcessor)
+				{
+					m_spectrumRegionProcessor->applySpectrumAdjustment(fullSegmentData.data(), tempRegionLength, processedSegment.data());
+
+					// Apply fade envelopes AGAIN after spectrum matching to ensure smooth boundaries post-FFT
+					// Apply fade-in envelope to first halfCrossfade samples
+					for (int i = 0; i < halfCrossfade; i++)
+					{
+						processedSegment[i] *= ((float)(i + 1) / (float)halfCrossfade);
+					}
+
+					// Apply fade-out envelope to last halfCrossfade samples
+					for (int i = 0; i < halfCrossfade; i++)
+					{
+						processedSegment[halfCrossfade + exportRegionLength + i] *= (1.0f - ((float)(i + 1) / (float)halfCrossfade));
+					}
+				}
+				else
+				{
+					std::copy(fullSegmentData.begin(), fullSegmentData.end(), processedSegment.begin());
+				}
+
+				std::copy(processedSegment.begin(), processedSegment.end(), pTempBuffer + writeIndex);
+				writeIndex += tempRegionLength;
 			}
 		}
 
@@ -1181,7 +1197,8 @@ public:
 		// Create processor if not already created
 		if (!m_spectrumRegionProcessor)
 		{
-			const int FFT_SIZE = 2048;
+			static constexpr int FFT_ORDER = 14;
+			static constexpr int FFT_SIZE = 1 << FFT_ORDER;
 			m_spectrumRegionProcessor = std::make_unique<SpectrumMatchRegionProcessor>(FFT_SIZE);
 		}
 
