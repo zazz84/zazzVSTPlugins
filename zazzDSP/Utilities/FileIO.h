@@ -64,7 +64,9 @@ namespace zazzDSP
             juce::AudioBuffer<float>& buffer,
             int sampleRate,
             std::unique_ptr<juce::FileChooser>& chooser,
-            int bitDepth = 32)
+            int bitDepth = 32,
+            std::function<void(const juce::File&)> onSaveComplete = nullptr,
+            bool showNotification = true)
         {
             chooser = std::make_unique<juce::FileChooser>(
                 "Save processed Wav file as...",
@@ -73,7 +75,7 @@ namespace zazzDSP
 
             int flag = juce::FileBrowserComponent::saveMode;
 
-            chooser->launchAsync(flag, [&buffer, sampleRate, bitDepth](const juce::FileChooser& fc)
+            chooser->launchAsync(flag, [&buffer, sampleRate, bitDepth, onSaveComplete, showNotification](const juce::FileChooser& fc)
             {
                 juce::File outFile = fc.getResult();
                 if (outFile == juce::File())
@@ -83,7 +85,7 @@ namespace zazzDSP
                     outFile = outFile.withFileExtension(".wav");
 
                 // Save on background thread
-                std::thread([outFile, &buffer, sampleRate, bitDepth]()
+                std::thread([outFile, &buffer, sampleRate, bitDepth, onSaveComplete, showNotification]()
                 {
                     juce::WavAudioFormat wavFormat;
                     std::unique_ptr<juce::FileOutputStream> stream(outFile.createOutputStream());
@@ -102,13 +104,24 @@ namespace zazzDSP
                     }
 
                     // Notify on UI thread
-                    juce::MessageManager::callAsync([outFile, ok]()
+                    juce::MessageManager::callAsync([outFile, ok, onSaveComplete, showNotification]()
                     {
                         if (ok)
-                            juce::AlertWindow::showMessageBoxAsync(
-                                juce::AlertWindow::InfoIcon,
-                                "Saved",
-                                "Processed file saved to:\n" + outFile.getFullPathName());
+                        {
+                            if (showNotification)
+                            {
+                                juce::AlertWindow::showMessageBoxAsync(
+                                    juce::AlertWindow::InfoIcon,
+                                    "Saved",
+                                    "Processed file saved to:\n" + outFile.getFullPathName());
+                            }
+
+                            // Call the completion callback
+                            if (onSaveComplete)
+                            {
+                                onSaveComplete(outFile);
+                            }
+                        }
                         else
                             juce::AlertWindow::showMessageBoxAsync(
                                 juce::AlertWindow::WarningIcon,

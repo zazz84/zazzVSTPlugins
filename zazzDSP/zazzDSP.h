@@ -18,6 +18,7 @@ END_JUCE_MODULE_DECLARATION
 
 #include "Utilities/CircularBuffer.h"
 #include "Utilities/FileIO.h"
+#include "Utilities/Spectrum.h"
 #include "Utilities/Statistics.h"
 
 namespace zazzDSP
