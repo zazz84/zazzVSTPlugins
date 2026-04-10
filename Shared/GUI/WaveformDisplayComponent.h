@@ -414,6 +414,7 @@ public:
 		if (m_showFilteredButton.getToggleState() && m_filteredAudioBuffer.getNumSamples() != 0)
 		{
 			auto* filteredData = m_filteredAudioBuffer.getReadPointer(0); // take first channel
+			const int filteredNumSamples = m_filteredAudioBuffer.getNumSamples();
 
 			juce::Path filteredPath;
 			filteredPath.preallocateSpace(3 * (int)width);
@@ -426,7 +427,10 @@ public:
 			{
 				// Find sample corresponding to this pixel (nearest-neighbour downsampling)
 				const auto sampleIndex = juce::jmap<int>(x, 0, (int)width, m_leftSampleIndex, m_rightSampleIndex - 1);
-				const float level = m_filteredVerticalZoom * filteredData[sampleIndex];
+
+				// Ensure sample index is within bounds of filtered buffer
+				const int clampedIndex = juce::jlimit(0, filteredNumSamples - 1, sampleIndex);
+				const float level = m_filteredVerticalZoom * filteredData[clampedIndex];
 
 				// Map sample value (-1..1) to vertical pixel position
 				float y = juce::jmap(level, -1.0f, 1.0f, (float)pixelSize9, (float)pixelSize);

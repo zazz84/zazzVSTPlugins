@@ -245,20 +245,39 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_detectionTypeComboBox.addItem("Time Domain", 1);
 	m_detectionTypeComboBox.addItem("Time Domain + Filter", 2);
 	m_detectionTypeComboBox.addItem("FFT", 3);
+	m_detectionTypeComboBox.addItem("FFT + Filter", 4);
 	m_detectionTypeComboBox.setSelectedId(1);
 	m_detectionTypeComboBox.onChange = [this] {
 		const int detectionTypeId = m_detectionTypeComboBox.getSelectedId();
 
-		// Show FFT phase threshold slider only for "DominantFrequency" mode (id = 3)
+		// Show FFT phase threshold slider only for "FFT" mode (id = 3)
 		const bool showFFTPhaseThreshold = (detectionTypeId == 3);
 
 		m_fftPhaseThresholdSlider.setVisible(showFFTPhaseThreshold);
 		m_fftPhaseThresholdLabel.setVisible(showFFTPhaseThreshold);
 
-		// Hide threshold slider in FFT detection mode (DominantFrequency)
-		const bool showThresholdSlider = (detectionTypeId != 3);
+		// Hide threshold slider in FFT detection modes (ids 3)
+		const bool showThresholdSlider = detectionTypeId != 3;
 		m_thresholdSlider.setVisible(showThresholdSlider);
 		m_thresholdLabel.setVisible(showThresholdSlider);
+
+		// Hide offset slider and label when using FFT + Filter mode (id = 4)
+		const bool showOffsetSlider = (detectionTypeId != 4);
+		m_exportMaxRegionOffsetSlider.setVisible(showOffsetSlider);
+		m_exportMaxRegionOffsetLabel.setVisible(showOffsetSlider);
+
+		// For FFT + Filter mode, change minimum length slider to work as multiplier (0.5 - 2.0)
+		// For other modes, keep it as samples (1.0 - 10000.0)
+		if (detectionTypeId == 4)  // FFT + Filter mode
+		{
+			m_minimumLengthSlider.setRange(0.5, 2.0, 0.1);
+			m_minimumLengthSlider.setValue(0.8);
+		}
+		else
+		{
+			m_minimumLengthSlider.setRange(1.0, 10000.0, 1.0);
+			m_minimumLengthSlider.setValue(100.0);
+		}
 	};
 	addAndMakeVisible(m_detectionTypeComboBox);
 

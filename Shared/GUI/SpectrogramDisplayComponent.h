@@ -20,6 +20,7 @@
 #include <vector>
 #include <JuceHeader.h>
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
+#include "../../zazzDSP/Utilities/Spectrum.h"
 
 class SpectrogramDisplayComponent : public juce::Component, public juce::TooltipClient
 {
@@ -57,14 +58,7 @@ public:
 	}
 
 private:
-	/*static constexpr int FFT_ORDER = 15;  // 4096 samples for good low-frequency resolution
-	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
-	static constexpr float MIN_FREQUENCY = 20.0f;
-	static constexpr float MAX_FREQUENCY = 200.0f;
-	static constexpr int NUM_FREQUENCY_BINS = 128;  // Number of pixels on Y axis
-	static constexpr int NUM_TIME_BINS = 2048;      // Number of pixels on X axis*/
-
-	static constexpr int FFT_ORDER = 15;
+	static constexpr int FFT_ORDER = 14;
 	static constexpr int FFT_SIZE = 1 << FFT_ORDER;
 	static constexpr float MIN_FREQUENCY = 48000.0f / (float)FFT_SIZE; // = Bins size in Hz, so 48000/4096 = ~11.7Hz
 	static constexpr int NUM_FREQUENCY_BINS = 256;
@@ -90,76 +84,59 @@ private:
 			return;
 		}
 
-		juce::dsp::FFT forwardFFT(FFT_ORDER);
-		juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
+		constexpr int sampleRate = 48000;  // Default, will be improved by passing it from MainComponent
 
-		auto* channelData = m_audioBuffer.getReadPointer(0);
-		const int totalSamples = m_audioBuffer.getNumSamples();
-		const int hopSize = (totalSamples - FFT_SIZE) / (NUM_TIME_BINS - 1);
+		// Calculate FFT magnitudes using centered windows
+		std::vector<std::vector<float>> magnitudes;
+		std::vector<int> frameCenterSamples;
+		float binFrequencyResolution = 0.0f;
+		int numTimeBins = 0;
 
-		if (hopSize <= 0)
+		zazzDSP::Spectrum::calculateFFTMagnitudes(
+			m_audioBuffer,
+			sampleRate,
+			FFT_ORDER,
+			magnitudes,
+			frameCenterSamples,
+			binFrequencyResolution,
+			numTimeBins);
+
+		if (numTimeBins == 0 || magnitudes.empty())
 		{
 			return;
 		}
 
-		int sampleRate = 48000;  // Default, will be improved by passing it from MainComponent
-		const float binFrequencyResolution = (float)sampleRate / FFT_SIZE;
+		// Remap FFT bins to display frequency range and normalize
+		remapFFTBinsToDisplay(magnitudes, binFrequencyResolution, numTimeBins);
 
-		// First pass: compute all FFT data and find maximum magnitude
+		// Detect dominant frequency bins in display range
+		detectDominantFrequencies(magnitudes, binFrequencyResolution, numTimeBins);
+	}
+
+	void remapFFTBinsToDisplay(const std::vector<std::vector<float>>& magnitudes, float binFrequencyResolution, int numTimeBins)
+	{
+		// Map FFT bins to display frequency range
+		const int minBin = (int)(MIN_FREQUENCY / binFrequencyResolution);
+		const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
+		const int freqBinRange = maxBin - minBin;
+
 		float maxMagnitudeLocal = 0.0f;
-		std::vector<std::vector<float>> tempData(NUM_TIME_BINS, std::vector<float>(NUM_FREQUENCY_BINS, 0.0f));
-		std::vector<int> dominantBins(NUM_TIME_BINS);
 
-		for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
+		// First pass: map to display range and find maximum magnitude
+		for (int timeIdx = 0; timeIdx < numTimeBins; ++timeIdx)
 		{
-			int startSample = timeIdx * hopSize;
-
-			if (startSample + FFT_SIZE > totalSamples)
-			{
-				break;
-			}
-
-			float fftData[2 * FFT_SIZE]{};
-
-			// Copy audio data
-			for (int i = 0; i < FFT_SIZE; ++i)
-			{
-				fftData[i] = channelData[startSample + i];
-			}
-
-			// Apply windowing
-			window.multiplyWithWindowingTable(fftData, FFT_SIZE);
-
-			// Perform FFT
-			forwardFFT.performFrequencyOnlyForwardTransform(fftData);
-
-			// Map FFT bins to frequency range [20Hz, 200Hz]
-			const int minBin = (int)(MIN_FREQUENCY / binFrequencyResolution);
-			const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
-			const int freqBinRange = maxBin - minBin;
-
-			int maxFreqIdx = 0;
-			float maxMagnitudeFrame = 0.0f;
-
 			for (int freqIdx = 0; freqIdx < NUM_FREQUENCY_BINS; ++freqIdx)
 			{
 				const int fftBin = minBin + (freqIdx * freqBinRange) / NUM_FREQUENCY_BINS;
 
-				if (fftBin >= 0 && fftBin < FFT_SIZE)
+				if (fftBin >= 0 && fftBin < (int)magnitudes[timeIdx].size())
 				{
-					const float magnitude = std::sqrt(fftData[fftBin] * fftData[fftBin] + fftData[fftBin + FFT_SIZE] * fftData[fftBin + FFT_SIZE]);
-					tempData[timeIdx][freqIdx] = magnitude;
+					const float magnitude = magnitudes[timeIdx][fftBin];
+					m_spectrogram.data[timeIdx][freqIdx] = magnitude;
 					maxMagnitudeLocal = std::max(maxMagnitudeLocal, magnitude);
-
-					if (magnitude > maxMagnitudeFrame)
-					{
-						maxMagnitudeFrame = magnitude;
-						maxFreqIdx = freqIdx;
-					}
 				}
 			}
 
-			dominantBins[timeIdx] = maxFreqIdx;
 			m_spectrogram.validTimeSteps++;
 		}
 
@@ -172,44 +149,51 @@ private:
 			{
 				for (int freqIdx = 0; freqIdx < NUM_FREQUENCY_BINS; ++freqIdx)
 				{
-					const float normalized = tempData[timeIdx][freqIdx] / maxMagnitudeLocal;
-					m_spectrogram.data[timeIdx][freqIdx] = juce::jlimit(0.0f, 1.0f, normalized);
+					m_spectrogram.data[timeIdx][freqIdx] /= maxMagnitudeLocal;
+					m_spectrogram.data[timeIdx][freqIdx] = juce::jlimit(0.0f, 1.0f, m_spectrogram.data[timeIdx][freqIdx]);
 				}
 			}
 		}
-
-		// Apply smoothing to dominant frequency bins to avoid rapid jumps
-		smoothDominantFrequencies(dominantBins);
 	}
 
-	void smoothDominantFrequencies(std::vector<int>& dominantBins)
+	void detectDominantFrequencies(const std::vector<std::vector<float>>& magnitudes, float binFrequencyResolution, int numTimeBins)
 	{
-		if (dominantBins.empty())
-			return;
+		// Map FFT bins to display frequency range
+		const int minBin = (int)(MIN_FREQUENCY / binFrequencyResolution);
+		const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
+		const int freqBinRange = maxBin - minBin;
 
-		const int smoothingWindow = 7;  // Median filter window size
-		std::vector<int> smoothedBins(dominantBins.size());
+		// Step 1: Find dominant frequencies (in Hz)
+		std::vector<float> dominantFrequenciesHz;
+		zazzDSP::Spectrum::findDominantFrequenciesFromFFT(
+			magnitudes,
+			binFrequencyResolution,
+			minBin,
+			maxBin,
+			dominantFrequenciesHz);
 
-		for (int timeIdx = 0; timeIdx < (int)dominantBins.size(); ++timeIdx)
+		// Step 2: Smooth dominant frequencies (in Hz)
+		std::vector<float> smoothedFrequenciesHz;
+		zazzDSP::Spectrum::smoothDominantFrequencies(dominantFrequenciesHz, smoothedFrequenciesHz);
+
+		// Step 3: Remap smoothed frequencies to display bin indices
+		m_dominantFrequencyBins.resize(numTimeBins);
+		for (int timeIdx = 0; timeIdx < numTimeBins; ++timeIdx)
 		{
-			std::vector<int> window;
+			// Convert frequency to FFT bin
+			const int fftBin = (int)(smoothedFrequenciesHz[timeIdx] / binFrequencyResolution + 0.5f);
 
-			// Gather values within the smoothing window
-			for (int i = -smoothingWindow / 2; i <= smoothingWindow / 2; ++i)
+			// Convert FFT bin to display bin index (0 to NUM_FREQUENCY_BINS-1)
+			if (fftBin >= minBin && fftBin < maxBin)
 			{
-				int idx = timeIdx + i;
-				if (idx >= 0 && idx < (int)dominantBins.size())
-				{
-					window.push_back(dominantBins[idx]);
-				}
+				const int displayBinIdx = (fftBin - minBin) * NUM_FREQUENCY_BINS / freqBinRange;
+				m_dominantFrequencyBins[timeIdx] = juce::jlimit(0, NUM_FREQUENCY_BINS - 1, displayBinIdx);
 			}
-
-			// Sort and take median
-			std::sort(window.begin(), window.end());
-			smoothedBins[timeIdx] = window[window.size() / 2];
+			else
+			{
+				m_dominantFrequencyBins[timeIdx] = 0;
+			}
 		}
-
-		m_dominantFrequencyBins = smoothedBins;
 	}
 
 	void updateSpectrogramImage()

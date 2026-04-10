@@ -54,8 +54,7 @@ public:
 	enum DisplayMode
 	{
 		Waveform = 0,
-		Spectrogram = 1,
-		DominantFrequency = 2
+		DominantFrequency = 1
 	};
 
 	//==============================================================================
@@ -556,11 +555,69 @@ public:
 	}
 
 	//==========================================================================
+	void saveProjectToFile(const juce::File& projectFile)
+	{
+		auto projectObject = std::make_unique<juce::DynamicObject>();
+
+		// Save file path
+		projectObject->setProperty("sourceFilePath", m_sourceFilePath);
+
+		// Save all slider values
+		projectObject->setProperty("threshold", m_thresholdSlider.getValue());
+		projectObject->setProperty("minimumLength", m_minimumLengthSlider.getValue());
+		projectObject->setProperty("spectrumDifference", m_SpectrumDifferenceSlider.getValue());
+		projectObject->setProperty("fftPhaseThreshold", m_fftPhaseThresholdSlider.getValue());
+		projectObject->setProperty("zeroCrossingCount", m_zeroCrossingCountSlider.getValue());
+		projectObject->setProperty("crossfadeLength", m_crossfadeLengthSlider.getValue());
+		projectObject->setProperty("regionLenghtExport", m_regionLenghtExportSlider.getValue());
+		projectObject->setProperty("exportRegionLeft", m_exportRegionLeftSlider.getValue());
+		projectObject->setProperty("exportRegionRight", m_exportRegionRightSlider.getValue());
+		projectObject->setProperty("exportMaxRegionOffset", m_exportMaxRegionOffsetSlider.getValue());
+		projectObject->setProperty("exportRegionCount", m_exportRegionCountSlider.getValue());
+		projectObject->setProperty("spectrumMatchIntensity", m_spectrumMatchIntensitySlider.getValue());
+
+		// Save combo box selections
+		projectObject->setProperty("detectionType", m_detectionTypeComboBox.getSelectedId());
+		projectObject->setProperty("generationType", m_generationTypeComboBox.getSelectedId());
+
+		// Save interpolation type
+		projectObject->setProperty("interpolationType", (int)m_interpolationType);
+
+		// Save detection results
+		projectObject->setProperty("regionLenghtMedian", m_regionLenghtMedian);
+		projectObject->setProperty("regions", serializeRegions());
+
+		// Save generation results
+		projectObject->setProperty("randomRegionSelections", serializeRandomSelections());
+
+		juce::var jsonVar(projectObject.release());
+		projectFile.replaceWithText(juce::JSON::toString(jsonVar, true));
+	}
+
+	//==========================================================================
 	void saveWavButtonClicked()
 	{
 		if (const int samples = m_bufferOutput.getNumSamples(); samples != 0)
 		{
-			zazzDSP::FileIO::saveWavFile(m_bufferOutput, m_sampleRate, m_wavSaveChooser, WRITTE_BIT_DEPTH);
+			zazzDSP::FileIO::saveWavFile(
+				m_bufferOutput,
+				m_sampleRate,
+				m_wavSaveChooser,
+				WRITTE_BIT_DEPTH,
+				[this](const juce::File& wavFile)
+				{
+					// Automatically save project with same name as wav file
+					juce::File projectFile = wavFile.withFileExtension(".json");
+					saveProjectToFile(projectFile);
+
+					// Show single combined notification
+					juce::AlertWindow::showMessageBoxAsync(
+						juce::AlertWindow::InfoIcon,
+						"Files Saved",
+						"Wav file saved to:\n" + wavFile.getFullPathName() + "\n\n" +
+						"Project saved to:\n" + projectFile.getFullPathName());
+				},
+				false);  // Suppress the built-in WAV file notification
 		}
 		else
 		{
@@ -934,7 +991,7 @@ public:
 					}
 				}
 
-				// Load slider values if they exist
+				// Load slider values if they exist (except exportRegionLeft/Right which depend on region count)
 				if (obj->hasProperty("threshold"))
 					m_thresholdSlider.setValue(obj->getProperty("threshold"));
 				if (obj->hasProperty("minimumLength"))
@@ -949,14 +1006,12 @@ public:
 					m_crossfadeLengthSlider.setValue(obj->getProperty("crossfadeLength"));
 				if (obj->hasProperty("regionLenghtExport"))
 					m_regionLenghtExportSlider.setValue(obj->getProperty("regionLenghtExport"));
-				if (obj->hasProperty("exportRegionLeft"))
-					m_exportRegionLeftSlider.setValue(obj->getProperty("exportRegionLeft"));
-				if (obj->hasProperty("exportRegionRight"))
-					m_exportRegionRightSlider.setValue(obj->getProperty("exportRegionRight"));
 				if (obj->hasProperty("exportMaxRegionOffset"))
 					m_exportMaxRegionOffsetSlider.setValue(obj->getProperty("exportMaxRegionOffset"));
 				if (obj->hasProperty("exportRegionCount"))
 					m_exportRegionCountSlider.setValue(obj->getProperty("exportRegionCount"));
+				if (obj->hasProperty("spectrumMatchIntensity"))
+					m_spectrumMatchIntensitySlider.setValue(obj->getProperty("spectrumMatchIntensity"));
 
 				// Load combo box selections if they exist
 				if (obj->hasProperty("detectionType"))
@@ -978,6 +1033,14 @@ public:
 				// Load generation results if they exist
 				if (obj->hasProperty("randomRegionSelections"))
 					deserializeRandomSelections(obj->getProperty("randomRegionSelections"));
+
+				// Store exportRegionLeft/Right values to restore after setting ranges
+				double savedExportRegionLeft = 0.0;
+				double savedExportRegionRight = 0.0;
+				if (obj->hasProperty("exportRegionLeft"))
+					savedExportRegionLeft = obj->getProperty("exportRegionLeft");
+				if (obj->hasProperty("exportRegionRight"))
+					savedExportRegionRight = obj->getProperty("exportRegionRight");
 
 				// Update UI labels and displays
 				if (m_bufferSource.getNumSamples() > 0 && !m_regions.empty())
@@ -1019,8 +1082,8 @@ public:
 					{
 						m_exportRegionLeftSlider.setRange(0.0, (double)(size - 1), 1.0);
 						m_exportRegionRightSlider.setRange(0.0, (double)(size - 1), 1.0);
-						m_exportRegionLeftSlider.setValue(0.0);
-						m_exportRegionRightSlider.setValue((double)(size - 1));
+						m_exportRegionLeftSlider.setValue(savedExportRegionLeft);
+						m_exportRegionRightSlider.setValue(savedExportRegionRight);
 					}
 					else
 					{
@@ -1047,14 +1110,19 @@ public:
 			return;
 		}
 
-		const int regionOffset = (int)m_exportMaxRegionOffsetSlider.getValue();
-		const int leftThreshold = m_regionLenghtMedian - regionOffset;
-		const int rightThreshold = m_regionLenghtMedian + regionOffset;
-
-		// Limit regions by offset
-		for (auto& region : m_regions)
+		// For FFT + Filter mode, skip offset-based filtering since region lengths are dynamic
+		// based on dominant frequency detection (by design)
+		if (m_lastDetectionTypeId != 4)  // 4 = FFT + Filter mode
 		{
-			region.m_isValid = region.m_length > leftThreshold && region.m_length < rightThreshold;
+			const int regionOffset = (int)m_exportMaxRegionOffsetSlider.getValue();
+			const int leftThreshold = m_regionLenghtMedian - regionOffset;
+			const int rightThreshold = m_regionLenghtMedian + regionOffset;
+
+			// Limit regions by offset (for fixed-length detection modes)
+			for (auto& region : m_regions)
+			{
+				region.m_isValid = region.m_length > leftThreshold && region.m_length < rightThreshold;
+			}
 		}
 
 		juce::dsp::FFT forwardFFT(FFT_ORDER);
@@ -1314,17 +1382,36 @@ public:
 		}
 
 		ZeroCrossingOffline zeroCrossing{};
-		zeroCrossing.init(m_sampleRate);
+			zeroCrossing.init(m_sampleRate);
 
-		const float maximumFrequencySamples = (float)m_minimumLengthSlider.getValue();
-		const float maximumFrequencyHz = m_sampleRate / maximumFrequencySamples;
+			const int detectionTypeId = m_detectionTypeComboBox.getSelectedId();
+			const float sliderValue = (float)m_minimumLengthSlider.getValue();
 
-		zeroCrossing.set((float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
-		zeroCrossing.setType(m_detectionTypeComboBox.getSelectedId());
-		zeroCrossing.setFFTPhaseThreshold((float)m_fftPhaseThresholdSlider.getValue());
+			// For FFT + Filter mode, the slider is a multiplier (0.5 - 2.0)
+			// For other modes, the slider is in samples
+			float maximumFrequencyHz = 0.0f;
+			if (detectionTypeId == 4)  // FFT + Filter mode
+			{
+				// For FFT + Filter mode:
+				// - maximumFrequencyHz is used as a fallback only (not actively used in per-sample calculation)
+				// - The actual minimum length is recalculated per sample based on dominant frequency from FFT
+				// - sliderValue acts as a multiplier (0.5 - 2.0) applied to the period of dominant frequency
+				// Set maximumFrequencyHz to a neutral value; it won't override the per-sample dominant frequency calculation
+				maximumFrequencyHz = 100.0f;  // Fallback value, not used for actual calculation
+			}
+			else
+			{
+				// For other modes, use slider value as samples count
+				maximumFrequencyHz = m_sampleRate / sliderValue;
+			}
 
-		// Check if using Filter detection type to prepare filtered buffer
-		const bool isFilterType = (m_detectionTypeComboBox.getSelectedId() == 2); // 2 = "Filter"
+			zeroCrossing.set((float)juce::Decibels::decibelsToGain(m_thresholdSlider.getValue()), maximumFrequencyHz);
+			zeroCrossing.setType(detectionTypeId);
+			zeroCrossing.setFFTPhaseThreshold((float)m_fftPhaseThresholdSlider.getValue());
+			zeroCrossing.setMinimumLengthMultiplier(sliderValue);  // Pass multiplier value for FFT + Filter per-sample calculation
+
+			// Check if using Filter detection type to prepare filtered buffer
+			const bool isFilterType = (detectionTypeId == 2); // 2 = "Filter"
 		juce::AudioBuffer<float> filteredBuffer;
 		juce::AudioBuffer<float> bufferForProcessing;
 
@@ -1398,9 +1485,21 @@ public:
 		}
 
 		std::vector<int> zeroCrossingIdxs;
-		zeroCrossing.process(bufferForProcessing, zeroCrossingIdxs);
+			zeroCrossing.process(bufferForProcessing, zeroCrossingIdxs);
 
-		const size_t size = zeroCrossingIdxs.size();
+			// For FFT + Filter mode, retrieve the filtered buffer from the detector
+				if (detectionTypeId == 4)  // 4 = "FFT + Filter"
+				{
+					const std::vector<float>& filteredData = zeroCrossing.getLastFilteredBuffer();
+				if (!filteredData.empty())
+				{
+					filteredBuffer.setSize(1, (int)filteredData.size(), false, true);
+					float* outputPtr = filteredBuffer.getWritePointer(0);
+					std::copy(filteredData.begin(), filteredData.end(), outputPtr);
+				}
+			}
+
+			const size_t size = zeroCrossingIdxs.size();
 
 		// Get zero crossing grouping value
 		const int zcGroupCount = static_cast<int>(m_zeroCrossingCountSlider.getValue());
@@ -1497,12 +1596,20 @@ public:
 
 		m_maxZeroCrossingGainLabel.setText("Max. zero crossing: " + juce::String((float)juce::Decibels::gainToDecibels(maxZeroCrossing), 1), juce::dontSendNotification);
 
+		// Store detection type for use in updateValidZeroCrossingIdx()
+		m_lastDetectionTypeId = detectionTypeId;
+
+		// Update UI visibility based on detection mode
+		updateOffsetSliderVisibility();
+
 		updateValidZeroCrossingIdx();
 
 		m_waveformDisplaySource.setRegions(m_regions);
 
-		// Pass filtered buffer to waveform display when available
-		m_waveformDisplaySource.setFilteredAudioBuffer(filteredBuffer, isFilterType);
+			// Pass filtered buffer to waveform display when available
+			// Show for both "Filter" (2) and "FFT + Filter" (4) modes
+			const bool shouldDisplayFiltered = (detectionTypeId == 2 || detectionTypeId == 4);
+			m_waveformDisplaySource.setFilteredAudioBuffer(filteredBuffer, shouldDisplayFiltered);
 
 		if (const size_t size = m_regions.size(); size > 1)
 		{
@@ -1645,9 +1752,18 @@ public:
 	}
 
 	//==========================================================================
+	void updateOffsetSliderVisibility()
+	{
+		// Hide offset slider and label when using FFT + Filter mode
+		const bool shouldShow = (m_lastDetectionTypeId != 4);
+		m_exportMaxRegionOffsetSlider.setVisible(shouldShow);
+		m_exportMaxRegionOffsetLabel.setVisible(shouldShow);
+	}
+
+	//==========================================================================
 	void displayModeButtonClicked()
 	{
-		m_displayMode = (DisplayMode)((m_displayMode + 1) % 3);
+		m_displayMode = (DisplayMode)((m_displayMode + 1) % 2);
 
 		// Update spectrogram components with new display mode
 		m_spectrogramDisplaySource.setDisplayMode((SpectrogramDisplayComponent::DisplayMode)m_displayMode);
@@ -1661,14 +1777,6 @@ public:
 				m_waveformDisplayOutput.setVisible(true);
 				m_spectrogramDisplaySource.setVisible(false);
 				m_spectrogramDisplayOutput.setVisible(false);
-				break;
-
-			case DisplayMode::Spectrogram:
-				m_displayModeButton.setButtonText("Spectrogram");
-				m_waveformDisplaySource.setVisible(false);
-				m_waveformDisplayOutput.setVisible(false);
-				m_spectrogramDisplaySource.setVisible(true);
-				m_spectrogramDisplayOutput.setVisible(true);
 				break;
 
 			case DisplayMode::DominantFrequency:
@@ -1785,6 +1893,7 @@ public:
 	int m_regionLenghtMedian = 0;
 	int m_playbackIndex = 0;
 	int m_sampleRate = 48000;
+	int m_lastDetectionTypeId = 1;  // Track last detection mode (1-4)
 
 	// From MainComponentBase
 	juce::AudioFormatManager m_formatManager;
