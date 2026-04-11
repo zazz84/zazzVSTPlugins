@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/WaveformDisplayComponent.h"
+#include "../../../zazzVSTPlugins/Shared/GUI/WaveformEditorComponent.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/SpectrogramDisplayComponent.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
@@ -1851,8 +1851,8 @@ public:
 	juce::AudioBuffer<float> m_bufferSource;
 	juce::AudioBuffer<float> m_bufferOutput;
 
-	WaveformDisplayComponent m_waveformDisplaySource;
-	WaveformDisplayComponent m_waveformDisplayOutput;
+	WaveformEditorComponent m_waveformDisplaySource;
+	WaveformEditorComponent m_waveformDisplayOutput;
 
 	SpectrogramDisplayComponent m_spectrogramDisplaySource;
 	SpectrogramDisplayComponent m_spectrogramDisplayOutput;
