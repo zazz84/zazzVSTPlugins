@@ -38,8 +38,7 @@ public:
 
 	enum Type
 	{
-		Default,
-		Filter,
+		Amplitude,
 		DominantFrequency,
 		FFTFilter
 	};
@@ -48,14 +47,17 @@ public:
 	{
 		m_sampleRate = sampleRate;
 	}
-	void set(const float threshold, const float maximumFrequency)
+	void setAmplitudeThreshold(const float threshold)
 	{
 		m_threshold = threshold;
-		m_maximumFrequency = maximumFrequency;
 	}
-	void setType(const int type)
+	void setMinimumSamplesBetweenCrossings(const float minimumSamplesBetweenCrossings)
 	{
-		m_type = static_cast<Type>(type - 1);
+		m_minimumSamplesBetweenCrossings = minimumSamplesBetweenCrossings;
+	}
+	void setType(const Type type)
+	{
+		m_type = type;
 	}
 	void setFFTPhaseThreshold(const float thresholdDegrees)
 	{
@@ -87,7 +89,7 @@ public:
 
 		// Delegate to appropriate detection method based on type
 		// Fallback to time-domain detection for small buffers or non-FFT types to avoid overhead
-		if (m_type == Type::Default || m_type == Type::Filter || samples < FFT_SIZE)
+		if (m_type == Type::Amplitude || samples < FFT_SIZE)
 		{
 			processTimeDomainDetection(sumBuffer, regions);
 		}
@@ -109,7 +111,7 @@ private:
 
 		// Dont allow zero crosing too often
 		int sinceLast = 0;
-		const int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
+		const int SINCE_LAST_MIN = (int)m_minimumSamplesBetweenCrossings;
 
 		bool wasPositive = false;
 		bool wasNegative = false;
@@ -178,7 +180,7 @@ private:
 		regions.push_back(0);
 
 		int sinceLast = 0;
-		const int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
+		const int SINCE_LAST_MIN = (int)m_minimumSamplesBetweenCrossings;
 		const float PI = 3.14159265359f;
 
 		// Helper lambda to wrap phase to [-π, π]
@@ -321,14 +323,14 @@ private:
 			}
 
 			// Calculate minimum length dynamically based on dominant frequency at this sample
-			int SINCE_LAST_MIN = (int)((float)m_sampleRate / m_maximumFrequency);
+			int SINCE_LAST_MIN = (int)m_minimumSamplesBetweenCrossings;
 
 			// Always use dominant frequency from initial analysis, scaled by multiplier
 			if (!dominantFrequencies.empty())
 			{
 				int timeIdx = (int)((float)sample / blockSize);
 				timeIdx = std::min(timeIdx, (int)dominantFrequencies.size() - 1);
-				
+
 				if (timeIdx >= 0)
 				{
 					float domFreq = dominantFrequencies[timeIdx];
@@ -423,10 +425,10 @@ private:
 		}
 	}
 
-	float m_maximumFrequency = 200.0f;
+	float m_minimumSamplesBetweenCrossings = 240.0f;
 	float m_threshold = -60.0f;
 	int m_sampleRate = 48000;
-	Type m_type = Type::Default;
+	Type m_type = Type::Amplitude;
 	float m_fftPhaseThresholdRadians = 0.0f; // Default to 0 degrees (crossing through 0)
 	float m_minimumLengthMultiplier = 1.0f; // Multiplier for minimum region length in FFT + Filter mode
 	std::vector<float> m_lastFilteredBuffer; // Stores filtered buffer for visualization in FFT + Filter mode

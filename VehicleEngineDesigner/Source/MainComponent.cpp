@@ -8,6 +8,9 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	setAudioChannels(0, 2);
 
+	// Initialize slider configurations
+	initializeSliderConfigs();
+
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
 	addAndMakeVisible(m_spectrogramDisplaySource);
@@ -23,9 +26,8 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_exportGroupLableComponent);
 	addAndMakeVisible(m_playbackGroupLableComponent);
 	addAndMakeVisible(m_displayGroupLableComponent);
-	
-	// Labels
-	//
+
+	// Info labels setup
 	addAndMakeVisible(m_sourceFileNameLabel);
 	m_sourceFileNameLabel.setText("", juce::dontSendNotification);
 	m_sourceFileNameLabel.setJustificationType(juce::Justification::centred);
@@ -33,7 +35,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_regionLenghtMedianLabel);
 	m_regionLenghtMedianLabel.setText("", juce::dontSendNotification);
 	m_regionLenghtMedianLabel.setJustificationType(juce::Justification::centred);	
-	
+
 	addAndMakeVisible(m_regionLengthDiffLabel);
 	m_regionLengthDiffLabel.setText("", juce::dontSendNotification);
 	m_regionLengthDiffLabel.setJustificationType(juce::Justification::centred);
@@ -41,158 +43,12 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_validRegionsCountLabel);
 	m_validRegionsCountLabel.setText("", juce::dontSendNotification);
 	m_validRegionsCountLabel.setJustificationType(juce::Justification::centred);
-	//
 
-	//
-	addAndMakeVisible(m_thresholdSlider);
-	m_thresholdSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_thresholdSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_thresholdSlider.setRange(-60.0, 0.0, 1.0); 
-	m_thresholdSlider.setValue(-60.0);
-
-	addAndMakeVisible(m_thresholdLabel);
-	m_thresholdLabel.setText("Threshold", juce::dontSendNotification);
-
-	m_thresholdLabel.attachToComponent(&m_thresholdSlider, true);
-
-	//
-	addAndMakeVisible(m_SpectrumDifferenceSlider);
-	m_SpectrumDifferenceSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_SpectrumDifferenceSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_SpectrumDifferenceSlider.setRange(0.0, 100.0, 0.1);
-	m_SpectrumDifferenceSlider.setSkewFactorFromMidPoint(10.0);
-	m_SpectrumDifferenceSlider.setValue(100.0);
-
-	addAndMakeVisible(m_SpectrumDifferenceLabel);
-	m_SpectrumDifferenceLabel.setText("Spectrum", juce::dontSendNotification);
-
-	m_SpectrumDifferenceLabel.attachToComponent(&m_SpectrumDifferenceSlider, true);
-
-	//
-	addAndMakeVisible(m_fftPhaseThresholdSlider);
-	m_fftPhaseThresholdSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_fftPhaseThresholdSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_fftPhaseThresholdSlider.setRange(-180.0, 180.0, 1.0);
-	m_fftPhaseThresholdSlider.setValue(0.0);
-
-	addAndMakeVisible(m_fftPhaseThresholdLabel);
-	m_fftPhaseThresholdLabel.setText("Phase", juce::dontSendNotification);
-
-	m_fftPhaseThresholdLabel.attachToComponent(&m_fftPhaseThresholdSlider, true);
-
-	// Initially hide FFT phase threshold slider - show only for DominantFrequency mode
-	m_fftPhaseThresholdSlider.setVisible(false);
-	m_fftPhaseThresholdLabel.setVisible(false);
-
-	//
-	addAndMakeVisible(m_zeroCrossingCountSlider);
-	m_zeroCrossingCountSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_zeroCrossingCountSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_zeroCrossingCountSlider.setRange(1.0, 12.0, 1.0);
-	m_zeroCrossingCountSlider.setValue(1.0);
-
-	addAndMakeVisible(m_zeroCrossingCountLabel);
-	m_zeroCrossingCountLabel.setText("Multiplier", juce::dontSendNotification);
-
-	m_zeroCrossingCountLabel.attachToComponent(&m_zeroCrossingCountSlider, true);
-
-	//
-	addAndMakeVisible(m_crossfadeLengthSlider);
-	m_crossfadeLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_crossfadeLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_crossfadeLengthSlider.setRange(0.0, 200.0, 1.0);
-	m_crossfadeLengthSlider.setValue(0.0);
-
-	addAndMakeVisible(m_crossfadeLengthLabel);
-	m_crossfadeLengthLabel.setText("Crossfade", juce::dontSendNotification);
-
-	m_crossfadeLengthLabel.attachToComponent(&m_crossfadeLengthSlider, true);
-
-	//
-	addAndMakeVisible(m_spectrumMatchIntensitySlider);
-	m_spectrumMatchIntensitySlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_spectrumMatchIntensitySlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_spectrumMatchIntensitySlider.setRange(0.0, 100.0, 1.0);
-	m_spectrumMatchIntensitySlider.setValue(0.0);
-	m_spectrumMatchIntensitySlider.onValueChange = [this] { spectrumMatchIntensitySliderChanged(); };
-
-	addAndMakeVisible(m_spectrumMatchIntensityLabel);
-	m_spectrumMatchIntensityLabel.setText("FFT Match", juce::dontSendNotification);
-
-	m_spectrumMatchIntensityLabel.attachToComponent(&m_spectrumMatchIntensitySlider, true);
-
-
-	addAndMakeVisible(m_minimumLengthSlider);
-	m_minimumLengthSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_minimumLengthSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_minimumLengthSlider.setRange(1.0, 10000.0, 1.0);   // min, max, step (in samples)
-	m_minimumLengthSlider.setValue(100.0);              // initial value
-
-	addAndMakeVisible(m_maximumFrequencyLabel);
-	m_maximumFrequencyLabel.setText("Min Length", juce::dontSendNotification);
-
-	m_maximumFrequencyLabel.attachToComponent(&m_minimumLengthSlider, true);
-
-	//
-	addAndMakeVisible(m_regionLenghtExportSlider);
-	m_regionLenghtExportSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_regionLenghtExportSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_regionLenghtExportSlider.setRange(1.0, 10000.0, 1.0);        // min, max, step
-	m_regionLenghtExportSlider.setValue(1000.0);                     // initial value
-
-	addAndMakeVisible(m_regionLenghtExportLabel);
-	m_regionLenghtExportLabel.setText("Reg Lenght", juce::dontSendNotification);
-
-	m_regionLenghtExportLabel.attachToComponent(&m_regionLenghtExportSlider, true);
-
-	//
 	addAndMakeVisible(m_regionsCountLabel);
 	m_regionsCountLabel.setJustificationType(juce::Justification::centred);
 
-	//
 	addAndMakeVisible(m_maxZeroCrossingGainLabel);
 	m_maxZeroCrossingGainLabel.setJustificationType(juce::Justification::centred);
-
-	// Export sliders
-	addAndMakeVisible(m_exportRegionLeftSlider);
-	m_exportRegionLeftSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_exportRegionLeftSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_exportRegionLeftSlider.setRange(0.0, 200.0, 1.0);
-	m_exportRegionLeftSlider.setValue(0.0);
-
-	addAndMakeVisible(m_exportRegionLeftLabel);
-	m_exportRegionLeftLabel.setText("Reg Left", juce::dontSendNotification);
-	m_exportRegionLeftLabel.attachToComponent(&m_exportRegionLeftSlider, true);
-
-	addAndMakeVisible(m_exportRegionRightSlider);
-	m_exportRegionRightSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_exportRegionRightSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_exportRegionRightSlider.setRange(0.0, 200.0, 1.0);
-	m_exportRegionRightSlider.setValue(0.0);
-
-	addAndMakeVisible(m_exportRegionRightLabel);
-	m_exportRegionRightLabel.setText("Reg Right", juce::dontSendNotification);
-	m_exportRegionRightLabel.attachToComponent(&m_exportRegionRightSlider, true);
-
-	addAndMakeVisible(m_exportMaxRegionOffsetSlider);
-	m_exportMaxRegionOffsetSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_exportMaxRegionOffsetSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_exportMaxRegionOffsetSlider.setRange(0.0, 400.0, 1.0);
-	m_exportMaxRegionOffsetSlider.setValue(100.0);
-
-	addAndMakeVisible(m_exportMaxRegionOffsetLabel);
-	m_exportMaxRegionOffsetLabel.setText("Max Offset", juce::dontSendNotification);
-	m_exportMaxRegionOffsetLabel.attachToComponent(&m_exportMaxRegionOffsetSlider, true);
-
-	addAndMakeVisible(m_exportRegionCountSlider);
-	m_exportRegionCountSlider.setSliderStyle(juce::Slider::LinearHorizontal);
-	m_exportRegionCountSlider.setTextBoxStyle(juce::Slider::TextBoxRight, false, 80, 20);
-	m_exportRegionCountSlider.setRange(0.0, 256.0, 1.0);
-	m_exportRegionCountSlider.setValue(64.0);
-
-	addAndMakeVisible(m_exportRegionCountLabel);
-	m_exportRegionCountLabel.setText("Reg Count", juce::dontSendNotification);
-	m_exportRegionCountLabel.attachToComponent(&m_exportRegionCountSlider, true);
 
 	// Buttons
 	addAndMakeVisible(&m_openSourceButton);
@@ -241,43 +97,13 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_displayModeButton.onClick = [this] { displayModeButtonClicked(); };
 
 	// Combo boxes
-	//
 	m_detectionTypeComboBox.addItem("Time Domain", 1);
 	m_detectionTypeComboBox.addItem("Time Domain + Filter", 2);
 	m_detectionTypeComboBox.addItem("FFT", 3);
 	m_detectionTypeComboBox.addItem("FFT + Filter", 4);
 	m_detectionTypeComboBox.setSelectedId(1);
 	m_detectionTypeComboBox.onChange = [this] {
-		const int detectionTypeId = m_detectionTypeComboBox.getSelectedId();
-
-		// Show FFT phase threshold slider only for "FFT" mode (id = 3)
-		const bool showFFTPhaseThreshold = (detectionTypeId == 3);
-
-		m_fftPhaseThresholdSlider.setVisible(showFFTPhaseThreshold);
-		m_fftPhaseThresholdLabel.setVisible(showFFTPhaseThreshold);
-
-		// Hide threshold slider in FFT detection modes (ids 3)
-		const bool showThresholdSlider = detectionTypeId != 3;
-		m_thresholdSlider.setVisible(showThresholdSlider);
-		m_thresholdLabel.setVisible(showThresholdSlider);
-
-		// Hide offset slider and label when using FFT + Filter mode (id = 4)
-		const bool showOffsetSlider = (detectionTypeId != 4);
-		m_exportMaxRegionOffsetSlider.setVisible(showOffsetSlider);
-		m_exportMaxRegionOffsetLabel.setVisible(showOffsetSlider);
-
-		// For FFT + Filter mode, change minimum length slider to work as multiplier (0.5 - 2.0)
-		// For other modes, keep it as samples (1.0 - 10000.0)
-		if (detectionTypeId == 4)  // FFT + Filter mode
-		{
-			m_minimumLengthSlider.setRange(0.5, 2.0, 0.1);
-			m_minimumLengthSlider.setValue(0.8);
-		}
-		else
-		{
-			m_minimumLengthSlider.setRange(1.0, 10000.0, 1.0);
-			m_minimumLengthSlider.setValue(100.0);
-		}
+		updateDetectionModeUI(m_detectionTypeComboBox.getSelectedId());
 	};
 	addAndMakeVisible(m_detectionTypeComboBox);
 
@@ -302,7 +128,28 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_spectrumSourceComboBox.addItem("Average", 1);
 	m_spectrumSourceComboBox.addItem("Median", 2);
 	m_spectrumSourceComboBox.setSelectedId(1);
-	m_spectrumSourceComboBox.onChange = [this] { spectrumSourceComboBoxChanged(); };
+	m_spectrumSourceComboBox.onChange = [this] {
+		int selectedId = m_spectrumSourceComboBox.getSelectedId();
+
+		if (selectedId == 1)
+		{
+			// "Average" mode
+			m_selectedSpectrumRegionIndex = -1;
+			m_useMedianSpectrum = false;
+		}
+		else if (selectedId == 2)
+		{
+			// "Median" mode
+			m_selectedSpectrumRegionIndex = -2;
+			m_useMedianSpectrum = true;
+		}
+		else
+		{
+			// Specific region selected (selectedId - 3 because ID 1 is "Average", ID 2 is "Median")
+			m_selectedSpectrumRegionIndex = selectedId - 3;
+			m_useMedianSpectrum = false;
+		}
+	};
 	addAndMakeVisible(m_spectrumSourceComboBox);
 
 	addAndMakeVisible(m_spectrumSourceLabel);
@@ -312,6 +159,14 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	// Initially hide crossfade slider for Flat mode
 	m_crossfadeLengthSlider.setVisible(false);
 	m_crossfadeLengthLabel.setVisible(false);
+
+	// Initially hide low-pass frequency slider (show only in Time Domain + Filter mode)
+	m_lowPassFrequencySlider.setVisible(false);
+	m_lowPassFrequencyLabel.setVisible(false);
+
+	// Initially hide minimum length multiplier slider (show only in FFT + Filter mode)
+	m_minimumLengthMultiplierSlider.setVisible(false);
+	m_minimumLengthMultiplierLabel.setVisible(false);
 
 	// Canvas size
 	const int canvasWidth = CANVAS_WIDTH * PIXEL_SIZE;
@@ -323,8 +178,129 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 MainComponent::~MainComponent()
 {
-    // This shuts down the audio device and clears the audio source.
-    shutdownAudio();
+	// This shuts down the audio device and clears the audio source.
+	shutdownAudio();
+}
+
+//==============================================================================
+void MainComponent::initializeSliderConfigs()
+{
+	// Create all slider configurations with metadata
+	// Format: Slider*, Label*, JSON key, min, max, default, step, 
+	//         label text, style, textbox width, textbox height, attach label
+
+	m_sliderConfigs = {
+		// Detection sliders
+		SliderConfig(
+			&m_thresholdSlider,
+			&m_thresholdLabel,
+			"threshold",
+			-60.0, 0.0, -60.0, 1.0,
+			"Threshold"),
+
+		SliderConfig(
+			&m_minimumLengthSlider,
+			&m_maximumFrequencyLabel,
+			"minimumLength",
+			10.0, 5000.0, 100.0, 1.0,
+			"Min Length"),
+
+		SliderConfig(
+			&m_minimumLengthMultiplierSlider,
+			&m_minimumLengthMultiplierLabel,
+			"minimumLengthMultiplier",
+			0.5, 2.0, 0.8, 0.1,
+			"Length Mult"),
+
+		SliderConfig(
+			&m_SpectrumDifferenceSlider,
+			&m_SpectrumDifferenceLabel,
+			"spectrumDifference",
+			0.0, 200.0, 100.0, 1.0,
+			"Spectrum"),
+
+		SliderConfig(
+			&m_fftPhaseThresholdSlider,
+			&m_fftPhaseThresholdLabel,
+			"fftPhaseThreshold",
+			-180.0, 180.0, 0.0, 1.0,
+			"Phase"),
+
+		SliderConfig(
+			&m_zeroCrossingCountSlider,
+			&m_zeroCrossingCountLabel,
+			"zeroCrossingCount",
+			1.0, 12.0, 1.0, 1.0,
+			"Multiplier"),
+
+		SliderConfig(
+			&m_lowPassFrequencySlider,
+			&m_lowPassFrequencyLabel,
+			"lowPassFrequency",
+			10.0, 2000.0, 500.0, 1.0,
+			"Low Pass"),
+
+		// Generation sliders
+		SliderConfig(
+			&m_crossfadeLengthSlider,
+			&m_crossfadeLengthLabel,
+			"crossfadeLength",
+			0.0, 200.0, 0.0, 1.0,
+			"Crossfade"),
+
+		SliderConfig(
+			&m_regionLenghtExportSlider,
+			&m_regionLenghtExportLabel,
+			"regionLenghtExport",
+			100.0, 50000.0, 1000.0, 1.0,
+			"Reg Lenght"),
+
+		// Export range sliders (ranges are set dynamically)
+		SliderConfig(
+			&m_exportRegionLeftSlider,
+			&m_exportRegionLeftLabel,
+			"exportRegionLeft",
+			0.0, 1.0, 0.0, 1.0,
+			"Reg Left"),
+
+		SliderConfig(
+			&m_exportRegionRightSlider,
+			&m_exportRegionRightLabel,
+			"exportRegionRight",
+			0.0, 1.0, 0.0, 1.0,
+			"Reg Right"),
+
+		SliderConfig(
+			&m_exportMaxRegionOffsetSlider,
+			&m_exportMaxRegionOffsetLabel,
+			"exportMaxRegionOffset",
+			0.0, 5000.0, 1000.0, 1.0,
+			"Max Offset"),
+
+		SliderConfig(
+			&m_exportRegionCountSlider,
+			&m_exportRegionCountLabel,
+			"exportRegionCount",
+			1.0, 1000.0, 200.0, 1.0,
+			"Reg Count"),
+
+		// Spectrum matching slider
+		SliderConfig(
+			&m_spectrumMatchIntensitySlider,
+			&m_spectrumMatchIntensityLabel,
+			"spectrumMatchIntensity",
+			0.0, 100.0, 0.0, 1.0,
+			"FFT Match",
+			juce::Slider::LinearHorizontal,
+			80, 20, true,
+			[this](double value) { spectrumMatchIntensitySliderChanged(); })
+	};
+
+	// Setup UI for all sliders (addAndMakeVisible, setSliderStyle, attach labels, etc.)
+	SliderManager::setupSliderUI(m_sliderConfigs, this);
+
+	// Initialize all sliders with their value configurations
+	SliderManager::initializeSliders(m_sliderConfigs);
 }
 
 //==============================================================================
@@ -451,6 +427,8 @@ void MainComponent::resized()
 	m_detectionTypeComboBox.setSize(pixelSize15, pixelSize);
 	m_thresholdSlider.setSize(pixelSize12, pixelSize);
 	m_minimumLengthSlider.setSize(pixelSize12, pixelSize);
+	m_minimumLengthMultiplierSlider.setSize(pixelSize12, pixelSize);  // NEW: Size for multiplier slider
+	m_lowPassFrequencySlider.setSize(pixelSize12, pixelSize);
 	m_exportMaxRegionOffsetSlider.setSize(pixelSize12, pixelSize);
 	m_SpectrumDifferenceSlider.setSize(pixelSize12, pixelSize);
 	m_fftPhaseThresholdSlider.setSize(pixelSize12, pixelSize);
@@ -506,20 +484,22 @@ void MainComponent::resized()
 	// Detect regions
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row1);
 	m_detectionTypeComboBox.setTopLeftPosition(column8, row2);
-	
+
 	m_minimumLengthSlider.setTopLeftPosition(column9, row3);
+	m_minimumLengthMultiplierSlider.setTopLeftPosition(column9, row3);  // Same position as m_minimumLengthSlider
 	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column9, row4);
 	m_zeroCrossingCountSlider.setTopLeftPosition(column9, row5);
 	m_SpectrumDifferenceSlider.setTopLeftPosition(column9, row6);
 	m_thresholdSlider.setTopLeftPosition(column9, row7);	
 	m_fftPhaseThresholdSlider.setTopLeftPosition(column9, row7);
+	m_lowPassFrequencySlider.setTopLeftPosition(column9, row8);
 	
 	// Info labels
-	m_regionsCountLabel.setTopLeftPosition(column8, row8);
-	m_validRegionsCountLabel.setTopLeftPosition(column8, row9);
-	m_regionLenghtMedianLabel.setTopLeftPosition(column8, row10);
-	m_regionLengthDiffLabel.setTopLeftPosition(column11, row8);
-	m_maxZeroCrossingGainLabel.setTopLeftPosition(column11, row9);
+	m_regionsCountLabel.setTopLeftPosition(column2, row8);
+	m_validRegionsCountLabel.setTopLeftPosition(column2, row9);
+	m_regionLenghtMedianLabel.setTopLeftPosition(column2, row10);
+	m_regionLengthDiffLabel.setTopLeftPosition(column5, row8);
+	m_maxZeroCrossingGainLabel.setTopLeftPosition(column5, row9);
 
 	m_detectRegionsButton.setTopLeftPosition(column10, row11);
 
