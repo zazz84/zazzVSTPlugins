@@ -25,7 +25,7 @@
 
 struct Region
 {
-	static const int FFT_ORDER = 14;
+	static const int FFT_ORDER = 12;
 	static const int FFT_SIZE = 1 << FFT_ORDER;
 	
 	int m_sampleIndex = -1;

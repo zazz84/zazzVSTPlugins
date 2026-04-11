@@ -1056,113 +1056,10 @@ public:
 			}
 		}
 
-		juce::dsp::FFT forwardFFT(FFT_ORDER);
-		juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
-		float tempBuffer[FFT_SIZE];
-		float fftData[2 * FFT_SIZE];
-		auto* pBufferSource = m_bufferSource.getWritePointer(0);
-		const int sourceSize = m_bufferSource.getNumSamples();
+		regionsSpectrumValidation();
 
-
-		for (auto& region : m_regions)
-		{
-			if (region.m_isValid == false)
-			{
-				continue;
-			}
-
-			// Resample
-			const int segmentStartIndex = region.m_sampleIndex;
-			const int sourceRegionLength = region.m_length;
-			const float indexIncrement = (float)sourceRegionLength / (float)FFT_SIZE;
-
-			float sourceIndex = 0.0f;
-
-			for (int i = 0; i < FFT_SIZE; i++)
-			{
-				const int indexLeft = segmentStartIndex + (int)sourceIndex;
-				const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
-
-				const float valueLeft = pBufferSource[indexLeft];
-				const float valueRight = pBufferSource[indexRight];
-
-				const float delta = sourceIndex - std::floor(sourceIndex);
-				const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
-
-				//tempBuffer[i] = interpolated;
-				region.m_fftData[i] = interpolated;
-
-				sourceIndex += indexIncrement;
-			}
-
-			// Get spectrum
-			// Apply windowing function
-			window.multiplyWithWindowingTable(region.m_fftData, FFT_SIZE);
-
-			// Perform FFT
-			forwardFFT.performFrequencyOnlyForwardTransform(region.m_fftData);
-		}
-
-		// Do FFT statistics		
+		// Update info labels
 		auto validRegionsCount = getValidRegionsCount();
-
-		// Get average
-		float fftDataAverage[2 * FFT_SIZE];
-		std::fill(std::begin(fftDataAverage), std::end(fftDataAverage), 0.0f);
-
-		for (auto& region : m_regions)
-		{
-			if (region.m_isValid == false)
-			{
-				continue;
-			}
-
-			for (size_t i = 0; i < 2 * FFT_SIZE; i++)
-			{
-				const float value = region.m_fftData[i];
-				if (value > 0.001f)
-				{
-					fftDataAverage[i] += value;
-				}
-			}
-		}
-
-		for (size_t i = 0; i < 2 * FFT_SIZE; i++)
-		{
-			fftDataAverage[i] = fftDataAverage[i] / (float)(validRegionsCount);
-		}
-
-		// Get difference
-		const auto spectrumDifference = 0.01 * m_SpectrumDifferenceSlider.getValue();
-
-		for (auto& region : m_regions)
-		{
-			if (region.m_isValid == false)
-			{
-				continue;
-			}
-
-			float diff = 0.0f;
-
-			for (size_t i = 0; i < FFT_SIZE; i++)
-			{
-				const float d = std::fabsf(fftDataAverage[i] - region.m_fftData[i]);
-				if (d > 0.001f)
-				{
-					diff += d;
-				}
-			}
-
-			// Set invalid
-			region.m_difference = diff / (float)(FFT_SIZE);
-			if (region.m_difference > spectrumDifference)
-			{
-				region.m_isValid = false;
-			}
-		}
-
-
-		validRegionsCount = getValidRegionsCount();
 		m_validRegionsCountLabel.setText("Valid regions count: " + juce::String((float)validRegionsCount, 0), juce::dontSendNotification);
 		m_waveformDisplaySource.setRegions(m_regions);
 
@@ -1195,6 +1092,118 @@ public:
 		}
 	}
 
+	//==========================================================================
+	void regionsSpectrumValidation()
+	{
+		juce::dsp::FFT forwardFFT(Region::FFT_ORDER);
+		juce::dsp::WindowingFunction<float> window(Region::FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
+		float tempBuffer[Region::FFT_SIZE];
+		float fftData[2 * Region::FFT_SIZE];
+		auto* pBufferSource = m_bufferSource.getWritePointer(0);
+		const int sourceSize = m_bufferSource.getNumSamples();
+
+		for (auto& region : m_regions)
+		{
+			if (region.m_isValid == false)
+			{
+				continue;
+			}
+
+			// Resample
+			const int segmentStartIndex = region.m_sampleIndex;
+			const int sourceRegionLength = region.m_length;
+			const float indexIncrement = (float)sourceRegionLength / (float)Region::FFT_SIZE;
+
+			float sourceIndex = 0.0f;
+
+			for (int i = 0; i < Region::FFT_SIZE; i++)
+			{
+				const int indexLeft = segmentStartIndex + (int)sourceIndex;
+				const int indexRight = indexLeft < sourceSize - 1 ? indexLeft + 1 : indexLeft;
+
+				const float valueLeft = pBufferSource[indexLeft];
+				const float valueRight = pBufferSource[indexRight];
+
+				const float delta = sourceIndex - std::floor(sourceIndex);
+				const float interpolated = valueLeft * (1.0f - delta) + valueRight * delta;
+
+				//tempBuffer[i] = interpolated;
+				region.m_fftData[i] = interpolated;
+
+				sourceIndex += indexIncrement;
+			}
+
+			// Get spectrum
+			// Apply windowing function
+			window.multiplyWithWindowingTable(region.m_fftData, Region::FFT_SIZE);
+
+			// Perform FFT
+			forwardFFT.performFrequencyOnlyForwardTransform(region.m_fftData);
+		}
+
+		// Do FFT statistics		
+		auto validRegionsCount = getValidRegionsCount();
+
+		// Get average
+		float fftDataAverage[Region::FFT_SIZE];
+		std::fill(std::begin(fftDataAverage), std::end(fftDataAverage), 0.0f);
+
+		for (auto& region : m_regions)
+		{
+			if (region.m_isValid == false)
+			{
+				continue;
+			}
+
+			for (size_t i = 0; i < Region::FFT_SIZE; i++)
+			{
+				const float value = region.m_fftData[i];
+				if (value > 0.001f)
+				{
+					fftDataAverage[i] += value;
+				}
+			}
+		}
+
+		for (size_t i = 0; i < Region::FFT_SIZE; i++)
+		{
+			fftDataAverage[i] = fftDataAverage[i] / (float)(validRegionsCount);
+		}
+
+		// Get difference
+		const auto spectrumDifference = powf(0.01f * (float)m_SpectrumDifferenceSlider.getValue(), 8.0f);
+		constexpr auto MIN_FREQUENCY = 200.0f;
+		constexpr auto MAX_FREQUENCY = 10000.0f;
+		const auto minFrequencyBin = (int)(MIN_FREQUENCY * (float)Region::FFT_SIZE / (float)m_sampleRate);
+		const auto maxFrequencyBin = (int)(MAX_FREQUENCY * (float)Region::FFT_SIZE / (float)m_sampleRate);
+
+		for (auto& region : m_regions)
+		{
+			if (region.m_isValid == false)
+			{
+				continue;
+			}
+
+			float diff = 0.0f;
+
+			for (size_t i = minFrequencyBin; i < maxFrequencyBin; i++)
+			{
+				const float d = std::fabsf(fftDataAverage[i] - region.m_fftData[i]);
+				if (d > 0.001f)
+				{
+					diff += fminf(d, 1.0f);
+				}
+			}
+
+			// Set invalid
+			region.m_difference = diff / (float)(maxFrequencyBin - minFrequencyBin);
+			if (region.m_difference > spectrumDifference)
+			{
+				region.m_isValid = false;
+			}
+		}
+	}
+	
 	//==========================================================================
 	void initializeSpectrumMatching()
 	{
@@ -1619,7 +1628,7 @@ public:
 		// │ Slider/Control       │  TDom │ TDom+F │ FFT │ FFT+Filter │
 		// │ (ID = 1, 2, 3, 4)    │   1   │   2    │  3  │     4      │
 		// ├──────────────────────┼───────┼────────┼─────┼────────────┤
-		// │ threshold            │   ✓   │   ✓    │  -  │     -      │
+		// │ threshold            │   ✓   │   ✓    │  -  │     ✓      │
 		// │ minimumLength        │   ✓   │   ✓    │  ✓  │     -      │
 		// │ minimumLengthMult    │   -   │   -    │  -  │     ✓      │
 		// │ lowPassFrequency     │   -   │   ✓    │  -  │     -      │
@@ -1678,7 +1687,7 @@ public:
 		// Mode 4: FFT + Filter
 		else if (detectionTypeId == 4)
 		{
-			m_thresholdSlider.setVisible(false);
+			m_thresholdSlider.setVisible(true);
 			m_thresholdLabel.setVisible(false);
 			m_minimumLengthSlider.setVisible(false);
 			m_maximumFrequencyLabel.setVisible(false);

@@ -291,7 +291,6 @@ private:
 		{
 			reversedFrameCenterSamples[i] = samples - 1 - reversedFrameCenterSamples[i];
 		}
-		std::reverse(reversedFrameCenterSamples.begin(), reversedFrameCenterSamples.end());
 
 		// Step 5: Backward pass: Apply filter again (reversed)
 		applyAdaptiveFilter(m_lastFilteredBuffer.data(), samples, reversedDominantFrequencies, reversedFrameCenterSamples);

@@ -216,7 +216,7 @@ void MainComponent::initializeSliderConfigs()
 			&m_SpectrumDifferenceSlider,
 			&m_SpectrumDifferenceLabel,
 			"spectrumDifference",
-			0.0, 200.0, 100.0, 1.0,
+			0.0, 100.0, 100.0, 1.0,
 			"Spectrum"),
 
 		SliderConfig(
@@ -281,7 +281,7 @@ void MainComponent::initializeSliderConfigs()
 			&m_exportRegionCountSlider,
 			&m_exportRegionCountLabel,
 			"exportRegionCount",
-			1.0, 1000.0, 200.0, 1.0,
+			1.0, 256.0, 64.0, 1.0,
 			"Reg Count"),
 
 		// Spectrum matching slider
