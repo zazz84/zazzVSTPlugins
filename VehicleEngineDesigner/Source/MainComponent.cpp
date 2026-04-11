@@ -96,6 +96,13 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_displayModeButton.setButtonText("Waveform");
 	m_displayModeButton.onClick = [this] { displayModeButtonClicked(); };
 
+	addAndMakeVisible(&m_applyDCFilterCheckbox);
+	m_applyDCFilterCheckbox.setButtonText("DC Filter");
+	m_applyDCFilterCheckbox.setToggleState(m_applyDCFilter, juce::dontSendNotification);
+	m_applyDCFilterCheckbox.onClick = [this] {
+		m_applyDCFilter = m_applyDCFilterCheckbox.getToggleState();
+	};
+
 	// Combo boxes
 	m_detectionTypeComboBox.addItem("Time Domain", 1);
 	m_detectionTypeComboBox.addItem("Time Domain + Filter", 2);
@@ -460,6 +467,7 @@ void MainComponent::resized()
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
 	m_displayModeButton.setSize(pixelSize3, pixelSize);
+	m_applyDCFilterCheckbox.setSize(pixelSize3, pixelSize);
 
 	m_waveformDisplaySource.setSize(pizelSize63, pixelSize11);
 	m_waveformDisplayOutput.setSize(pizelSize63, pixelSize11);
@@ -519,6 +527,7 @@ void MainComponent::resized()
 	m_generateButton.setTopLeftPosition(column15, row11);
 	m_saveButton.setTopLeftPosition(column16, row11);
 	m_exportRegionsButton.setTopLeftPosition(column17, row11);
+	m_applyDCFilterCheckbox.setTopLeftPosition(column18, row11);
 
 	// Main column 4
 	// Playback
@@ -528,7 +537,7 @@ void MainComponent::resized()
 
 	//Display
 	m_displayGroupLableComponent.setTopLeftPosition(column20, row3);
-	m_displayModeButton.setTopLeftPosition(column20, row4);	
+	m_displayModeButton.setTopLeftPosition(column20, row4);
 	
 	// Waveform and spectrogram displays (overlapping, visibility controlled by display mode button)
 	m_waveformDisplaySource.setTopLeftPosition(column2, row12);

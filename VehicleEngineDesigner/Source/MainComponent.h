@@ -271,6 +271,13 @@ public:
 			regionsExport[i].m_sampleIndex = i * exportRegionLength;
 		}
 
+		// Apply DC filter if enabled
+		if (m_applyDCFilter)
+		{
+			ZeroPhaseFilter dcFilter(m_sampleRate);
+			dcFilter.applyHighPassZeroPhase(m_bufferOutput, 10.0f, 0.707f);
+		}
+
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
 		m_waveformDisplayOutput.setRegions(regionsExport);
 		m_spectrogramDisplayOutput.setAudioBuffer(m_bufferOutput);
@@ -552,6 +559,13 @@ public:
 			{
 				regionsExport[i].m_length = m_bufferOutput.getNumSamples() - currentPos;
 			}
+		}
+
+		// Apply DC filter if enabled
+		if (m_applyDCFilter)
+		{
+			ZeroPhaseFilter dcFilter(m_sampleRate);
+			dcFilter.applyHighPassZeroPhase(m_bufferOutput, 10.0f, 0.707f);
 		}
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
@@ -1767,6 +1781,8 @@ public:
 	juce::TextButton m_sourceButton;
 	juce::TextButton m_displayModeButton;
 
+	juce::ToggleButton m_applyDCFilterCheckbox;
+
 	// Sliders
 	juce::Slider m_thresholdSlider;
 	juce::Slider m_minimumLengthSlider;
@@ -1854,6 +1870,7 @@ public:
 	SourceType m_sourceType = SourceType::Source;
 	InterpolationType m_interpolationType = InterpolationType::Linear;
 	bool m_showSpectrogram = false;
+	bool m_applyDCFilter = false;
 	DisplayMode m_displayMode = DisplayMode::Waveform;
 
 	int m_regionLenghtMedian = 0;
