@@ -1477,6 +1477,16 @@ public:
 		const bool shouldDisplayFiltered = (detectionTypeId == 2 || detectionTypeId == 4);
 		m_waveformDisplaySource.setFilteredAudioBuffer(filteredBuffer, shouldDisplayFiltered);
 
+		// Pass phase audio buffer for FFT mode visualization
+		if (detectionTypeId == static_cast<int>(DetectionType::FFT))
+		{
+			const juce::AudioBuffer<float>& phaseBuffer = zeroCrossing.getLastPhaseAudioBuffer();
+			if (phaseBuffer.getNumSamples() > 0)
+			{
+				m_waveformDisplaySource.setPhaseTrajectory(phaseBuffer);
+			}
+		}
+
 		if (const size_t size = m_regions.size(); size > 1)
 		{
 			m_exportRegionLeftSlider.setRange(0.0, (double)(size - 1), 1.0);

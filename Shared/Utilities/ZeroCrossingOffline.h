@@ -40,7 +40,7 @@ public:
 	{
 		Amplitude,
 		FFT,
-		AmplitudeAdaptiveFilter
+		AmplitudeAdaptiveFilter,
 	};
 
 	void init(const int sampleRate)
@@ -71,6 +71,10 @@ public:
 	const std::vector<float>& getLastFilteredBuffer() const
 	{
 		return m_lastFilteredBuffer;
+	}
+	const juce::AudioBuffer<float>& getLastPhaseAudioBuffer() const
+	{
+		return m_phaseAudioBuffer;
 	}
 	void process(const juce::AudioBuffer<float>& audioBuffer, std::vector<int>& regions)
 	{
@@ -159,18 +163,14 @@ private:
 	void processFFTDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
 	{
 		const auto samples = buffer.getNumSamples();
-		//const auto timeBinsPerSecond = 4096;
 		const auto timeBinsPerSecond = m_sampleRate / 10;
+		constexpr auto FFT_ORDER = 12;
 
 		// Calculate dominant frequencies and phase trajectory using extended method
 		std::vector<float> phaseTrajectory;
 		std::vector<int> frameCenterSamples;
 		std::vector<float> dominantFrequencies;
-		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, &phaseTrajectory, true, timeBinsPerSecond);
-
-		// Calculate block size for phase interpolation
-		const int m_timeBinsCount = zazzDSP::Spectrum::calculateNumTimeBins(samples, m_sampleRate, timeBinsPerSecond);
-		const float blockSize = (float)samples / (float)m_timeBinsCount;
+		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, &phaseTrajectory, true, timeBinsPerSecond, FFT_ORDER);
 
 		if (phaseTrajectory.empty() || phaseTrajectory.size() == 0)
 		{
@@ -178,9 +178,10 @@ private:
 			return;
 		}
 
-		// Detect upward zero crossings using interpolated phase per sample
-		int sinceLast = 0;
-		const int SINCE_LAST_MIN = (int)m_minimumSamplesBetweenCrossings;
+		// Calculate block size for phase interpolation
+		const int m_timeBinsCount = zazzDSP::Spectrum::calculateNumTimeBins(samples, m_sampleRate, timeBinsPerSecond);
+		const float blockSize = (float)samples / (float)m_timeBinsCount;
+
 		constexpr float PI = 3.14159265359f;
 
 		// Helper function to interpolate between two phase values with proper wrapping
@@ -202,10 +203,9 @@ private:
 				result += 2.0f * PI;
 
 			return result;
-		};
+			};
 
 		// Linear interpolation with proper phase wrapping handling
-		// Determine which frame pair to interpolate between based on sample position
 		auto interpolatePhaseLinear = [&](int frameIdx, float samplePos) -> float {
 			if (frameIdx >= (int)phaseTrajectory.size())
 				return phaseTrajectory.back();
@@ -213,7 +213,6 @@ private:
 			float currentFrameCenter = frameCenterSamples[frameIdx];
 			float currentPhase = phaseTrajectory[frameIdx];
 
-			// Determine if we interpolate with previous or next frame
 			int prevIdx = frameIdx - 1;
 			int nextIdx = frameIdx + 1;
 			bool hasPrev = (prevIdx >= 0);
@@ -248,28 +247,46 @@ private:
 				}
 			}
 
-			// Default: return current frame's phase
-			// sample = sampleCenter of current frame
 			return currentPhase;
-		};
+			};
 
-		float lastPhase = phaseTrajectory[0];  // Already in [-π, π] range
+		// Step 1: Create phase audio buffer with interpolated phase values for every sample
+		m_phaseAudioBuffer.setSize(1, samples, false, true);
+		auto* phasePtr = m_phaseAudioBuffer.getWritePointer(0);
 
-		for (int sample = 1; sample < samples; ++sample)
+		for (int sample = 0; sample < samples; ++sample)
 		{
-			// Find which FFT frames this sample is between
 			float sampleBlockPosition = (float)sample / blockSize;
 			int frameIdx = (int)sampleBlockPosition;
 			frameIdx = std::max(0, std::min(frameIdx, (int)phaseTrajectory.size() - 1));
 
-			// Choose interpolation method based on frame position
-			float currentPhase = interpolatePhaseLinear(frameIdx, sample);
+			phasePtr[sample] = interpolatePhaseLinear(frameIdx, (float)sample);
+		}
+
+		// Step 2: Normalize phase buffer for visualization (remap to [-1, 1]) in-place
+		for (int i = 0; i < samples; ++i)
+		{
+			phasePtr[i] = phasePtr[i] / PI;  // [-π, π] → [-1, 1]
+		}
+
+		// Step 3: Detect zero crossings using normalized phase buffer [-1, 1]
+		int sinceLast = 0;
+		const int SINCE_LAST_MIN = (int)m_minimumSamplesBetweenCrossings;
+
+		// Normalize threshold to [-1, 1] range for phase buffer comparison
+		const float normalizedThreshold = m_fftPhaseThresholdRadians / PI;
+
+		float lastPhase = phasePtr[0];
+
+		for (int sample = 1; sample < samples; ++sample)
+		{
+			float currentPhase = phasePtr[sample];
 
 			// Detect upward zero crossing: phase crosses threshold from below to above
-			// No wrapping needed - phase is already in [-π, π] range
-			if (fabsf(PI - fabsf(m_fftPhaseThresholdRadians)) < 0.1f)
+			if (fabsf(1.0f - fabsf(normalizedThreshold)) < 0.1f)
 			{
-				if (lastPhase > currentPhase  && sinceLast > SINCE_LAST_MIN)
+				// Threshold at ±1 (normalized ±π, phase wrapping detection)
+				if (lastPhase > currentPhase && sinceLast > SINCE_LAST_MIN)
 				{
 					regions.push_back(sample);
 					sinceLast = 0;
@@ -281,7 +298,8 @@ private:
 			}
 			else
 			{
-				if (lastPhase < m_fftPhaseThresholdRadians && currentPhase >= m_fftPhaseThresholdRadians && sinceLast > SINCE_LAST_MIN)
+				// Standard threshold crossing
+				if (lastPhase < normalizedThreshold && currentPhase >= normalizedThreshold && sinceLast > SINCE_LAST_MIN)
 				{
 					regions.push_back(sample);
 					sinceLast = 0;
@@ -291,7 +309,7 @@ private:
 					sinceLast++;
 				}
 			}
-			
+
 			lastPhase = currentPhase;
 		}
 
@@ -435,7 +453,7 @@ private:
 			int idx0 = (int)std::floor(frameIdx);
 			int idx1 = idx0 + 1;
 			float alpha = frameIdx - idx0;
-				
+
 			if (idx0 < 0)
 			{
 				centerFrequency = dominantFrequencies[0];
@@ -453,18 +471,11 @@ private:
 			centerFrequency = std::max(20.0f, std::min(20000.0f, centerFrequency));
 
 			// Set filter frequencies based on dominant frequency (with some scaling to create a band)
-			//const float highPassFrequency = centerFrequency * 0.7f;
-			//const float lowPassFrequency = centerFrequency * 1.3f;
-
-			//filterHP.setHighPass(highPassFrequency, 2.0f);
-			//filterLP.setLowPass(lowPassFrequency, 2.0f);
-
 			filterHP.setBandPassPeakGain(centerFrequency, 2.0f);
 
 			// Process sample through both filters (filters maintain state across iterations)
 			float sample_data = buffer[sample];
 			sample_data = filterHP.processDF1(sample_data);
-			//sample_data = filterLP.processDF1(sample_data);
 
 			buffer[sample] = sample_data;
 		}
@@ -474,7 +485,8 @@ private:
 	float m_threshold = -60.0f;
 	int m_sampleRate = 48000;
 	Type m_type = Type::Amplitude;
-	float m_fftPhaseThresholdRadians = 0.0f; // Default to 0 degrees (crossing through 0)
-	float m_minimumLengthMultiplier = 1.0f; // Multiplier for minimum region length in FFT + Filter mode
-	std::vector<float> m_lastFilteredBuffer; // Stores filtered buffer for visualization in FFT + Filter mode
+	float m_fftPhaseThresholdRadians = 0.0f;
+	float m_minimumLengthMultiplier = 1.0f;
+	std::vector<float> m_lastFilteredBuffer;
+	juce::AudioBuffer<float> m_phaseAudioBuffer;
 };

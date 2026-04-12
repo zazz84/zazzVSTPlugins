@@ -230,6 +230,20 @@ public:
 			repaint();
 		};
 
+		addAndMakeVisible(m_phaseDisplayComponent);
+		m_phaseDisplayComponent.setWaveformColour(juce::Colours::greenyellow);
+		m_phaseDisplayComponent.setWaveformThickness(1.5f);
+		m_phaseDisplayComponent.setVisible(false);
+
+		addAndMakeVisible(&m_showPhaseButton);
+		m_showPhaseButton.setButtonText("P");
+		m_showPhaseButton.setClickingTogglesState(true);
+		m_showPhaseButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+		m_showPhaseButton.onClick = [this]
+		{
+			m_phaseDisplayComponent.setVisible(m_showPhaseButton.getToggleState());
+		};
+
 	}
 	~WaveformEditorComponent() = default;
 
@@ -247,6 +261,9 @@ public:
 
 		// Clear filtered buffer
 		m_waveformFilteredComponent.setAudioBuffer(juce::AudioBuffer<float>());
+
+		// Clear phase buffer
+		m_phaseDisplayComponent.setAudioBuffer(juce::AudioBuffer<float>());
 
 		// Clear
 		m_leftRegionIndex = -1;
@@ -286,6 +303,19 @@ public:
 	{
 		m_spectrogramComponent.setAudioBuffer(buffer);
 	}
+	void setPhaseTrajectory(const juce::AudioBuffer<float>& phaseBuffer)
+	{
+		if (phaseBuffer.getNumSamples() <= 0)
+		{
+			m_phaseDisplayComponent.setAudioBuffer(juce::AudioBuffer<float>());
+			return;
+		}
+
+		// Phase buffer is already normalized [-1, 1] from ZeroCrossingOffline
+		// Set it directly to the display component
+		m_phaseDisplayComponent.setAudioBuffer(phaseBuffer);
+		m_phaseDisplayComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
+	}
 	void setRegions(const std::vector<Region> regions)
 	{
 		const size_t size = regions.size();
@@ -317,6 +347,7 @@ public:
 
 		m_waveformDisplayComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
 		m_waveformFilteredComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
+		m_phaseDisplayComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
 		m_spectrogramComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
 
 		repaint();
@@ -356,6 +387,8 @@ public:
 		m_waveformDisplayComponent.setTopLeftPosition(0, waveformY);
 		m_waveformFilteredComponent.setSize(width, waveformHeight);
 		m_waveformFilteredComponent.setTopLeftPosition(0, waveformY);
+		m_phaseDisplayComponent.setSize(width, waveformHeight);
+		m_phaseDisplayComponent.setTopLeftPosition(0, waveformY);
 
 		// Set spectrogram display component size and position (overlapping)
 		m_spectrogramComponent.setSize(width, waveformHeight + pixelSize);
@@ -374,6 +407,7 @@ public:
 		m_showFilteredButton.setSize(pixelSize, pixelSize);
 		m_showSpectrogramButton.setSize(pixelSize, pixelSize);
 		m_showRegionMarkersButton.setSize(pixelSize, pixelSize);
+		m_showPhaseButton.setSize(pixelSize, pixelSize);
 
 		// Set position
 		const auto column1 = 0;	
@@ -404,6 +438,7 @@ public:
 		m_showDetailsButton.setTopLeftPosition		(column8, row4);
 		m_showFilteredButton.setTopLeftPosition		(column9, row4);
 		m_showSpectrogramButton.setTopLeftPosition	(column9 + pixelSize, row4);
+		m_showPhaseButton.setTopLeftPosition		(column9 + pixelSize2, row4);
 	}
 
 	void paint(juce::Graphics& g) override
@@ -535,6 +570,7 @@ public:
 private:
 	WaveformDisplayComponent m_waveformDisplayComponent;
 	WaveformDisplayComponent m_waveformFilteredComponent;
+	WaveformDisplayComponent m_phaseDisplayComponent;
 	SpectrogramDisplayComponent m_spectrogramComponent;
 
 	std::vector<Region> m_regions;
@@ -550,6 +586,7 @@ private:
 	juce::TextButton m_showFilteredButton;
 	juce::TextButton m_showSpectrogramButton;
 	juce::TextButton m_showRegionMarkersButton;
+	juce::TextButton m_showPhaseButton;
 
 	int m_leftSampleIndex = 0;
 	int m_rightSampleIndex = 0;

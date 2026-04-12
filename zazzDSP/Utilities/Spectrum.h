@@ -262,9 +262,9 @@ namespace zazzDSP
 			std::vector<int>& timeBinCenterSamples,
 			std::vector<float>* outPhaseTrajectory = nullptr,
 			bool usePhaseExtraction = false,
-			int binsPerSecond = BINS_PER_SECOND)
+			int binsPerSecond = BINS_PER_SECOND,
+			int fftOrder = 12)
 		{
-			constexpr int FFT_ORDER = 12;
 			constexpr int MIN_BIN = 1;
 			constexpr float MAX_FREQUENCY = 400.0f;
 
@@ -277,7 +277,7 @@ namespace zazzDSP
 			calculateFFTMagnitudes(
 				buffer,
 				sampleRate,
-				FFT_ORDER,
+				fftOrder,
 				magnitudes,
 				timeBinCenterSamples,
 				binFrequencyResolution,
