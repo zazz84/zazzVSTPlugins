@@ -23,6 +23,7 @@
 
 #include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
 #include "WaveformDisplayComponent.h"
+#include "SpectrogramDisplayComponent.h"
 
 struct Region
 {
@@ -40,10 +41,12 @@ struct Region
 class WaveformEditorComponent : public juce::Component
 {
 public:
-	WaveformEditorComponent(juce::String name) : m_nameGroupComponent(name)
+	WaveformEditorComponent(juce::String name) : m_nameGroupComponent(name), m_spectrogramComponent(name + " Spectrum")
 	{
 		addAndMakeVisible(m_waveformDisplayComponent);
 		addAndMakeVisible(m_waveformFilteredComponent);
+		addAndMakeVisible(m_spectrogramComponent);
+		m_spectrogramComponent.setVisible(false);
 
 		// Configure filtered waveform appearance
 		m_waveformFilteredComponent.setWaveformColour(juce::Colours::cyan);
@@ -208,12 +211,37 @@ public:
 			m_waveformFilteredComponent.setVisible(m_showFilteredButton.getToggleState());
 		};
 
+		addAndMakeVisible(&m_showSpectrogramButton);
+		m_showSpectrogramButton.setButtonText("S");
+		m_showSpectrogramButton.setClickingTogglesState(true);
+		m_showSpectrogramButton.setToggleState(false, juce::NotificationType::dontSendNotification);
+		m_showSpectrogramButton.onClick = [this]
+		{
+			m_spectrogramComponent.setVisible(m_showSpectrogramButton.getToggleState());
+			repaint();
+		};
+
+		addAndMakeVisible(&m_showRegionMarkersButton);
+		m_showRegionMarkersButton.setButtonText("M");
+		m_showRegionMarkersButton.setClickingTogglesState(true);
+		m_showRegionMarkersButton.setToggleState(true, juce::NotificationType::dontSendNotification);
+		m_showRegionMarkersButton.onClick = [this]
+		{
+			repaint();
+		};
+
 	}
 	~WaveformEditorComponent() = default;
+
+	void setSampleRate(const int sampleRate)
+	{
+		m_spectrogramComponent.setSampleRate(sampleRate);
+	}
 
 	void setAudioBuffer(const juce::AudioBuffer<float> buffer)
 	{
 		m_waveformDisplayComponent.setAudioBuffer(buffer);
+		m_spectrogramComponent.setAudioBuffer(buffer);
 		m_leftSampleIndex = 0;
 		m_rightSampleIndex = buffer.getNumSamples();
 
@@ -253,6 +281,11 @@ public:
 			m_waveformFilteredComponent.setAudioBuffer(juce::AudioBuffer<float>());
 		}
 	}
+
+	void setSpectrogramAudioBuffer(const juce::AudioBuffer<float> buffer)
+	{
+		m_spectrogramComponent.setAudioBuffer(buffer);
+	}
 	void setRegions(const std::vector<Region> regions)
 	{
 		const size_t size = regions.size();
@@ -284,6 +317,7 @@ public:
 
 		m_waveformDisplayComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
 		m_waveformFilteredComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
+		m_spectrogramComponent.setHorizontalZoom(m_leftSampleIndex, m_rightSampleIndex);
 
 		repaint();
 	}
@@ -323,6 +357,10 @@ public:
 		m_waveformFilteredComponent.setSize(width, waveformHeight);
 		m_waveformFilteredComponent.setTopLeftPosition(0, waveformY);
 
+		// Set spectrogram display component size and position (overlapping)
+		m_spectrogramComponent.setSize(width, waveformHeight + pixelSize);
+		m_spectrogramComponent.setTopLeftPosition(0, waveformY - pixelSize);
+
 		// Set size
 		m_nameGroupComponent.setSize(width, pixelSize);
 		m_zoomGroupComponent.setSize(pixelSize4, pixelSize);
@@ -334,6 +372,8 @@ public:
 		m_resetZoomButton.setSize(pixelSize, pixelSize);
 		m_showDetailsButton.setSize(pixelSize, pixelSize);
 		m_showFilteredButton.setSize(pixelSize, pixelSize);
+		m_showSpectrogramButton.setSize(pixelSize, pixelSize);
+		m_showRegionMarkersButton.setSize(pixelSize, pixelSize);
 
 		// Set position
 		const auto column1 = 0;	
@@ -344,6 +384,7 @@ public:
 		const auto column6 = column5 + pixelSize2;
 		const auto column7 = column6 + pixelSize8;
 		const auto column8 = column7 + pixelSize;
+		const auto column9 = column8 + pixelSize;
 
 		const auto row1 = 0;
 		const auto row2 = row1 + pixelSize;
@@ -359,11 +400,27 @@ public:
 		m_zoomRegionRightLabel.setTopLeftPosition	(column4, row4);
 		m_scrollRightButton.setTopLeftPosition		(column5, row4);
 		m_resetZoomButton.setTopLeftPosition		(column6, row4);
-		m_showDetailsButton.setTopLeftPosition		(column7, row4);
-		m_showFilteredButton.setTopLeftPosition		(column8, row4);
+		m_showRegionMarkersButton.setTopLeftPosition(column7, row4);
+		m_showDetailsButton.setTopLeftPosition		(column8, row4);
+		m_showFilteredButton.setTopLeftPosition		(column9, row4);
+		m_showSpectrogramButton.setTopLeftPosition	(column9 + pixelSize, row4);
 	}
 
 	void paint(juce::Graphics& g) override
+	{
+		const auto width = getWidth();
+		const auto height = getHeight();
+		const auto pixelSize = height / 11;
+		const auto pixelSize8 = 8 * pixelSize;
+		const auto waveformY = pixelSize;
+		const auto waveformHeight = pixelSize8;
+
+		// Draw black background for waveform display area
+		g.setColour(juce::Colours::black);
+		g.fillRect(0, waveformY, width, waveformHeight);
+	}
+
+	void paintOverChildren(juce::Graphics& g) override
 	{
 		const auto width = getWidth();
 		const auto height = getHeight();
@@ -374,12 +431,9 @@ public:
 		const auto waveformY = pixelSize;
 		const auto waveformHeight = pixelSize8;
 
-		// Draw black background for waveform display area
-		g.setColour(juce::Colours::black);
-		g.fillRect(0, waveformY, width, waveformHeight);
-
-		// Draw regions if any exist
-		if (m_regions.size() == 0 || m_leftSampleIndex >= m_rightSampleIndex)
+		// Draw regions if any exist and if visibility is enabled
+		if (m_regions.size() == 0 || m_leftSampleIndex >= m_rightSampleIndex || 
+			!m_showRegionMarkersButton.getToggleState())
 		{
 			return;
 		}
@@ -420,7 +474,7 @@ public:
 						g.fillRect(rectangle);
 						auto* channelData = audioBuffer.getReadPointer(0);
 						g.setColour(juce::Colours::black);
-						g.drawText(juce::String(juce::Decibels::gainToDecibels(channelData[sampleIndex]), 1), rectangle, juce::Justification::centred);
+						g.drawText(juce::String(juce::Decibels::gainToDecibels(fabsf(channelData[sampleIndex])), 1), rectangle, juce::Justification::centred);
 					}
 
 					rectangle.setBounds(x + 5.0f, (float)(waveformY + pixelSize4) + 80.0f, recWidth, 20.0f);
@@ -481,6 +535,7 @@ public:
 private:
 	WaveformDisplayComponent m_waveformDisplayComponent;
 	WaveformDisplayComponent m_waveformFilteredComponent;
+	SpectrogramDisplayComponent m_spectrogramComponent;
 
 	std::vector<Region> m_regions;
 
@@ -493,6 +548,8 @@ private:
 	juce::TextButton m_resetZoomButton;
 	juce::TextButton m_showDetailsButton;
 	juce::TextButton m_showFilteredButton;
+	juce::TextButton m_showSpectrogramButton;
+	juce::TextButton m_showRegionMarkersButton;
 
 	int m_leftSampleIndex = 0;
 	int m_rightSampleIndex = 0;

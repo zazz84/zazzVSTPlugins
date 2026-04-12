@@ -46,7 +46,7 @@ struct SliderConfig
 		double step = 1.0,
 		const juce::String& label_text = "",
 		juce::Slider::SliderStyle style = juce::Slider::LinearHorizontal,
-		int textbox_width = 80,
+		int textbox_width = 60,
 		int textbox_height = 20,
 		bool attach_label = true,
 		std::function<void(double)> onChanged = nullptr,

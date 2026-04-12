@@ -9,7 +9,6 @@
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/GUI/WaveformEditorComponent.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/SpectrogramDisplayComponent.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
 #include "SpectrumMatchRegionProcessor.h"
@@ -61,10 +60,10 @@ public:
 
 	enum DetectionType
 	{
-		TimeDomain = 1,
-		TimeDomainFilter = 2,
+		Amplitude = 1,
+		AmplitudeFilter = 2,
 		FFT = 3,
-		FFTFilter = 4
+		AmplitudeAdaptiveFilter = 4
 	};
 
 	//==============================================================================
@@ -111,10 +110,8 @@ public:
 					// Draw waveform
 					const float verticalZoom = 1.0f / m_bufferSource.getMagnitude(0, m_bufferSource.getNumSamples());
 					m_waveformDisplaySource.setVerticalZoom(verticalZoom);
+					m_waveformDisplaySource.setSampleRate(static_cast<int>(m_sampleRate));
 					m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
-
-					// Draw spectrogram
-					m_spectrogramDisplaySource.setAudioBuffer(m_bufferSource);
 
 					// Set filename label
 					m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
@@ -280,8 +277,7 @@ public:
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
 		m_waveformDisplayOutput.setRegions(regionsExport);
-		m_spectrogramDisplayOutput.setAudioBuffer(m_bufferOutput);
-	}
+			}
 
 	//==========================================================================
 	void randomRegionsGenerate()
@@ -570,8 +566,7 @@ public:
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
 		m_waveformDisplayOutput.setRegions(regionsExport);
-		m_spectrogramDisplayOutput.setAudioBuffer(m_bufferOutput);
-	}
+			}
 
 	//==========================================================================
 	void saveProjectToFile(const juce::File& projectFile)
@@ -943,9 +938,6 @@ public:
 									m_waveformDisplaySource.setVerticalZoom(verticalZoom);
 									m_waveformDisplaySource.setAudioBuffer(m_bufferSource);
 
-									// Draw spectrogram
-									m_spectrogramDisplaySource.setAudioBuffer(m_bufferSource);
-
 									// Set filename label
 									m_sourceFileNameLabel.setText(m_fileName, juce::dontSendNotification);
 								}
@@ -1312,15 +1304,15 @@ public:
 		ZeroCrossingOffline::Type detectionType = ZeroCrossingOffline::Type::Amplitude;
 		if (detectionTypeId == static_cast<int>(DetectionType::FFT))
 		{
-			detectionType = ZeroCrossingOffline::Type::DominantFrequency;
+			detectionType = ZeroCrossingOffline::Type::FFT;
 		}
-		else if (detectionTypeId == static_cast<int>(DetectionType::FFTFilter))
+		else if (detectionTypeId == static_cast<int>(DetectionType::AmplitudeAdaptiveFilter))
 		{
-			detectionType = ZeroCrossingOffline::Type::FFTFilter;
+			detectionType = ZeroCrossingOffline::Type::AmplitudeAdaptiveFilter;
 		}
 		const float minimumSamplesBetweenCrossings = (float)m_minimumLengthSlider.getValue();
 		const float minimumLengthMultiplier = (float)m_minimumLengthMultiplierSlider.getValue();
-		const bool isFilterType = detectionTypeId == static_cast<int>(DetectionType::TimeDomainFilter);
+		const bool isFilterType = detectionTypeId == static_cast<int>(DetectionType::AmplitudeFilter);
 		
 			
 		ZeroCrossingOffline zeroCrossing{};
@@ -1362,7 +1354,7 @@ public:
 		zeroCrossing.process(bufferForProcessing, zeroCrossingIdxs);
 
 		// For FFT + Filter mode, retrieve the filtered buffer from the detector
-		if (detectionTypeId == static_cast<int>(DetectionType::FFTFilter))
+		if (detectionTypeId == static_cast<int>(DetectionType::AmplitudeAdaptiveFilter))
 		{
 			const std::vector<float>& filteredData = zeroCrossing.getLastFilteredBuffer();
 			if (!filteredData.empty())
@@ -1702,7 +1694,7 @@ public:
 		else if (detectionTypeId == 4)
 		{
 			m_thresholdSlider.setVisible(true);
-			m_thresholdLabel.setVisible(false);
+			m_thresholdLabel.setVisible(true);
 			m_minimumLengthSlider.setVisible(false);
 			m_maximumFrequencyLabel.setVisible(false);
 			m_minimumLengthMultiplierSlider.setVisible(true);
@@ -1713,35 +1705,6 @@ public:
 			m_exportMaxRegionOffsetLabel.setVisible(false);
 			m_fftPhaseThresholdSlider.setVisible(false);
 			m_fftPhaseThresholdLabel.setVisible(false);
-		}
-	}
-
-	//==========================================================================
-	void displayModeButtonClicked()
-	{
-		m_displayMode = (DisplayMode)((m_displayMode + 1) % 2);
-
-		// Update spectrogram components with new display mode
-		m_spectrogramDisplaySource.setDisplayMode((SpectrogramDisplayComponent::DisplayMode)m_displayMode);
-		m_spectrogramDisplayOutput.setDisplayMode((SpectrogramDisplayComponent::DisplayMode)m_displayMode);
-
-		switch (m_displayMode)
-		{
-			case DisplayMode::Waveform:
-				m_displayModeButton.setButtonText("Waveform");
-				m_waveformDisplaySource.setVisible(true);
-				m_waveformDisplayOutput.setVisible(true);
-				m_spectrogramDisplaySource.setVisible(false);
-				m_spectrogramDisplayOutput.setVisible(false);
-				break;
-
-			case DisplayMode::DominantFrequency:
-				m_displayModeButton.setButtonText("Frequency");
-				m_waveformDisplaySource.setVisible(false);
-				m_waveformDisplayOutput.setVisible(false);
-				m_spectrogramDisplaySource.setVisible(true);
-				m_spectrogramDisplayOutput.setVisible(true);
-				break;
 		}
 	}
 
@@ -1779,7 +1742,6 @@ public:
 
 	juce::TextButton m_playButton;
 	juce::TextButton m_sourceButton;
-	juce::TextButton m_displayModeButton;
 
 	juce::ToggleButton m_applyDCFilterCheckbox;
 
@@ -1835,7 +1797,6 @@ public:
 	zazzGUI::GroupLabel m_regionGroupLableComponent{ "Regions Detection" };
 	zazzGUI::GroupLabel m_exportGroupLableComponent{ "Output" };
 	zazzGUI::GroupLabel m_playbackGroupLableComponent{ "Playback" };
-	zazzGUI::GroupLabel m_displayGroupLableComponent{ "Display" };
 
 	// Combo boxes
 	juce::ComboBox m_detectionTypeComboBox;
@@ -1854,10 +1815,6 @@ public:
 	WaveformEditorComponent m_waveformDisplaySource;
 	WaveformEditorComponent m_waveformDisplayOutput;
 
-	SpectrogramDisplayComponent m_spectrogramDisplaySource;
-	SpectrogramDisplayComponent m_spectrogramDisplayOutput;
-
-	// Spectrum matching
 	std::unique_ptr<SpectrumMatchRegionProcessor> m_spectrumRegionProcessor;
 	bool m_useSpectrumMatching = false;
 	bool m_useMedianSpectrum = false;

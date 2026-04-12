@@ -1,8 +1,7 @@
 #include "MainComponent.h"
 
 //==============================================================================
-MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output"),
-								  m_spectrogramDisplaySource("Source"), m_spectrogramDisplayOutput("Output")
+MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDisplayOutput("Output")
 {
 	m_formatManager.registerBasicFormats();
 
@@ -13,19 +12,11 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
-	addAndMakeVisible(m_spectrogramDisplaySource);
-	addAndMakeVisible(m_spectrogramDisplayOutput);
-
-	// Initially hide spectrograms, show waveforms
-	m_spectrogramDisplaySource.setVisible(false);
-	m_spectrogramDisplayOutput.setVisible(false);
-
 	addAndMakeVisible(m_fileGroupLableComponent);
 	addAndMakeVisible(m_sourceGroupLableComponent);
 	addAndMakeVisible(m_regionGroupLableComponent);
 	addAndMakeVisible(m_exportGroupLableComponent);
 	addAndMakeVisible(m_playbackGroupLableComponent);
-	addAndMakeVisible(m_displayGroupLableComponent);
 
 	// Info labels setup
 	addAndMakeVisible(m_sourceFileNameLabel);
@@ -92,10 +83,6 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	m_sourceButton.setButtonText("Source");
 	m_sourceButton.onClick = [this] { sourceButtonClicked(); };
 
-	addAndMakeVisible(&m_displayModeButton);
-	m_displayModeButton.setButtonText("Waveform");
-	m_displayModeButton.onClick = [this] { displayModeButtonClicked(); };
-
 	addAndMakeVisible(&m_applyDCFilterCheckbox);
 	m_applyDCFilterCheckbox.setButtonText("DC Filter");
 	m_applyDCFilterCheckbox.setToggleState(m_applyDCFilter, juce::dontSendNotification);
@@ -104,10 +91,10 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	};
 
 	// Combo boxes
-	m_detectionTypeComboBox.addItem("Time Domain", 1);
-	m_detectionTypeComboBox.addItem("Time Domain + Filter", 2);
+	m_detectionTypeComboBox.addItem("Amplitude", 1);
+	m_detectionTypeComboBox.addItem("Amplitude + Filter", 2);
 	m_detectionTypeComboBox.addItem("FFT", 3);
-	m_detectionTypeComboBox.addItem("FFT + Filter", 4);
+	m_detectionTypeComboBox.addItem("Amplitude + AdaptiveFilter", 4);
 	m_detectionTypeComboBox.setSelectedId(1);
 	m_detectionTypeComboBox.onChange = [this] {
 		updateDetectionModeUI(m_detectionTypeComboBox.getSelectedId());
@@ -160,7 +147,7 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	addAndMakeVisible(m_spectrumSourceComboBox);
 
 	addAndMakeVisible(m_spectrumSourceLabel);
-	m_spectrumSourceLabel.setText("FFT Source", juce::dontSendNotification);
+	m_spectrumSourceLabel.setText("Spectrum Source", juce::dontSendNotification);
 	m_spectrumSourceLabel.attachToComponent(&m_spectrumSourceComboBox, true);
 
 	// Initially hide crossfade slider for Flat mode
@@ -203,49 +190,49 @@ void MainComponent::initializeSliderConfigs()
 			&m_thresholdLabel,
 			"threshold",
 			-60.0, 0.0, -60.0, 1.0,
-			"Threshold"),
+			"Amplitude Threshold"),
 
 		SliderConfig(
 			&m_minimumLengthSlider,
 			&m_maximumFrequencyLabel,
 			"minimumLength",
 			10.0, 5000.0, 100.0, 1.0,
-			"Min Length"),
+			"Minimum Length"),
 
 		SliderConfig(
 			&m_minimumLengthMultiplierSlider,
 			&m_minimumLengthMultiplierLabel,
 			"minimumLengthMultiplier",
 			0.5, 2.0, 0.8, 0.1,
-			"Length Mult"),
+			"Minimum Length Mult."),
 
 		SliderConfig(
 			&m_SpectrumDifferenceSlider,
 			&m_SpectrumDifferenceLabel,
 			"spectrumDifference",
 			0.0, 100.0, 100.0, 1.0,
-			"Spectrum"),
+			"Spectrum Difference"),
 
 		SliderConfig(
 			&m_fftPhaseThresholdSlider,
 			&m_fftPhaseThresholdLabel,
 			"fftPhaseThreshold",
-			-180.0, 180.0, 0.0, 1.0,
-			"Phase"),
+			-180.0, 180.0, 98.0, 1.0,
+			"Phase Threshold"),
 
 		SliderConfig(
 			&m_zeroCrossingCountSlider,
 			&m_zeroCrossingCountLabel,
 			"zeroCrossingCount",
 			1.0, 12.0, 1.0, 1.0,
-			"Multiplier"),
+			"Zero Crossing Multiplier"),
 
 		SliderConfig(
 			&m_lowPassFrequencySlider,
 			&m_lowPassFrequencyLabel,
 			"lowPassFrequency",
 			10.0, 2000.0, 500.0, 1.0,
-			"Low Pass"),
+			"Low Pass Filter"),
 
 		// Generation sliders
 		SliderConfig(
@@ -253,14 +240,14 @@ void MainComponent::initializeSliderConfigs()
 			&m_crossfadeLengthLabel,
 			"crossfadeLength",
 			0.0, 200.0, 0.0, 1.0,
-			"Crossfade"),
+			"Crossfade Length"),
 
 		SliderConfig(
 			&m_regionLenghtExportSlider,
 			&m_regionLenghtExportLabel,
 			"regionLenghtExport",
 			100.0, 50000.0, 1000.0, 1.0,
-			"Reg Lenght"),
+			"Region Lenght"),
 
 		// Export range sliders (ranges are set dynamically)
 		SliderConfig(
@@ -268,28 +255,28 @@ void MainComponent::initializeSliderConfigs()
 			&m_exportRegionLeftLabel,
 			"exportRegionLeft",
 			0.0, 1.0, 0.0, 1.0,
-			"Reg Left"),
+			"Left Region"),
 
 		SliderConfig(
 			&m_exportRegionRightSlider,
 			&m_exportRegionRightLabel,
 			"exportRegionRight",
 			0.0, 1.0, 0.0, 1.0,
-			"Reg Right"),
+			"Right Region"),
 
 		SliderConfig(
 			&m_exportMaxRegionOffsetSlider,
 			&m_exportMaxRegionOffsetLabel,
 			"exportMaxRegionOffset",
 			0.0, 5000.0, 1000.0, 1.0,
-			"Max Offset"),
+			"Maximum Region Offset"),
 
 		SliderConfig(
 			&m_exportRegionCountSlider,
 			&m_exportRegionCountLabel,
 			"exportRegionCount",
 			1.0, 256.0, 64.0, 1.0,
-			"Reg Count"),
+			"Region Count"),
 
 		// Spectrum matching slider
 		SliderConfig(
@@ -297,7 +284,7 @@ void MainComponent::initializeSliderConfigs()
 			&m_spectrumMatchIntensityLabel,
 			"spectrumMatchIntensity",
 			0.0, 100.0, 0.0, 1.0,
-			"FFT Match",
+			"Spectrum Match",
 			juce::Slider::LinearHorizontal,
 			80, 20, true,
 			[this](double value) { spectrumMatchIntensitySliderChanged(); })
@@ -425,21 +412,20 @@ void MainComponent::resized()
 	m_regionGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_exportGroupLableComponent.setSize(pixelSize15, pixelSize);
 	m_playbackGroupLableComponent.setSize(pixelSize6, pixelSize);
-	m_displayGroupLableComponent.setSize(pixelSize3, pixelSize);
 
 	m_openSourceButton.setSize(pixelSize3, pixelSize);
 	m_sourceFileNameLabel.setSize(pixelSize12, pixelSize);
 
 	m_detectRegionsButton.setSize(pixelSize3, pixelSize);
 	m_detectionTypeComboBox.setSize(pixelSize15, pixelSize);
-	m_thresholdSlider.setSize(pixelSize12, pixelSize);
-	m_minimumLengthSlider.setSize(pixelSize12, pixelSize);
-	m_minimumLengthMultiplierSlider.setSize(pixelSize12, pixelSize);  // NEW: Size for multiplier slider
-	m_lowPassFrequencySlider.setSize(pixelSize12, pixelSize);
-	m_exportMaxRegionOffsetSlider.setSize(pixelSize12, pixelSize);
-	m_SpectrumDifferenceSlider.setSize(pixelSize12, pixelSize);
-	m_fftPhaseThresholdSlider.setSize(pixelSize12, pixelSize);
-	m_zeroCrossingCountSlider.setSize(pixelSize12, pixelSize);
+	m_thresholdSlider.setSize(pixelSize9, pixelSize);
+	m_minimumLengthSlider.setSize(pixelSize9, pixelSize);
+	m_minimumLengthMultiplierSlider.setSize(pixelSize9, pixelSize);  // NEW: Size for multiplier slider
+	m_lowPassFrequencySlider.setSize(pixelSize9, pixelSize);
+	m_exportMaxRegionOffsetSlider.setSize(pixelSize9, pixelSize);
+	m_SpectrumDifferenceSlider.setSize(pixelSize9, pixelSize);
+	m_fftPhaseThresholdSlider.setSize(pixelSize9, pixelSize);
+	m_zeroCrossingCountSlider.setSize(pixelSize9, pixelSize);
 
 	m_regionsCountLabel.setSize(pixelSize6, pixelSize);
 	m_validRegionsCountLabel.setSize(pixelSize6, pixelSize);
@@ -455,25 +441,21 @@ void MainComponent::resized()
 	m_loadProjectButton.setSize(pixelSize3, pixelSize);
 	m_newProjectButton.setSize(pixelSize3, pixelSize);
 
-	m_regionLenghtExportSlider.setSize(pixelSize12, pixelSize);
-	m_exportRegionLeftSlider.setSize(pixelSize12, pixelSize);
-	m_exportRegionRightSlider.setSize(pixelSize12, pixelSize);
-	m_exportRegionCountSlider.setSize(pixelSize12, pixelSize);
-	m_crossfadeLengthSlider.setSize(pixelSize12, pixelSize);
+	m_regionLenghtExportSlider.setSize(pixelSize9, pixelSize);
+	m_exportRegionLeftSlider.setSize(pixelSize9, pixelSize);
+	m_exportRegionRightSlider.setSize(pixelSize9, pixelSize);
+	m_exportRegionCountSlider.setSize(pixelSize9, pixelSize);
+	m_crossfadeLengthSlider.setSize(pixelSize9, pixelSize);
 
-	m_spectrumSourceComboBox.setSize(pixelSize12, pixelSize);
-	m_spectrumMatchIntensitySlider.setSize(pixelSize12, pixelSize);
+	m_spectrumSourceComboBox.setSize(pixelSize9, pixelSize);
+	m_spectrumMatchIntensitySlider.setSize(pixelSize9, pixelSize);
 
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
-	m_displayModeButton.setSize(pixelSize3, pixelSize);
 	m_applyDCFilterCheckbox.setSize(pixelSize3, pixelSize);
 
 	m_waveformDisplaySource.setSize(pizelSize63, pixelSize11);
 	m_waveformDisplayOutput.setSize(pizelSize63, pixelSize11);
-	m_spectrogramDisplaySource.setSize(pizelSize63, pixelSize11);
-	m_spectrogramDisplayOutput.setSize(pizelSize63, pixelSize11);
-
 	// Set position
 	
 	// Main column 1
@@ -493,14 +475,14 @@ void MainComponent::resized()
 	m_regionGroupLableComponent.setTopLeftPosition(column8, row1);
 	m_detectionTypeComboBox.setTopLeftPosition(column8, row2);
 
-	m_minimumLengthSlider.setTopLeftPosition(column9, row3);
-	m_minimumLengthMultiplierSlider.setTopLeftPosition(column9, row3);  // Same position as m_minimumLengthSlider
-	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column9, row4);
-	m_zeroCrossingCountSlider.setTopLeftPosition(column9, row5);
-	m_SpectrumDifferenceSlider.setTopLeftPosition(column9, row6);
-	m_thresholdSlider.setTopLeftPosition(column9, row7);	
-	m_fftPhaseThresholdSlider.setTopLeftPosition(column9, row7);
-	m_lowPassFrequencySlider.setTopLeftPosition(column9, row8);
+	m_minimumLengthSlider.setTopLeftPosition(column10, row3);
+	m_minimumLengthMultiplierSlider.setTopLeftPosition(column10, row3);  // Same position as m_minimumLengthSlider
+	m_exportMaxRegionOffsetSlider.setTopLeftPosition(column10, row4);
+	m_zeroCrossingCountSlider.setTopLeftPosition(column10, row5);
+	m_SpectrumDifferenceSlider.setTopLeftPosition(column10, row6);
+	m_thresholdSlider.setTopLeftPosition(column10, row7);	
+	m_fftPhaseThresholdSlider.setTopLeftPosition(column10, row7);
+	m_lowPassFrequencySlider.setTopLeftPosition(column10, row8);
 	
 	// Info labels
 	m_regionsCountLabel.setTopLeftPosition(column2, row8);
@@ -516,13 +498,13 @@ void MainComponent::resized()
 	m_exportGroupLableComponent.setTopLeftPosition(column14, row1);
 	m_generationTypeComboBox.setTopLeftPosition(column14, row2);
 
-	m_regionLenghtExportSlider.setTopLeftPosition(column15, row3);
-	m_exportRegionLeftSlider.setTopLeftPosition(column15, row4);
-	m_exportRegionRightSlider.setTopLeftPosition(column15, row5);
-	m_exportRegionCountSlider.setTopLeftPosition(column15, row6);
-	m_crossfadeLengthSlider.setTopLeftPosition(column15, row7);
-	m_spectrumSourceComboBox.setTopLeftPosition(column15, row8);
-	m_spectrumMatchIntensitySlider.setTopLeftPosition(column15, row9);
+	m_regionLenghtExportSlider.setTopLeftPosition(column16, row3);
+	m_exportRegionLeftSlider.setTopLeftPosition(column16, row4);
+	m_exportRegionRightSlider.setTopLeftPosition(column16, row5);
+	m_exportRegionCountSlider.setTopLeftPosition(column16, row6);
+	m_crossfadeLengthSlider.setTopLeftPosition(column16, row7);
+	m_spectrumSourceComboBox.setTopLeftPosition(column16, row8);
+	m_spectrumMatchIntensitySlider.setTopLeftPosition(column16, row9);
 
 	m_generateButton.setTopLeftPosition(column15, row11);
 	m_saveButton.setTopLeftPosition(column16, row11);
@@ -534,17 +516,10 @@ void MainComponent::resized()
 	m_playbackGroupLableComponent.setTopLeftPosition(column20, row1);	
 	m_sourceButton.setTopLeftPosition(column20, row2);
 	m_playButton.setTopLeftPosition(column21, row2);
-
-	//Display
-	m_displayGroupLableComponent.setTopLeftPosition(column20, row3);
-	m_displayModeButton.setTopLeftPosition(column20, row4);
 	
 	// Waveform and spectrogram displays (overlapping, visibility controlled by display mode button)
 	m_waveformDisplaySource.setTopLeftPosition(column2, row12);
-	m_waveformDisplayOutput.setTopLeftPosition(column2, row13);
-	m_spectrogramDisplaySource.setTopLeftPosition(column2, row12);
-	m_spectrogramDisplayOutput.setTopLeftPosition(column2, row13);
-}
+	m_waveformDisplayOutput.setTopLeftPosition(column2, row13);}
 
 bool MainComponent::keyPressed(const juce::KeyPress& key)
 {

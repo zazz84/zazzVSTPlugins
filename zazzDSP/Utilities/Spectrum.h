@@ -12,6 +12,41 @@ namespace zazzDSP
 	public:
 		static const int BINS_PER_SECOND = 512;
 
+	private:
+		/// <summary>
+		/// Interpolates phase values between two adjacent bins with proper phase wrapping.
+		/// Phase is interpolated linearly in the shortest direction around the unit circle.
+		/// </summary>
+		/// <param name="phase1">Phase at first bin (radians)</param>
+		/// <param name="phase2">Phase at second bin (radians)</param>
+		/// <param name="t">Interpolation parameter (0 to 1, where 0 = phase1, 1 = phase2)</param>
+		/// <returns>Interpolated phase in range [-π, π]</returns>
+		static float interpolatePhaseValue(float phase1, float phase2, float t)
+		{
+			constexpr float TWO_PI = 2.0f * 3.14159265358979323846f;
+			constexpr float PI = 3.14159265358979323846f;
+
+			float diff = phase2 - phase1;
+
+			// Unwrap to shortest path around the circle
+			if (diff > PI)
+				diff -= TWO_PI;
+			else if (diff < -PI)
+				diff += TWO_PI;
+
+			float result = phase1 + t * diff;
+
+			// Wrap result back to [-π, π]
+			while (result > PI)
+				result -= TWO_PI;
+			while (result < -PI)
+				result += TWO_PI;
+
+			return result;
+		}
+
+	public:
+
 		/// <summary>
 		/// Calculates FFT magnitude data for all time bins using centered windows and real-only FFT.
 		/// Used for detailed frequency analysis including phase extraction.
@@ -25,6 +60,7 @@ namespace zazzDSP
 		/// <param name="outBinFrequencyResolution">Output frequency resolution in Hz per FFT bin</param>
 		/// <param name="outNumTimeBins">Output number of time bins calculated</param>
 		/// <param name="extractPhase">If true, extract phase information</param>
+		/// <param name="binsPerSecond">Time-frequency resolution in bins per second (default 512)</param>
 		static void calculateFFTMagnitudes(
 			const juce::AudioBuffer<float>& buffer,
 			int sampleRate,
@@ -34,7 +70,8 @@ namespace zazzDSP
 			float& outBinFrequencyResolution,
 			int& outNumTimeBins,
 			std::vector<std::vector<float>>* outPhaseData = nullptr,
-			bool extractPhase = false)
+			bool extractPhase = false,
+			int binsPerSecond = BINS_PER_SECOND)
 		{
 			const int FFT_SIZE = 1 << fftOrder;
 			const auto samples = buffer.getNumSamples();
@@ -47,7 +84,7 @@ namespace zazzDSP
 				return;
 			}
 
-			const int NUM_TIME_BINS = calculateNumTimeBins(samples, sampleRate);
+			const int NUM_TIME_BINS = calculateNumTimeBins(samples, sampleRate, binsPerSecond);
 
 			juce::dsp::FFT forwardFFT(fftOrder);
 			juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
@@ -142,10 +179,11 @@ namespace zazzDSP
 
 			for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
 			{
+				const int maxBinSize = (int)magnitudes[timeIdx].size();
 				int maxFftBin = minBin;
 				float maxMagnitude = 0.0f;
 
-				for (int bin = minBin; bin < maxBin && bin < (int)magnitudes[timeIdx].size(); ++bin)
+				for (int bin = minBin; bin < maxBin && bin < maxBinSize; ++bin)
 				{
 					if (magnitudes[timeIdx][bin] > maxMagnitude)
 					{
@@ -154,15 +192,53 @@ namespace zazzDSP
 					}
 				}
 
-				// Convert FFT bin to frequency in Hz
-				outDominantFrequencies[timeIdx] = maxFftBin * binFrequencyResolution;
+				// Interpolate frequency based on surrounding bins using parabolic interpolation
+				float binOffset = 0.0f;
 
-				// Extract phase if provided
+				if (maxFftBin > minBin && maxFftBin < maxBin - 1 && maxFftBin + 1 < maxBinSize)
+				{
+					float leftMag = magnitudes[timeIdx][maxFftBin - 1];
+					float rightMag = magnitudes[timeIdx][maxFftBin + 1];
+					float denominator = leftMag - 2.0f * maxMagnitude + rightMag;
+
+					// Parabolic interpolation: find the bin offset for the true peak
+					if (std::abs(denominator) > 1e-6f)
+					{
+						binOffset = 0.5f * (leftMag - rightMag) / denominator;
+						// Clamp offset to reasonable range to avoid outliers
+						binOffset = std::max(-0.5f, std::min(0.5f, binOffset));
+					}
+				}
+
+				// Convert FFT bin to frequency in Hz with interpolated offset
+				outDominantFrequencies[timeIdx] = (maxFftBin + binOffset) * binFrequencyResolution;
+
+				// Extract and interpolate phase if provided
 				if (inPhaseData != nullptr && outPhaseAtDominant != nullptr && timeIdx < (int)inPhaseData->size())
 				{
-					if (maxFftBin < (int)(*inPhaseData)[timeIdx].size())
+					const int phaseSize = (int)(*inPhaseData)[timeIdx].size();
+					if (maxFftBin < phaseSize)
 					{
-						(*outPhaseAtDominant)[timeIdx] = (*inPhaseData)[timeIdx][maxFftBin];
+						float interpolatedPhase = (*inPhaseData)[timeIdx][maxFftBin];
+
+						// If we have a sub-bin offset and neighboring bins, interpolate the phase
+						if (std::abs(binOffset) > 1e-6f)
+						{
+							if (binOffset > 0.0f && maxFftBin + 1 < phaseSize)
+							{
+								// Interpolate toward right neighbor
+								float rightPhase = (*inPhaseData)[timeIdx][maxFftBin + 1];
+								interpolatedPhase = interpolatePhaseValue(interpolatedPhase, rightPhase, binOffset);
+							}
+							else if (binOffset < 0.0f && maxFftBin > 0)
+							{
+								// Interpolate toward left neighbor
+								float leftPhase = (*inPhaseData)[timeIdx][maxFftBin - 1];
+								interpolatedPhase = interpolatePhaseValue(leftPhase, interpolatedPhase, -binOffset);
+							}
+						}
+
+						(*outPhaseAtDominant)[timeIdx] = interpolatedPhase;
 					}
 				}
 			}
@@ -172,13 +248,21 @@ namespace zazzDSP
 		/// Convenience method that combines FFT calculation and dominant frequency detection.
 		/// Performs FFT on centered windows and detects dominant frequencies in specified range.
 		/// </summary>
+		/// <param name="buffer">Input audio buffer (single channel)</param>
+		/// <param name="sampleRate">Sample rate of the audio buffer in Hz</param>
+		/// <param name="dominantFrequencies">Output vector of dominant frequencies in Hz</param>
+		/// <param name="timeBinCenterSamples">Output vector of center sample indices for each time bin</param>
+		/// <param name="outPhaseTrajectory">Output vector of phase values at dominant frequencies (optional)</param>
+		/// <param name="usePhaseExtraction">If true, extract and return phase information</param>
+		/// <param name="binsPerSecond">Time-frequency resolution in bins per second (default 512)</param>
 		static void calculateDominantFrequencies(
 			const juce::AudioBuffer<float>& buffer,
 			int sampleRate,
 			std::vector<float>& dominantFrequencies,
 			std::vector<int>& timeBinCenterSamples,
 			std::vector<float>* outPhaseTrajectory = nullptr,
-			bool usePhaseExtraction = false)
+			bool usePhaseExtraction = false,
+			int binsPerSecond = BINS_PER_SECOND)
 		{
 			constexpr int FFT_ORDER = 12;
 			constexpr int MIN_BIN = 1;
@@ -199,7 +283,8 @@ namespace zazzDSP
 				binFrequencyResolution,
 				numTimeBins,
 				usePhaseExtraction ? &phases : nullptr,
-				usePhaseExtraction);
+				usePhaseExtraction,
+				binsPerSecond);
 
 			// Find maximum bin index from frequency
 			const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
@@ -217,15 +302,15 @@ namespace zazzDSP
 
 		/// <summary>
 		/// Calculates the number of time bins for FFT processing based on sample count and sample rate.
-		/// Uses constant time resolution (BINS_PER_SECOND) to determine number of analysis frames.
+		/// Uses constant time resolution (binsPerSecond) to determine number of analysis frames.
 		/// </summary>
 		/// <param name="numSamples">Total number of audio samples</param>
 		/// <param name="sampleRate">Sample rate in Hz</param>
 		/// <param name="binsPerSecond">Desired time-frequency resolution in bins per second (default 512)</param>
 		/// <returns>Number of time bins for FFT analysis (minimum 1)</returns>
-		static int calculateNumTimeBins(int numSamples, int sampleRate)
+		static int calculateNumTimeBins(int numSamples, int sampleRate, int binsPerSecond = BINS_PER_SECOND)
 		{
-			return std::max(1, (numSamples * BINS_PER_SECOND) / sampleRate);
+			return std::max(1, binsPerSecond * (numSamples / sampleRate));
 		}
 
 		/// <summary>

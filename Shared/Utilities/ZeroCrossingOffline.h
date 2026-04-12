@@ -39,8 +39,8 @@ public:
 	enum Type
 	{
 		Amplitude,
-		DominantFrequency,
-		FFTFilter
+		FFT,
+		AmplitudeAdaptiveFilter
 	};
 
 	void init(const int sampleRate)
@@ -91,20 +91,20 @@ public:
 		// Fallback to time-domain detection for small buffers or non-FFT types to avoid overhead
 		if (m_type == Type::Amplitude || samples < FFT_SIZE)
 		{
-			processTimeDomainDetection(sumBuffer, regions);
+			processAmplitudeDetection(sumBuffer, regions);
 		}
-		else if (m_type == Type::DominantFrequency)
+		else if (m_type == Type::FFT)
 		{
-			processDominantFrequencyDetection(sumBuffer, regions);
+			processFFTDetection(sumBuffer, regions);
 		}
-		else if (m_type == Type::FFTFilter)
+		else if (m_type == Type::AmplitudeAdaptiveFilter)
 		{
-			processFFTFilterDetection(sumBuffer, regions);
+			processAmplitudeAdaptiveDetection(sumBuffer, regions);
 		}
 	}
 
 private:
-	void processTimeDomainDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
+	void processAmplitudeDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
 	{
 		const auto samples = buffer.getNumSamples();
 		auto* pBuffer = buffer.getReadPointer(0);
@@ -156,19 +156,21 @@ private:
 	}
 
 
-	void processDominantFrequencyDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
+	void processFFTDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
 	{
 		const auto samples = buffer.getNumSamples();
+		//const auto timeBinsPerSecond = 4096;
+		const auto timeBinsPerSecond = m_sampleRate / 10;
 
 		// Calculate dominant frequencies and phase trajectory using extended method
 		std::vector<float> phaseTrajectory;
-		std::vector<int> frameStartSamples;
+		std::vector<int> frameCenterSamples;
 		std::vector<float> dominantFrequencies;
-		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameStartSamples, &phaseTrajectory, true);
+		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, &phaseTrajectory, true, timeBinsPerSecond);
 
 		// Calculate block size for phase interpolation
-		const int NUM_TIME_BINS = zazzDSP::Spectrum::calculateNumTimeBins(samples, m_sampleRate);
-		const float blockSize = (float)samples / NUM_TIME_BINS;
+		const int m_timeBinsCount = zazzDSP::Spectrum::calculateNumTimeBins(samples, m_sampleRate, timeBinsPerSecond);
+		const float blockSize = (float)samples / (float)m_timeBinsCount;
 
 		if (phaseTrajectory.empty() || phaseTrajectory.size() == 0)
 		{
@@ -177,22 +179,81 @@ private:
 		}
 
 		// Detect upward zero crossings using interpolated phase per sample
-		regions.push_back(0);
-
 		int sinceLast = 0;
 		const int SINCE_LAST_MIN = (int)m_minimumSamplesBetweenCrossings;
-		const float PI = 3.14159265359f;
+		constexpr float PI = 3.14159265359f;
 
-		// Helper lambda to wrap phase to [-π, π]
-		auto wrapPhase = [PI](float phase) -> float {
-			while (phase > PI)
-				phase -= 2.0f * PI;
-			while (phase < -PI)
-				phase += 2.0f * PI;
-			return phase;
+		// Helper function to interpolate between two phase values with proper wrapping
+		auto interpolateBetweenPhases = [PI](float phase1, float phase2, float t) -> float {
+			// Calculate shortest angular distance
+			float phaseDiff = phase2 - phase1;
+			if (phaseDiff > PI)
+				phaseDiff -= 2.0f * PI;
+			else if (phaseDiff < -PI)
+				phaseDiff += 2.0f * PI;
+
+			// Interpolate along shortest path
+			float result = phase1 + t * phaseDiff;
+
+			// Wrap result back to [-π, π]
+			if (result > PI)
+				result -= 2.0f * PI;
+			else if (result < -PI)
+				result += 2.0f * PI;
+
+			return result;
 		};
 
-		float lastPhase = wrapPhase(phaseTrajectory[0]);
+		// Linear interpolation with proper phase wrapping handling
+		// Determine which frame pair to interpolate between based on sample position
+		auto interpolatePhaseLinear = [&](int frameIdx, float samplePos) -> float {
+			if (frameIdx >= (int)phaseTrajectory.size())
+				return phaseTrajectory.back();
+
+			float currentFrameCenter = frameCenterSamples[frameIdx];
+			float currentPhase = phaseTrajectory[frameIdx];
+
+			// Determine if we interpolate with previous or next frame
+			int prevIdx = frameIdx - 1;
+			int nextIdx = frameIdx + 1;
+			bool hasPrev = (prevIdx >= 0);
+			bool hasNext = (nextIdx < (int)phaseTrajectory.size());
+
+			// Sample is before current frame center - interpolate with previous frame
+			if (samplePos < currentFrameCenter && hasPrev)
+			{
+				float prevFrameCenter = frameCenterSamples[prevIdx];
+				float prevPhase = phaseTrajectory[prevIdx];
+				float frameDuration = currentFrameCenter - prevFrameCenter;
+
+				if (frameDuration > 0.0f)
+				{
+					float t = (samplePos - prevFrameCenter) / frameDuration;
+					t = std::max(0.0f, std::min(1.0f, t));
+					return interpolateBetweenPhases(prevPhase, currentPhase, t);
+				}
+			}
+			// Sample is after current frame center - interpolate with next frame
+			else if (samplePos > currentFrameCenter && hasNext)
+			{
+				float nextFrameCenter = frameCenterSamples[nextIdx];
+				float nextPhase = phaseTrajectory[nextIdx];
+				float frameDuration = nextFrameCenter - currentFrameCenter;
+
+				if (frameDuration > 0.0f)
+				{
+					float t = (samplePos - currentFrameCenter) / frameDuration;
+					t = std::max(0.0f, std::min(1.0f, t));
+					return interpolateBetweenPhases(currentPhase, nextPhase, t);
+				}
+			}
+
+			// Default: return current frame's phase
+			// sample = sampleCenter of current frame
+			return currentPhase;
+		};
+
+		float lastPhase = phaseTrajectory[0];  // Already in [-π, π] range
 
 		for (int sample = 1; sample < samples; ++sample)
 		{
@@ -201,66 +262,51 @@ private:
 			int frameIdx = (int)sampleBlockPosition;
 			frameIdx = std::max(0, std::min(frameIdx, (int)phaseTrajectory.size() - 1));
 
-			// Interpolate phase between frames
-			float currentPhase = phaseTrajectory[frameIdx];
-
-			if (frameIdx + 1 < (int)phaseTrajectory.size())
-			{
-				// Linear interpolation between current and next frame
-				float currentFrameCenter = frameStartSamples[frameIdx];
-				float nextFrameCenter = frameStartSamples[frameIdx + 1];
-				float frameDuration = nextFrameCenter - currentFrameCenter;
-
-				if (frameDuration > 0.0f)
-				{
-					float samplePositionInFrame = (float)(sample - currentFrameCenter) / frameDuration;
-					samplePositionInFrame = std::max(0.0f, std::min(1.0f, samplePositionInFrame));
-
-					float nextPhase = phaseTrajectory[frameIdx + 1];
-
-					// Interpolate accounting for phase wrapping
-					float phaseDiff = nextPhase - currentPhase;
-					if (phaseDiff > PI)
-						phaseDiff -= 2.0f * PI;
-					else if (phaseDiff < -PI)
-						phaseDiff += 2.0f * PI;
-
-					currentPhase = currentPhase + samplePositionInFrame * phaseDiff;
-				}
-			}
-
-			// Wrap phase to [-π, π]
-			currentPhase = wrapPhase(currentPhase);
+			// Choose interpolation method based on frame position
+			float currentPhase = interpolatePhaseLinear(frameIdx, sample);
 
 			// Detect upward zero crossing: phase crosses threshold from below to above
-			if (lastPhase < m_fftPhaseThresholdRadians && currentPhase >= m_fftPhaseThresholdRadians && sinceLast > SINCE_LAST_MIN)
+			// No wrapping needed - phase is already in [-π, π] range
+			if (fabsf(PI - fabsf(m_fftPhaseThresholdRadians)) < 0.1f)
 			{
-				regions.push_back(sample);
-				sinceLast = 0;
+				if (lastPhase > currentPhase  && sinceLast > SINCE_LAST_MIN)
+				{
+					regions.push_back(sample);
+					sinceLast = 0;
+				}
+				else
+				{
+					sinceLast++;
+				}
 			}
 			else
 			{
-				sinceLast++;
+				if (lastPhase < m_fftPhaseThresholdRadians && currentPhase >= m_fftPhaseThresholdRadians && sinceLast > SINCE_LAST_MIN)
+				{
+					regions.push_back(sample);
+					sinceLast = 0;
+				}
+				else
+				{
+					sinceLast++;
+				}
 			}
-
+			
 			lastPhase = currentPhase;
 		}
 
-		// Ensure we have at least beginning marker
+		// Ensure we have at least one marker - use first detected crossing or sample 0 as fallback
 		if (regions.empty())
 		{
 			regions.push_back(0);
 		}
 	}
 
-	void processFFTFilterDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
+	void processAmplitudeAdaptiveDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
 	{
 		const auto samples = buffer.getNumSamples();
 		auto* pBuffer = buffer.getReadPointer(0);
 
-		// FFT setup (match SpectrogramDisplayComponent)
-		constexpr int FFT_ORDER = 12;
-		constexpr int FFT_SIZE = 1 << FFT_ORDER;
 		constexpr int BINS_PER_SECOND = 512;
 
 		const int NUM_TIME_BINS = std::max(1, (samples * BINS_PER_SECOND) / m_sampleRate);
