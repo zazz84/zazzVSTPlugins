@@ -22,8 +22,10 @@ END_JUCE_MODULE_DECLARATION
 #include "classes/GroupLabel.h"
 #include "classes/PluginName.h"
 #include "classes/RotarySlider.h"
+#include "classes/SpectrogramDisplay.h"
 #include "classes/TextButton.h"
 #include "classes/TextRotarySlide.h"
+#include "classes/WaveformDisplay.h"
 
 namespace zazzGUI
 {

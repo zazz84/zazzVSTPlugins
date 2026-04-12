@@ -217,7 +217,7 @@ void MainComponent::initializeSliderConfigs()
 			&m_fftPhaseThresholdSlider,
 			&m_fftPhaseThresholdLabel,
 			"fftPhaseThreshold",
-			-180.0, 180.0, 98.0, 1.0,
+			-180.0, 180.0, 90.0, 1.0,
 			"Phase Threshold"),
 
 		SliderConfig(

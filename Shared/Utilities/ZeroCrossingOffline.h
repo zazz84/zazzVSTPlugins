@@ -159,18 +159,19 @@ private:
 		}
 	}
 
-
 	void processFFTDetection(const juce::AudioBuffer<float>& buffer, std::vector<int>& regions)
 	{
 		const auto samples = buffer.getNumSamples();
 		const auto timeBinsPerSecond = m_sampleRate / 10;
-		constexpr auto FFT_ORDER = 12;
+		constexpr auto FFT_ORDER = 8;
 
 		// Calculate dominant frequencies and phase trajectory using extended method
 		std::vector<float> phaseTrajectory;
 		std::vector<int> frameCenterSamples;
 		std::vector<float> dominantFrequencies;
-		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, &phaseTrajectory, true, timeBinsPerSecond, FFT_ORDER);
+		
+		//zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, &phaseTrajectory, true, timeBinsPerSecond, FFT_ORDER);
+		zazzDSP::Spectrum::calculateDominantFrequenciesWithIQInterpolation(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, &phaseTrajectory, timeBinsPerSecond, FFT_ORDER);
 
 		if (phaseTrajectory.empty() || phaseTrajectory.size() == 0)
 		{

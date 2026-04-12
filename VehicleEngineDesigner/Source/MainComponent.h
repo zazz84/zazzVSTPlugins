@@ -8,9 +8,9 @@
 #include <algorithm>
 
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
-#include "../../../zazzVSTPlugins/Shared/GUI/WaveformEditorComponent.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
+#include "WaveformEditorComponent.h"
 #include "SpectrumMatchRegionProcessor.h"
 #include "SliderConfig.h"
 #include "ZeroPhaseFilter.h"

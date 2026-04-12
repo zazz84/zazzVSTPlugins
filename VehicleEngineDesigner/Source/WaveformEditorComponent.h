@@ -18,12 +18,7 @@
 #pragma once
 
 #include <vector>
-
 #include <JuceHeader.h>
-
-#include "../../../zazzVSTPlugins/Shared/GUI/GroupLabelComponent.h"
-#include "WaveformDisplayComponent.h"
-#include "SpectrogramDisplayComponent.h"
 
 struct Region
 {
@@ -568,15 +563,15 @@ public:
 	}
 
 private:
-	WaveformDisplayComponent m_waveformDisplayComponent;
-	WaveformDisplayComponent m_waveformFilteredComponent;
-	WaveformDisplayComponent m_phaseDisplayComponent;
-	SpectrogramDisplayComponent m_spectrogramComponent;
+	zazzGUI::WaveformDisplay m_waveformDisplayComponent;
+	zazzGUI::WaveformDisplay m_waveformFilteredComponent;
+	zazzGUI::WaveformDisplay m_phaseDisplayComponent;
+	zazzGUI::SpectrogramDisplay m_spectrogramComponent;
 
 	std::vector<Region> m_regions;
 
-	GroupLabelComponent m_nameGroupComponent;
-	GroupLabelComponent m_zoomGroupComponent{ "Zoom" };
+	zazzGUI::GroupLabel m_nameGroupComponent;
+	zazzGUI::GroupLabel m_zoomGroupComponent{ "Zoom" };
 	juce::Label m_zoomRegionLeftLabel;
 	juce::Label m_zoomRegionRightLabel;
 	juce::TextButton m_scrollLeftButton;

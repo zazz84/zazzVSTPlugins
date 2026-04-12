@@ -5,10 +5,10 @@
               jucerFormatVersion="1" companyName="zazz" version="0.0.5">
   <MAINGROUP id="mkvuHv" name="VehicleEngineDesigner">
     <GROUP id="{F2D151BB-A00D-9D60-6DFB-DB3C87000671}" name="Source">
+      <FILE id="EKxrWT" name="WaveformEditorComponent.h" compile="0" resource="0"
+            file="Source/WaveformEditorComponent.h"/>
       <FILE id="x3WxCv" name="SpectrumMatchRegionProcessor.h" compile="0"
             resource="0" file="Source/SpectrumMatchRegionProcessor.h"/>
-      <FILE id="R9V7gt" name="SpectrogramDisplayComponent.h" compile="0"
-            resource="0" file="../Shared/GUI/SpectrogramDisplayComponent.h"/>
       <FILE id="s4ouKo" name="SliderConfig.h" compile="0" resource="0" file="Source/SliderConfig.h"/>
       <FILE id="lOSKRu" name="RandomNoRepeat.h" compile="0" resource="0"
             file="../Shared/Utilities/RandomNoRepeat.h"/>
@@ -16,8 +16,6 @@
             file="../Shared/Utilities/ZeroCrossingOffline.h"/>
       <FILE id="A5jU3x" name="ZeroPhaseFilter.h" compile="0" resource="0"
             file="Source/ZeroPhaseFilter.h"/>
-      <FILE id="XPNdJ4" name="WaveformDisplayComponent.h" compile="0" resource="0"
-            file="../Shared/GUI/WaveformDisplayComponent.h"/>
       <FILE id="Ke1H5j" name="BiquadFilters.h" compile="0" resource="0" file="../Shared/Filters/BiquadFilters.h"/>
       <FILE id="uCKt05" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="KUOACD" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
