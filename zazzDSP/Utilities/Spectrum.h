@@ -13,6 +13,13 @@ namespace zazzDSP
 		static const int BINS_PER_SECOND = 512;
 
 	private:
+		// Mathematical constants
+		static constexpr float PI = 3.14159265358979323846f;
+		static constexpr float TWO_PI = 2.0f * PI;
+
+		// Frequency analysis constants
+		static constexpr int MIN_BIN = 1;
+		static constexpr float MAX_FREQUENCY = 400.0f;
 		/// <summary>
 		/// Wraps phase to [-π, π] range.
 		/// </summary>
@@ -20,9 +27,6 @@ namespace zazzDSP
 		/// <returns>Wrapped phase in range [-π, π]</returns>
 		static float wrapPhase(float phase)
 		{
-			constexpr float TWO_PI = 2.0f * 3.14159265358979323846f;
-			constexpr float PI = 3.14159265358979323846f;
-
 			while (phase > PI)
 				phase -= TWO_PI;
 			while (phase < -PI)
@@ -39,9 +43,6 @@ namespace zazzDSP
 		/// <returns>Unwrapped difference that represents shortest path</returns>
 		static float unwrapPhaseDifference(float phase1, float phase2)
 		{
-			constexpr float TWO_PI = 2.0f * 3.14159265358979323846f;
-			constexpr float PI = 3.14159265358979323846f;
-
 			float diff = phase2 - phase1;
 
 			if (diff > PI)
@@ -448,9 +449,6 @@ namespace zazzDSP
 			int fftOrder = 12,
 			int phaseWindowSize = 0)
 		{
-			constexpr int MIN_BIN = 1;
-			constexpr float MAX_FREQUENCY = 400.0f;
-
 			std::vector<std::vector<float>> magnitudes;
 			std::vector<std::vector<float>> phases;
 			float binFrequencyResolution = 0.0f;
@@ -500,508 +498,129 @@ namespace zazzDSP
 		}
 
 		/// <summary>
-		/// Applies median filter to smooth dominant frequencies to avoid rapid jumps.
-		/// Overload for frequency values (Hz).
+		/// Enhanced version that calculates dominant frequencies with accurate I/Q-based phase interpolation.
+		/// Performs FFT on centered windows, extracts real/imaginary components, and interpolates them
+		/// for sub-bin accurate phase calculation at dominant frequencies.
+		/// 
+		/// This method provides superior phase accuracy compared to direct phase interpolation because:
+		/// - Interpolates real and imaginary components separately (linear interpolation is well-defined)
+		/// - Calculates phase from interpolated I/Q values using atan2(Q, R)
+		/// - Avoids phase wrapping issues that occur when interpolating phase directly
+		/// - Optionally averages phase from multiple bins around the dominant for noise reduction
 		/// </summary>
-		/// <param name="inDominantFrequencies">Input vector of dominant frequencies in Hz</param>
-		/// <param name="outSmoothedFrequencies">Output vector of smoothed frequencies in Hz</param>
-		/// <param name="smoothingWindow">Window size for median filter (default 7)</param>
-		static void smoothDominantFrequencies(
-			const std::vector<float>& inDominantFrequencies,
-			std::vector<float>& outSmoothedFrequencies,
-			int smoothingWindow = 7)
+		/// <param name="buffer">Input audio buffer (single channel)</param>
+		/// <param name="sampleRate">Sample rate of the audio buffer in Hz</param>
+		/// <param name="dominantFrequencies">Output vector of dominant frequencies in Hz</param>
+		/// <param name="timeBinCenterSamples">Output vector of center sample indices for each time bin</param>
+		/// <param name="outPhaseTrajectory">Output vector of phase values at dominant frequencies (optional, calculated from interpolated I/Q)</param>
+		/// <param name="binsPerSecond">Time-frequency resolution in bins per second (default 512)</param>
+		/// <param name="fftOrder">FFT order (FFT_SIZE = 2^fftOrder). Default is 12 (4096 samples)</param>
+		/// <param name="phaseWindowSize">Window size for phase averaging around dominant bin (0=single bin, 2=±2 bins for 5-bin average, etc.)</param>
+		static void calculateDominantFrequenciesWithIQInterpolation(
+			const juce::AudioBuffer<float>& buffer,
+			int sampleRate,
+			std::vector<float>& dominantFrequencies,
+			std::vector<int>& timeBinCenterSamples,
+			std::vector<float>* outPhaseTrajectory = nullptr,
+			int binsPerSecond = BINS_PER_SECOND,
+			int fftOrder = 12,
+			int phaseWindowSize = 3)
 		{
-			if (inDominantFrequencies.empty())
+			constexpr int MIN_BIN = 1;
+			constexpr float MAX_FREQUENCY = 400.0f;
+
+			const int FFT_SIZE = 1 << fftOrder;
+			const auto samples = buffer.getNumSamples();
+			auto* pBuffer = buffer.getReadPointer(0);
+
+			// Input buffer is too small for FFT
+			if (samples < FFT_SIZE)
 			{
-				outSmoothedFrequencies.clear();
 				return;
 			}
 
-			outSmoothedFrequencies.resize(inDominantFrequencies.size());
+			const int NUM_TIME_BINS = calculateNumTimeBins(samples, sampleRate, binsPerSecond);
 
-			for (int timeIdx = 0; timeIdx < (int)inDominantFrequencies.size(); ++timeIdx)
+			juce::dsp::FFT forwardFFT(fftOrder);
+			juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
+
+			const float binFrequencyResolution = (float)sampleRate / FFT_SIZE;
+			const float blockSize = (float)samples / NUM_TIME_BINS;
+
+			// Prepare output containers
+			std::vector<std::vector<float>> magnitudes(NUM_TIME_BINS, std::vector<float>(FFT_SIZE / 2 + 1, 0.0f));
+			std::vector<std::vector<float>> realData(NUM_TIME_BINS, std::vector<float>(FFT_SIZE / 2 + 1, 0.0f));
+			std::vector<std::vector<float>> imagData(NUM_TIME_BINS, std::vector<float>(FFT_SIZE / 2 + 1, 0.0f));
+
+			timeBinCenterSamples.assign(NUM_TIME_BINS, 0);
+
+			std::vector<float> fftData(2 * FFT_SIZE);
+
+			// Step 1: Perform FFT and extract magnitudes + real/imaginary components
+			for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
 			{
-				std::vector<float> window;
+				float centerSampleFloat = blockSize * (timeIdx + 0.5f);
+				int centerSample = (int)centerSampleFloat;
+				int startSample = centerSample - FFT_SIZE / 2;
 
-				// Gather values within the smoothing window
-				for (int i = -smoothingWindow / 2; i <= smoothingWindow / 2; ++i)
+				if (startSample < 0)
 				{
-					int idx = timeIdx + i;
-					if (idx >= 0 && idx < (int)inDominantFrequencies.size())
-					{
-						window.push_back(inDominantFrequencies[idx]);
-					}
+					startSample = 0;
+				}
+				else if (startSample + FFT_SIZE > samples)
+				{
+					startSample = samples - FFT_SIZE;
 				}
 
-				// Sort and take median
-				std::sort(window.begin(), window.end());
-				outSmoothedFrequencies[timeIdx] = window[window.size() / 2];
+				timeBinCenterSamples[timeIdx] = centerSample;
+
+				// Clear FFT buffer
+				std::fill(fftData.begin(), fftData.end(), 0.0f);
+
+				// Copy audio data
+				std::copy(pBuffer + startSample, pBuffer + startSample + FFT_SIZE, fftData.begin());
+
+				// Apply windowing
+				window.multiplyWithWindowingTable(fftData.data(), FFT_SIZE);
+
+				// Perform FFT
+				forwardFFT.performRealOnlyForwardTransform(fftData.data());
+
+				// Extract magnitudes and real/imaginary components
+				const int numBins = FFT_SIZE / 2 + 1;
+				for (int bin = 0; bin < numBins; ++bin)
+				{
+					const float real = fftData[2 * bin];
+					const float imag = fftData[2 * bin + 1];
+					const float magnitude = std::sqrt(real * real + imag * imag);
+
+					magnitudes[timeIdx][bin] = magnitude;
+					realData[timeIdx][bin] = real;
+					imagData[timeIdx][bin] = imag;
+				}
 			}
+
+			// Step 2: Find dominant frequencies using I/Q interpolation for phase
+			dominantFrequencies.assign(NUM_TIME_BINS, 0.0f);
+			if (outPhaseTrajectory != nullptr)
+			{
+				outPhaseTrajectory->assign(NUM_TIME_BINS, 0.0f);
+			}
+
+			const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
+
+			// Call findDominantFrequenciesFromFFT with I/Q data for superior phase accuracy
+			findDominantFrequenciesFromFFT(
+				magnitudes,
+				binFrequencyResolution,
+				MIN_BIN,
+				maxBin,
+				dominantFrequencies,
+				nullptr,  // Don't use legacy phase interpolation
+				outPhaseTrajectory,
+				&realData,  // Pass real FFT components
+				&imagData,  // Pass imaginary FFT components
+				phaseWindowSize);  // Use window-based phase averaging
 		}
-
-		/// <summary>
-		/// Unwraps phase trajectory to remove 2π wraps and create continuous phase.
-		/// Detects large jumps and corrects them by adding/subtracting 2π.
-		/// This method helps identify and fix phase discontinuities.
-		/// </summary>
-		/// <param name="inPhaseTrajectory">Input phase values in radians (may contain wraps)</param>
-		/// <param name="outUnwrappedPhase">Output continuous (unwrapped) phase trajectory</param>
-		/// <param name="jumpThreshold">Threshold for detecting phase wraps in radians (default π)</param>
-		static void unwrapPhaseTrajectory(
-			const std::vector<float>& inPhaseTrajectory,
-			std::vector<float>& outUnwrappedPhase,
-			float jumpThreshold = 3.14159265358979323846f)
-		{
-			if (inPhaseTrajectory.empty())
-			{
-				outUnwrappedPhase.clear();
-				return;
-			}
-
-			constexpr float TWO_PI = 2.0f * 3.14159265358979323846f;
-			outUnwrappedPhase.resize(inPhaseTrajectory.size());
-
-			// Start with the first phase value
-			outUnwrappedPhase[0] = inPhaseTrajectory[0];
-			float cumulativePhase = inPhaseTrajectory[0];
-
-			// Unwrap subsequent values
-			for (int i = 1; i < (int)inPhaseTrajectory.size(); ++i)
-			{
-				float phaseDiff = inPhaseTrajectory[i] - inPhaseTrajectory[i - 1];
-
-				// Correct for wrapping by detecting large jumps
-				if (phaseDiff > jumpThreshold)
-				{
-					phaseDiff -= TWO_PI;
-				}
-				else if (phaseDiff < -jumpThreshold)
-				{
-					phaseDiff += TWO_PI;
-				}
-
-				cumulativePhase += phaseDiff;
-				outUnwrappedPhase[i] = cumulativePhase;
-			}
-		}
-
-		/// <summary>
-		/// Unwraps and smooths phase trajectory for frame-to-frame analysis.
-		/// Better than simple unwrapping for frequency tracking with bin changes.
-		/// Uses frame duration and actual measured phase to properly track phase continuity.
-		/// </summary>
-		/// <param name="inPhaseTrajectory">Input phase values in radians [timeIdx]</param>
-		/// <param name="inDominantFrequencies">Dominant frequencies in Hz for each frame [timeIdx]</param>
-		/// <param name="frameDurationSeconds">Duration of each analysis frame in seconds</param>
-		/// <param name="outUnwrappedPhase">Output continuous phase trajectory</param>
-		static void unwrapPhaseTrajectoryWithFrequency(
-			const std::vector<float>& inPhaseTrajectory,
-			const std::vector<float>& inDominantFrequencies,
-			float frameDurationSeconds,
-			std::vector<float>& outUnwrappedPhase)
-		{
-			if (inPhaseTrajectory.empty() || inDominantFrequencies.empty() ||
-				inPhaseTrajectory.size() != inDominantFrequencies.size())
-			{
-				outUnwrappedPhase.clear();
-				return;
-			}
-
-			constexpr float TWO_PI = 2.0f * 3.14159265358979323846f;
-			constexpr float PI = 3.14159265358979323846f;
-
-			outUnwrappedPhase.resize(inPhaseTrajectory.size());
-
-			// Start with the first phase value
-			outUnwrappedPhase[0] = inPhaseTrajectory[0];
-			float cumulativePhase = inPhaseTrajectory[0];
-
-			// Unwrap subsequent values using expected phase advance
-			for (int i = 1; i < (int)inPhaseTrajectory.size(); ++i)
-			{
-				// Expected phase advance based on previous frequency
-				float expectedPhaseAdvance = TWO_PI * inDominantFrequencies[i - 1] * frameDurationSeconds;
-
-				// Expected phase at this frame
-				float expectedPhase = cumulativePhase + expectedPhaseAdvance;
-
-				// Measured phase (may be wrapped)
-				float measuredPhase = inPhaseTrajectory[i];
-
-				// Find the unwrapped version of measured phase that's closest to expected
-				float unwrappedMeasured = measuredPhase;
-				float diff = expectedPhase - unwrappedMeasured;
-
-				// Adjust unwrapped measured phase to be closest to expected
-				while (diff > PI)
-				{
-					unwrappedMeasured += TWO_PI;
-					diff -= TWO_PI;
-				}
-				while (diff < -PI)
-				{
-					unwrappedMeasured -= TWO_PI;
-					diff += TWO_PI;
-				}
-
-				cumulativePhase = unwrappedMeasured;
-				outUnwrappedPhase[i] = cumulativePhase;
-			}
-		}
-
-			/// <summary>
-				/// Enhanced version that calculates dominant frequencies with accurate I/Q-based phase interpolation.
-				/// Performs FFT on centered windows, extracts real/imaginary components, and interpolates them
-				/// for sub-bin accurate phase calculation at dominant frequencies.
-				/// 
-				/// This method provides superior phase accuracy compared to direct phase interpolation because:
-				/// - Interpolates real and imaginary components separately (linear interpolation is well-defined)
-				/// - Calculates phase from interpolated I/Q values using atan2(Q, R)
-				/// - Avoids phase wrapping issues that occur when interpolating phase directly
-				/// - Optionally averages phase from multiple bins around the dominant for noise reduction
-				/// </summary>
-				/// <param name="buffer">Input audio buffer (single channel)</param>
-				/// <param name="sampleRate">Sample rate of the audio buffer in Hz</param>
-				/// <param name="dominantFrequencies">Output vector of dominant frequencies in Hz</param>
-				/// <param name="timeBinCenterSamples">Output vector of center sample indices for each time bin</param>
-				/// <param name="outPhaseTrajectory">Output vector of phase values at dominant frequencies (optional, calculated from interpolated I/Q)</param>
-				/// <param name="binsPerSecond">Time-frequency resolution in bins per second (default 512)</param>
-				/// <param name="fftOrder">FFT order (FFT_SIZE = 2^fftOrder). Default is 12 (4096 samples)</param>
-				/// <param name="phaseWindowSize">Window size for phase averaging around dominant bin (0=single bin, 2=±2 bins for 5-bin average, etc.)</param>
-				static void calculateDominantFrequenciesWithIQInterpolation(
-					const juce::AudioBuffer<float>& buffer,
-					int sampleRate,
-					std::vector<float>& dominantFrequencies,
-					std::vector<int>& timeBinCenterSamples,
-					std::vector<float>* outPhaseTrajectory = nullptr,
-					int binsPerSecond = BINS_PER_SECOND,
-					int fftOrder = 12,
-					int phaseWindowSize = 7)
-				{
-					constexpr int MIN_BIN = 1;
-					constexpr float MAX_FREQUENCY = 400.0f;
-
-					const int FFT_SIZE = 1 << fftOrder;
-					const auto samples = buffer.getNumSamples();
-					auto* pBuffer = buffer.getReadPointer(0);
-
-					// Input buffer is too small for FFT
-					if (samples < FFT_SIZE)
-					{
-						return;
-					}
-
-					const int NUM_TIME_BINS = calculateNumTimeBins(samples, sampleRate, binsPerSecond);
-
-					juce::dsp::FFT forwardFFT(fftOrder);
-					juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
-
-					const float binFrequencyResolution = (float)sampleRate / FFT_SIZE;
-					const float blockSize = (float)samples / NUM_TIME_BINS;
-
-					// Prepare output containers
-					std::vector<std::vector<float>> magnitudes(NUM_TIME_BINS, std::vector<float>(FFT_SIZE / 2 + 1, 0.0f));
-					std::vector<std::vector<float>> realData(NUM_TIME_BINS, std::vector<float>(FFT_SIZE / 2 + 1, 0.0f));
-					std::vector<std::vector<float>> imagData(NUM_TIME_BINS, std::vector<float>(FFT_SIZE / 2 + 1, 0.0f));
-
-					timeBinCenterSamples.assign(NUM_TIME_BINS, 0);
-
-					std::vector<float> fftData(2 * FFT_SIZE);
-
-					// Step 1: Perform FFT and extract magnitudes + real/imaginary components
-					for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
-					{
-						float centerSampleFloat = blockSize * (timeIdx + 0.5f);
-						int centerSample = (int)centerSampleFloat;
-						int startSample = centerSample - FFT_SIZE / 2;
-
-						if (startSample < 0)
-						{
-							startSample = 0;
-						}
-						else if (startSample + FFT_SIZE > samples)
-						{
-							startSample = samples - FFT_SIZE;
-						}
-
-						timeBinCenterSamples[timeIdx] = centerSample;
-
-						// Clear FFT buffer
-						std::fill(fftData.begin(), fftData.end(), 0.0f);
-
-						// Copy audio data
-						std::copy(pBuffer + startSample, pBuffer + startSample + FFT_SIZE, fftData.begin());
-
-						// Apply windowing
-						window.multiplyWithWindowingTable(fftData.data(), FFT_SIZE);
-
-						// Perform FFT
-						forwardFFT.performRealOnlyForwardTransform(fftData.data());
-
-						// Extract magnitudes and real/imaginary components
-						const int numBins = FFT_SIZE / 2 + 1;
-						for (int bin = 0; bin < numBins; ++bin)
-						{
-							const float real = fftData[2 * bin];
-							const float imag = fftData[2 * bin + 1];
-							const float magnitude = std::sqrt(real * real + imag * imag);
-
-							magnitudes[timeIdx][bin] = magnitude;
-							realData[timeIdx][bin] = real;
-							imagData[timeIdx][bin] = imag;
-						}
-					}
-
-					// Step 2: Find dominant frequencies using I/Q interpolation for phase
-					dominantFrequencies.assign(NUM_TIME_BINS, 0.0f);
-					if (outPhaseTrajectory != nullptr)
-					{
-						outPhaseTrajectory->assign(NUM_TIME_BINS, 0.0f);
-					}
-
-					const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
-
-					// Call findDominantFrequenciesFromFFT with I/Q data for superior phase accuracy
-					findDominantFrequenciesFromFFT(
-						magnitudes,
-						binFrequencyResolution,
-						MIN_BIN,
-						maxBin,
-						dominantFrequencies,
-						nullptr,  // Don't use legacy phase interpolation
-						outPhaseTrajectory,
-						&realData,  // Pass real FFT components
-						&imagData,  // Pass imaginary FFT components
-						phaseWindowSize);  // Use window-based phase averaging
-				}
-
-				/// <summary>
-				/// Simplified magnitude-only analysis for zero crossing confidence weighting.
-				/// Calculates spectral magnitude at each time bin without any phase extraction.
-				/// Useful for weighting time-domain zero crossings by spectral energy.
-				/// </summary>
-				/// <param name="buffer">Input audio buffer (single channel)</param>
-				/// <param name="sampleRate">Sample rate of the audio buffer in Hz</param>
-				/// <param name="outSpectralMagnitudes">Output vector of spectral magnitudes [timeIdx] (average magnitude across frequency)</param>
-				/// <param name="outTimeBinCenterSamples">Output vector of center sample indices for each time bin (optional)</param>
-				/// <param name="binsPerSecond">Time-frequency resolution in bins per second (default 512)</param>
-				/// <param name="fftOrder">FFT order (default 12)</param>
-				static void calculateSpectralMagnitude(
-					const juce::AudioBuffer<float>& buffer,
-					int sampleRate,
-					std::vector<float>& outSpectralMagnitudes,
-					std::vector<int>* outTimeBinCenterSamples = nullptr,
-					int binsPerSecond = BINS_PER_SECOND,
-					int fftOrder = 12)
-				{
-					const int FFT_SIZE = 1 << fftOrder;
-					const auto samples = buffer.getNumSamples();
-					auto* pBuffer = buffer.getReadPointer(0);
-
-					// Input buffer is too small for FFT
-					if (samples < FFT_SIZE)
-					{
-						outSpectralMagnitudes.clear();
-						return;
-					}
-
-					const int NUM_TIME_BINS = calculateNumTimeBins(samples, sampleRate, binsPerSecond);
-
-					juce::dsp::FFT forwardFFT(fftOrder);
-					juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
-
-					const float blockSize = (float)samples / NUM_TIME_BINS;
-
-					outSpectralMagnitudes.assign(NUM_TIME_BINS, 0.0f);
-					if (outTimeBinCenterSamples != nullptr)
-					{
-						outTimeBinCenterSamples->assign(NUM_TIME_BINS, 0);
-					}
-
-					std::vector<float> fftData(2 * FFT_SIZE);
-
-					for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
-					{
-						float centerSampleFloat = blockSize * (timeIdx + 0.5f);
-						int centerSample = (int)centerSampleFloat;
-						int startSample = centerSample - FFT_SIZE / 2;
-
-						if (startSample < 0)
-						{
-							startSample = 0;
-						}
-						else if (startSample + FFT_SIZE > samples)
-						{
-							startSample = samples - FFT_SIZE;
-						}
-
-						if (outTimeBinCenterSamples != nullptr)
-						{
-							(*outTimeBinCenterSamples)[timeIdx] = centerSample;
-						}
-
-						// Clear FFT buffer
-						std::fill(fftData.begin(), fftData.end(), 0.0f);
-
-						// Copy audio data
-						std::copy(pBuffer + startSample, pBuffer + startSample + FFT_SIZE, fftData.begin());
-
-						// Apply windowing
-						window.multiplyWithWindowingTable(fftData.data(), FFT_SIZE);
-
-						// Perform FFT
-						forwardFFT.performRealOnlyForwardTransform(fftData.data());
-
-						// Calculate average magnitude across all frequency bins
-						float sumMagnitude = 0.0f;
-						const int numBins = FFT_SIZE / 2 + 1;
-						for (int bin = 0; bin < numBins; ++bin)
-						{
-							const float real = fftData[2 * bin];
-							const float img = fftData[2 * bin + 1];
-							const float magnitude = std::sqrt(real * real + img * img);
-							sumMagnitude += magnitude;
-						}
-
-						outSpectralMagnitudes[timeIdx] = sumMagnitude / numBins;
-					}
-				}
-
-				/// <summary>
-				/// Calculates dominant frequency with magnitude only (no phase).
-				/// Faster and simpler than the full version, suitable for zero crossing weighting.
-				/// </summary>
-				/// <param name="buffer">Input audio buffer (single channel)</param>
-				/// <param name="sampleRate">Sample rate of the audio buffer in Hz</param>
-				/// <param name="outDominantFrequencies">Output vector of dominant frequencies in Hz</param>
-				/// <param name="outMagnitudeAtDominant">Output vector of magnitude values at dominant frequencies (optional)</param>
-				/// <param name="outTimeBinCenterSamples">Output vector of center sample indices for each time bin (optional)</param>
-				/// <param name="binsPerSecond">Time-frequency resolution in bins per second (default 512)</param>
-				/// <param name="fftOrder">FFT order (default 12)</param>
-				static void calculateDominantFrequencyMagnitudeOnly(
-					const juce::AudioBuffer<float>& buffer,
-					int sampleRate,
-					std::vector<float>& outDominantFrequencies,
-					std::vector<float>* outMagnitudeAtDominant = nullptr,
-					std::vector<int>* outTimeBinCenterSamples = nullptr,
-					int binsPerSecond = BINS_PER_SECOND,
-					int fftOrder = 12)
-				{
-					constexpr int MIN_BIN = 1;
-					constexpr float MAX_FREQUENCY = 400.0f;
-
-					const int FFT_SIZE = 1 << fftOrder;
-					const auto samples = buffer.getNumSamples();
-					auto* pBuffer = buffer.getReadPointer(0);
-
-					// Input buffer is too small for FFT
-					if (samples < FFT_SIZE)
-					{
-						outDominantFrequencies.clear();
-						return;
-					}
-
-					const int NUM_TIME_BINS = calculateNumTimeBins(samples, sampleRate, binsPerSecond);
-
-					juce::dsp::FFT forwardFFT(fftOrder);
-					juce::dsp::WindowingFunction<float> window(FFT_SIZE, juce::dsp::WindowingFunction<float>::hann);
-
-					const float binFrequencyResolution = (float)sampleRate / FFT_SIZE;
-					const float blockSize = (float)samples / NUM_TIME_BINS;
-
-					outDominantFrequencies.assign(NUM_TIME_BINS, 0.0f);
-					if (outMagnitudeAtDominant != nullptr)
-					{
-						outMagnitudeAtDominant->assign(NUM_TIME_BINS, 0.0f);
-					}
-					if (outTimeBinCenterSamples != nullptr)
-					{
-						outTimeBinCenterSamples->assign(NUM_TIME_BINS, 0);
-					}
-
-					std::vector<float> fftData(2 * FFT_SIZE);
-					const int maxBin = (int)(MAX_FREQUENCY / binFrequencyResolution);
-
-					for (int timeIdx = 0; timeIdx < NUM_TIME_BINS; ++timeIdx)
-					{
-						float centerSampleFloat = blockSize * (timeIdx + 0.5f);
-						int centerSample = (int)centerSampleFloat;
-						int startSample = centerSample - FFT_SIZE / 2;
-
-						if (startSample < 0)
-						{
-							startSample = 0;
-						}
-						else if (startSample + FFT_SIZE > samples)
-						{
-							startSample = samples - FFT_SIZE;
-						}
-
-						if (outTimeBinCenterSamples != nullptr)
-						{
-							(*outTimeBinCenterSamples)[timeIdx] = centerSample;
-						}
-
-						// Clear FFT buffer
-						std::fill(fftData.begin(), fftData.end(), 0.0f);
-
-						// Copy audio data
-						std::copy(pBuffer + startSample, pBuffer + startSample + FFT_SIZE, fftData.begin());
-
-						// Apply windowing
-						window.multiplyWithWindowingTable(fftData.data(), FFT_SIZE);
-
-						// Perform FFT
-						forwardFFT.performRealOnlyForwardTransform(fftData.data());
-
-						// Find dominant bin
-						int maxFftBin = MIN_BIN;
-						float maxMagnitude = 0.0f;
-						const int numBins = FFT_SIZE / 2 + 1;
-
-						for (int bin = MIN_BIN; bin < maxBin && bin < numBins; ++bin)
-						{
-							const float real = fftData[2 * bin];
-							const float img = fftData[2 * bin + 1];
-							const float magnitude = std::sqrt(real * real + img * img);
-
-							if (magnitude > maxMagnitude)
-							{
-								maxMagnitude = magnitude;
-								maxFftBin = bin;
-							}
-						}
-
-						// Parabolic interpolation for frequency
-						float binOffset = 0.0f;
-						if (maxFftBin > MIN_BIN && maxFftBin < maxBin - 1 && maxFftBin + 1 < numBins)
-						{
-							const float real_left = fftData[2 * (maxFftBin - 1)];
-							const float img_left = fftData[2 * (maxFftBin - 1) + 1];
-							float leftMag = std::sqrt(real_left * real_left + img_left * img_left);
-
-							const float real_right = fftData[2 * (maxFftBin + 1)];
-							const float img_right = fftData[2 * (maxFftBin + 1) + 1];
-							float rightMag = std::sqrt(real_right * real_right + img_right * img_right);
-
-							float denominator = leftMag - 2.0f * maxMagnitude + rightMag;
-
-							if (std::abs(denominator) > 1e-6f)
-							{
-								binOffset = 0.5f * (leftMag - rightMag) / denominator;
-								binOffset = std::max(-0.5f, std::min(0.5f, binOffset));
-							}
-						}
-
-						// Convert to frequency
-						outDominantFrequencies[timeIdx] = (maxFftBin + binOffset) * binFrequencyResolution;
-
-						// Store magnitude if requested
-						if (outMagnitudeAtDominant != nullptr)
-						{
-							(*outMagnitudeAtDominant)[timeIdx] = maxMagnitude;
-						}
-					}
-				}
-			};
-		}
+	};
+}

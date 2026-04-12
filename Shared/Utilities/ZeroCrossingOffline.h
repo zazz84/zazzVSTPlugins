@@ -328,13 +328,13 @@ private:
 
 		constexpr int BINS_PER_SECOND = 512;
 
-		const int NUM_TIME_BINS = std::max(1, (samples * BINS_PER_SECOND) / m_sampleRate);
+		const int NUM_TIME_BINS = std::max(1, samples * BINS_PER_SECOND /m_sampleRate);
 		const float blockSize = (float)samples / NUM_TIME_BINS;
 
 		// Step 1: Calculate initial dominant frequencies from original buffer (for filtering)
 		std::vector<float> dominantFrequencies;
 		std::vector<int> frameCenterSamples;
-		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples);
+		zazzDSP::Spectrum::calculateDominantFrequencies(buffer, m_sampleRate, dominantFrequencies, frameCenterSamples, false, BINS_PER_SECOND);
 
 		// Step 2: Initialize filtered buffer with original data
 		m_lastFilteredBuffer.resize(samples);
