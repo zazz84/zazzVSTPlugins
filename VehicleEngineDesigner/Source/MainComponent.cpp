@@ -10,6 +10,10 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 	// Initialize slider configurations
 	initializeSliderConfigs();
 
+	// Synchronize m_useSpectrumMatching with the initial slider value
+	m_spectrumMatchIntensity = m_spectrumMatchIntensitySlider.getValue() / 100.0f;
+	m_useSpectrumMatching = (m_spectrumMatchIntensity > 0.0f);
+
 	addAndMakeVisible(m_waveformDisplaySource);
 	addAndMakeVisible(m_waveformDisplayOutput);
 	addAndMakeVisible(m_fileGroupLableComponent);
@@ -90,6 +94,13 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 		m_applyDCFilter = m_applyDCFilterCheckbox.getToggleState();
 	};
 
+	addAndMakeVisible(&m_clampLengthCheckbox);
+	m_clampLengthCheckbox.setButtonText("Clamp Length");
+	m_clampLengthCheckbox.setToggleState(m_clampLength, juce::dontSendNotification);
+	m_clampLengthCheckbox.onClick = [this] {
+		m_clampLength = m_clampLengthCheckbox.getToggleState();
+	};
+
 	// Combo boxes
 	m_detectionTypeComboBox.addItem("Amplitude", 1);
 	m_detectionTypeComboBox.addItem("Amplitude + Filter", 2);
@@ -114,7 +125,9 @@ MainComponent::MainComponent() : m_waveformDisplaySource("Source"), m_waveformDi
 		m_crossfadeLengthLabel.setVisible(showCrossfade);
 		m_exportRegionCountSlider.setVisible(showCrossfade);
 		m_exportRegionCountLabel.setVisible(showCrossfade);
-
+		m_resampleSlider.setVisible(showCrossfade);
+		m_resampleLabel.setVisible(showCrossfade);
+		m_clampLengthCheckbox.setVisible(showCrossfade);
 	};
 	addAndMakeVisible(m_generationTypeComboBox);
 
@@ -243,6 +256,13 @@ void MainComponent::initializeSliderConfigs()
 			"Crossfade Length"),
 
 		SliderConfig(
+			&m_resampleSlider,
+			&m_resampleLabel,
+			"resample",
+			0.0, 100.0, 100.0, 1.0,
+			"Resample"),
+
+		SliderConfig(
 			&m_regionLenghtExportSlider,
 			&m_regionLenghtExportLabel,
 			"regionLenghtExport",
@@ -286,7 +306,7 @@ void MainComponent::initializeSliderConfigs()
 			0.0, 100.0, 0.0, 1.0,
 			"Spectrum Match",
 			juce::Slider::LinearHorizontal,
-			80, 20, true,
+			60, 20, true,
 			[this](double value) { spectrumMatchIntensitySliderChanged(); })
 	};
 
@@ -442,6 +462,7 @@ void MainComponent::resized()
 	m_newProjectButton.setSize(pixelSize3, pixelSize);
 
 	m_regionLenghtExportSlider.setSize(pixelSize9, pixelSize);
+	m_resampleSlider.setSize(pixelSize6, pixelSize);
 	m_exportRegionLeftSlider.setSize(pixelSize9, pixelSize);
 	m_exportRegionRightSlider.setSize(pixelSize9, pixelSize);
 	m_exportRegionCountSlider.setSize(pixelSize9, pixelSize);
@@ -453,6 +474,7 @@ void MainComponent::resized()
 	m_sourceButton.setSize(pixelSize3, pixelSize);
 	m_playButton.setSize(pixelSize3, pixelSize);
 	m_applyDCFilterCheckbox.setSize(pixelSize3, pixelSize);
+	m_clampLengthCheckbox.setSize(pixelSize3, pixelSize);
 
 	m_waveformDisplaySource.setSize(pizelSize63, pixelSize11);
 	m_waveformDisplayOutput.setSize(pizelSize63, pixelSize11);
@@ -499,6 +521,7 @@ void MainComponent::resized()
 	m_generationTypeComboBox.setTopLeftPosition(column14, row2);
 
 	m_regionLenghtExportSlider.setTopLeftPosition(column16, row3);
+	m_resampleSlider.setTopLeftPosition(column16, row10);
 	m_exportRegionLeftSlider.setTopLeftPosition(column16, row4);
 	m_exportRegionRightSlider.setTopLeftPosition(column16, row5);
 	m_exportRegionCountSlider.setTopLeftPosition(column16, row6);
@@ -510,6 +533,7 @@ void MainComponent::resized()
 	m_saveButton.setTopLeftPosition(column16, row11);
 	m_exportRegionsButton.setTopLeftPosition(column17, row11);
 	m_applyDCFilterCheckbox.setTopLeftPosition(column18, row11);
+	m_clampLengthCheckbox.setTopLeftPosition(column18, row10);
 
 	// Main column 4
 	// Playback

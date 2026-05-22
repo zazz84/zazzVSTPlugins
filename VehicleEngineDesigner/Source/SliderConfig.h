@@ -98,6 +98,16 @@ public:
 				config.sliderPtr->setTextBoxStyle(juce::Slider::TextBoxRight, false, 
 													config.textBoxWidth, config.textBoxHeight);
 
+				// Register callback if provided
+				if (config.onValueChanged)
+				{
+					auto callback = config.onValueChanged;
+					auto sliderPtr = config.sliderPtr;
+					config.sliderPtr->onValueChange = [callback, sliderPtr]() { 
+						callback(sliderPtr->getValue());
+					};
+				}
+
 				// Setup label if provided
 				if (config.labelPtr)
 				{

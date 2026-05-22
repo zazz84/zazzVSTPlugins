@@ -10,6 +10,7 @@
 #include "../../../zazzVSTPlugins/Shared/Filters/BiquadFilters.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/ZeroCrossingOffline.h"
 #include "../../../zazzVSTPlugins/Shared/Utilities/RandomNoRepeat.h"
+#include "../../../zazzVSTPlugins/Shared/Utilities/Math.h"
 #include "WaveformEditorComponent.h"
 #include "SpectrumMatchRegionProcessor.h"
 #include "SliderConfig.h"
@@ -309,7 +310,6 @@ public:
 			return;
 		}
 
-		// Initialize spectrum matching if enabled
 		if (m_useSpectrumMatching)
 		{
 			initializeSpectrumMatching();
@@ -337,6 +337,9 @@ public:
 		const int channels = m_bufferSource.getNumChannels();
 		tempBuffer.setSize(channels, tempBufferLength);
 
+		const float resample = m_resampleSlider.getValue();
+		const bool clampLength = m_clampLength;
+
 		for (int channel = 0; channel < channels; channel++)
 		{
 			auto* pBufferSource = m_bufferSource.getWritePointer(channel);
@@ -353,13 +356,15 @@ public:
 
 				float readIndex = (float)m_regions[regionIdx].m_sampleIndex;
 				const int regionLenghtSource = m_regions[regionIdx].m_length;
-				const float indexIncrement = (float)regionLenghtSource / (float)exportRegionLength;
+				
+				const float indexIncrement = Math::remap(resample, 0.0f, 100.0f, 1.0f, (float)regionLenghtSource / (float)exportRegionLength);
+				const float exportRegionLengthWithResample = fminf(clampLength ? (float)regionLenghtSource / (float)indexIncrement : (float)exportRegionLength, (float)exportRegionLength);
 
 				readIndex -= halfCrossfade * indexIncrement;
 
 				// Collect full segment data (fade in + region + fade out)
 				std::vector<float> fullSegmentData(tempRegionLength);
-				int segmentWriteIndex = 0;
+ 				int segmentWriteIndex = 0;
 
 				// Fade in data - with envelope applied BEFORE FFT for proper windowing
 				for (int i = 0; i < halfCrossfade; i++)
@@ -387,13 +392,15 @@ public:
 					}
 
 					// Apply fade-in envelope (0 -> 1) BEFORE FFT for loopable segment
-					fullSegmentData[segmentWriteIndex] = sample * ((float)(i + 1) / (float)halfCrossfade);
+					const float gain = (float)(i) / (float)halfCrossfade; // Linear fade-in
+					fullSegmentData[segmentWriteIndex] = gain * sample;
 					segmentWriteIndex++;
 					readIndex += indexIncrement;
 				}
 
 				// Region data (no envelope in middle section)
-				for (int i = 0; i < exportRegionLength; i++)
+				//for (int i = 0; i < exportRegionLength; i++)
+				for (int i = 0; i < exportRegionLengthWithResample; i++)
 				{
 					if (m_interpolationType == InterpolationType::Point)
 					{
@@ -448,7 +455,8 @@ public:
 					}
 
 					// Apply fade-out envelope (1 -> 0) BEFORE FFT for loopable segment
-					fullSegmentData[segmentWriteIndex] = sample * (1.0f - ((float)(i + 1) / (float)halfCrossfade));
+					const float gain = 1.0f - ((float)(i + 1) / (float)halfCrossfade); // Linear fade-out
+					fullSegmentData[segmentWriteIndex] = gain * sample;
 					segmentWriteIndex++;
 					readIndex += indexIncrement;
 				}
@@ -520,12 +528,41 @@ public:
 
 					int readIndex = regionIndex * tempRegionLength;
 					int writeIndex = outRegionIdx * exportRegionLength - halfCrossfade;
+					int writteSamples = tempRegionLength;
 
-					for (int sample = 0; sample < tempRegionLength; sample++)
+					if (outRegionIdx == 0)
+					{
+						// First region - no fade-in, start writing from the beginning of the output buffer
+						writeIndex = 0;
+						writteSamples = exportRegionLength + halfCrossfade; // Write full region + fade-out
+						readIndex =+ halfCrossfade; // Skip fade-in samples in the temp buffer
+					}
+					else if (outRegionIdx == exportRegionCount - 1)
+					{
+						// Last region - no fade-out, write until the end of the output buffer
+						writteSamples = exportRegionLength + halfCrossfade; // Write full region + fade-in
+					}
+
+					for (int sample = 0; sample < writteSamples; sample++)
 					{
 						if (writeIndex >= 0 && writeIndex < outputSize)
 						{
-							pOutBuffer[writeIndex] = pOutBuffer[writeIndex] + pTempBuffer[readIndex];
+							// Apply fade in
+							if (sample < crossfadeLength && outRegionIdx != 0)
+							{
+								const float gain = (float)(sample + 1) / (float)crossfadeLength; // Linear fade-in
+								pOutBuffer[writeIndex] = pOutBuffer[writeIndex] + gain * pTempBuffer[readIndex];
+							}
+							// Apply fade out
+							else if (sample >= exportRegionLength && outRegionIdx != exportRegionCount - 1)
+							{
+								const float gain = 1.0f - ((float)(sample - exportRegionLength + 1) / (float)crossfadeLength); // Linear fade-out
+								pOutBuffer[writeIndex] = pOutBuffer[writeIndex] + gain * pTempBuffer[readIndex];
+							}
+							else
+							{
+								pOutBuffer[writeIndex] = pOutBuffer[writeIndex] + pTempBuffer[readIndex];
+							}
 						}
 
 						readIndex++;
@@ -566,7 +603,7 @@ public:
 
 		m_waveformDisplayOutput.setAudioBuffer(m_bufferOutput);
 		m_waveformDisplayOutput.setRegions(regionsExport);
-			}
+	}
 
 	//==========================================================================
 	void saveProjectToFile(const juce::File& projectFile)
@@ -585,6 +622,10 @@ public:
 
 		// Save interpolation type
 		projectObject->setProperty("interpolationType", (int)m_interpolationType);
+
+		// Save checkbox states
+		projectObject->setProperty("applyDCFilter", m_applyDCFilterCheckbox.getToggleState());
+		projectObject->setProperty("clampLength", m_clampLengthCheckbox.getToggleState());
 
 		// Save detection results
 		projectObject->setProperty("regionLenghtMedian", m_regionLenghtMedian);
@@ -855,6 +896,10 @@ public:
 		m_detectionTypeComboBox.setSelectedId(1);
 		m_generationTypeComboBox.setSelectedId(1);
 
+		// Reset checkboxes to default
+		m_applyDCFilterCheckbox.setToggleState(false, juce::dontSendNotification);
+		m_clampLengthCheckbox.setToggleState(true, juce::dontSendNotification);
+
 		// Clear all labels
 		m_regionsCountLabel.setText("", juce::dontSendNotification);
 		m_validRegionsCountLabel.setText("", juce::dontSendNotification);
@@ -950,6 +995,10 @@ public:
 				// Load slider values using the centralized method
 				loadAllSliders(*obj);
 
+				// Synchronize m_useSpectrumMatching with the loaded slider value
+				m_spectrumMatchIntensity = m_spectrumMatchIntensitySlider.getValue() / 100.0f;
+				m_useSpectrumMatching = (m_spectrumMatchIntensity > 0.0f);
+
 				// Load combo box selections if they exist
 				if (obj->hasProperty("detectionType"))
 					m_detectionTypeComboBox.setSelectedId(obj->getProperty("detectionType"));
@@ -959,6 +1008,12 @@ public:
 				// Load interpolation type if it exists
 				if (obj->hasProperty("interpolationType"))
 					m_interpolationType = static_cast<InterpolationType>((int)obj->getProperty("interpolationType"));
+
+				// Load checkbox states if they exist
+				if (obj->hasProperty("applyDCFilter"))
+					m_applyDCFilterCheckbox.setToggleState((bool)obj->getProperty("applyDCFilter"), juce::dontSendNotification);
+				if (obj->hasProperty("clampLength"))
+					m_clampLengthCheckbox.setToggleState((bool)obj->getProperty("clampLength"), juce::dontSendNotification);
 
 				// Load detection results if they exist
 				if (obj->hasProperty("regionLenghtMedian"))
@@ -1754,6 +1809,7 @@ public:
 	juce::TextButton m_sourceButton;
 
 	juce::ToggleButton m_applyDCFilterCheckbox;
+	juce::ToggleButton m_clampLengthCheckbox;
 
 	// Sliders
 	juce::Slider m_thresholdSlider;
@@ -1764,6 +1820,7 @@ public:
 	juce::Slider m_zeroCrossingCountSlider;
 	juce::Slider m_lowPassFrequencySlider;  // NEW: Controls low-pass frequency for filtering
 	juce::Slider m_crossfadeLengthSlider;
+	juce::Slider m_resampleSlider;  // NEW: Controls resampling amount (0-100%)
 	juce::Slider m_regionLenghtExportSlider;
 
 	juce::Slider m_exportRegionLeftSlider;
@@ -1785,6 +1842,7 @@ public:
 	juce::Label m_zeroCrossingCountLabel;
 	juce::Label m_lowPassFrequencyLabel;  // NEW: Label for low-pass frequency slider
 	juce::Label m_crossfadeLengthLabel;
+	juce::Label m_resampleLabel;  // NEW: Label for resample slider
 	juce::Label m_spectrumMatchIntensityLabel;
 
 	juce::Label m_regionLenghtMedianLabel;
@@ -1826,7 +1884,7 @@ public:
 	WaveformEditorComponent m_waveformDisplayOutput;
 
 	std::unique_ptr<SpectrumMatchRegionProcessor> m_spectrumRegionProcessor;
-	bool m_useSpectrumMatching = false;
+	bool m_useSpectrumMatching = true;
 	bool m_useMedianSpectrum = false;
 	int m_selectedSpectrumRegionIndex = 0;
 	float m_spectrumMatchIntensity = 0.0f;
@@ -1838,6 +1896,7 @@ public:
 	InterpolationType m_interpolationType = InterpolationType::Linear;
 	bool m_showSpectrogram = false;
 	bool m_applyDCFilter = false;
+	bool m_clampLength = true;
 	DisplayMode m_displayMode = DisplayMode::Waveform;
 
 	int m_regionLenghtMedian = 0;
